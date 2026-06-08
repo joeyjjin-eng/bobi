@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 로그인</title>
+<link rel="stylesheet" href="styles/tokens.css" />
+<link rel="stylesheet" href="styles/auth.css" />
+</head>
+<body>
+
+<div class="auth-page">
+
+  <header class="auth-header">
+    <a href="onboarding.html" style="display:inline-flex;align-items:center"><img src="assets/bobi-logo.png" alt="BoBi" /></a>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+
+      <h1 class="lg-title">로그인</h1>
+
+      <form class="lg-form" onsubmit="event.preventDefault(); location.href='desktop.html';">
+        <div class="lg-field">
+          <label for="lg-id">아이디</label>
+          <input id="lg-id" type="text" autocomplete="username" placeholder="아이디를 입력하세요." />
+        </div>
+        <div class="lg-field">
+          <label for="lg-pw">비밀번호</label>
+          <input id="lg-pw" type="password" autocomplete="current-password" placeholder="숫자 + 영문 8자 이상" />
+        </div>
+
+        <div class="lg-forgot">
+          <a href="#">아이디 또는 비밀번호 찾기</a>
+        </div>
+
+        <button class="lg-submit" type="submit">로그인</button>
+      </form>
+
+    </div>
+  </main>
+
+  <footer class="auth-ft">
+    <div>
+      <div class="auth-ft-links">
+        <button class="auth-ft-link">이용약관</button>
+        <span class="auth-ft-sep">|</span>
+        <button class="auth-ft-link bold">개인정보처리방침</button>
+      </div>
+      <div class="auth-ft-info">
+        <p>주식회사 천호인터내셔널<span class="dot">·</span>대표 이승엽<span class="dot">·</span>사업자등록번호 342-81-00261</p>
+        <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
+      </div>
+    </div>
+    <div class="auth-ft-cs">
+      <div class="cs-call">고객센터 <b>1644-0161</b></div>
+      <div>운영시간 10:00 ~ 17:00</div>
+      <div class="cs-mail"><a href="mailto:cs@weplat.co.kr">cs@weplat.co.kr</a></div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

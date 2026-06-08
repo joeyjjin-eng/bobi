@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi v2 · 시안 E — 모바일 (홈 + 진료기록 리포트)</title>
+<link rel="stylesheet" href="styles/tokens.css" />
+<link rel="stylesheet" href="styles/mobile.css" />
+<style>
+  html, body { margin: 0; background: #eceff3; }
+  .row { display: flex; gap: 40px; padding: 40px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .col .cap { font: 700 13px/1 Pretendard, sans-serif; color: #44545F; }
+  .phone { box-shadow: 0 12px 48px rgba(14,26,36,.14); border-radius: 26px; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  @keyframes barRiseM { from { height: 0; } }
+  .m-chart .bar { animation: barRiseM .7s cubic-bezier(.2,.8,.2,1) 80ms both; }
+
+  @keyframes radDrawM { from { stroke-dashoffset: 163.36; } }
+  .m-rfill { animation: radDrawM .9s cubic-bezier(.2,.8,.2,1) both; }
+
+  @keyframes trackFillM { from { width: 0; } }
+  .m-dis .fill { animation: trackFillM .8s ease 120ms both; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 13h7M8.5 16.5h7M8.5 9.5h2"/></symbol>
+  <symbol id="i-search-check" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="m8.5 11 2 2 3.5-3.7"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M16 7h5v5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 4 5-4"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-footprints" viewBox="0 0 24 24"><path d="M7 19c-1.5 0-2.5-1-2.5-2.8 0-1.3.6-2 .6-3.4 0-1.2-.4-1.8-.4-3C4.7 7.4 5.7 6 7.2 6c1.4 0 2.3 1.1 2.3 3 0 2.4-.3 3-.3 5.3C9.2 17.7 8.5 19 7 19Z"/><path d="M17 13c1.5 0 2.5-1 2.5-2.8 0-1.3-.6-2-.6-3.4 0-1.2.4-1.8.4-3C19.3 1.4 18.3 0 16.8 0"/><path d="M17 13c-1.5 0-2.2 1.3-2.2 3.3 0 1 .1 1.7.1 2.4 0 1.2.9 2.3 2.1 2.3s2.2-1 2.2-2.8c0-1.3-.6-2-.6-3.4"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 7v12M3 13h18v6M21 19v-3a4 4 0 0 0-4-4H8"/><circle cx="7" cy="10.5" r="1.6"/></symbol>
+  <symbol id="i-stethoscope" viewBox="0 0 24 24"><path d="M5 3v5a4 4 0 0 0 8 0V3"/><path d="M5 3H3.5M13 3h1.5"/><path d="M9 16v1a4 4 0 0 0 8 0v-1.5"/><circle cx="18" cy="13.5" r="2"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="m8.5 8.5 7 7"/></symbol>
+</svg>
+
+<div class="row">
+
+  <div class="col">
+    <div class="cap">시안 E · 홈 (390px)</div>
+    <div class="phone m-e">
+      <div class="statusbar">
+        <span class="time">9:41</span>
+        <span class="sb-r">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 4.2A11 11 0 0 1 16 4.2"/><path d="M3.6 6.8a7 7 0 0 1 9.8 0"/><path d="M6.2 9.3a3.3 3.3 0 0 1 4.6 0"/><circle cx="8.5" cy="11" r=".6" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x="1" y="1" width="21" height="11" rx="3" stroke="currentColor" stroke-opacity=".4" stroke-width="1"/><rect x="2.6" y="2.6" width="16" height="7.8" rx="1.6" fill="currentColor"/><rect x="23.5" y="4" width="1.6" height="5" rx="1" fill="currentColor" fill-opacity=".5"/></svg>
+        </span>
+      </div>
+
+      <header class="m-appbar">
+        <button class="ham" style="width:38px;height:38px;border:none;background:none;display:grid;place-items:center;color:var(--ink-2)"><svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg></button>
+        <img class="m-logo" src="assets/bobi-logo.png" alt="BoBi" />
+        <div class="m-r">
+          <button class="m-iconbtn"><svg class="ic-svg" width="21" height="21"><use href="#i-bell"/></svg><span class="dot"></span></button>
+          <div class="m-avatar">홍</div>
+        </div>
+      </header>
+
+      <div class="m-greet">
+        <h1>안녕하세요, 홍길동님</h1>
+        <div class="sub">오늘도 보비가 영업을 돕겠습니다 · 2025.08.01</div>
+      </div>
+
+      <main class="m-body">
+        <div class="m-kpis">
+          <div class="kpi">
+            <div class="l"><span class="dot" style="background:var(--brand)"></span>현재 내 고객</div>
+            <div class="v">3,045<small> 명</small></div>
+            <div class="trend"><svg class="ic-svg" width="12" height="12"><use href="#i-trending-up"/></svg> +24 이번 주</div>
+            <div class="spark">
+              <i style="height:9px;background:var(--brand-soft)"></i>
+              <i style="height:14px;background:var(--brand-soft)"></i>
+              <i style="height:11px;background:var(--brand-soft)"></i>
+              <i style="height:18px;background:var(--brand-soft)"></i>
+              <i style="height:22px;background:var(--brand-soft)"></i>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="l"><span class="dot" style="background:var(--c-out)"></span>이번 달 리포트</div>
+            <div class="v">12<small> 건</small></div>
+            <div class="trend"><svg class="ic-svg" width="12" height="12"><use href="#i-trending-up"/></svg> +3 전월</div>
+            <div class="spark">
+              <i style="height:7px;background:#FFD3D7"></i>
+              <i style="height:11px;background:#FFD3D7"></i>
+              <i style="height:9px;background:#FFD3D7"></i>
+              <i style="height:16px;background:#FFD3D7"></i>
+              <i style="height:20px;background:#FFD3D7"></i>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="l"><span class="dot" style="background:var(--c-in)"></span>미청구 탐색</div>
+            <div class="v">7<small> 건</small></div>
+            <div class="trend mut">대기 중</div>
+            <div class="spark">
+              <i style="height:12px;background:#B6EFE4"></i>
+              <i style="height:9px;background:#B6EFE4"></i>
+              <i style="height:14px;background:#B6EFE4"></i>
+              <i style="height:11px;background:#B6EFE4"></i>
+              <i style="height:16px;background:#B6EFE4"></i>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="l"><span class="dot" style="background:var(--c-surg)"></span>남은 무료</div>
+            <div class="v">1 / 10</div>
+            <div class="trend mut">FREE 플랜</div>
+            <div class="spark">
+              <i style="height:20px;background:#D8C8FB"></i>
+              <i style="height:18px;background:#D8C8FB"></i>
+              <i style="height:16px;background:#D8C8FB"></i>
+              <i style="height:14px;background:#D8C8FB"></i>
+              <i style="height:6px;background:#D8C8FB"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-feature">
+          <div class="ic"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
+          <h3>진료기록 리포트
+새로 만들기</h3>
+          <p>고객의 5년 진료내역을 한 장의 리포트로</p>
+          <span class="start">새 리포트 시작 <svg class="ic-svg" width="15" height="15"><use href="#i-arrow-right"/></svg></span>
+          <img class="m-mascot" src="assets/bobi-mascot.svg" alt="" />
+        </div>
+
+        <div class="m-acts">
+          <div class="act"><div class="ic out"><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg></div><h4>최근 리포트</h4><p>최근 12건</p></div>
+          <div class="act"><div class="ic in"><svg class="ic-svg" width="18" height="18"><use href="#i-search-check"/></svg></div><h4>미청구금</h4><p>탐색하기</p></div>
+          <div class="act"><div class="ic surg"><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg></div><h4>청구 내역</h4><p>완료 28건</p></div>
+        </div>
+
+        <div class="m-sec"><h2>공지사항</h2><span class="more">전체보기 <svg class="ic-svg" width="13" height="13"><use href="#i-chevron-right"/></svg></span></div>
+        <div class="m-npanel">
+          <div class="nrow"><span class="ntag imp">공지</span><div><div class="nt">서비스 점검 안내 (9/10 새벽 2시~5시)</div><div class="nd">2025.07.21</div></div></div>
+          <div class="nrow"><span class="ntag imp">업데이트</span><div><div class="nt">신규 기능 업데이트 소식: 스마트보비가 열렸습니다</div><div class="nd">2025.07.19</div></div></div>
+          <div class="nrow"><span class="ntag">필독</span><div><div class="nt">개인정보 처리방침 변경 안내 (시행일: 10/1)</div><div class="nd">2025.07.05</div></div></div>
+          <div class="nrow"><span class="ntag">안내</span><div><div class="nt">추석 연휴 리포트 발급 일정 안내</div><div class="nd">2025.06.29</div></div></div>
+        </div>
+
+        <footer class="m-ft">
+          <div class="m-ft-links">
+            <button class="m-ft-link">이용약관</button>
+            <span class="m-ft-sep">|</span>
+            <button class="m-ft-link bold">개인정보처리방침</button>
+          </div>
+          <div class="m-ft-info">
+            <p>주식회사 천호인터내셔널</p>
+            <p>대표 이승엽 · 사업자등록번호 342-81-00261</p>
+            <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="cap">시안 E · 진료기록 리포트 (390px)</div>
+    <div class="phone m-e">
+      <div class="statusbar">
+        <span class="time">9:41</span>
+        <span class="sb-r">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 4.2A11 11 0 0 1 16 4.2"/><path d="M3.6 6.8a7 7 0 0 1 9.8 0"/><path d="M6.2 9.3a3.3 3.3 0 0 1 4.6 0"/><circle cx="8.5" cy="11" r=".6" fill="currentColor" stroke="none"/></svg>
+          <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x="1" y="1" width="21" height="11" rx="3" stroke="currentColor" stroke-opacity=".4" stroke-width="1"/><rect x="2.6" y="2.6" width="16" height="7.8" rx="1.6" fill="currentColor"/><rect x="23.5" y="4" width="1.6" height="5" rx="1" fill="currentColor" fill-opacity=".5"/></svg>
+        </span>
+      </div>
+
+      <header class="m-rbar">
+        <button class="back"><svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg></button>
+        <span class="ttl">진료기록 리포트</span>
+        <button class="save"><svg class="ic-svg" width="15" height="15"><use href="#i-download"/></svg> 저장</button>
+      </header>
+
+      <main class="m-body">
+        <div class="m-patient">
+          <img src="assets/fig-image.png" alt="" />
+          <div>
+            <div class="nm">홍길동님</div>
+            <div class="meta">
+              <span>여성</span>
+              <span><b>1991.07.20</b> (만 34세)</span>
+              <span>보험 <b>34세</b></span>
+              <span>대구</span>
+            </div>
+          </div>
+          <div class="asof">조회일자<b>2025.08.01</b></div>
+        </div>
+
+        <div class="m-period">
+          <span class="lbl">조회기간 · 최대 5년</span>
+          <div class="dates">
+            <span class="di"><svg class="ic-svg" width="15" height="15"><use href="#i-calendar"/></svg> 2020.01.01</span>
+            <span class="dash">—</span>
+            <span class="di"><svg class="ic-svg" width="15" height="15"><use href="#i-calendar"/></svg> 2024.12.31</span>
+          </div>
+          <div class="presets">
+            <button class="preset" data-preset>3개월</button>
+            <button class="preset" data-preset>1년</button>
+            <button class="preset" data-preset>3년</button>
+            <button class="preset on" data-preset>5년</button>
+          </div>
+          <button class="search">조회하기</button>
+        </div>
+
+        <div class="m-card">
+          <h3>주요정보</h3>
+          <div class="m-sum">
+            <div class="s out"><div class="top"><span class="l">통원</span><span class="ic"><svg class="ic-svg" width="17" height="17"><use href="#i-footprints"/></svg></span></div><div class="days">21일</div><div class="cst">262,500원</div></div>
+            <div class="s in"><div class="top"><span class="l">입원</span><span class="ic"><svg class="ic-svg" width="17" height="17"><use href="#i-bed"/></svg></span></div><div class="days">3일</div><div class="cst">645,000원</div></div>
+            <div class="s surg"><div class="top"><span class="l">수술</span><span class="ic"><svg class="ic-svg" width="17" height="17"><use href="#i-stethoscope"/></svg></span></div><div class="days">1건</div><div class="cst">850,000원</div></div>
+            <div class="s med"><div class="top"><span class="l">투약</span><span class="ic"><svg class="ic-svg" width="17" height="17"><use href="#i-pill"/></svg></span></div><div class="days">52회</div><div class="cst">651,230원</div></div>
+          </div>
+        </div>
+
+        <div class="m-kw">
+          <span class="txt">재검사 소견 키워드 <b>3가지</b> 발견</span>
+          <span class="chips">
+            <span class="chip">#CT</span>
+            <span class="chip">#X-RAY</span>
+            <span class="chip">#영상</span>
+          </span>
+        </div>
+
+        <div class="m-card">
+          <h3>의료비 정보</h3>
+          <div class="m-costnums">
+            <div><div class="l">총 의료비</div><div class="vv">2,408,730원</div></div>
+            <div><div class="l">연 평균</div><div class="vv brand">481,750원</div></div>
+          </div>
+          <div class="m-chart">
+            <div class="avg" style="bottom:62.6%"><span>연 평균</span></div>
+            <div class="col"><div class="bar" style="height:36.4%"><span class="v">28만</span></div><span class="yr">2020</span></div>
+            <div class="col"><div class="bar" style="height:68.8%"><span class="v">53만</span></div><span class="yr">2021</span></div>
+            <div class="col"><div class="bar" style="height:41.6%"><span class="v">32만</span></div><span class="yr">2022</span></div>
+            <div class="col"><div class="bar hi" style="height:100%"><span class="v">77만</span></div><span class="yr">2023</span></div>
+            <div class="col"><div class="bar" style="height:66.2%"><span class="v">51만</span></div><span class="yr">2024</span></div>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <h3>진료 구성 비중</h3>
+          <div class="radials">
+            <div class="radial">
+              <svg width="66" height="66">
+                <circle cx="33" cy="33" r="26" fill="none" stroke="#EAEFF4" stroke-width="6.5" />
+                <circle class="m-rfill" cx="33" cy="33" r="26" fill="none" stroke="#42BAFF" stroke-width="6.5" stroke-linecap="round"
+                  stroke-dasharray="163.36" stroke-dashoffset="145.4" transform="rotate(-90 33 33)" style="animation-delay:200ms" />
+                <text x="33" y="37" text-anchor="middle" font-size="13" font-weight="800" fill="#1C50A1">11%</text>
+              </svg>
+              <div><div class="rv">통원</div><div class="rl">262,500원 · 21일</div></div>
+            </div>
+            <div class="radial">
+              <svg width="66" height="66">
+                <circle cx="33" cy="33" r="26" fill="none" stroke="#EAEFF4" stroke-width="6.5" />
+                <circle class="m-rfill" cx="33" cy="33" r="26" fill="none" stroke="#42BAFF" stroke-width="6.5" stroke-linecap="round"
+                  stroke-dasharray="163.36" stroke-dashoffset="119.2" transform="rotate(-90 33 33)" style="animation-delay:320ms" />
+                <text x="33" y="37" text-anchor="middle" font-size="13" font-weight="800" fill="#1C50A1">27%</text>
+              </svg>
+              <div><div class="rv">입원</div><div class="rl">645,000원 · 3일</div></div>
+            </div>
+            <div class="radial">
+              <svg width="66" height="66">
+                <circle cx="33" cy="33" r="26" fill="none" stroke="#EAEFF4" stroke-width="6.5" />
+                <circle class="m-rfill" cx="33" cy="33" r="26" fill="none" stroke="#42BAFF" stroke-width="6.5" stroke-linecap="round"
+                  stroke-dasharray="163.36" stroke-dashoffset="106.2" transform="rotate(-90 33 33)" style="animation-delay:440ms" />
+                <text x="33" y="37" text-anchor="middle" font-size="13" font-weight="800" fill="#1C50A1">35%</text>
+              </svg>
+              <div><div class="rv">수술</div><div class="rl">850,000원 · 1건</div></div>
+            </div>
+            <div class="radial">
+              <svg width="66" height="66">
+                <circle cx="33" cy="33" r="26" fill="none" stroke="#EAEFF4" stroke-width="6.5" />
+                <circle class="m-rfill" cx="33" cy="33" r="26" fill="none" stroke="#42BAFF" stroke-width="6.5" stroke-linecap="round"
+                  stroke-dasharray="163.36" stroke-dashoffset="119.2" transform="rotate(-90 33 33)" style="animation-delay:560ms" />
+                <text x="33" y="37" text-anchor="middle" font-size="13" font-weight="800" fill="#1C50A1">27%</text>
+              </svg>
+              <div><div class="rv">투약</div><div class="rl">651,230원 · 52회</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-card">
+          <h3>10대 주요질환</h3>
+          <div class="m-dis">
+            <div class="top">
+              <span class="rank">1</span>
+              <span class="dname">고혈압</span>
+              <span class="dcost">825,000원</span>
+            </div>
+            <div class="stats">
+              <span>외래 <b>3일</b></span>
+              <span>입원 <b>3일</b></span>
+              <span>투약 <b>17회</b></span>
+              <span>수술 <b>1회</b></span>
+            </div>
+            <div class="track"><div class="fill" style="width:61%"></div></div>
+            <div class="first">최초진단 2021.01.01</div>
+          </div>
+          <div class="m-dis">
+            <div class="top">
+              <span class="rank">2</span>
+              <span class="dname">콜레스테롤</span>
+              <span class="dcost">625,000원</span>
+            </div>
+            <div class="stats">
+              <span>투약 <b>17회</b></span>
+            </div>
+            <div class="track"><div class="fill" style="width:46%"></div></div>
+            <div class="first">최초진단 2020.11.30</div>
+          </div>
+        </div>
+
+        <div class="m-card" style="padding:18px 0 8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px">
+            <h3 style="margin:0">전체 진료기록</h3>
+            <span class="more" style="font-size:var(--fs-label);color:var(--ink-3)">전체 ›</span>
+          </div>
+          <div class="m-rec"><div class="r1"><span class="date">2025.05.03</span><span class="typechip">외래</span><span class="cost">19,200원</span></div><div class="place">스마트치과</div><div class="dis2">만성 단순치주염(치주과) <span class="code">· AK20</span></div></div>
+          <div class="m-rec"><div class="r1"><span class="date">2025.04.21</span><span class="typechip">외래</span><span class="cost">12,400원</span></div><div class="place">다나아내과</div><div class="dis2">급성 기관지염(내과) <span class="code">· J20</span></div></div>
+          <div class="m-rec"><div class="r1"><span class="date">2025.03.18</span><span class="typechip">외래</span><span class="cost">19,200원</span></div><div class="place">스마트치과</div><div class="dis2">만성 단순치주염(치주과) <span class="code">· AK20</span></div></div>
+          <div class="m-rec"><div class="r1"><span class="date">2025.02.27</span><span class="typechip">외래</span><span class="cost">8,600원</span></div><div class="place">연세이비인후과</div><div class="dis2">급성 비염(이비인후과) <span class="code">· J00</span></div></div>
+          <div class="m-rec"><div class="r1"><span class="date">2025.01.30</span><span class="typechip">외래</span><span class="cost">24,000원</span></div><div class="place">스마트치과</div><div class="dis2">치은염(치주과) <span class="code">· K05</span></div></div>
+          <div class="m-pager">
+            <button><svg class="ic-svg" width="15" height="15"><use href="#i-chevron-left"/></svg></button>
+            <span class="pp">1 / 5</span>
+            <button><svg class="ic-svg" width="15" height="15"><use href="#i-chevron-right"/></svg></button>
+          </div>
+        </div>
+
+        <footer class="m-ft">
+          <div class="m-ft-links">
+            <button class="m-ft-link">이용약관</button>
+            <span class="m-ft-sep">|</span>
+            <button class="m-ft-link bold">개인정보처리방침</button>
+          </div>
+          <div class="m-ft-info">
+            <p>주식회사 천호인터내셔널</p>
+            <p>대표 이승엽 · 사업자등록번호 342-81-00261</p>
+            <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.m-period').forEach(function(scope){
+    scope.querySelectorAll('[data-preset]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        scope.querySelectorAll('[data-preset]').forEach(function(b){ b.classList.remove('on'); });
+        btn.classList.add('on');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

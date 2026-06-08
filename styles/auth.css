@@ -1,0 +1,133 @@
+/* ============================================================
+   BoBi v2 — 인증 페이지 (온보딩 · 로그인 · 회원가입 등)
+   토큰 의존: styles/tokens.css 의 컬러·타입·라운드·그림자
+   ============================================================ */
+
+html, body { margin: 0; background: #fff; }
+body { font-family: 'Pretendard', system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+
+.auth-page { min-height: 100vh; display: flex; flex-direction: column; background: #fff; }
+
+/* === 상단 헤더 (로고만) === */
+.auth-header {
+  height: 72px;
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  position: sticky; top: 0; z-index: 10;
+}
+.auth-header img { height: 24px; }
+
+/* === 메인 영역 === */
+.auth-main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 24px 60px; }
+.auth-card { width: 100%; max-width: 480px; }
+
+/* === 온보딩 === */
+.onb-illust-wrap {
+  position: relative;
+  display: flex; justify-content: center; align-items: flex-end;
+  margin: 0 auto 36px;
+  width: 280px; height: 220px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--brand-pale) 0%, #fff 80%);
+}
+.onb-illust { width: 200px; height: auto; object-fit: contain; }
+.onb-eyebrow {
+  font-size: var(--fs-option);
+  color: var(--brand-deep); font-weight: 700;
+  letter-spacing: 0.02em; text-align: center;
+}
+.onb-title {
+  font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em;
+  margin: 8px 0 40px; text-align: center; color: var(--ink);
+}
+.onb-title b { color: var(--brand); }
+.onb-actions { display: flex; flex-direction: column; gap: 12px; }
+.onb-btn {
+  width: 100%; padding: 17px;
+  border-radius: var(--r-md); border: none;
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+  text-align: center; text-decoration: none;
+  cursor: pointer;
+  display: block; box-sizing: border-box;
+  transition: background-color .2s ease;
+}
+.onb-btn.primary { background: var(--brand); color: #fff; box-shadow: var(--sh-brand); }
+.onb-btn.primary:hover { background: var(--brand-hover); }
+.onb-btn.secondary { background: var(--brand-ink); color: #fff; }
+.onb-btn.secondary:hover { background: #14333f; }
+
+/* === 로그인 === */
+.lg-title {
+  font-size: var(--fs-h1); font-weight: 800;
+  text-align: center;
+  margin: 0 0 32px; color: var(--ink); letter-spacing: -0.02em;
+}
+.lg-form { display: flex; flex-direction: column; gap: 12px; }
+.lg-field {
+  position: relative;
+  border: 1px solid var(--line-strong); border-radius: var(--r-md);
+  padding: 11px 18px 13px;
+  background: #fff;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.lg-field:focus-within {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(66,186,255,.12);
+}
+.lg-field label {
+  display: block; font-size: var(--fs-option); font-weight: 700;
+  color: var(--brand-deep); margin-bottom: 4px;
+}
+.lg-field input {
+  width: 100%; border: none; outline: none;
+  font-family: inherit; font-size: var(--fs-body); color: var(--ink);
+  padding: 0; background: transparent;
+}
+.lg-field input::placeholder { color: var(--ink-4); }
+.lg-forgot { margin: 10px 0 6px; }
+.lg-forgot a {
+  font-size: var(--fs-option); color: var(--ink-2);
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.lg-forgot a:hover { color: var(--brand-deep); }
+.lg-submit {
+  width: 100%; padding: 17px; margin-top: 16px;
+  border-radius: var(--r-md); border: none;
+  background: var(--brand); color: #fff;
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+  cursor: pointer; box-shadow: var(--sh-brand);
+  transition: background-color .2s ease;
+}
+.lg-submit:hover { background: var(--brand-hover); }
+
+/* === 푸터 (인증 페이지) === */
+.auth-ft {
+  background: #fff; border-top: 1px solid var(--line);
+  padding: 24px 40px;
+  display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: start;
+}
+.auth-ft-links { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.auth-ft-link {
+  background: none; border: none; padding: 0;
+  font-size: var(--fs-body); color: var(--ink-2);
+  cursor: pointer; font-weight: 600; font-family: inherit;
+}
+.auth-ft-link:hover { color: var(--brand-deep); }
+.auth-ft-link.bold { font-weight: 800; color: var(--ink); }
+.auth-ft-sep { color: var(--line-strong); }
+.auth-ft-info { font-size: var(--fs-option); color: var(--ink-3); line-height: 1.7; }
+.auth-ft-info p { margin: 0; }
+.auth-ft-info .dot { color: var(--ink-4); margin: 0 8px; }
+.auth-ft-cs { font-size: var(--fs-option); color: var(--ink-3); text-align: right; line-height: 1.7; min-width: 240px; }
+.auth-ft-cs .cs-call { font-size: var(--fs-body); color: var(--ink); font-weight: 700; }
+.auth-ft-cs .cs-call b { color: var(--brand-deep); }
+.auth-ft-cs .cs-mail a { color: var(--brand-deep); text-decoration: none; }
+.auth-ft-cs .cs-mail a:hover { text-decoration: underline; }
+
+/* 모바일 대응 */
+@media (max-width: 640px) {
+  .auth-main { padding: 48px 20px 40px; }
+  .auth-ft { grid-template-columns: 1fr; padding: 24px 20px; }
+  .auth-ft-cs { text-align: left; min-width: 0; }
+}
