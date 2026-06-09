@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
@@ -155,9 +155,9 @@
       <div class="kw">
         <span class="txt">재검사 소견으로 보이는 키워드가 <b>3가지</b> 발견되었습니다</span>
         <span class="kwchips">
-          <span class="kwchip">#CT</span>
-          <span class="kwchip">#X-RAY</span>
-          <span class="kwchip">#영상</span>
+          <a class="kwchip" href="desktop-reexam.html?keyword=ct">#CT</a>
+          <a class="kwchip" href="desktop-reexam.html?keyword=xray">#X-RAY</a>
+          <a class="kwchip" href="desktop-reexam.html?keyword=image">#영상</a>
         </span>
       </div>
     </div>
@@ -309,32 +309,114 @@
     </div>
 
     <div class="card-pad">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <h2 style="margin:0">전체 진료기록</h2>
-        <span class="more" style="font-size:var(--fs-label);color:var(--ink-3);cursor:pointer">전체보기 ›</span>
+      <div class="rec-head">
+        <div class="rec-tabs" role="tablist">
+          <button class="rec-tab on" type="button" role="tab" aria-selected="true" data-rec="all">전체 진료기록</button>
+          <button class="rec-tab" type="button" role="tab" aria-selected="false" data-rec="detail">세부진료기록</button>
+          <button class="rec-tab" type="button" role="tab" aria-selected="false" data-rec="prescription">처방조제정보</button>
+        </div>
+        <a class="more" id="rec-viewall-top" href="desktop-records.html?view=all">전체보기 ›</a>
       </div>
-      <table>
-        <thead><tr>
-          <th>진료시작일</th><th>병·의원/약국</th><th>질병(진단과)</th><th>진단코드</th><th>입원/외래</th><th>내원일수</th><th class="amt">의료비</th>
-        </tr></thead>
-        <tbody>
-          <tr><td>2025.05.03</td><td class="num">스마트치과</td><td>만성 단순치주염(치주과)</td><td>AK20</td><td><span class="typechip">외래</span></td><td>2</td><td class="amt">19,200원</td></tr>
-          <tr><td>2025.04.21</td><td class="num">다나아내과</td><td>급성 기관지염(내과)</td><td>J20</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">12,400원</td></tr>
-          <tr><td>2025.03.18</td><td class="num">스마트치과</td><td>만성 단순치주염(치주과)</td><td>AK20</td><td><span class="typechip">외래</span></td><td>2</td><td class="amt">19,200원</td></tr>
-          <tr><td>2025.02.27</td><td class="num">연세이비인후과</td><td>급성 비염(이비인후과)</td><td>J00</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">8,600원</td></tr>
-          <tr><td>2025.01.30</td><td class="num">스마트치과</td><td>치은염(치주과)</td><td>K05</td><td><span class="typechip">외래</span></td><td>3</td><td class="amt">24,000원</td></tr>
-          <tr><td>2024.12.11</td><td class="num">행복한의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">11,500원</td></tr>
-          <tr><td>2024.11.05</td><td class="num">다나아내과</td><td>고지질혈증(내과)</td><td>E78</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">9,800원</td></tr>
-          <tr><td>2024.10.22</td><td class="num">서울대병원</td><td>건강검진(내과)</td><td>Z00</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">152,000원</td></tr>
-          <tr><td>2024.09.14</td><td class="num">스마트치과</td><td>치주염(치주과)</td><td>K05</td><td><span class="typechip">외래</span></td><td>2</td><td class="amt">21,300원</td></tr>
-        </tbody>
-      </table>
-      <div class="pager">
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevrons-left"/></svg></button>
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg></button>
-        <span class="pp">1 / 5</span>
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></button>
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevrons-right"/></svg></button>
+
+      <!-- 전체 진료기록 -->
+      <div class="rec-pane" data-rec-pane="all">
+        <table>
+          <thead><tr>
+            <th>진료시작일</th><th>병·의원/약국</th><th>질병(진단과)</th><th class="ctr">진단코드</th><th class="ctr">입원/외래</th><th class="ctr">내원일수</th><th class="amt">의료비</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>2025.05.03</td><td class="num">스마트치과</td><td>만성 단순치주염(치주과)</td><td class="ctr">AK20</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">2</td><td class="amt">19,200원</td></tr>
+            <tr><td>2025.04.21</td><td class="num">다나아내과</td><td>급성 기관지염(내과)</td><td class="ctr">J20</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">12,400원</td></tr>
+            <tr><td>2025.03.18</td><td class="num">스마트치과</td><td>만성 단순치주염(치주과)</td><td class="ctr">AK20</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">2</td><td class="amt">19,200원</td></tr>
+            <tr><td>2025.02.27</td><td class="num">연세이비인후과</td><td>급성 비염(이비인후과)</td><td class="ctr">J00</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">8,600원</td></tr>
+            <tr><td>2025.01.30</td><td class="num">스마트치과</td><td>치은염(치주과)</td><td class="ctr">K05</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">3</td><td class="amt">24,000원</td></tr>
+            <tr><td>2024.12.11</td><td class="num">행복한의원</td><td>본태성 고혈압(내과)</td><td class="ctr">I10</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">11,500원</td></tr>
+            <tr><td>2024.11.05</td><td class="num">다나아내과</td><td>고지질혈증(내과)</td><td class="ctr">E78</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">9,800원</td></tr>
+            <tr><td>2024.10.22</td><td class="num">서울대병원</td><td>건강검진(내과)</td><td class="ctr">Z00</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">152,000원</td></tr>
+            <tr><td>2024.09.14</td><td class="num">스마트치과</td><td>치주염(치주과)</td><td class="ctr">K05</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">2</td><td class="amt">21,300원</td></tr>
+          </tbody>
+        </table>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="desktop-records.html?view=all">전체보기 ›</a>
+        </div>
+      </div>
+
+      <!-- 세부진료기록 (청구 명세서 로우 데이터) -->
+      <div class="rec-pane" data-rec-pane="detail" hidden>
+        <div class="raw-scroll">
+          <table class="raw-table">
+            <thead>
+              <tr>
+                <th>진료시작일</th>
+                <th>병·의원·약국</th>
+                <th>진료내역</th>
+                <th class="wrap">코드명</th>
+                <th class="ctr">1회 투약량</th>
+                <th class="ctr">1일 투여횟수</th>
+                <th class="ctr">총 투약일수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>진찰료/초진(양방)</td><td>초진진찰료-의원</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>진찰료/응급 및 회송료 등(양방)</td><td>외래환자 의약품관리료-1일분(의원,치과의원,보건의료원 의·치과)</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>처치 및 수술/처치 및 수술(양방)</td><td>질강처치</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-03</td><td class="num">죽전하나약국</td><td>조제료등</td><td>처방조제-내복약 5일분</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-04-12</td><td class="num">스마트치과의원 죽전점</td><td>처치 및 수술/처치 및 수술(양방)</td><td>치석제거[전악]</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-03-15</td><td class="num">르봄여성의원</td><td>검사료/위탁검사(양방)</td><td>핵산증폭-다종그룹2_성매개 감염균</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-02-15</td><td class="num">대구탑연합정형외과의원</td><td>진찰료/재진(양방)</td><td>재진진찰료-의원</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-02-15</td><td class="num">대구탑연합정형외과의원</td><td>이학요법료/이학요법(양방)</td><td>간섭파전류치료[ICT]</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-25</td><td class="num">메디필즈의원</td><td>처치 및 수술/처치 및 수술(양방)</td><td>사마귀제거술-절제술-기타</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>주사료/피하, 근육내(양방)</td><td>로카인주사2mg/mL(로피바카인염산염일수화물)_(42mg/20mL)</td><td class="ctr">0</td><td class="ctr">0</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>마취료/마취(양방)</td><td>척수신경말초지차단술-견갑신경</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>견관절2매</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2024-11-12</td><td class="num">다나연합내과의원</td><td>진찰료/재진(양방)</td><td>재진진찰료-의원</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2024-11-09</td><td class="num">다나연합내과의원</td><td>특수장비/CT진단(양방)</td><td>일반전산화단층영상진단-흉부-조영제를사용하지않는경우-기타의경우</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2024-10-19</td><td class="num">다나연합내과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>흉부[직접]2매</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="desktop-records.html?view=detail">전체보기 ›</a>
+        </div>
+      </div>
+
+      <!-- 처방조제정보 (청구 명세서 로우 데이터) -->
+      <div class="rec-pane" data-rec-pane="prescription" hidden>
+        <div class="raw-scroll">
+          <table class="raw-table">
+            <thead>
+              <tr>
+                <th>진료시작일</th>
+                <th>병·의원·약국</th>
+                <th class="wrap">약품명</th>
+                <th>성분명</th>
+                <th class="ctr">1회 투약량</th>
+                <th class="ctr">1일 투여횟수</th>
+                <th class="ctr">총 투약일수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>후라시닐정(메트로니다졸)_(0.25g/1정)</td><td>metronidazole</td><td class="ctr">2</td><td class="ctr">2</td><td class="ctr">5</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>가모시드정5밀리그램(모사프리드시트르산염이수화물)_(5.29mg/1정)</td><td>mosapride citrate hydrate</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">5</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>오엔지질연질캡슐_(1캡슐)</td><td>neomycin sulfate (as neomycin)</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-03-15</td><td class="num">르봄여성의원</td><td>록스펜정(록소프로펜나트륨)_(60mg/1정)</td><td>loxoprofen sodium hydrate</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-03-15</td><td class="num">르봄여성의원</td><td>웅코나졸정150밀리그램(플루코나졸)_(0.15g/1정)</td><td>fluconazole</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-25</td><td class="num">메디필즈의원</td><td>메가파모정20밀리그램(파모티딘)_(20mg/1정)</td><td>famotidine</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-25</td><td class="num">메디필즈의원</td><td>동광록소프로펜정(록소프로펜나트륨수화물)_(68.1mg/1정)</td><td>loxoprofen sodium hydrate</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>아페락정(아세클로페낙)_(0.1g/1정)</td><td>aceclofenac</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>엑손정(에페리손염산염)_(50mg/1정)</td><td>eperisone hydrochloride</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-24</td><td class="num">새봄약국</td><td>울트라셋세미정_(1정)</td><td>acetaminophen</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2024-12-09</td><td class="num">다나연합내과의원</td><td>코푸시럽_(20mL)</td><td>ammonium chloride</td><td class="ctr">1</td><td class="ctr">3</td><td class="ctr">4</td></tr>
+              <tr><td>2024-12-09</td><td class="num">다나연합내과의원</td><td>앱시토정40밀리그램(펙수프라잔염산염)_(40mg/1정)</td><td>fexuprazan hydrochloride</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">4</td></tr>
+              <tr><td>2024-11-30</td><td class="num">다나연합내과의원</td><td>베아티린정(레보세티리진염산염)_(5mg/1정)</td><td>levocetirizine dihydrochloride</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">4</td></tr>
+              <tr><td>2024-11-30</td><td class="num">다나연합내과의원</td><td>펠루비정(펠루비프로펜)_(30mg/1정)</td><td>pelubiprofen</td><td class="ctr">1</td><td class="ctr">3</td><td class="ctr">4</td></tr>
+              <tr><td>2024-11-30</td><td class="num">다나연합내과의원</td><td>심비코트터부헬러160/4.5마이크로그램_(120회)</td><td>budesonide(micronized)</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="desktop-records.html?view=prescription">전체보기 ›</a>
+        </div>
       </div>
     </div>
 
@@ -422,6 +504,23 @@
     });
 
     recalc();
+  })();
+
+  // 전체 진료기록 카드 탭 — 전체/세부진료/처방조제 전환 + 상단 전체보기 링크 동기화
+  (function(){
+    const tabs = document.querySelectorAll('.rec-tab');
+    const panes = document.querySelectorAll('.rec-pane');
+    const topMore = document.getElementById('rec-viewall-top');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      const name = t.dataset.rec;
+      tabs.forEach(b => {
+        const on = b === t;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+      panes.forEach(p => { p.hidden = p.dataset.recPane !== name; });
+      if (topMore) topMore.href = 'desktop-records.html?view=' + name;
+    }));
   })();
 
   // 환자 프로필 아바타 — 성씨 기반 색상
