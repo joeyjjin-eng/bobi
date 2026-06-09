@@ -57,183 +57,68 @@
   <main class="emain">
     <div class="etop">
       <div>
-        <a class="back-btn" href="desktop-precheck.html"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 사전 확인 자료로 돌아가기</a>
-        <h1>난소의 자궁내막증</h1>
-        <div class="sub">진단코드 <b style="color:var(--ink)">AN801</b> · 산부인과 · 첫 진료일로부터 1년 1개월</div>
+        <a class="back-btn" href="desktop-report.html"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 진료기록 리포트로 돌아가기</a>
+        <h1>10대 주요질환 상세</h1>
+        <div class="sub">보험 상담 시 참고할 수 있는 주요질환별 진료 이력입니다</div>
       </div>
       <button class="smart-cta"><svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg> 저장</button>
     </div>
 
-    <div class="card-pad">
-      <h2>진료 요약</h2>
-      <div class="cd-summary">
-        <div class="cd-stat"><div class="l">진료 횟수</div><div class="v">3<small>회</small></div></div>
-        <div class="cd-stat"><div class="l">통원</div><div class="v">2<small>회</small></div></div>
-        <div class="cd-stat hi"><div class="l">입원</div><div class="v">3<small>일</small></div></div>
-        <div class="cd-stat hi"><div class="l">수술</div><div class="v">1<small>건</small></div></div>
-        <div class="cd-stat"><div class="l">처방 약품</div><div class="v">33<small>건</small></div></div>
-        <div class="cd-stat"><div class="l">총 의료비</div><div class="v">4,709,100<small>원</small></div></div>
-      </div>
-      <div class="cd-period">
-        <span>첫 진료 <b>2024.09.05</b></span>
-        <span class="dot">·</span>
-        <span>최근 진료 <b>2024.09.23</b></span>
-        <span class="dot">·</span>
-        <span>본인 부담 <b>866,580원</b></span>
-      </div>
+    <div class="cd-tabs" role="tablist">
+      <button class="cd-tab on" type="button" data-tab="hypertension" role="tab" aria-selected="true">고혈압 <span class="cd-tab-code">I10</span></button>
+      <button class="cd-tab" type="button" data-tab="diabetes" role="tab" aria-selected="false">당뇨병 <span class="cd-tab-code">E11</span></button>
     </div>
 
-    <div class="card-pad">
-      <h2>진료 이력</h2>
-      <table class="cd-table">
+    <div class="card-pad cd-pane" data-pane="hypertension">
+      <h2>고혈압 진료 이력 <span class="hint">· 총 8건 · 의료비 109,000원 · 최초진단 2023.05.12</span></h2>
+      <table>
         <thead>
           <tr>
             <th>진료시작일</th>
             <th>병·의원/약국</th>
-            <th>진단과</th>
+            <th>질병(진단과)</th>
+            <th>진단코드</th>
             <th>입원/외래</th>
             <th>내원일수</th>
-            <th>총 진료비</th>
-            <th>내가 낸 의료비</th>
+            <th>의료비</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="dt">2024.09.23</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td>산부인과</td>
-            <td><span class="typechip">외래</span></td>
-            <td>1일</td>
-            <td class="num">23,980원</td>
-            <td class="num">20,800원</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.23</td>
-            <td class="nm">계명지하철약국</td>
-            <td>일반의</td>
-            <td><span class="typechip">외래</span></td>
-            <td>1일</td>
-            <td class="num">28,640원</td>
-            <td class="num">8,500원</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td>산부인과</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>3일</td>
-            <td class="num">4,656,480원</td>
-            <td class="num">837,280원</td>
-          </tr>
+          <tr><td>2025.04.20</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">18,500원</td></tr>
+          <tr><td>2025.04.20</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">9,200원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">17,800원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">8,500원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">19,200원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">8,800원</td></tr>
+          <tr><td>2024.07.10</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">18,500원</td></tr>
+          <tr><td>2024.07.10</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">8,500원</td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="card-pad">
-      <h2>처방 내역 <span class="pc-count">총 <b>33건</b> · 외래 처방 2 · 입원 처방 31</span></h2>
-      <table class="cd-table">
+    <div class="card-pad cd-pane" data-pane="diabetes" hidden>
+      <h2>당뇨병 진료 이력 <span class="hint">· 총 6건 · 의료비 106,100원 · 최초진단 2023.11.20</span></h2>
+      <table>
         <thead>
           <tr>
-            <th>진료일자</th>
+            <th>진료시작일</th>
             <th>병·의원/약국</th>
-            <th>구분</th>
-            <th>약품명</th>
-            <th>성분명</th>
-            <th>1회 투약량</th>
-            <th>1회 투여횟수</th>
-            <th>총 투약일수</th>
+            <th>질병(진단과)</th>
+            <th>진단코드</th>
+            <th>입원/외래</th>
+            <th>내원일수</th>
+            <th>의료비</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="dt">2024.09.23</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip">외래</span></td>
-            <td>비스비캡슐(포도엽엑스)_(0.18g/1캡슐)</td>
-            <td>vitis vinifera leaf ext.</td>
-            <td class="num">2</td><td class="num">1</td><td class="num">30</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.23</td>
-            <td class="nm">계명지하철약국</td>
-            <td><span class="typechip pres">처방조제</span></td>
-            <td>비스비캡슐(포도엽엑스)_(0.18g/1캡슐)</td>
-            <td>vitis vinifera leaf ext.</td>
-            <td class="num">2</td><td class="num">1</td><td class="num">30</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>메섹신정(메틸올세팔렉신리시네이트)_(0.5g/1정)</td>
-            <td>methylol cephalexin lysinate</td>
-            <td class="num">2</td><td class="num">3</td><td class="num">5</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>록스펜정(록소프로펜나트륨)_(60mg/1정)</td>
-            <td>loxoprofen sodium hydrate</td>
-            <td class="num">1</td><td class="num">3</td><td class="num">5</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>위드캡슐(테프레논)_(50mg/1캡슐)</td>
-            <td>teprenone</td>
-            <td class="num">1</td><td class="num">3</td><td class="num">5</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>모티리톤정_(30mg/1정)</td>
-            <td>corydalis tuber·pharbitis seed ext.</td>
-            <td class="num">1</td><td class="num">3</td><td class="num">5</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>일동후루마린주사0.5그램(플로목세프나트륨)_(0.5g/1병)</td>
-            <td>flomoxef sodium</td>
-            <td class="num">2</td><td class="num">2</td><td class="num">1</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>가스터주사액20밀리그램(파모티딘)_(20mg/1병)</td>
-            <td>famotidine</td>
-            <td class="num">1</td><td class="num">2</td><td class="num">1</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>케랄주(덱스케토프로펜트로메타몰)_(73.8mg/2mL)</td>
-            <td>dexketoprofen trometamol</td>
-            <td class="num">1</td><td class="num">1</td><td class="num">1</td>
-          </tr>
-          <tr>
-            <td class="dt">2024.09.05</td>
-            <td class="nm">계명대학교동산병원</td>
-            <td><span class="typechip in">입원</span></td>
-            <td>나제아주사액0.3밀리그램(라모세트론염산염)_(0.3mg/2mL)</td>
-            <td>ramosetron hydrochloride</td>
-            <td class="num">1</td><td class="num">1</td><td class="num">1</td>
-          </tr>
+          <tr><td>2025.04.20</td><td class="num">다나연합내과의원</td><td>인슐린-비의존 당뇨병(내과)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">24,300원</td></tr>
+          <tr><td>2025.04.20</td><td class="num">행복약국</td><td>인슐린-비의존 당뇨병(일반의)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">11,200원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">다나연합내과의원</td><td>인슐린-비의존 당뇨병(내과)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">22,500원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">행복약국</td><td>인슐린-비의존 당뇨병(일반의)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">10,800원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">다나연합내과의원</td><td>인슐린-비의존 당뇨병(내과)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">25,800원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">행복약국</td><td>인슐린-비의존 당뇨병(일반의)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="num">11,500원</td></tr>
         </tbody>
       </table>
-      <div class="pager">
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevrons-left"/></svg></button>
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg></button>
-        <span class="pp">1 / 4</span>
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></button>
-        <button><svg class="ic-svg" width="16" height="16"><use href="#i-chevrons-right"/></svg></button>
-      </div>
     </div>
 
   </main>
@@ -250,6 +135,29 @@
   </div>
 </footer>
 </div>
+
+<script>
+  (function(){
+    const tabs = document.querySelectorAll('.cd-tab');
+    const panes = document.querySelectorAll('.cd-pane');
+
+    function setActive(name){
+      tabs.forEach(t => {
+        const on = t.dataset.tab === name;
+        t.classList.toggle('on', on);
+        t.setAttribute('aria-selected', String(on));
+      });
+      panes.forEach(p => { p.hidden = p.dataset.pane !== name; });
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => setActive(t.dataset.tab)));
+
+    // URL 파라미터 ?tab=hypertension|diabetes 로 초기 탭 지정
+    const params = new URLSearchParams(location.search);
+    const initial = params.get('tab');
+    if (initial && document.querySelector(`.cd-tab[data-tab="${initial}"]`)) setActive(initial);
+  })();
+</script>
 
 </body>
 </html>

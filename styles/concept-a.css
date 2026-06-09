@@ -109,13 +109,16 @@
 .cA .rep-asof { font-size: var(--fs-label); color: var(--ink-3); text-align: right; }
 
 .cA .card-pad { padding: 28px; border: 1px solid var(--line); border-radius: var(--r-lg); margin-top: 20px; }
-.cA .card-pad > h2 { font-size: var(--fs-sub); font-weight: 700; margin-bottom: 18px; }
+.cA .card-pad h2 { font-size: var(--fs-h2); font-weight: 700; margin: 0 0 18px; }
 
 /* 조회기간 */
-.cA .period { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.cA .dateinput { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 11px 14px; font-size: var(--fs-body); color: var(--ink); }
-.cA .dash { color: var(--ink-3); }
-.cA .preset { font-size: var(--fs-body); font-weight: 600; padding: 10px 16px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
+.cA .period { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.cA .dateinput { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 11px 18px; font-size: var(--fs-body); color: var(--ink); min-width: 180px; cursor: pointer; background: #fff; transition: border-color .2s ease; }
+.cA .dateinput:hover { border-color: var(--ink-3); }
+.cA .dateinput input[type="date"] { border: none; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); color: var(--ink); padding: 0; cursor: pointer; flex: 1; min-width: 0; }
+.cA .dateinput input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+.cA .dash { color: var(--ink-3); line-height: 46px; padding: 0 2px; }
+.cA .preset { font-size: var(--fs-body); font-weight: 600; padding: 10px 16px; border-radius: var(--r-sm); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
 .cA .preset.on { background: var(--ink); color: #fff; border-color: var(--ink); }
 .cA .search-btn { margin-left: auto; background: var(--brand); color: #fff; border: none; font-size: var(--fs-body); font-weight: 700; padding: 11px 28px; border-radius: var(--r-pill); cursor: pointer; box-shadow: var(--sh-brand); }
 .cA .search-btn:hover { background: var(--brand-hover); }
@@ -149,16 +152,19 @@
 .cA .cost-stat .l { font-size: var(--fs-label); color: var(--ink-3); }
 .cA .cost-stat .v { font-size: var(--fs-h1); font-weight: 800; }
 .cA .cost-stat .v.brand { color: var(--brand-deep); }
-.cA .chart { position: relative; height: 200px; display: flex; align-items: flex-end; gap: 28px; padding-left: 8px; border-bottom: 1.5px solid var(--line); }
-.cA .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+.cA .chart { position: relative; height: 200px; display: flex; align-items: flex-end; gap: 22px; padding-left: 8px; padding-right: 44px; border-bottom: 1.5px solid var(--line); }
+.cA .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
 .cA .bar { width: 100%; max-width: 56px; border-radius: 8px 8px 0 0; background: var(--line-strong); transition: height .6s cubic-bezier(.2,.8,.2,1); position: relative; }
 .cA .bar.hi { background: var(--brand); }
 .cA .bar .val { position: absolute; top: -24px; left: 0; right: 0; text-align: center; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); opacity: 0; transition: opacity .2s; }
 .cA .bar-col:hover .bar { filter: brightness(.95); }
 .cA .bar-col:hover .val { opacity: 1; }
-.cA .bar-col .yr { font-size: var(--fs-label); color: var(--ink-3); }
-.cA .avgline { position: absolute; left: 8px; right: 0; border-top: 1.5px dashed var(--c-surg); }
-.cA .avgline span { position: absolute; right: 0; top: -22px; font-size: var(--fs-option); color: var(--c-surg); font-weight: 700; }
+
+/* 연도 라벨 — 차트 baseline 아래 별도 행 */
+.cA .chart-years { display: flex; gap: 22px; padding: 10px 44px 0 8px; }
+.cA .chart-years > span { flex: 1; text-align: center; font-size: var(--fs-option); color: var(--ink-3); }
+.cA .avgline { position: absolute; left: 8px; right: 44px; border-top: 1.5px dashed var(--c-surg); }
+.cA .avgline span { position: absolute; left: 100%; top: 0; transform: translateY(-50%); margin-left: 6px; font-size: var(--fs-option); color: var(--c-surg); font-weight: 700; white-space: nowrap; background: #fff; padding: 0 4px; }
 
 /* 주요질환 */
 .cA .dis { padding: 22px 24px; background: var(--bg-soft); border-radius: var(--r-md); margin-bottom: 12px; }

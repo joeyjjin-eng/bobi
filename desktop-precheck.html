@@ -28,6 +28,7 @@
   <symbol id="i-chevrons-left" viewBox="0 0 24 24"><path d="m17 6-6 6 6 6"/><path d="m11 6-6 6 6 6"/></symbol>
   <symbol id="i-chevrons-right" viewBox="0 0 24 24"><path d="m7 6 6 6-6 6"/><path d="m13 6 6 6-6 6"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
 </svg>
 
 <div class="layout">
@@ -68,14 +69,25 @@
     <div class="card-pad">
       <h2>조회기간 <span class="hint">· 기준일로부터 과거 진단 이력을 조회합니다</span></h2>
       <div class="period">
-        <span class="dlabel">시작일</span>
-        <span class="dateinput"><svg class="ic-svg" width="18" height="18"><use href="#i-calendar"/></svg> 2025.06.08</span>
+        <div class="date-field">
+          <label class="dlabel" for="pc-start">시작일</label>
+          <div class="dateinput" onclick="this.querySelector('input').showPicker&&this.querySelector('input').showPicker()">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-calendar"/></svg>
+            <input type="date" id="pc-start" value="2025-06-08" />
+          </div>
+        </div>
         <span class="dash">—</span>
-        <span class="dlabel">기준일</span>
-        <span class="dateinput"><svg class="ic-svg" width="18" height="18"><use href="#i-calendar"/></svg> 2026.06.08</span>
-        <button class="preset" data-preset>3개월</button>
-        <button class="preset on" data-preset>1년</button>
-        <button class="preset" data-preset>2년</button>
+        <div class="date-field">
+          <label class="dlabel" for="pc-ref">기준일</label>
+          <div class="dateinput" onclick="this.querySelector('input').showPicker&&this.querySelector('input').showPicker()">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-calendar"/></svg>
+            <input type="date" id="pc-ref" value="2026-06-08" />
+          </div>
+        </div>
+        <button class="preset" data-preset data-months="3">3개월</button>
+        <button class="preset on" data-preset data-years="1">1년</button>
+        <button class="preset" data-preset data-years="2">2년</button>
+        <button class="reset-btn" id="pc-reset" title="초기화"><svg class="ic-svg" width="18" height="18"><use href="#i-rotate-ccw"/></svg></button>
         <button class="search-btn">조회</button>
       </div>
     </div>
@@ -133,12 +145,42 @@
 </div>
 
 <script>
-  document.querySelectorAll('[data-preset]').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('[data-preset]').forEach(function(b){ b.classList.remove('on'); });
-      btn.classList.add('on');
+  (function(){
+    const pad = n => String(n).padStart(2, '0');
+    const fmtISO = d => d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+    const startEl = document.getElementById('pc-start');
+    const refEl = document.getElementById('pc-ref');
+
+    function recalc(){
+      if (!refEl.value) return;
+      const ref = new Date(refEl.value + 'T00:00:00');
+      const active = document.querySelector('[data-preset].on');
+      if (!active) return;
+      const start = new Date(ref);
+      if (active.dataset.months) start.setMonth(start.getMonth() - parseInt(active.dataset.months));
+      else if (active.dataset.years) start.setFullYear(start.getFullYear() - parseInt(active.dataset.years));
+      startEl.value = fmtISO(start);
+    }
+
+    document.querySelectorAll('[data-preset]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        recalc();
+      });
     });
-  });
+
+    refEl.addEventListener('change', recalc);
+
+    document.getElementById('pc-reset').addEventListener('click', () => {
+      refEl.value = '2026-06-08';
+      document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('on'));
+      document.querySelector('[data-years="1"]').classList.add('on');
+      recalc();
+    });
+
+    recalc();
+  })();
 </script>
 
 </body>
