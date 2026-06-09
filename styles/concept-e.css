@@ -156,9 +156,27 @@
 .cE .dname-link { color: var(--ink); text-decoration: none; border-bottom: 1px dashed var(--ink-3); transition: color .2s ease, border-bottom-color .2s ease; }
 .cE .dname-link:hover { color: var(--brand-deep); border-bottom-color: var(--brand); }
 
+/* 주요정보 상세 — 필터 카드 (기간 + 검색) */
+.cE .tr-filter-h { font-size: var(--fs-h2); margin: 0 0 16px; }
+.cE .tr-filter-row { display: grid; grid-template-columns: auto auto auto 1fr auto; align-items: end; gap: 10px; }
+.cE .tr-filter-row .dash { line-height: 46px; color: var(--ink-3); padding: 0 2px; }
+.cE .search-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.cE .searchinput { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 11px 16px; background: #fff; transition: border-color .2s ease; }
+.cE .searchinput:hover { border-color: var(--ink-3); }
+.cE .searchinput:focus-within { border-color: var(--brand); }
+.cE .searchinput input { border: none; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); color: var(--ink); padding: 0; flex: 1; min-width: 0; }
+.cE .searchinput input::placeholder { color: var(--ink-4); }
+.cE .search-clear { background: none; border: none; padding: 4px; margin: -4px; display: grid; place-items: center; cursor: pointer; color: var(--ink-4); border-radius: 50%; }
+.cE .search-clear:hover { background: var(--bg-soft); color: var(--ink-2); }
+.cE .tr-filter-actions { display: flex; align-items: end; gap: 8px; }
+.cE .tr-filter-actions .reset-btn { margin-left: 0; }
+.cE .tr-filter-meta { margin-top: 14px; font-size: var(--fs-option); color: var(--ink-3); padding: 8px 14px; background: var(--bg-soft); border-radius: var(--r-sm); display: inline-block; }
+
 /* 주요질환 상세 — 탭 */
 .cE .cd-tabs { display: flex; gap: 0; margin-top: 28px; border-bottom: 1px solid var(--line); }
-.cE .cd-tab { display: inline-flex; align-items: center; gap: 8px; background: none; border: none; padding: 14px 28px; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--ink-3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s ease, border-bottom-color .2s ease; }
+.cE .cd-tab { display: inline-flex; align-items: center; gap: 10px; background: none; border: none; padding: 10px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--ink-3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s ease, border-bottom-color .2s ease; }
+.cE .cd-tab-ic { width: 28px; height: 28px; display: block; opacity: .55; transition: opacity .2s ease; }
+.cE .cd-tab.on .cd-tab-ic { opacity: 1; }
 .cE .cd-tab:hover { color: var(--ink); }
 .cE .cd-tab.on { color: var(--brand-deep); border-bottom-color: var(--brand); font-weight: 800; }
 .cE .cd-tab-code { font-size: var(--fs-option); color: var(--ink-4); font-weight: 600; }

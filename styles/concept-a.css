@@ -102,6 +102,7 @@
 .cA .rep-head { display: flex; align-items: center; justify-content: space-between; padding: 28px; border: 1px solid var(--line); border-radius: var(--r-lg); margin-top: 40px; }
 .cA .rep-id { display: flex; align-items: center; gap: 18px; }
 .cA .rep-id img { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-soft); object-fit: cover; object-position: top; }
+.cA .rep-id .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 28px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
 .cA .rep-id h1 { font-size: var(--fs-title); font-weight: 800; }
 .cA .rep-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 8px; }
 .cA .rep-meta span { font-size: var(--fs-label); color: var(--ink-2); }
@@ -126,16 +127,18 @@
 
 /* 주요정보 카드 */
 .cA .sum-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
-.cA .sumc { border-radius: var(--r-md); padding: 20px; color: #fff; position: relative; overflow: hidden; }
+.cA .sumc { border-radius: var(--r-md); padding: 20px 26px 30px 26px; color: #fff; position: relative; overflow: hidden; display: block; text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
+a.sumc:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,.14); }
 .cA .sumc.out { background: linear-gradient(140deg,#FF96A0,#FF6675); }
 .cA .sumc.in  { background: linear-gradient(140deg,#43D6BE,#1FA48F); }
 .cA .sumc.surg{ background: linear-gradient(140deg,#AC85F7,#7E4FE6); }
 .cA .sumc.med { background: linear-gradient(140deg,#6FD0FF,#2B9FF0); }
 .cA .sumc .top { display: flex; align-items: center; justify-content: space-between; }
-.cA .sumc .top .l { font-size: var(--fs-sub); font-weight: 800; }
+.cA .sumc .top .l { font-size: var(--fs-h2); font-weight: 400; }
 .cA .sumc .top .ic { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,.22); display: grid; place-items: center; }
+.cA .sumc-ic { width: 56px; height: 56px; display: block; padding: 5px; box-sizing: border-box; background: rgba(255,255,255,.17); border-radius: 50%; filter: drop-shadow(0 1px 2px rgba(0,0,0,.08)); }
 .cA .sumc .days { font-size: var(--fs-h1); font-weight: 800; margin-top: 24px; }
-.cA .sumc .cst { font-size: var(--fs-label); opacity: .9; margin-top: 2px; }
+.cA .sumc .cst { font-size: var(--fs-label); opacity: .9; margin-top: 4px; }
 .cA .sumc.zero { background: var(--bg-soft); color: var(--ink-4); }
 .cA .sumc.zero .top .ic { background: #fff; color: var(--ink-4); }
 .cA .sumc.zero .top .l { color: var(--ink-2); }
@@ -180,9 +183,11 @@
 
 /* 테이블 */
 .cA table { width: 100%; border-collapse: collapse; }
-.cA thead th { font-size: var(--fs-label); font-weight: 700; color: var(--ink-2); text-align: left; padding: 12px 14px; border-bottom: 2px solid var(--ink); }
+.cA thead th { font-size: var(--fs-label); font-weight: 700; color: var(--ink-2); text-align: left; padding: 14px 16px; border-bottom: 2px solid var(--ink); background: var(--bg-soft); }
 .cA tbody td { font-size: var(--fs-body); padding: 14px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
 .cA tbody td.num { color: var(--ink); font-weight: 600; }
+/* 금액 셀 — 모든 테이블에서 우측정렬 */
+.bobi td.amt, .bobi th.amt { color: var(--ink); font-weight: 600; white-space: nowrap; text-align: right; }
 .cA tbody tr:hover { background: var(--brand-pale); }
 .cA .pager { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 22px; }
 .cA .pager button { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); cursor: pointer; display: grid; place-items: center; }
