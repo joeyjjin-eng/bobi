@@ -4,65 +4,37 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BoBi · 재검사 소견 상세</title>
-<link rel="stylesheet" href="styles/tokens.css" />
-<link rel="stylesheet" href="styles/concept-a.css" />
-<link rel="stylesheet" href="styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
 </style>
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></symbol>
-  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5"/><path d="M16 5.2a3 3 0 0 1 0 5.6"/><path d="M21 20c0-2.6-1.5-4.5-3.5-5.2"/></symbol>
-  <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 13h7M8.5 16.5h7M8.5 9.5h2"/></symbol>
-  <symbol id="i-search-check" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="m8.5 11 2 2 3.5-3.7"/></symbol>
-  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z"/><path d="M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></symbol>
-  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
-  <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 16 4-4-4-4M20 12H9"/></symbol>
-  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 4 5-4"/><path d="M5 20h14"/></symbol>
-  <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
-  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
-  <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
-  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></symbol>
-</svg>
+<div id="icons-host"></div>
 
 <div class="layout">
 <div class="cA cE bobi">
-  <aside class="eside">
-    <div class="brand"><img src="assets/bobi-logo.png" alt="BoBi" /></div>
-    <div class="eprofile">
-      <div class="pa">
-        <div class="eav">홍</div>
-        <div>
-          <div class="nm">홍길동님</div>
-          <div class="rl">메가미래라이프 · FC</div>
-        </div>
-      </div>
-      <button class="mybtn">마이페이지</button>
-    </div>
-    <nav class="enav">
-      <a href="desktop.html"><svg class="ic-svg" width="19" height="19"><use href="#i-home"/></svg>홈</a>
-      <a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-users"/></svg>내고객</a>
-      <a class="on" href="desktop-report.html"><svg class="ic-svg" width="19" height="19"><use href="#i-file-text"/></svg>진료기록 리포트</a>
-      <a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-search-check"/></svg>미청구보험금</a>
-      <a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-sparkles"/></svg>스마트보비<span class="badge"></span></a>
-      <a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-bell"/></svg>공지사항</a>
-    </nav>
-    <div class="logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>
-  </aside>
+  <div id="gnb-host"></div>
 
   <main class="emain">
     <div class="etop">
       <div>
-        <a class="back-btn" href="desktop-report.html"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 진료기록 리포트로 돌아가기</a>
+        <a class="back-btn" href="main.html"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 진료기록 리포트로 돌아가기</a>
         <h1>재검사 소견 상세</h1>
         <div class="sub">재검사가 의심되는 검사·영상 진료 이력입니다</div>
       </div>
-      <button class="smart-cta"><svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg> 저장</button>
     </div>
 
     <div class="card-pad tr-filter">
@@ -191,17 +163,7 @@
 
   </main>
 </div>
-<footer class="ft">
-  <div class="ft-links">
-    <button class="ft-link">이용약관</button>
-    <span class="ft-sep">|</span>
-    <button class="ft-link bold">개인정보처리방침</button>
-  </div>
-  <div class="ft-info">
-    <p>주식회사 천호인터내셔널<span class="ft-sep-dot">·</span>대표 이승엽<span class="ft-sep-dot">·</span>사업자등록번호 342-81-00261</p>
-    <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
-  </div>
-</footer>
+<div id="footer-host"></div>
 </div>
 
 <script>
@@ -283,17 +245,15 @@
 
     function updateClearVisibility(){ clearBtn.hidden = (searchEl.value || '') === ''; }
 
+    // 조회 버튼 / Enter / 초기화 클릭 시에만 반영 (입력·날짜 변경 자동 반영 안 함)
     searchBtn.addEventListener('click', applyFilter);
-    searchEl.addEventListener('input', () => { updateClearVisibility(); applyFilter(); });
-    startEl.addEventListener('change', applyFilter);
-    refEl.addEventListener('change', applyFilter);
+    searchEl.addEventListener('input', updateClearVisibility);
     searchEl.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilter(); });
 
     clearBtn.addEventListener('click', () => {
       searchEl.value = '';
       searchEl.focus();
       updateClearVisibility();
-      applyFilter();
     });
 
     resetBtn.addEventListener('click', () => {
@@ -304,7 +264,7 @@
       applyFilter();
     });
 
-    applyFilter();
+    applyFilter();  // 초기 1회만
   })();
 
   // 정렬 칩
@@ -345,5 +305,7 @@
   })();
 </script>
 
+<script src="../../components/layout.js"></script>
+<script>injectShell('report');</script>
 </body>
 </html>

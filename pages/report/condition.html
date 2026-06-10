@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 난소의 자궁내막증 상세</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+    <div class="etop">
+      <div>
+        <a class="back-btn" href="main.html"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 진료기록 리포트로 돌아가기</a>
+        <h1>10대 주요질환 상세<span class="info-popover">
+          <button class="info-trigger" type="button" aria-expanded="false">
+            <svg class="ic-svg" width="15" height="15"><use href="#i-help-circle"/></svg>
+            전체 주요질환
+          </button>
+          <div class="info-content" hidden>
+            <div class="info-head">
+              <h3>10대 주요질환</h3>
+              <button class="info-close" type="button">
+                <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg> 닫기
+              </button>
+            </div>
+            <div class="info-body">
+              <p class="disease-desc">보험 가입·심사 시 참고하는 10가지 주요질환입니다.</p>
+              <table class="disease-list">
+                <tr><td class="rk">1</td><td>암</td></tr>
+                <tr><td class="rk">2</td><td>백혈병</td></tr>
+                <tr><td class="rk">3</td><td>고혈압</td></tr>
+                <tr><td class="rk">4</td><td>협심증</td></tr>
+                <tr><td class="rk">5</td><td>심근경색</td></tr>
+                <tr><td class="rk">6</td><td>심장판막증</td></tr>
+                <tr><td class="rk">7</td><td>간경화증</td></tr>
+                <tr><td class="rk">8</td><td>뇌졸중증(뇌출혈, 뇌경색)</td></tr>
+                <tr><td class="rk">9</td><td>당뇨병</td></tr>
+                <tr><td class="rk">10</td><td>에이즈(AIDS) 및 HIV 보균</td></tr>
+              </table>
+            </div>
+          </div>
+        </span></h1>
+        <div class="sub">보험 상담 시 참고할 수 있는 주요질환별 진료 이력입니다</div>
+      </div>
+      <button class="smart-cta" type="button" id="save-condition"><svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg> 저장</button>
+    </div>
+
+    <div class="cd-tabs" role="tablist">
+      <button class="cd-tab on" type="button" data-tab="hypertension" role="tab" aria-selected="true">고혈압 <span class="cd-tab-code">I10</span></button>
+      <button class="cd-tab" type="button" data-tab="diabetes" role="tab" aria-selected="false">당뇨병 <span class="cd-tab-code">E11</span></button>
+    </div>
+
+    <div class="card-pad cd-pane" data-pane="hypertension">
+      <h2>고혈압 진료 이력 <span class="hint">· 총 8건 · 의료비 109,000원 · 최초진단 2023.05.12</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>진료시작일</th>
+            <th>병·의원/약국</th>
+            <th>질병(진단과)</th>
+            <th>진단코드</th>
+            <th>입원/외래</th>
+            <th>내원일수</th>
+            <th class="amt">의료비</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2025.04.20</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">18,500원</td></tr>
+          <tr><td>2025.04.20</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">9,200원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">17,800원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">8,500원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">19,200원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">8,800원</td></tr>
+          <tr><td>2024.07.10</td><td class="num">다나연합내과의원</td><td>본태성 고혈압(내과)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">18,500원</td></tr>
+          <tr><td>2024.07.10</td><td class="num">행복약국</td><td>본태성 고혈압(일반의)</td><td>I10</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">8,500원</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-pad cd-pane" data-pane="diabetes" hidden>
+      <h2>당뇨병 진료 이력 <span class="hint">· 총 6건 · 의료비 106,100원 · 최초진단 2023.11.20</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>진료시작일</th>
+            <th>병·의원/약국</th>
+            <th>질병(진단과)</th>
+            <th>진단코드</th>
+            <th>입원/외래</th>
+            <th>내원일수</th>
+            <th class="amt">의료비</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2025.04.20</td><td class="num">다나연합내과의원</td><td>인슐린-비의존 당뇨병(내과)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">24,300원</td></tr>
+          <tr><td>2025.04.20</td><td class="num">행복약국</td><td>인슐린-비의존 당뇨병(일반의)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">11,200원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">다나연합내과의원</td><td>인슐린-비의존 당뇨병(내과)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">22,500원</td></tr>
+          <tr><td>2025.01.18</td><td class="num">행복약국</td><td>인슐린-비의존 당뇨병(일반의)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">10,800원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">다나연합내과의원</td><td>인슐린-비의존 당뇨병(내과)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">25,800원</td></tr>
+          <tr><td>2024.10.15</td><td class="num">행복약국</td><td>인슐린-비의존 당뇨병(일반의)</td><td>E11</td><td><span class="typechip">외래</span></td><td>1</td><td class="amt">11,500원</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script>
+  (function(){
+    const tabs = document.querySelectorAll('.cd-tab');
+    const panes = document.querySelectorAll('.cd-pane');
+
+    function setActive(name){
+      tabs.forEach(t => {
+        const on = t.dataset.tab === name;
+        t.classList.toggle('on', on);
+        t.setAttribute('aria-selected', String(on));
+      });
+      panes.forEach(p => { p.hidden = p.dataset.pane !== name; });
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => setActive(t.dataset.tab)));
+
+    // URL 파라미터 ?tab=hypertension|diabetes 로 초기 탭 지정
+    const params = new URLSearchParams(location.search);
+    const initial = params.get('tab');
+    if (initial && document.querySelector(`.cd-tab[data-tab="${initial}"]`)) setActive(initial);
+  })();
+
+  // 10대 주요질환 안내 팝오버
+  (function(){
+    document.querySelectorAll('.info-popover').forEach(p => {
+      const trigger = p.querySelector('.info-trigger');
+      const content = p.querySelector('.info-content');
+      const close = p.querySelector('.info-close');
+      trigger.addEventListener('click', e => {
+        e.stopPropagation();
+        const open = content.hidden;
+        content.hidden = !open;
+        trigger.setAttribute('aria-expanded', String(open));
+      });
+      close.addEventListener('click', e => {
+        e.stopPropagation();
+        content.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', e => {
+      document.querySelectorAll('.info-popover').forEach(p => {
+        if (!p.contains(e.target)) {
+          p.querySelector('.info-content').hidden = true;
+          p.querySelector('.info-trigger').setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  })();
+
+  // [저장] 버튼 — 질환별 탭을 각각 시트로 가지는 단일 .xlsx 파일로 다운로드
+  (function(){
+    const btn = document.getElementById('save-condition');
+    if (!btn) return;
+
+    // Excel 시트명 제약: 최대 31자, : \ / ? * [ ] 사용 불가
+    const sanitizeSheetName = (s, fallback) => {
+      let n = (s || fallback || '시트').replace(/[:\\/?*\[\]]/g, ' ').trim();
+      if (n.length > 31) n = n.slice(0, 31);
+      return n || fallback;
+    };
+
+    function todayStr(){
+      const d = new Date(), p = n => String(n).padStart(2,'0');
+      return d.getFullYear() + p(d.getMonth()+1) + p(d.getDate());
+    }
+    function paneToAOA(pane){
+      const headers = [...pane.querySelectorAll('thead th')].map(th => th.textContent.replace(/\s+/g,' ').trim());
+      const rows = [...pane.querySelectorAll('tbody tr')]
+        .map(tr => [...tr.children].map(td => td.textContent.replace(/\s+/g,' ').trim()));
+      return [headers, ...rows];
+    }
+    function autoColWidths(aoa){
+      if (!aoa.length) return [];
+      const cols = aoa[0].length;
+      const widths = new Array(cols).fill(8);
+      aoa.forEach(row => row.forEach((cell, i) => {
+        const len = String(cell || '').length;
+        widths[i] = Math.min(40, Math.max(widths[i], len + 2));
+      }));
+      return widths.map(w => ({ wch: w }));
+    }
+    function tabLabel(tab){
+      const code = tab.querySelector('.cd-tab-code');
+      const codeText = code ? code.textContent.trim() : '';
+      const name = tab.textContent.replace(codeText, '').trim();
+      return codeText ? name + ' ' + codeText : name;
+    }
+
+    btn.addEventListener('click', () => {
+      if (typeof XLSX === 'undefined') {
+        alert('엑셀 모듈을 불러오지 못했습니다. 네트워크 상태를 확인 후 다시 시도해 주세요.');
+        return;
+      }
+      const tabs = [...document.querySelectorAll('.cd-tab')];
+      const wb = XLSX.utils.book_new();
+      const usedNames = new Set();
+      let totalRows = 0;
+
+      tabs.forEach(tab => {
+        const paneName = tab.dataset.tab;
+        const pane = document.querySelector(`.cd-pane[data-pane="${paneName}"]`);
+        if (!pane) return;
+        const aoa = paneToAOA(pane);
+        totalRows += Math.max(0, aoa.length - 1);
+
+        let sheetName = sanitizeSheetName(tabLabel(tab), paneName);
+        let unique = sheetName, i = 2;
+        while (usedNames.has(unique)) {
+          const suffix = ' (' + i + ')';
+          unique = sanitizeSheetName(sheetName.slice(0, 31 - suffix.length) + suffix, paneName);
+          i++;
+        }
+        usedNames.add(unique);
+
+        const ws = XLSX.utils.aoa_to_sheet(aoa);
+        ws['!cols'] = autoColWidths(aoa);
+        XLSX.utils.book_append_sheet(wb, ws, unique);
+      });
+
+      if (totalRows === 0) { alert('다운로드할 내역이 없습니다.'); return; }
+      XLSX.writeFile(wb, '주요질환_상세_' + todayStr() + '.xlsx');
+    });
+  })();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('report');</script>
+</body>
+</html>

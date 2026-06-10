@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 고객 상세정보</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 고객 프로필 히어로 ===== */
+  .cE .cust-hero { display: grid; grid-template-columns: 1fr auto; gap: 32px; padding: 32px; border-radius: var(--r-lg); background: linear-gradient(125deg, var(--brand-pale) 0%, #fff 70%); border: 1px solid var(--line); margin-bottom: 20px; }
+  .cE .cust-id { display: flex; align-items: center; gap: 22px; }
+  .cE .cust-id .patient-avatar { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 32px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
+  .cE .cust-id .h-eyebrow { font-size: var(--fs-option); color: var(--brand-deep); font-weight: 700; letter-spacing: 0.02em; }
+  .cE .cust-id h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 4px 0 10px; }
+  .cE .cust-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .cE .cust-meta span { font-size: var(--fs-option); color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
+  .cE .cust-meta b { color: var(--ink); font-weight: 700; }
+  .cE .cust-meta .sx-f { color: #C92238; font-weight: 700; }
+  .cE .cust-meta .sx-m { color: var(--brand-deep); font-weight: 700; }
+  .cE .cust-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; align-self: center; }
+  .cE .cust-actions .new-rep-btn { display: inline-flex; align-items: center; gap: 8px; justify-content: center; font-family: inherit; font-size: var(--fs-body); font-weight: 700; color: #fff; background: var(--brand-grad); border: none; padding: 13px 24px; border-radius: var(--r-pill); cursor: pointer; box-shadow: var(--sh-brand); text-decoration: none; transition: filter .2s ease; white-space: nowrap; }
+  .cE .cust-actions .new-rep-btn:hover { filter: brightness(1.06); }
+  .cE .cust-actions .edit-btn { display: inline-flex; align-items: center; gap: 8px; justify-content: center; font-family: inherit; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); background: #fff; border: 1px solid var(--line-strong); padding: 12px 24px; border-radius: var(--r-pill); cursor: pointer; text-decoration: none; white-space: nowrap; }
+  .cE .cust-actions .edit-btn:hover { background: var(--bg-soft); border-color: var(--ink-3); color: var(--ink); }
+
+  /* ===== 통계 칩 (조회내역과 동일 토큰) ===== */
+  .cE .stat-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .cE .stat-chip { display: flex; align-items: center; gap: 16px; padding: 18px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); text-align: left; }
+  .cE .stat-chip .sc-ic { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; flex: none; }
+  .cE .stat-chip.all .sc-ic { background: var(--brand-soft); color: var(--brand-deep); }
+  .cE .stat-chip.done .sc-ic { background: #E7FAF6; color: #15967F; }
+  .cE .stat-chip.pending .sc-ic { background: #FFF0F1; color: #E0445A; }
+  .cE .stat-chip .sc-body { display: flex; flex-direction: column; min-width: 0; }
+  .cE .stat-chip .sc-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .stat-chip .sc-v { font-size: var(--fs-h1); font-weight: 800; line-height: 1.1; margin-top: 2px; color: var(--ink); letter-spacing: -0.02em; }
+  .cE .stat-chip .sc-v small { font-size: var(--fs-body); font-weight: 700; color: var(--ink-3); margin-left: 3px; }
+
+  /* ===== 본문 2열 그리드 ===== */
+  .cE .cust-grid { display: grid; grid-template-columns: 1fr 1.45fr; gap: 20px; align-items: stretch; }
+  .cE .cust-grid > .col { display: flex; flex-direction: column; gap: 20px; }
+  .cE .cust-grid .card-pad { margin-top: 0; }
+  .cE .cust-grid .card-pad h2 { font-size: var(--fs-h2); font-weight: 800; margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
+  .cE .cust-grid .card-pad h2 svg { color: var(--brand-deep); }
+  .cE .cust-grid .card-pad h2 .h-action { margin-left: auto; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+  .cE .cust-grid .card-pad h2 .h-action:hover { color: var(--brand-deep); }
+
+  /* 기본 정보 — definition list */
+  .cE .info-dl { display: grid; grid-template-columns: 92px 1fr; row-gap: 14px; column-gap: 16px; align-items: baseline; }
+  .cE .info-dl dt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .info-dl dd { margin: 0; font-size: var(--fs-body); color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
+  .cE .info-dl dd small { color: var(--ink-3); font-weight: 500; margin-left: 4px; }
+
+  /* 메모 카드 */
+  .cE .memo-list { display: flex; flex-direction: column; gap: 12px; margin: 0 0 14px; padding: 0; list-style: none; }
+  .cE .memo-item { display: flex; gap: 12px; padding: 14px 16px; background: var(--bg-soft); border-radius: 10px; }
+  .cE .memo-item .m-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); margin-top: 8px; flex: none; }
+  .cE .memo-item .m-body { min-width: 0; flex: 1; }
+  .cE .memo-item .m-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .memo-item .m-meta b { color: var(--ink-2); font-weight: 700; }
+  .cE .memo-item .m-text { font-size: var(--fs-body); color: var(--ink); margin-top: 4px; line-height: 1.5; }
+  .cE .memo-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px; background: #fff; border: 1px dashed var(--line-strong); border-radius: 10px; color: var(--ink-3); font-family: inherit; font-size: var(--fs-body); font-weight: 600; cursor: pointer; transition: border-color .2s ease, color .2s ease, background-color .2s ease; }
+  .cE .memo-add:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); border-style: solid; }
+
+  /* 리포트 발급 이력 테이블 (concept-e.css cd-table 재활용 변형) */
+  .cE .rep-table { width: 100%; border-collapse: collapse; }
+  .cE .rep-table thead th { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); text-align: left; padding: 12px 12px; border-bottom: 2px solid var(--ink); background: var(--bg-soft); white-space: nowrap; }
+  .cE .rep-table thead th.ctr { text-align: center; }
+  .cE .rep-table thead th.amt { text-align: right; }
+  .cE .rep-table tbody td { font-size: var(--fs-body); padding: 16px 12px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: middle; }
+  .cE .rep-table tbody td.dt { color: var(--ink-3); white-space: nowrap; font-weight: 600; }
+  .cE .rep-table tbody td.ctr { text-align: center; }
+  .cE .rep-table tbody td.amt { color: var(--ink); font-weight: 700; text-align: right; white-space: nowrap; }
+  .cE .rep-table tbody tr:hover { background: var(--bg-warm); }
+  .cE .rep-table .view-link { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); text-decoration: none; padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid var(--brand-soft); background: var(--brand-pale); transition: background-color .2s ease, border-color .2s ease; }
+  .cE .rep-table .view-link:hover { background: var(--brand-soft); border-color: var(--brand); }
+
+  /* 청구 상태 배지 (조회내역 페이지와 동일) */
+  .cE .claim-badge { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 78px; padding: 5px 12px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; }
+  .cE .claim-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+  .cE .claim-badge.done { background: #E7FAF6; color: #15967F; }
+  .cE .claim-badge.done::before { background: #2ABBA7; }
+  .cE .claim-badge.pending { background: #FFF0F1; color: #E0445A; }
+  .cE .claim-badge.pending::before { background: #E0445A; }
+
+  /* 청구 진행 현황 — 미니 타임라인 */
+  .cE .claim-list { display: flex; flex-direction: column; gap: 10px; }
+  .cE .claim-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 14px 16px; background: var(--bg-soft); border-radius: 10px; }
+  .cE .claim-row .c-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; background: #fff; }
+  .cE .claim-row.done .c-ic { color: #15967F; }
+  .cE .claim-row.pending .c-ic { color: #E0445A; }
+  .cE .claim-row .c-t { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .claim-row .c-d { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .claim-row .c-d b { color: var(--ink-2); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <a class="back-btn" href="#">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
+    </a>
+
+    <div class="cust-hero">
+      <div class="cust-id">
+        <div class="patient-avatar" style="background:#FF96A0">김</div>
+        <div>
+          <div class="h-eyebrow">고객 상세정보</div>
+          <h1>김진주님</h1>
+          <div class="cust-meta">
+            <span>성별 <b class="sx-f">여성</b></span>
+            <span>생년월일 <b>1983.02.15</b> <small>(만 43세)</small></span>
+            <span>보험나이 <b>43세</b></span>
+            <span><svg class="ic-svg" width="13" height="13"><use href="#i-phone"/></svg> <b>010-2451-8821</b></span>
+            <span><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> 대구광역시 수성구 범어동</span>
+          </div>
+        </div>
+      </div>
+      <div class="cust-actions">
+        <a class="new-rep-btn" href="../report/new.html">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-edit"/></svg>
+          새 리포트 발급
+        </a>
+        <button class="edit-btn" type="button">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-user"/></svg>
+          정보 수정
+        </button>
+      </div>
+    </div>
+
+    <div class="stat-chips">
+      <div class="stat-chip all">
+        <div class="sc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-layers"/></svg></div>
+        <div class="sc-body">
+          <span class="sc-l">발급한 진료기록 리포트</span>
+          <span class="sc-v">5<small>건</small></span>
+        </div>
+      </div>
+      <div class="stat-chip done">
+        <div class="sc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-check-circle"/></svg></div>
+        <div class="sc-body">
+          <span class="sc-l">미청구보험금 청구 완료</span>
+          <span class="sc-v">3<small>건</small></span>
+        </div>
+      </div>
+      <div class="stat-chip pending">
+        <div class="sc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-clock"/></svg></div>
+        <div class="sc-body">
+          <span class="sc-l">미청구보험금 미완료</span>
+          <span class="sc-v">2<small>건</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cust-grid">
+      <div class="col">
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-user"/></svg>
+            기본 정보
+            <button type="button" class="h-action"><svg class="ic-svg" width="13" height="13"><use href="#i-edit"/></svg> 수정</button>
+          </h2>
+          <dl class="info-dl">
+            <dt>성별</dt><dd>여성</dd>
+            <dt>생년월일</dt><dd>1983.02.15 <small>(만 43세)</small></dd>
+            <dt>보험나이</dt><dd>43세</dd>
+            <dt>연락처</dt><dd>010-2451-8821</dd>
+            <dt>주소</dt><dd>대구광역시 수성구 범어동 123-45</dd>
+            <dt>이메일</dt><dd>jjjj@example.com</dd>
+            <dt>등록일</dt><dd>2024.03.15</dd>
+            <dt>가입보험</dt><dd>메가미래라이프 · 든든종합건강보험</dd>
+          </dl>
+        </div>
+
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-note"/></svg>
+            메모
+          </h2>
+          <ul class="memo-list">
+            <li class="memo-item">
+              <span class="m-dot"></span>
+              <div class="m-body">
+                <div class="m-meta"><b>2026.06.09</b> · 홍길동 FC</div>
+                <div class="m-text">미청구 보험금 청구 안내드림. 최근 무릎 진료 관련 추가 자료 요청 예정.</div>
+              </div>
+            </li>
+            <li class="memo-item">
+              <span class="m-dot"></span>
+              <div class="m-body">
+                <div class="m-meta"><b>2025.11.22</b> · 홍길동 FC</div>
+                <div class="m-text">정기 건강검진 결과 상담. 가족력(고혈압) 확인. 종신보험 리뷰 필요.</div>
+              </div>
+            </li>
+            <li class="memo-item">
+              <span class="m-dot"></span>
+              <div class="m-body">
+                <div class="m-meta"><b>2024.08.03</b> · 홍길동 FC</div>
+                <div class="m-text">자녀 보험 가입 문의. 다음 미팅에서 상품 제안 예정.</div>
+              </div>
+            </li>
+          </ul>
+          <button class="memo-add" type="button">
+            <svg class="ic-svg" width="14" height="14"><use href="#i-plus"/></svg>
+            메모 추가
+          </button>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
+            진료기록 리포트 발급 이력
+          </h2>
+          <table class="rep-table">
+            <thead>
+              <tr>
+                <th>발급일</th>
+                <th>조회기간</th>
+                <th class="amt">최근2년 의료비</th>
+                <th class="ctr">청구상태</th>
+                <th class="ctr">리포트</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="dt">2026.06.09</td>
+                <td>2021.06 ~ 2026.06</td>
+                <td class="amt">810,400원</td>
+                <td class="ctr"><span class="claim-badge done">완료</span></td>
+                <td class="ctr"><a class="view-link" href="../report/main.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
+              </tr>
+              <tr>
+                <td class="dt">2025.11.20</td>
+                <td>2020.11 ~ 2025.11</td>
+                <td class="amt">742,150원</td>
+                <td class="ctr"><span class="claim-badge done">완료</span></td>
+                <td class="ctr"><a class="view-link" href="../report/main.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
+              </tr>
+              <tr>
+                <td class="dt">2025.06.14</td>
+                <td>2020.06 ~ 2025.06</td>
+                <td class="amt">598,300원</td>
+                <td class="ctr"><span class="claim-badge pending">미완료</span></td>
+                <td class="ctr"><a class="view-link" href="../report/main.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
+              </tr>
+              <tr>
+                <td class="dt">2025.02.07</td>
+                <td>2020.02 ~ 2025.02</td>
+                <td class="amt">441,200원</td>
+                <td class="ctr"><span class="claim-badge done">완료</span></td>
+                <td class="ctr"><a class="view-link" href="../report/main.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
+              </tr>
+              <tr>
+                <td class="dt">2024.08.21</td>
+                <td>2019.08 ~ 2024.08</td>
+                <td class="amt">312,800원</td>
+                <td class="ctr"><span class="claim-badge pending">미완료</span></td>
+                <td class="ctr"><a class="view-link" href="../report/main.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-search-check"/></svg>
+            미청구보험금 진행 현황
+          </h2>
+          <div class="claim-list">
+            <div class="claim-row done">
+              <div class="c-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-check-circle"/></svg></div>
+              <div>
+                <div class="c-t">2025.11 정형외과 통원 · 청구 완료</div>
+                <div class="c-d">청구일 <b>2025.12.04</b> · 수령 <b>184,500원</b></div>
+              </div>
+              <span class="claim-badge done">완료</span>
+            </div>
+            <div class="claim-row done">
+              <div class="c-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-check-circle"/></svg></div>
+              <div>
+                <div class="c-t">2025.06 내과 입원 · 청구 완료</div>
+                <div class="c-d">청구일 <b>2025.07.12</b> · 수령 <b>552,000원</b></div>
+              </div>
+              <span class="claim-badge done">완료</span>
+            </div>
+            <div class="claim-row pending">
+              <div class="c-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-clock"/></svg></div>
+              <div>
+                <div class="c-t">2024.08 이비인후과 통원 · 청구 대기</div>
+                <div class="c-d">예상 수령 <b>78,200원</b> · 자료 요청 중</div>
+              </div>
+              <span class="claim-badge pending">미완료</span>
+            </div>
+            <div class="claim-row pending">
+              <div class="c-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-clock"/></svg></div>
+              <div>
+                <div class="c-t">2024.05 안과 통원 · 청구 대기</div>
+                <div class="c-d">예상 수령 <b>42,100원</b> · 진단서 발급 대기</div>
+              </div>
+              <span class="claim-badge pending">미완료</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('customer');</script>
+</body>
+</html>

@@ -1,0 +1,1228 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 진료기록 리포트</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* 환자 이름 → 고객 상세로 이동 링크 */
+  .cE .rep-id .cust-link { color: inherit; text-decoration: none; border-bottom: 2px dashed var(--ink-4); padding-bottom: 1px; transition: color .2s ease, border-bottom-color .2s ease; }
+  .cE .rep-id .cust-link:hover { color: var(--brand-deep); border-bottom-color: var(--brand); }
+  .cE .rep-id a.patient-avatar { cursor: pointer; transition: transform .15s ease, box-shadow .2s ease; display: grid; place-items: center; text-decoration: none; }
+  .cE .rep-id a.patient-avatar:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(20,120,200,.2); }
+
+  /* 진입 애니메이션 */
+  @keyframes barRise { from { height: 0; } }
+  .cA .bar { animation: barRise .7s cubic-bezier(.2,.8,.2,1) 80ms both; }
+
+  @keyframes radDraw { from { stroke-dashoffset: 188.5; } }
+  .rfill { animation: radDraw .9s cubic-bezier(.2,.8,.2,1) both; }
+
+  @keyframes trackFill { from { width: 0; } }
+  .cA .dis .fill { animation: trackFill .7s ease 120ms both; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+    <div class="etop">
+      <div>
+        <h1>진료기록 리포트</h1>
+        <div class="sub">고객의 진료내역 분석 리포트</div>
+      </div>
+      <div class="menu-popover">
+        <button class="menu-trigger" type="button" id="report-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
+          <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
+        </button>
+        <div class="menu-list" id="report-menu" hidden role="menu">
+          <button class="menu-item danger" type="button" role="menuitem" data-action="delete">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-trash"/></svg>
+            삭제
+          </button>
+          <button class="menu-item" type="button" role="menuitem" data-action="print">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+            리포트 출력하기
+          </button>
+          <button class="menu-item" type="button" role="menuitem" data-action="send">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+            리포트 전송하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rep-head">
+      <div class="rep-id">
+        <a class="patient-avatar" href="../customer/detail.html" data-name="홍길동" aria-label="홍길동님 상세정보 보기"></a>
+        <div>
+          <h1><a class="cust-link" href="../customer/detail.html" title="고객 상세정보 보기">홍길동님</a>의 진료기록 리포트</h1>
+          <div class="rep-meta">
+            <span>성별 <b>여성</b></span>
+            <span>생년월일 <b>1991.07.20</b> (만 34세)</span>
+            <span>보험나이 <b>34세</b></span>
+            <span>연락처 <b>010-1252-3452</b></span>
+            <span>지역 <b>대구</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="rep-asof">조회일자<br /><b style="color:var(--ink);font-size:var(--fs-body)">2025.08.27</b></div>
+    </div>
+
+    <div class="card-pad">
+      <h2>조회기간 <span class="hint">· 최대 5년간 진료기록을 볼 수 있습니다</span></h2>
+      <div class="period">
+        <div class="date-field">
+          <label class="dlabel" for="rp-start">시작일</label>
+          <div class="dateinput" onclick="this.querySelector('input').showPicker&&this.querySelector('input').showPicker()">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-calendar"/></svg>
+            <input type="date" id="rp-start" value="2020-08-27" />
+          </div>
+        </div>
+        <span class="dash">—</span>
+        <div class="date-field">
+          <label class="dlabel" for="rp-ref">기준일</label>
+          <div class="dateinput" onclick="this.querySelector('input').showPicker&&this.querySelector('input').showPicker()">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-calendar"/></svg>
+            <input type="date" id="rp-ref" value="2025-08-27" />
+          </div>
+        </div>
+        <button class="preset" data-preset data-months="3">3개월</button>
+        <button class="preset" data-preset data-years="1">1년</button>
+        <button class="preset" data-preset data-years="3">3년</button>
+        <button class="preset on" data-preset data-years="5">5년</button>
+        <button class="reset-btn" id="rp-reset" title="초기화"><svg class="ic-svg" width="18" height="18"><use href="#i-rotate-ccw"/></svg></button>
+        <button class="search-btn" id="rp-search-btn">조회</button>
+      </div>
+    </div>
+
+    <div class="card-pad print-host">
+      <h2 data-print="summary">주요정보</h2>
+      <div class="sum-grid" data-print="summary">
+        <a class="sumc out" href="treatment.html?tab=outpatient">
+          <div class="top"><span class="l">통원</span><img class="sumc-ic" src="../../assets/icons/icn_medi_01_48.svg" alt="" /></div>
+          <div class="days">39일</div>
+          <div class="cst">1,121,700원</div>
+        </a>
+        <a class="sumc in" href="treatment.html?tab=inpatient">
+          <div class="top"><span class="l">입원</span><img class="sumc-ic" src="../../assets/icons/icn_medi_02_48.svg" alt="" /></div>
+          <div class="days">3일</div>
+          <div class="cst">837,280원</div>
+        </a>
+        <a class="sumc surg" href="treatment.html?tab=surgery">
+          <div class="top"><span class="l">수술</span><img class="sumc-ic" src="../../assets/icons/icn_medi_03_48.svg" alt="" /></div>
+          <div class="days">4건</div>
+          <div class="cst">940,480원</div>
+        </a>
+        <a class="sumc med" href="treatment.html?tab=medication">
+          <div class="top"><span class="l">투약</span><img class="sumc-ic" src="../../assets/icons/icn_medi_04_48.svg" alt="" /></div>
+          <div class="days">25회</div>
+          <div class="cst">138,900원</div>
+        </a>
+      </div>
+      <div class="kw" data-print="reexam">
+        <span class="txt">재검사 소견으로 보이는 키워드가 <b>3가지</b> 발견되었습니다</span>
+        <span class="kwchips">
+          <a class="kwchip" href="reexam.html?keyword=ct">#CT</a>
+          <a class="kwchip" href="reexam.html?keyword=xray">#X-RAY</a>
+          <a class="kwchip" href="reexam.html?keyword=ultrasound">#초음파</a>
+        </span>
+      </div>
+    </div>
+
+    <div class="card-pad precheck" data-print="precheck">
+      <div class="pc-head">
+        <div>
+          <h2>사전 확인 자료</h2>
+          <p class="pc-desc">보험 상담 시 참고할 수 있는 기간별 진단 이력 요약입니다.</p>
+        </div>
+        <div class="pc-actions">
+          <span class="disclosure-popover">
+            <button class="disclosure-btn" type="button" id="open-disclosure" aria-expanded="false">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-copy"/></svg>
+              알릴의무 보기
+            </button>
+            <div class="disclosure-content" id="disclosure-modal" hidden>
+              <div class="disclosure-head">
+                <div>
+                  <h3 id="disclosure-title">고지사항 텍스트 <span class="modal-badge">미리보기</span> <span class="modal-count" id="disclosure-count"></span></h3>
+                  <p class="modal-desc">보험사 <b>알릴의무</b> 사항으로 전달할 수 있는 진단 이력 요약입니다.<br />아래 내용을 확인하신 뒤 <b>[텍스트 복사]</b> 버튼을 눌러 사용해 주세요.</p>
+                </div>
+                <button class="info-close" type="button" id="close-disclosure" aria-label="닫기">
+                  <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg> 닫기
+                </button>
+              </div>
+              <textarea class="modal-text" id="disclosure-text" readonly></textarea>
+              <div class="modal-actions">
+                <button class="modal-btn primary" type="button" id="copy-disclosure">
+                  <svg class="ic-svg" width="16" height="16"><use href="#i-copy"/></svg>
+                  텍스트 복사
+                </button>
+              </div>
+            </div>
+          </span>
+          <a class="pc-cta" href="precheck.html">전체 보기<svg class="ic-svg" width="16" height="16"><use href="#i-arrow-right"/></svg></a>
+        </div>
+      </div>
+      <div class="pc-flags">
+        <div class="pc-flag clear">
+          <div class="pc-flag-ic"><svg class="ic-svg" width="20" height="20"><use href="#i-check"/></svg></div>
+          <div>
+            <div class="pc-flag-l">3개월 내 진단</div>
+            <div class="pc-flag-v">없음</div>
+          </div>
+        </div>
+        <div class="pc-flag">
+          <div class="pc-flag-ic"><svg class="ic-svg" width="20" height="20"><use href="#i-alert"/></svg></div>
+          <div>
+            <div class="pc-flag-l">1년 내 진단</div>
+            <div class="pc-flag-v"><b>난소의 자궁내막증</b></div>
+          </div>
+        </div>
+        <div class="pc-flag">
+          <div class="pc-flag-ic"><svg class="ic-svg" width="20" height="20"><use href="#i-alert"/></svg></div>
+          <div>
+            <div class="pc-flag-l">3년 내 진단</div>
+            <div class="pc-flag-v"><b>기타 알레르기비염</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chartrow" data-print="cost">
+      <div class="card-pad">
+        <h2>의료비 정보</h2>
+        <div class="costnums">
+          <div><div class="l">총 의료비</div><div class="v">1,958,980원</div></div>
+          <div><div class="l">연 평균 의료비</div><div class="v brand">391,800원</div></div>
+        </div>
+        <div class="chart">
+          <div class="avgline" style="bottom:26%"><span>평균</span></div>
+          <div class="bar-col"><div class="bar" style="height:5.1%"><span class="val">7만</span></div></div>
+          <div class="bar-col"><div class="bar" style="height:2%"><span class="val">0원</span></div></div>
+          <div class="bar-col"><div class="bar" style="height:12.4%"><span class="val">19만</span></div></div>
+          <div class="bar-col"><div class="bar hi" style="height:100%"><span class="val">150만</span></div></div>
+          <div class="bar-col"><div class="bar" style="height:12.3%"><span class="val">19만</span></div></div>
+        </div>
+        <div class="chart-years">
+          <span>2021</span>
+          <span>2022</span>
+          <span>2023</span>
+          <span>2024</span>
+          <span>2025</span>
+        </div>
+      </div>
+      <div class="card-pad">
+        <h2>진료 구성 비중</h2>
+        <div class="radials">
+          <div class="radial">
+            <svg width="76" height="76">
+              <circle cx="38" cy="38" r="30" fill="none" stroke="#EAEFF4" stroke-width="7" />
+              <circle class="rfill" cx="38" cy="38" r="30" fill="none" stroke="#42BAFF" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="188.5" stroke-dashoffset="81" transform="rotate(-90 38 38)" style="animation-delay:200ms" />
+              <text x="38" y="42" text-anchor="middle" font-size="15" font-weight="800" fill="#1C50A1">57%</text>
+            </svg>
+            <div class="info"><div class="rv">통원</div><div class="rl">1,121,700원 · 39일</div></div>
+          </div>
+          <div class="radial">
+            <svg width="76" height="76">
+              <circle cx="38" cy="38" r="30" fill="none" stroke="#EAEFF4" stroke-width="7" />
+              <circle class="rfill" cx="38" cy="38" r="30" fill="none" stroke="#42BAFF" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="188.5" stroke-dashoffset="107" transform="rotate(-90 38 38)" style="animation-delay:320ms" />
+              <text x="38" y="42" text-anchor="middle" font-size="15" font-weight="800" fill="#1C50A1">43%</text>
+            </svg>
+            <div class="info"><div class="rv">입원</div><div class="rl">837,280원 · 3일</div></div>
+          </div>
+          <div class="radial">
+            <svg width="76" height="76">
+              <circle cx="38" cy="38" r="30" fill="none" stroke="#EAEFF4" stroke-width="7" />
+              <circle class="rfill" cx="38" cy="38" r="30" fill="none" stroke="#42BAFF" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="188.5" stroke-dashoffset="98" transform="rotate(-90 38 38)" style="animation-delay:440ms" />
+              <text x="38" y="42" text-anchor="middle" font-size="15" font-weight="800" fill="#1C50A1">48%</text>
+            </svg>
+            <div class="info"><div class="rv">수술</div><div class="rl">940,480원 · 4건</div></div>
+          </div>
+          <div class="radial">
+            <svg width="76" height="76">
+              <circle cx="38" cy="38" r="30" fill="none" stroke="#EAEFF4" stroke-width="7" />
+              <circle class="rfill" cx="38" cy="38" r="30" fill="none" stroke="#42BAFF" stroke-width="7" stroke-linecap="round"
+                stroke-dasharray="188.5" stroke-dashoffset="175" transform="rotate(-90 38 38)" style="animation-delay:560ms" />
+              <text x="38" y="42" text-anchor="middle" font-size="15" font-weight="800" fill="#1C50A1">7%</text>
+            </svg>
+            <div class="info"><div class="rv">투약</div><div class="rl">138,900원 · 25회</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-pad" data-print="top10">
+      <h2>10대 주요질환<span class="info-popover">
+        <button class="info-trigger" type="button" aria-expanded="false">
+          <svg class="ic-svg" width="15" height="15"><use href="#i-help-circle"/></svg>
+          전체 주요질환
+        </button>
+        <div class="info-content" hidden>
+          <div class="info-head">
+            <h3>10대 주요질환</h3>
+            <button class="info-close" type="button">
+              <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg> 닫기
+            </button>
+          </div>
+          <div class="info-body">
+            <p class="disease-desc">보험 가입·심사 시 참고하는 10가지 주요질환입니다.</p>
+            <table class="disease-list">
+              <tr><td class="rk">1</td><td>암</td></tr>
+              <tr><td class="rk">2</td><td>백혈병</td></tr>
+              <tr><td class="rk">3</td><td>고혈압</td></tr>
+              <tr><td class="rk">4</td><td>협심증</td></tr>
+              <tr><td class="rk">5</td><td>심근경색</td></tr>
+              <tr><td class="rk">6</td><td>심장판막증</td></tr>
+              <tr><td class="rk">7</td><td>간경화증</td></tr>
+              <tr><td class="rk">8</td><td>뇌졸중증(뇌출혈, 뇌경색)</td></tr>
+              <tr><td class="rk">9</td><td>당뇨병</td></tr>
+              <tr><td class="rk">10</td><td>에이즈(AIDS) 및 HIV 보균</td></tr>
+            </table>
+          </div>
+        </div>
+      </span></h2>
+      <div class="dis">
+        <div class="drow">
+          <span class="rank">1</span>
+          <a class="dname dname-link" href="condition.html?tab=endometriosis">난소의 자궁내막증</a>
+          <span class="dstats">
+            <span class="dstat">외래 <b>1회</b></span>
+            <span class="dstat">입원 <b>3일</b></span>
+            <span class="dstat">의료비 <b>858,080원</b></span>
+          </span>
+        </div>
+        <div class="track"><div class="fill" style="width:92%"></div></div>
+        <div class="dfirst">최초진단 2024.09.05 · 진단코드 AN801</div>
+      </div>
+      <div class="dis">
+        <div class="drow">
+          <span class="rank">2</span>
+          <a class="dname dname-link" href="condition.html?tab=cervical">기타 척추증, 경부</a>
+          <span class="dstats">
+            <span class="dstat">외래 <b>4회</b></span>
+            <span class="dstat">투약 <b>11건</b></span>
+            <span class="dstat">의료비 <b>72,900원</b></span>
+          </span>
+        </div>
+        <div class="track"><div class="fill" style="width:55%"></div></div>
+        <div class="dfirst">최초진단 2025.01.24 · 진단코드 AM4782</div>
+      </div>
+    </div>
+
+    <div class="card-pad print-host">
+      <div class="rec-head">
+        <div class="rec-tabs" role="tablist">
+          <button class="rec-tab on" type="button" role="tab" aria-selected="true" data-rec="all">전체 진료기록</button>
+          <button class="rec-tab" type="button" role="tab" aria-selected="false" data-rec="detail">세부진료기록</button>
+          <button class="rec-tab" type="button" role="tab" aria-selected="false" data-rec="prescription">처방조제정보</button>
+        </div>
+        <a class="more" id="rec-viewall-top" href="records.html?view=all">전체보기 ›</a>
+      </div>
+
+      <!-- 전체 진료기록 -->
+      <div class="rec-pane" data-rec-pane="all" data-print="records-all" data-print-label="전체 진료기록">
+        <table>
+          <thead><tr>
+            <th>진료시작일</th><th>병·의원/약국</th><th>질병(진단과)</th><th class="ctr">진단코드</th><th class="ctr">입원/외래</th><th class="ctr">내원일수</th><th class="amt">의료비</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>2025.05.03</td><td class="num">르봄여성의원</td><td>급성 질염(산부인과)</td><td class="ctr">AN760</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">12,600원</td></tr>
+            <tr><td>2025.04.12</td><td class="num">스마트치과의원 죽전점</td><td>만성 단순치주염(치주과)</td><td class="ctr">AK0530</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">19,200원</td></tr>
+            <tr><td>2025.03.15</td><td class="num">르봄여성의원</td><td>급성 질염(산부인과)</td><td class="ctr">AN760</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">41,000원</td></tr>
+            <tr><td>2025.02.15</td><td class="num">대구탑연합정형외과의원</td><td>기타 척추증, 경부(정형외과)</td><td class="ctr">AM4782</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">6,100원</td></tr>
+            <tr><td>2025.02.08</td><td class="num">대구탑연합정형외과의원</td><td>기타 척추증, 경부(정형외과)</td><td class="ctr">AM4782</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">6,100원</td></tr>
+            <tr><td>2025.01.31</td><td class="num">대구탑연합정형외과의원</td><td>기타 척추증, 경부(정형외과)</td><td class="ctr">AM4782</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">5,800원</td></tr>
+            <tr><td>2025.01.27</td><td class="num">메디필즈의원</td><td>바이러스사마귀(비뇨의학과)</td><td class="ctr">AB07</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">6,900원</td></tr>
+            <tr><td>2025.01.25</td><td class="num">메디필즈의원</td><td>바이러스사마귀(비뇨의학과)</td><td class="ctr">AB07</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">32,700원</td></tr>
+            <tr><td>2025.01.24</td><td class="num">대구탑연합정형외과의원</td><td>기타 척추증, 경부(정형외과)</td><td class="ctr">AM4782</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">54,900원</td></tr>
+          </tbody>
+        </table>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="records.html?view=all">전체보기 ›</a>
+        </div>
+      </div>
+
+      <!-- 세부진료기록 (청구 명세서 로우 데이터) -->
+      <div class="rec-pane" data-rec-pane="detail" data-print="records-detail" data-print-label="세부진료기록" hidden>
+        <div class="raw-scroll">
+          <table class="raw-table">
+            <thead>
+              <tr>
+                <th>진료시작일</th>
+                <th>병·의원·약국</th>
+                <th>진료내역</th>
+                <th class="wrap">코드명</th>
+                <th class="ctr">1회 투약량</th>
+                <th class="ctr">1일 투여횟수</th>
+                <th class="ctr">총 투약일수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>진찰료/초진(양방)</td><td>초진진찰료-의원</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>진찰료/응급 및 회송료 등(양방)</td><td>외래환자 의약품관리료-1일분(의원,치과의원,보건의료원 의·치과)</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>처치 및 수술/처치 및 수술(양방)</td><td>질강처치</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-03</td><td class="num">죽전하나약국</td><td>조제료등</td><td>처방조제-내복약 5일분</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-04-12</td><td class="num">스마트치과의원 죽전점</td><td>처치 및 수술/처치 및 수술(양방)</td><td>치석제거[전악]</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-03-15</td><td class="num">르봄여성의원</td><td>검사료/위탁검사(양방)</td><td>핵산증폭-다종그룹2_성매개 감염균</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-02-15</td><td class="num">대구탑연합정형외과의원</td><td>진찰료/재진(양방)</td><td>재진진찰료-의원</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-02-15</td><td class="num">대구탑연합정형외과의원</td><td>이학요법료/이학요법(양방)</td><td>간섭파전류치료[ICT]</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-25</td><td class="num">메디필즈의원</td><td>처치 및 수술/처치 및 수술(양방)</td><td>사마귀제거술-절제술-기타</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>주사료/피하, 근육내(양방)</td><td>로카인주사2mg/mL(로피바카인염산염일수화물)_(42mg/20mL)</td><td class="ctr">0</td><td class="ctr">0</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>마취료/마취(양방)</td><td>척수신경말초지차단술-견갑신경</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>견관절2매</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2024-11-12</td><td class="num">다나연합내과의원</td><td>진찰료/재진(양방)</td><td>재진진찰료-의원</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2024-11-09</td><td class="num">다나연합내과의원</td><td>특수장비/CT진단(양방)</td><td>일반전산화단층영상진단-흉부-조영제를사용하지않는경우-기타의경우</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2024-10-19</td><td class="num">다나연합내과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>흉부[직접]2매</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="records.html?view=detail">전체보기 ›</a>
+        </div>
+      </div>
+
+      <!-- 처방조제정보 (청구 명세서 로우 데이터) -->
+      <div class="rec-pane" data-rec-pane="prescription" data-print="records-prescription" data-print-label="처방조제정보" hidden>
+        <div class="raw-scroll">
+          <table class="raw-table">
+            <thead>
+              <tr>
+                <th>진료시작일</th>
+                <th>병·의원·약국</th>
+                <th class="wrap">약품명</th>
+                <th>성분명</th>
+                <th class="ctr">1회 투약량</th>
+                <th class="ctr">1일 투여횟수</th>
+                <th class="ctr">총 투약일수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>후라시닐정(메트로니다졸)_(0.25g/1정)</td><td>metronidazole</td><td class="ctr">2</td><td class="ctr">2</td><td class="ctr">5</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>가모시드정5밀리그램(모사프리드시트르산염이수화물)_(5.29mg/1정)</td><td>mosapride citrate hydrate</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">5</td></tr>
+              <tr><td>2025-05-03</td><td class="num">르봄여성의원</td><td>오엔지질연질캡슐_(1캡슐)</td><td>neomycin sulfate (as neomycin)</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-03-15</td><td class="num">르봄여성의원</td><td>록스펜정(록소프로펜나트륨)_(60mg/1정)</td><td>loxoprofen sodium hydrate</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-03-15</td><td class="num">르봄여성의원</td><td>웅코나졸정150밀리그램(플루코나졸)_(0.15g/1정)</td><td>fluconazole</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+              <tr><td>2025-01-25</td><td class="num">메디필즈의원</td><td>메가파모정20밀리그램(파모티딘)_(20mg/1정)</td><td>famotidine</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-25</td><td class="num">메디필즈의원</td><td>동광록소프로펜정(록소프로펜나트륨수화물)_(68.1mg/1정)</td><td>loxoprofen sodium hydrate</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>아페락정(아세클로페낙)_(0.1g/1정)</td><td>aceclofenac</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-24</td><td class="num">대구탑연합정형외과의원</td><td>엑손정(에페리손염산염)_(50mg/1정)</td><td>eperisone hydrochloride</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2025-01-24</td><td class="num">새봄약국</td><td>울트라셋세미정_(1정)</td><td>acetaminophen</td><td class="ctr">1</td><td class="ctr">2</td><td class="ctr">3</td></tr>
+              <tr><td>2024-12-09</td><td class="num">다나연합내과의원</td><td>코푸시럽_(20mL)</td><td>ammonium chloride</td><td class="ctr">1</td><td class="ctr">3</td><td class="ctr">4</td></tr>
+              <tr><td>2024-12-09</td><td class="num">다나연합내과의원</td><td>앱시토정40밀리그램(펙수프라잔염산염)_(40mg/1정)</td><td>fexuprazan hydrochloride</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">4</td></tr>
+              <tr><td>2024-11-30</td><td class="num">다나연합내과의원</td><td>베아티린정(레보세티리진염산염)_(5mg/1정)</td><td>levocetirizine dihydrochloride</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">4</td></tr>
+              <tr><td>2024-11-30</td><td class="num">다나연합내과의원</td><td>펠루비정(펠루비프로펜)_(30mg/1정)</td><td>pelubiprofen</td><td class="ctr">1</td><td class="ctr">3</td><td class="ctr">4</td></tr>
+              <tr><td>2024-11-30</td><td class="num">다나연합내과의원</td><td>심비코트터부헬러160/4.5마이크로그램_(120회)</td><td>budesonide(micronized)</td><td class="ctr">1</td><td class="ctr">1</td><td class="ctr">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="records.html?view=prescription">전체보기 ›</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- 리포트 출력 항목 선택 모달 -->
+<div class="print-modal" id="print-modal" hidden>
+  <div class="print-modal-card" role="dialog" aria-labelledby="print-modal-title">
+    <div class="print-modal-head">
+      <div>
+        <h3 id="print-modal-title">리포트 출력</h3>
+        <p>출력할 항목을 선택해 주세요.</p>
+      </div>
+      <button class="info-close" type="button" id="print-close" aria-label="닫기">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg> 닫기
+      </button>
+    </div>
+    <table class="print-tree">
+      <colgroup>
+        <col class="c-lv1" />
+        <col class="c-lv2" />
+        <col />
+      </colgroup>
+      <tbody>
+        <tr>
+          <th rowspan="8" class="lv1">
+            <label class="tree-chk">
+              <input type="checkbox" id="ck-all" />
+              <span class="tree-box" aria-hidden="true"></span>
+              <span class="tree-text">전체</span>
+            </label>
+          </th>
+          <th rowspan="5" class="lv2">
+            <label class="tree-chk">
+              <input type="checkbox" id="ck-summary" />
+              <span class="tree-box" aria-hidden="true"></span>
+              <span class="tree-text">요약</span>
+            </label>
+          </th>
+          <td><label class="tree-chk"><input type="checkbox" data-print-check value="summary" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">주요정보</span></label></td>
+        </tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="reexam" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">재검사소견</span></label></td></tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="precheck" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">사전확인자료</span></label></td></tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="cost" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">의료비정보</span></label></td></tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="top10" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">10대주요질환</span></label></td></tr>
+        <tr>
+          <td rowspan="3" class="lv2-empty" aria-hidden="true"></td>
+          <td><label class="tree-chk"><input type="checkbox" data-print-check value="records-all" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">전체진료기록</span></label></td>
+        </tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="records-detail" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">세부진료기록</span></label></td></tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="records-prescription" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">처방조제정보</span></label></td></tr>
+      </tbody>
+    </table>
+    <div class="print-modal-actions">
+      <button class="modal-btn" type="button" id="print-cancel">취소</button>
+      <button class="modal-btn primary" type="button" id="print-confirm">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+        인쇄
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 리포트 전송 확인 모달 -->
+<div class="print-modal" id="send-modal" hidden>
+  <div class="print-modal-card send-modal-card" role="dialog" aria-labelledby="send-modal-title">
+    <div class="print-modal-head">
+      <div>
+        <h3 id="send-modal-title">리포트 전송</h3>
+        <p><b id="send-name">000</b>님께 리포트를 전송합니다.</p>
+      </div>
+      <button class="info-close" type="button" id="send-close" aria-label="닫기">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg> 닫기
+      </button>
+    </div>
+    <div class="send-info">
+      <span class="send-info-l">연락처</span>
+      <span class="send-info-v" id="send-phone">010-0000-0000</span>
+    </div>
+    <div class="print-modal-actions">
+      <button class="modal-btn" type="button" id="send-cancel">취소</button>
+      <button class="modal-btn primary" type="button" id="send-confirm">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+        확인
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="footer-host"></div>
+</div>
+
+<script>
+  (function(){
+    // ===== 실 데이터 (PDF 기준) =====
+    // V(date, type, hospital, dept, code, name, days, cost, isPharmacy, isSurgery)
+    const V = (d,t,h,dp,c,n,dy,co,ph,sg) => ({d,t,h,dp,c,n,dy,co,ph,sg});
+    const VISITS = [
+      V('2025-05-03','외래','르봄여성의원','산부인과','AN760','급성 질염',1,9100,0,0),
+      V('2025-05-03','외래','죽전하나약국','일반의','AN72','자궁경부의 염증성 질환',1,3500,1,0),
+      V('2025-04-12','외래','스마트치과의원 죽전점','치주과','AK0530','만성 단순치주염',1,19200,0,0),
+      V('2025-03-15','외래','르봄여성의원','산부인과','AN760','급성 질염',1,36400,0,0),
+      V('2025-03-15','외래','죽전하나약국','일반의','AN72','자궁경부의 염증성 질환',1,4600,1,0),
+      V('2025-02-15','외래','대구탑연합정형외과의원','정형외과','AM4782','기타 척추증, 경부',1,6100,0,0),
+      V('2025-02-08','외래','대구탑연합정형외과의원','정형외과','AM4782','기타 척추증, 경부',1,6100,0,0),
+      V('2025-01-31','외래','대구탑연합정형외과의원','정형외과','AM4782','기타 척추증, 경부',1,5800,0,0),
+      V('2025-01-27','외래','메디필즈의원','비뇨의학과','AB07','바이러스사마귀',1,6900,0,0),
+      V('2025-01-25','외래','메디필즈의원','비뇨의학과','AB07','바이러스사마귀',1,28800,0,1),
+      V('2025-01-25','외래','본리사랑약국','일반의','AB07','바이러스사마귀',1,3900,1,0),
+      V('2025-01-24','외래','대구탑연합정형외과의원','정형외과','AM4782','기타 척추증, 경부',1,51500,0,0),
+      V('2025-01-24','외래','새봄약국','일반의','AM4782','기타 척추증, 경부',1,3400,1,0),
+      V('2024-12-09','외래','다나연합내과의원','내과','AJ4519','상세불명의 비알레르기천식',1,3700,0,0),
+      V('2024-12-09','외래','햇살약국','일반의','$','해당없음',1,6000,1,0),
+      V('2024-11-30','외래','다나연합내과의원','내과','AJ4519','상세불명의 비알레르기천식',1,12500,0,0),
+      V('2024-11-30','외래','햇살약국','일반의','$','해당없음',1,16400,1,0),
+      V('2024-11-12','외래','다나연합내과의원','가정의학과','AJ200','폐렴마이코플라스마에 의한 급성 기관지',1,3700,0,0),
+      V('2024-11-12','외래','햇살약국','일반의','AJ200','폐렴마이코플라스마에 의한 급성 기관지',1,5000,1,0),
+      V('2024-11-09','외래','다나연합내과의원','가정의학과','AJ200','폐렴마이코플라스마에 의한 급성 기관지',1,37600,0,0),
+      V('2024-11-09','외래','햇살약국','일반의','AJ200','폐렴마이코플라스마에 의한 급성 기관지',1,7200,1,0),
+      V('2024-10-19','외래','다나연합내과의원','가정의학과','AJ209','상세불명의 급성 기관지염',1,7900,0,0),
+      V('2024-10-19','외래','햇살약국','일반의','AJ209','상세불명의 급성 기관지염',1,9400,1,0),
+      V('2024-09-23','외래','계명대학교동산병원','산부인과','AN801','난소의 자궁내막증',1,20800,0,0),
+      V('2024-09-23','외래','계명지하철약국','일반의','AN801','난소의 자궁내막증',1,8500,1,0),
+      V('2024-09-21','외래','메디필즈의원','비뇨의학과','AB07','바이러스사마귀',1,17500,0,1),
+      V('2024-09-21','외래','본리사랑약국','일반의','AB07','바이러스사마귀',1,4100,1,0),
+      V('2024-09-05','입원','계명대학교동산병원','산부인과','AN801','난소의 자궁내막증',3,837280,0,1),
+      V('2024-08-24','외래','다나연합내과의원','가정의학과','AR05','기침',1,9900,0,0),
+      V('2024-08-24','외래','햇살약국','일반의','AR05','기침',1,9400,1,0),
+      V('2024-08-10','외래','효성이비인후과의원','이비인후과','AJ371','만성 후두기관염',1,7200,0,0),
+      V('2024-08-10','외래','삼정약국','일반의','$','해당없음',1,4600,1,0),
+      V('2024-08-09','외래','계명대학교동산병원','산부인과','AD279','난소의 양성 신생물, 상세불명 쪽',1,109900,0,0),
+      V('2024-07-22','외래','계명대학교동산병원','산부인과','AD279','난소의 양성 신생물, 상세불명 쪽',1,96600,0,0),
+      V('2024-06-22','외래','류앤닥터스내과의원','정형외과','AM79188','기타 근통, 기타 부분',1,6500,0,0),
+      V('2024-06-22','외래','정평유진약국','일반의','$','해당없음',1,13400,1,0),
+      V('2024-06-04','외래','파티마여성병원','산부인과','AD270','난소의 양성 신생물, 오른쪽',1,4900,0,0),
+      V('2024-05-16','외래','오영철내과의원','내과','AJ303','기타 알레르기비염',1,4600,0,0),
+      V('2024-05-16','외래','사랑약국','일반의','AJ303','기타 알레르기비염',1,3400,1,0),
+      V('2024-05-14','외래','오영철내과의원','내과','AJ303','기타 알레르기비염',1,4600,0,0),
+      V('2024-05-14','외래','사랑약국','일반의','AJ303','기타 알레르기비염',1,4100,1,0),
+      V('2024-05-13','외래','오영철내과의원','내과','AJ303','기타 알레르기비염',1,6200,0,0),
+      V('2024-05-13','외래','사랑약국','일반의','AJ303','기타 알레르기비염',1,3400,1,0),
+      V('2024-05-09','외래','천주성삼병원','응급의학과','AR1049','상세불명의 복통',1,199100,0,0),
+      V('2024-04-08','외래','대명이비인후과의원','이비인후과','AJ342','편위된 비중격',1,10400,0,0),
+      V('2024-04-08','외래','보성약국','일반의','$','해당없음',1,3000,1,0),
+      V('2024-02-02','외래','류앤닥터스내과의원','정형외과','AM79188','기타 근통, 기타 부분',1,5900,0,0),
+      V('2024-02-02','외래','정평유진약국','일반의','$','해당없음',1,5300,1,0),
+      V('2023-11-25','외래','정평탑치과의원','구강악안면외과','AK01173','하악제3대구치의 매복',1,4400,0,0),
+      V('2023-11-18','외래','정평탑치과의원','치과','AK01173','하악제3대구치의 매복',1,56900,0,1),
+      V('2023-11-18','외래','데레사약국','일반의','$','해당없음',1,5200,1,0),
+      V('2023-11-10','외래','서내과의원','내과','AJ209','상세불명의 급성 기관지염',1,5800,0,0),
+      V('2023-11-10','외래','메디팜 은화약국','일반의','$','해당없음',1,3700,1,0),
+      V('2023-11-04','외래','류앤닥터스내과의원','내과','AJ0390','재발성으로 명시되어 있지 않은 상세불명',1,5100,0,0),
+      V('2023-11-04','외래','정평유진약국','일반의','$','해당없음',1,6000,1,0),
+      V('2023-10-21','외래','류앤닥터스내과의원','내과','AJ209','상세불명의 급성 기관지염',1,7100,0,0),
+      V('2023-10-21','외래','정평유진약국','일반의','$','해당없음',1,5400,1,0),
+      V('2023-09-23','외래','정지영산부인과의원','산부인과','AD270','난소의 양성 신생물, 오른쪽',1,63200,0,0),
+      V('2023-08-18','외래','시티여성의원','산부인과','AN72','자궁경부의 염증성 질환',1,7200,0,0),
+      V('2023-07-31','외래','정평탑치과의원','치주과','AK0510','만성 단순 변연부 치은염',1,16700,0,0),
+      V('2021-07-29','외래','드림종합병원','응급의학과','AZ115','기타 바이러스질환에 대한 특수 선별검사',1,38500,0,0),
+      V('2021-07-29','외래','드림종합병원','응급의학과','AZ115','기타 바이러스질환에 대한 특수 선별검사',1,8900,0,0),
+      V('2021-07-21','외래','칠곡바른송치과의원','치주과','AK01173','하악제3대구치의 매복',1,19900,0,0),
+      V('2021-07-10','외래','삼족오한의원','한방내과','BJ304','(한방)상세불명의 알레르기비염',1,9700,0,0),
+    ];
+
+    // 처방조제 발생 일자 (25일)
+    const RX_DATES = [
+      '2025-05-03','2025-03-15','2025-01-25','2025-01-24',
+      '2024-12-09','2024-11-30','2024-11-12','2024-11-09','2024-10-19',
+      '2024-09-23','2024-09-21','2024-09-05','2024-08-24','2024-08-10',
+      '2024-06-22','2024-05-16','2024-05-14','2024-05-13','2024-05-09',
+      '2024-04-08','2024-02-02',
+      '2023-11-18','2023-11-10','2023-11-04','2023-10-21'
+    ];
+
+    // ===== Utilities =====
+    const pad = n => String(n).padStart(2, '0');
+    const fmtISO = d => d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+    const parseISO = s => new Date(s + 'T00:00:00');
+    const fmtKRW = n => (n || 0).toLocaleString('ko-KR') + '원';
+    const fmtDate = s => s.replace(/-/g, '.');
+    const fmtShortKRW = n => {
+      if (!n || n === 0) return '0원';
+      if (n >= 100000000) return (Math.round(n / 10000000) / 10) + '억';
+      if (n >= 10000) return Math.round(n / 10000) + '만';
+      return Math.round(n / 1000) + '천';
+    };
+
+    const startEl = document.getElementById('rp-start');
+    const refEl = document.getElementById('rp-ref');
+
+    // ===== 통계 계산 =====
+    function computeStats(s, e) {
+      const inRange = VISITS.filter(v => v.d >= s && v.d <= e);
+
+      // 통원
+      const outpHospitalDates = new Set(inRange.filter(v => v.t === '외래' && !v.ph).map(v => v.d));
+      const outpatientDays = outpHospitalDates.size;
+      const outpatientCost = inRange.filter(v => v.t === '외래').reduce((a,v)=>a+v.co,0);
+      // 입원
+      const inpVisits = inRange.filter(v => v.t === '입원');
+      const inpatientDays = inpVisits.reduce((a,v)=>a+v.dy,0);
+      const inpatientCost = inpVisits.reduce((a,v)=>a+v.co,0);
+      // 수술
+      const surgeryVisits = inRange.filter(v => v.sg);
+      const surgeryCount = surgeryVisits.length;
+      const surgeryCost = surgeryVisits.reduce((a,v)=>a+v.co,0);
+      // 투약
+      const rxInRange = RX_DATES.filter(d => d >= s && d <= e);
+      const rxCount = rxInRange.length;
+      const rxCost = inRange.filter(v => v.ph).reduce((a,v)=>a+v.co,0);
+
+      const totalCost = outpatientCost + inpatientCost;
+
+      // 연도별 차트 (표시 최대 5년)
+      const yStart = parseInt(s.slice(0,4));
+      const yEnd = parseInt(e.slice(0,4));
+      let years = [];
+      for (let y = yStart; y <= yEnd; y++) years.push(y);
+      if (years.length > 5) years = years.slice(-5);
+      const yearCosts = years.map(y => ({
+        year: y,
+        cost: inRange.filter(v => parseInt(v.d.slice(0,4)) === y).reduce((a,v)=>a+v.co,0)
+      }));
+      const maxYearCost = Math.max.apply(null, yearCosts.map(yc => yc.cost).concat([1]));
+      const avgYearCost = years.length > 0 ? totalCost / years.length : 0;
+
+      // 진료기록 (날짜+병원 그룹화, 같은 날 약국비 합산)
+      const dgrp = {};
+      inRange.filter(v => !v.ph).forEach(v => {
+        const k = v.d + '|' + v.h;
+        if (!dgrp[k]) dgrp[k] = Object.assign({}, v, { totalCost: 0 });
+        dgrp[k].totalCost += v.co;
+      });
+      inRange.filter(v => v.ph).forEach(p => {
+        const matchKeys = Object.keys(dgrp).filter(k => k.split('|')[0] === p.d);
+        if (matchKeys.length > 0) dgrp[matchKeys[0]].totalCost += p.co;
+      });
+      const records = Object.values(dgrp).sort((a,b) => b.d.localeCompare(a.d)).slice(0, 15);
+
+      // 주요질환 (진단코드별)
+      const condMap = {};
+      inRange.filter(v => !v.ph && v.c !== '$').forEach(v => {
+        if (!condMap[v.c]) condMap[v.c] = { code: v.c, name: v.n, dept: v.dp, outCount: 0, inpCount: 0, inpDays: 0, surg: 0, cost: 0, firstDate: v.d };
+        const c = condMap[v.c];
+        if (v.t === '입원') { c.inpCount++; c.inpDays += v.dy; }
+        else c.outCount++;
+        if (v.sg) c.surg++;
+        c.cost += v.co;
+        if (v.d < c.firstDate) c.firstDate = v.d;
+      });
+      // 약국 처방비도 코드별 비용에 합산
+      inRange.filter(v => v.ph && condMap[v.c]).forEach(v => { condMap[v.c].cost += v.co; });
+      const conditions = Object.values(condMap).map(c => Object.assign({}, c, {
+        score: (c.outCount + c.inpCount) * 1000 + c.inpDays * 5000 + c.cost / 1000
+      })).sort((a,b) => b.score - a.score).slice(0, 2);
+
+      // 사전 확인 (기준일 기준 중첩 없는 윈도)
+      const ref = parseISO(e);
+      const offsetMonths = (m) => {
+        const d = new Date(ref);
+        d.setMonth(d.getMonth() - m);
+        return fmtISO(d);
+      };
+      const w3m = offsetMonths(3);
+      const w1y = offsetMonths(12);
+      const w3y = offsetMonths(36);
+      const sigIn = (winStart, winEnd) => {
+        const wv = VISITS.filter(v => v.d > winStart && v.d <= winEnd && !v.ph && v.c !== '$');
+        if (!wv.length) return null;
+        const m = {};
+        wv.forEach(v => {
+          if (!m[v.c]) m[v.c] = { code: v.c, name: v.n, score: 0 };
+          m[v.c].score += v.co + (v.t === '입원' ? v.dy * 1000000 : 0) + (v.sg ? 500000 : 0);
+        });
+        return Object.values(m).sort((a,b)=>b.score-a.score)[0];
+      };
+      const precheck = { m3: sigIn(w3m, e), y1: sigIn(w1y, w3m), y3: sigIn(w3y, w1y) };
+
+      // 진료 구성 비중
+      const pct = (n,d) => d > 0 ? Math.round(n / d * 100) : 0;
+      const composition = {
+        out: pct(outpatientCost, totalCost),
+        in: pct(inpatientCost, totalCost),
+        surg: pct(surgeryCost, totalCost),
+        rx: pct(rxCost, totalCost),
+      };
+
+      return {
+        outpatientDays, outpatientCost, inpatientDays, inpatientCost,
+        surgeryCount, surgeryCost, rxCount, rxCost, totalCost,
+        avgYearCost, yearCosts, maxYearCost,
+        records, conditions, precheck, composition,
+      };
+    }
+
+    // ===== 렌더링 =====
+    function renderStats(st) {
+      // 주요정보 카드
+      const setCard = (cls, val, unit, cost) => {
+        const card = document.querySelector('.sumc.' + cls);
+        if (!card) return;
+        card.querySelector('.days').textContent = val + unit;
+        card.querySelector('.cst').textContent = fmtKRW(cost);
+        card.classList.toggle('zero', val === 0);
+      };
+      setCard('out', st.outpatientDays, '일', st.outpatientCost);
+      setCard('in', st.inpatientDays, '일', st.inpatientCost);
+      setCard('surg', st.surgeryCount, '건', st.surgeryCost);
+      setCard('med', st.rxCount, '회', st.rxCost);
+
+      // 의료비 총액
+      const costnums = document.querySelectorAll('.costnums .v');
+      if (costnums[0]) costnums[0].textContent = fmtKRW(st.totalCost);
+      if (costnums[1]) costnums[1].textContent = fmtKRW(Math.round(st.avgYearCost));
+
+      // 의료비 차트
+      const chartEl = document.querySelector('.chart');
+      const yearsEl = document.querySelector('.chart-years');
+      chartEl.innerHTML = '';
+      yearsEl.innerHTML = '';
+      if (st.yearCosts.length > 1 && st.maxYearCost > 0) {
+        const avgPct = Math.round(st.avgYearCost / st.maxYearCost * 100);
+        const avgLine = document.createElement('div');
+        avgLine.className = 'avgline';
+        avgLine.style.bottom = avgPct + '%';
+        avgLine.innerHTML = '<span>평균</span>';
+        chartEl.appendChild(avgLine);
+      }
+      st.yearCosts.forEach(yc => {
+        const isMax = yc.cost === st.maxYearCost && st.maxYearCost > 0;
+        const heightPct = st.maxYearCost > 0 ? Math.max(2, Math.round(yc.cost / st.maxYearCost * 100)) : 2;
+        const col = document.createElement('div');
+        col.className = 'bar-col';
+        col.innerHTML = '<div class="bar' + (isMax ? ' hi' : '') + '" style="height:' + heightPct + '%"><span class="val">' + fmtShortKRW(yc.cost) + '</span></div>';
+        chartEl.appendChild(col);
+        const yspan = document.createElement('span');
+        yspan.textContent = yc.year;
+        yearsEl.appendChild(yspan);
+      });
+
+      // 진료 구성 비중
+      const radials = document.querySelectorAll('.radial');
+      const radInfo = [
+        { pct: st.composition.out,  txt: fmtKRW(st.outpatientCost) + ' · ' + st.outpatientDays + '일' },
+        { pct: st.composition.in,   txt: fmtKRW(st.inpatientCost) + ' · ' + st.inpatientDays + '일' },
+        { pct: st.composition.surg, txt: fmtKRW(st.surgeryCost) + ' · ' + st.surgeryCount + '건' },
+        { pct: st.composition.rx,   txt: fmtKRW(st.rxCost) + ' · ' + st.rxCount + '회' },
+      ];
+      radials.forEach((r, i) => {
+        if (i >= radInfo.length) return;
+        const info = radInfo[i];
+        const C = 188.5;
+        const offset = C * (1 - info.pct / 100);
+        r.querySelector('.rfill').setAttribute('stroke-dashoffset', offset);
+        r.querySelector('text').textContent = info.pct + '%';
+        r.querySelector('.rl').textContent = info.txt;
+      });
+
+      // 사전 확인 자료
+      const flags = document.querySelectorAll('.pc-flag');
+      const pcItems = [st.precheck.m3, st.precheck.y1, st.precheck.y3];
+      flags.forEach((flag, i) => {
+        if (i >= pcItems.length) return;
+        const item = pcItems[i];
+        const clear = !item;
+        flag.classList.toggle('clear', clear);
+        const iconUse = flag.querySelector('.pc-flag-ic use');
+        if (iconUse) iconUse.setAttribute('href', clear ? '#i-check' : '#i-alert');
+        const v = flag.querySelector('.pc-flag-v');
+        if (clear) v.innerHTML = '없음';
+        else v.innerHTML = '<b>' + item.name + '</b>';
+      });
+
+      // 10대 주요질환
+      const allDis = document.querySelectorAll('.dis');
+      const maxCondScore = (st.conditions[0] && st.conditions[0].score) || 1;
+      allDis.forEach((dis, i) => {
+        if (i >= st.conditions.length) { dis.style.display = 'none'; return; }
+        dis.style.display = '';
+        const c = st.conditions[i];
+        dis.querySelector('.rank').textContent = String(i + 1);
+        const dn = dis.querySelector('.dname');
+        dn.textContent = c.name;
+        if (dn.tagName === 'A') dn.setAttribute('href', 'condition.html?code=' + c.code);
+        const stats = dis.querySelectorAll('.dstat');
+        stats[0].innerHTML = '외래 <b>' + c.outCount + '회</b>';
+        if (c.inpDays > 0) stats[1].innerHTML = '입원 <b>' + c.inpDays + '일</b>';
+        else stats[1].innerHTML = '투약 <b>' + (c.outCount * 3 + c.surg * 2) + '건</b>';
+        stats[2].innerHTML = '의료비 <b>' + fmtKRW(c.cost) + '</b>';
+        const fillPct = Math.max(20, Math.min(95, Math.round(c.score / maxCondScore * 95)));
+        dis.querySelector('.fill').style.width = fillPct + '%';
+        dis.querySelector('.dfirst').textContent = '최초진단 ' + fmtDate(c.firstDate) + ' · 진단코드 ' + c.code;
+      });
+
+      // 전체 진료기록 테이블
+      const tbody = document.querySelector('.rec-pane[data-rec-pane="all"] tbody');
+      if (tbody) {
+        if (st.records.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--ink-3)">조회기간 내 진료기록이 없습니다</td></tr>';
+        } else {
+          tbody.innerHTML = st.records.map(r =>
+            '<tr>' +
+              '<td>' + fmtDate(r.d) + '</td>' +
+              '<td class="num">' + r.h + '</td>' +
+              '<td>' + r.n + '(' + r.dp + ')</td>' +
+              '<td class="ctr">' + r.c + '</td>' +
+              '<td class="ctr"><span class="typechip">' + r.t + '</span></td>' +
+              '<td class="ctr">' + r.dy + '</td>' +
+              '<td class="amt">' + fmtKRW(r.totalCost) + '</td>' +
+            '</tr>'
+          ).join('');
+        }
+      }
+    }
+
+    function updateCardLinks(){
+      const s = startEl.value, e = refEl.value;
+      document.querySelectorAll('a.sumc[href*="treatment.html"]').forEach(a => {
+        const url = new URL(a.getAttribute('href'), location.href);
+        url.searchParams.set('start', s);
+        url.searchParams.set('end', e);
+        a.setAttribute('href', 'treatment.html' + url.search);
+      });
+    }
+
+    function recalc(){
+      if (!startEl.value || !refEl.value) return;
+      const st = computeStats(startEl.value, refEl.value);
+      renderStats(st);
+      updateCardLinks();
+    }
+
+    function applyPreset(btn){
+      const ref = parseISO(refEl.value);
+      const start = new Date(ref);
+      if (btn.dataset.months) start.setMonth(start.getMonth() - parseInt(btn.dataset.months));
+      else if (btn.dataset.years) start.setFullYear(start.getFullYear() - parseInt(btn.dataset.years));
+      startEl.value = fmtISO(start);
+    }
+
+    // 프리셋·날짜 변경은 시작일 입력값만 업데이트 (데이터 재계산은 [조회] 클릭 시에만)
+    document.querySelectorAll('[data-preset]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        applyPreset(btn);
+      });
+    });
+
+    refEl.addEventListener('change', () => {
+      const active = document.querySelector('[data-preset].on');
+      if (active) applyPreset(active);
+    });
+
+    startEl.addEventListener('change', () => {
+      document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('on'));
+    });
+
+    // [조회] 버튼 클릭 시에만 통계 재계산
+    document.getElementById('rp-search-btn').addEventListener('click', recalc);
+
+    // [초기화]는 즉시 반영 (기본 상태로 복귀)
+    document.getElementById('rp-reset').addEventListener('click', () => {
+      refEl.value = '2025-08-27';
+      document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('on'));
+      const presetBtn = document.querySelector('[data-years="5"]');
+      presetBtn.classList.add('on');
+      applyPreset(presetBtn);
+      recalc();
+    });
+
+    /* ===== 고지사항 텍스트 요약 (조회기간 기준) ===== */
+    function getPatientName(){
+      const av = document.querySelector('.patient-avatar[data-name]');
+      if (av && av.dataset.name) return av.dataset.name;
+      const nm = document.querySelector('.eside .nm');
+      if (nm) return nm.textContent.replace(/님\s*$/, '').trim();
+      return '';
+    }
+    function buildDisclosure(s, e) {
+      const inRange = VISITS.filter(v => v.d >= s && v.d <= e);
+      // 1) 진단코드별 그룹화 ('$' 해당없음은 별도 처리)
+      const codeMap = {};
+      inRange.filter(v => v.c !== '$').forEach(v => {
+        if (!codeMap[v.c]) {
+          codeMap[v.c] = { code: v.c, name: v.n, firstDate: v.d, lastDate: v.d, outDates: new Set(), inpDays: 0, surgery: 0, medCount: 0 };
+        }
+        const g = codeMap[v.c];
+        if (v.d < g.firstDate) g.firstDate = v.d;
+        if (v.d > g.lastDate) g.lastDate = v.d;
+        if (v.t === '입원') g.inpDays += v.dy;
+        else if (!v.ph) g.outDates.add(v.d);
+        if (v.sg) g.surgery = 1;
+        if (v.ph) g.medCount++;
+      });
+      // 2) '$' 약국 처방은 같은 날짜의 병·의원 진단코드에 귀속
+      const dateToCodes = {};
+      inRange.filter(v => !v.ph && v.c !== '$').forEach(v => {
+        if (!dateToCodes[v.d]) dateToCodes[v.d] = new Set();
+        dateToCodes[v.d].add(v.c);
+      });
+      inRange.filter(v => v.ph && v.c === '$').forEach(v => {
+        const codes = dateToCodes[v.d];
+        if (!codes) return;
+        codes.forEach(code => { if (codeMap[code]) codeMap[code].medCount++; });
+      });
+      const lines = Object.values(codeMap)
+        .map(g => Object.assign({}, g, { outDays: g.outDates.size }))
+        .sort((a,b) => b.lastDate.localeCompare(a.lastDate))
+        .map(g => {
+          let line = g.firstDate + ' ~ ' + g.lastDate + ' ' + g.name;
+          if (g.inpDays > 0) line += ' 입원' + g.inpDays + '일';
+          if (g.outDays > 0) line += ' 통원' + g.outDays + '일';
+          if (g.medCount > 0) line += ' 투약O';
+          if (g.surgery) line += ' / 치료내용 수술(절제)';
+          return line;
+        });
+      const name = getPatientName();
+      const header = name ? name + ' 님\n\n' : '';
+      const body = lines.length ? lines.join('\n') : '조회기간 내 고지 대상 진단 이력이 없습니다.';
+      return { text: header + body, count: lines.length };
+    }
+
+    const dlgModal = document.getElementById('disclosure-modal');
+    const dlgText = document.getElementById('disclosure-text');
+    const dlgCopyBtn = document.getElementById('copy-disclosure');
+    const dlgCount = document.getElementById('disclosure-count');
+    const dlgTrigger = document.getElementById('open-disclosure');
+    const dlgPopover = dlgTrigger.closest('.disclosure-popover');
+    const openDlg = () => {
+      const r = buildDisclosure(startEl.value, refEl.value);
+      dlgText.value = r.text;
+      if (dlgCount) dlgCount.textContent = '총 ' + r.count + '건';
+      dlgModal.hidden = false;
+      dlgTrigger.setAttribute('aria-expanded', 'true');
+      setTimeout(() => { dlgText.focus(); dlgText.setSelectionRange(0, 0); dlgText.scrollTop = 0; }, 50);
+    };
+    const closeDlg = () => {
+      dlgModal.hidden = true;
+      dlgTrigger.setAttribute('aria-expanded', 'false');
+      dlgCopyBtn.classList.remove('success');
+      dlgCopyBtn.innerHTML = '<svg class="ic-svg" width="16" height="16"><use href="#i-copy"/></svg> 텍스트 복사';
+    };
+    dlgTrigger.addEventListener('click', () => { dlgModal.hidden ? openDlg() : closeDlg(); });
+    document.getElementById('close-disclosure').addEventListener('click', closeDlg);
+    document.addEventListener('click', e => {
+      if (!dlgModal.hidden && dlgPopover && !dlgPopover.contains(e.target)) closeDlg();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dlgModal.hidden) closeDlg(); });
+    dlgCopyBtn.addEventListener('click', async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(dlgText.value);
+        } else {
+          dlgText.select();
+          document.execCommand('copy');
+          window.getSelection().removeAllRanges();
+        }
+        dlgCopyBtn.classList.add('success');
+        dlgCopyBtn.innerHTML = '<svg class="ic-svg" width="16" height="16"><use href="#i-check"/></svg> 복사됨';
+        setTimeout(() => {
+          dlgCopyBtn.classList.remove('success');
+          dlgCopyBtn.innerHTML = '<svg class="ic-svg" width="16" height="16"><use href="#i-copy"/></svg> 텍스트 복사';
+        }, 1800);
+      } catch (err) {
+        alert('복사에 실패했습니다. 텍스트 영역에서 직접 선택해 주세요.');
+      }
+    });
+
+    recalc();
+  })();
+
+  // 전체 진료기록 카드 탭 — 전체/세부진료/처방조제 전환 + 상단 전체보기 링크 동기화
+  (function(){
+    const tabs = document.querySelectorAll('.rec-tab');
+    const panes = document.querySelectorAll('.rec-pane');
+    const topMore = document.getElementById('rec-viewall-top');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      const name = t.dataset.rec;
+      tabs.forEach(b => {
+        const on = b === t;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+      panes.forEach(p => { p.hidden = p.dataset.recPane !== name; });
+      if (topMore) topMore.href = 'records.html?view=' + name;
+    }));
+  })();
+
+  // 환자 프로필 아바타 — 성씨 기반 색상
+  (function(){
+    const palette = ['#8FB8C4','#E89A9A','#B89AC4','#9AC4A6','#D4B88A','#9AB8E0','#E0A8C0','#9AC4B8','#C49AAE','#A8BFA4'];
+    document.querySelectorAll('.patient-avatar[data-name]').forEach(el => {
+      const name = el.dataset.name;
+      if (!name) return;
+      el.textContent = name.charAt(0);
+      const idx = Math.abs(name.charCodeAt(0)) % palette.length;
+      el.style.background = palette[idx];
+    });
+  })();
+
+  // 보충 설명 팝오버
+  (function(){
+    document.querySelectorAll('.info-popover').forEach(p => {
+      const trigger = p.querySelector('.info-trigger');
+      const content = p.querySelector('.info-content');
+      const close = p.querySelector('.info-close');
+      trigger.addEventListener('click', e => {
+        e.stopPropagation();
+        const open = content.hidden;
+        content.hidden = !open;
+        trigger.setAttribute('aria-expanded', String(open));
+      });
+      close.addEventListener('click', e => {
+        e.stopPropagation();
+        content.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', e => {
+      document.querySelectorAll('.info-popover').forEach(p => {
+        if (!p.contains(e.target)) {
+          p.querySelector('.info-content').hidden = true;
+          p.querySelector('.info-trigger').setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  })();
+
+  // 리포트 더보기 메뉴 (삭제 / 출력 / 전송) + 출력 항목 선택 모달
+  (function(){
+    const btn = document.getElementById('report-menu-btn');
+    const menu = document.getElementById('report-menu');
+    if (!btn || !menu) return;
+    const popover = btn.closest('.menu-popover');
+
+    const open = () => { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); };
+    const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+
+    btn.addEventListener('click', e => { e.stopPropagation(); menu.hidden ? open() : close(); });
+    document.addEventListener('click', e => {
+      if (!menu.hidden && popover && !popover.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.hidden) close(); });
+
+    /* ----- 출력 항목 선택 모달 (트리: 전체 → 요약 → 개별) ----- */
+    const SUMMARY_KEYS = ['summary','reexam','precheck','cost','top10'];
+    const printModal = document.getElementById('print-modal');
+    const checks = () => [...printModal.querySelectorAll('[data-print-check]')];
+    const ckAll = () => document.getElementById('ck-all');
+    const ckSum = () => document.getElementById('ck-summary');
+    const isSummary = c => SUMMARY_KEYS.includes(c.value);
+
+    const setChecked = keys => {
+      const set = new Set(keys);
+      checks().forEach(c => { c.checked = set.has(c.value); });
+      syncParents();
+    };
+    const getChecked = () => checks().filter(c => c.checked).map(c => c.value);
+    const syncParents = () => {
+      const sumChildren = checks().filter(isSummary);
+      const sumOn = sumChildren.filter(c => c.checked).length;
+      const all = checks();
+      const allOn = all.filter(c => c.checked).length;
+      const a = ckAll(), s = ckSum();
+      s.checked = (sumOn === sumChildren.length);
+      s.indeterminate = (sumOn > 0 && sumOn < sumChildren.length);
+      a.checked = (allOn === all.length);
+      a.indeterminate = (allOn > 0 && allOn < all.length);
+    };
+
+    const openPrintModal = () => {
+      setChecked(SUMMARY_KEYS); // 기본값: 요약
+      printModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    };
+    const closePrintModal = () => {
+      printModal.hidden = true;
+      document.body.style.overflow = '';
+    };
+
+    ckAll().addEventListener('change', e => {
+      const v = e.target.checked;
+      checks().forEach(c => { c.checked = v; });
+      syncParents();
+    });
+    ckSum().addEventListener('change', e => {
+      const v = e.target.checked;
+      checks().forEach(c => { if (isSummary(c)) c.checked = v; });
+      syncParents();
+    });
+    checks().forEach(c => c.addEventListener('change', syncParents));
+    document.getElementById('print-close').addEventListener('click', closePrintModal);
+    document.getElementById('print-cancel').addEventListener('click', closePrintModal);
+    printModal.addEventListener('click', e => { if (e.target === printModal) closePrintModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !printModal.hidden) closePrintModal(); });
+
+    function applyPrintShow(selectedKeys){
+      const set = new Set(selectedKeys);
+      document.querySelectorAll('[data-print]').forEach(el => {
+        el.classList.toggle('print-show', set.has(el.dataset.print));
+      });
+      document.querySelectorAll('.print-host').forEach(host => {
+        const anyShown = !!host.querySelector('[data-print].print-show');
+        host.classList.toggle('print-show', anyShown);
+      });
+      document.body.classList.add('printing');
+    }
+    function clearPrintShow(){
+      document.querySelectorAll('.print-show').forEach(el => el.classList.remove('print-show'));
+      document.body.classList.remove('printing');
+    }
+
+    document.getElementById('print-confirm').addEventListener('click', () => {
+      const sel = getChecked();
+      if (!sel.length) { alert('출력할 항목을 1개 이상 선택해 주세요.'); return; }
+      applyPrintShow(sel);
+      closePrintModal();
+      setTimeout(() => {
+        window.print();
+        setTimeout(clearPrintShow, 500);
+      }, 50);
+    });
+    window.addEventListener('afterprint', clearPrintShow);
+
+    /* ----- 리포트 전송 확인 모달 ----- */
+    const sendModal = document.getElementById('send-modal');
+    const sendName = document.getElementById('send-name');
+    const sendPhone = document.getElementById('send-phone');
+
+    function getPatientInfo(){
+      const av = document.querySelector('.patient-avatar[data-name]');
+      const name = av ? (av.dataset.name || '') : '';
+      let phone = '';
+      document.querySelectorAll('.rep-meta span').forEach(s => {
+        const txt = s.textContent || '';
+        if (txt.indexOf('연락처') !== -1) {
+          const b = s.querySelector('b');
+          if (b) phone = b.textContent.trim();
+        }
+      });
+      return { name, phone: phone || '010-0000-0000' };
+    }
+    const openSendModal = () => {
+      const p = getPatientInfo();
+      sendName.textContent = p.name || '000';
+      sendPhone.textContent = p.phone;
+      sendModal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    };
+    const closeSendModal = () => {
+      sendModal.hidden = true;
+      document.body.style.overflow = '';
+    };
+    document.getElementById('send-close').addEventListener('click', closeSendModal);
+    document.getElementById('send-cancel').addEventListener('click', closeSendModal);
+    sendModal.addEventListener('click', e => { if (e.target === sendModal) closeSendModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sendModal.hidden) closeSendModal(); });
+    document.getElementById('send-confirm').addEventListener('click', () => {
+      closeSendModal();
+      alert('리포트가 전송되었습니다.');
+    });
+
+    /* ----- 메뉴 항목 클릭 ----- */
+    menu.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const action = item.dataset.action;
+        close();
+        if (action === 'delete') {
+          if (confirm('이 리포트를 삭제하시겠습니까?')) alert('삭제되었습니다.');
+        } else if (action === 'print') {
+          openPrintModal();
+        } else if (action === 'send') {
+          openSendModal();
+        }
+      });
+    });
+  })();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('report');</script>
+</body>
+</html>
