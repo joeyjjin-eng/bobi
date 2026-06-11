@@ -110,7 +110,7 @@
       +     navItem('home',     BASE + 'home.html',                  'i-home',         '홈')
       +     navItem('customer', BASE + 'pages/customer/detail.html',    'i-users',        '내고객')
       +     navItem('report',   BASE + 'pages/report/history.html',     'i-file-text',    '진료기록 리포트')
-      +     navItem('claim',    '#',                                    'i-search-check', '미청구보험금')
+      +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금')
       +     navItem('smart',    '#',                                    'i-sparkles',     '스마트보비', '<span class="badge"></span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +   '</nav>'
@@ -136,6 +136,28 @@
       + '</footer>';
   }
 
+  // ===== 환자 아바타 자동 채색 =====
+  // .patient-avatar[data-name] 요소를 찾아 첫 글자 + 팔레트 색상 적용.
+  // 전체 이름 기반 해시 → 같은 이름은 항상 같은 색, 다른 이름은 (대체로) 다른 색.
+  // 페이지 내에서 이름이 동적으로 바뀐 뒤에도 다시 호출 가능.
+  var AVATAR_PALETTE = ['#8FB8C4','#E89A9A','#B89AC4','#9AC4A6','#D4B88A','#9AB8E0','#E0A8C0','#9AC4B8','#C49AAE','#A8BFA4'];
+  function hashName(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) {
+      h = ((h << 5) - h) + name.charCodeAt(i);
+      h = h | 0;
+    }
+    return Math.abs(h);
+  }
+  window.paintPatientAvatars = function () {
+    document.querySelectorAll('.patient-avatar[data-name]').forEach(function (el) {
+      var name = el.dataset.name;
+      if (!name) return;
+      el.textContent = name.charAt(0);
+      el.style.background = AVATAR_PALETTE[hashName(name) % AVATAR_PALETTE.length];
+    });
+  };
+
   // ===== 주입 함수 =====
   window.injectShell = function (active) {
     var iconsHost = document.getElementById('icons-host');
@@ -146,5 +168,6 @@
     if (gnbHost) gnbHost.outerHTML = gnbHTML(active);
     var footerHost = document.getElementById('footer-host');
     if (footerHost) footerHost.outerHTML = footerHTML();
+    window.paintPatientAvatars();
   };
 })();

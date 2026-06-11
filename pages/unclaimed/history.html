@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 미청구보험금 조회 내역</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 (미청구 전용 — 딥 그린 톤) ===== */
+  .cE .hist-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px 28px; padding: 0 0 22px; border-bottom: 1px solid var(--line); }
+  .cE .hist-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .cE .ht-l { display: flex; align-items: center; gap: 14px; }
+  .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: #DCF5F4; color: #0E9A95; display: grid; place-items: center; flex: none; }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .new-uc-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #12D5CF 0%, #0A8B86 100%); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: 0 10px 30px rgba(18, 213, 207, 0.32); text-decoration: none; flex: none; letter-spacing: -0.01em; transition: filter .2s ease; }
+  .cE .new-uc-btn:hover { filter: brightness(1.05); }
+
+  /* ===== 검색바 ===== */
+  .cE .search-bar { background: #fff; border-radius: var(--r-md); border: 1px solid var(--line); padding: 14px 22px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .cE .search-bar > .si-ic { color: var(--ink-4); flex: none; display: flex; }
+  .cE .search-bar input { flex: 1; border: none; outline: none; font-size: var(--fs-body); color: var(--ink); background: transparent; font-family: inherit; }
+  .cE .search-bar input::placeholder { color: var(--ink-4); }
+  .cE .sb-divider { width: 1px; height: 20px; background: var(--line-strong); }
+  .cE .period-popover { position: relative; }
+  .cE .period-trigger { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-3); font-size: var(--fs-option); font-weight: 600; cursor: pointer; user-select: none; background: transparent; border: none; padding: 0; font-family: inherit; }
+  .cE .period-trigger:hover { color: var(--ink); }
+  .cE .period-trigger.has-value { color: var(--ink); }
+
+  /* 기간 선택 팝오버 */
+  .cE .period-popup { position: absolute; top: calc(100% + 12px); right: 0; z-index: 50; width: 460px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-2); padding: 24px 26px 20px; }
+  .cE .period-popup[hidden] { display: none; }
+  .cE .pp-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 18px; }
+  .cE .pp-range { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 12px; margin-bottom: 20px; }
+  .cE .pp-range .date-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .cE .pp-range .dlabel { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; padding-left: 2px; }
+  .cE .pp-range .dateinput { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 10px 14px; background: #fff; cursor: pointer; transition: border-color .2s ease; }
+  .cE .pp-range .dateinput input[type="date"] { border: none; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); color: var(--ink); padding: 0; flex: 1; min-width: 0; cursor: pointer; }
+  .cE .pp-range .dateinput input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+  .cE .pp-range .dateinput svg { color: var(--ink-3); flex: none; }
+  .cE .pp-range .dash { align-self: center; margin-top: 18px; color: var(--ink-3); padding: 0 4px; }
+  .cE .pp-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .cE .pp-preset { background: #fff; border: 1px solid var(--line-strong); color: var(--ink-3); border-radius: var(--r-pill); padding: 7px 14px; font-size: var(--fs-option); font-weight: 600; font-family: inherit; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .pp-preset:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
+  .cE .pp-preset.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .cE .pp-actions { display: flex; justify-content: flex-end; gap: 10px; }
+  .cE .pp-clear { background: #fff; border: 1px solid var(--line-strong); color: var(--ink-3); border-radius: var(--r-pill); padding: 9px 20px; font-size: var(--fs-option); font-weight: 700; font-family: inherit; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .pp-clear:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
+  .cE .pp-apply { background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); padding: 9px 24px; font-size: var(--fs-option); font-weight: 700; font-family: inherit; cursor: pointer; box-shadow: var(--sh-brand); transition: background-color .2s ease; }
+  .cE .pp-apply:hover { background: var(--brand-hover); }
+
+  /* ===== 필터바 ===== */
+  .cE .filter-bar { background: #fff; border-radius: var(--r-md); border: 1px solid var(--line); padding: 14px 22px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+  .cE .filter-group { display: flex; align-items: center; gap: 10px; }
+  .cE .fg-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+  .cE .pills { display: flex; gap: 6px; }
+  .cE .pill { border: 1px solid var(--line-strong); background: #fff; color: var(--ink-3); border-radius: var(--r-pill); padding: 7px 14px; font-size: var(--fs-option); font-weight: 600; font-family: inherit; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .pill:hover { color: var(--ink-2); border-color: var(--ink-4); }
+  .cE .pill.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .cE .fb-divider { width: 1px; height: 20px; background: var(--line-strong); }
+  .cE .fb-count { margin-left: auto; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .fb-count b { color: var(--ink); font-weight: 800; }
+
+  /* ===== 리스트 패널 (단일 컬럼, 미리보기 없음) ===== */
+  .cE .list-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
+  .cE .table-head { display: grid; grid-template-columns: 120px 90px 90px 90px 1fr 110px 160px 28px; column-gap: 12px; padding: 16px 28px; border-bottom: 1px solid var(--line); background: var(--bg-soft); flex-shrink: 0; }
+  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; text-align: center; }
+  .cE .table-head span.h-name { text-align: center; }
+  .cE .table-head span.h-amt { text-align: right; padding-right: 4px; }
+  .cE .table-body { flex: 1; }
+  .cE .table-row { display: grid; grid-template-columns: 120px 90px 90px 90px 1fr 110px 160px 28px; column-gap: 12px; align-items: center; padding: 18px 28px; cursor: pointer; transition: background-color 0.12s ease; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .cE .table-row:last-child { border-bottom: none; }
+  .cE .table-row:hover { background: var(--bg-warm); }
+  .cE .tr-date { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; text-align: center; }
+  .cE .tr-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; text-align: center; }
+  .cE .tr-gender { text-align: center; }
+  .cE .gender-chip { font-size: var(--fs-option); font-weight: 700; padding: 3px 10px; border-radius: var(--r-pill); display: inline-block; }
+  .cE .gender-chip.f { background: #FEF0F0; color: #D96060; }
+  .cE .gender-chip.m { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .tr-age { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .cE .tr-year { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .cE .tr-amt { font-size: var(--fs-body); font-weight: 700; color: var(--ink); text-align: right; padding-right: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .cE .tr-go { color: var(--ink-4); display: flex; align-items: center; justify-content: center; transition: color .12s ease, transform .12s ease; }
+  .cE .table-row:hover .tr-go { color: var(--brand); transform: translateX(2px); }
+  .cE .empty-list { padding: 60px 20px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
+
+  /* ===== 페이지네이션 ===== */
+  .cE .pagination { border-top: 1px solid var(--line); padding: 20px 28px; display: flex; justify-content: center; gap: 6px; flex-shrink: 0; }
+  .cE .pg-btn { min-width: 36px; height: 36px; padding: 0 11px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .pg-btn:hover:not(.on):not(.dots) { background: var(--bg-soft); border-color: var(--line-strong); color: var(--ink); }
+  .cE .pg-btn.on { background: var(--brand); color: #fff; border-color: var(--brand); cursor: default; }
+  .cE .pg-btn.dots { border: none; cursor: default; background: transparent; color: var(--ink-4); min-width: 24px; padding: 0; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- ===== 타이틀 ===== -->
+    <div class="hist-title-row">
+      <div class="hist-title-inner">
+        <div class="ht-l">
+          <div class="ht-ic">
+            <svg class="ic-svg" width="22" height="22"><use href="#i-search-check"/></svg>
+          </div>
+          <div>
+            <h1>미청구보험금 조회 내역</h1>
+            <div class="ht-sub">고객별 미청구보험금 조회 기록</div>
+          </div>
+        </div>
+        <a class="new-uc-btn" href="new.html">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
+          새롭게 조회하기
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 검색바 ===== -->
+    <div class="search-bar">
+      <span class="si-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg></span>
+      <input type="text" id="search-input" placeholder="고객 이름 혹은 연락처로 검색" />
+      <div class="sb-divider"></div>
+      <div class="period-popover">
+        <button type="button" class="period-trigger" id="period-trigger" aria-expanded="false" aria-haspopup="dialog">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-calendar"/></svg>
+          <span id="period-label">기간 선택</span>
+          <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="period-popup" id="period-popup" hidden role="dialog" aria-label="조회 기간 선택">
+          <div class="pp-title">등록 기간</div>
+          <div class="pp-range">
+            <div class="date-field">
+              <label class="dlabel" for="pp-start">시작일</label>
+              <div class="dateinput" onclick="this.querySelector('input').showPicker&&this.querySelector('input').showPicker()">
+                <svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg>
+                <input type="date" id="pp-start" />
+              </div>
+            </div>
+            <span class="dash">—</span>
+            <div class="date-field">
+              <label class="dlabel" for="pp-end">종료일</label>
+              <div class="dateinput" onclick="this.querySelector('input').showPicker&&this.querySelector('input').showPicker()">
+                <svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg>
+                <input type="date" id="pp-end" />
+              </div>
+            </div>
+          </div>
+          <div class="pp-presets">
+            <button type="button" class="pp-preset" data-months="1">최근 1개월</button>
+            <button type="button" class="pp-preset" data-months="3">최근 3개월</button>
+            <button type="button" class="pp-preset" data-months="6">최근 6개월</button>
+            <button type="button" class="pp-preset" data-months="12">최근 1년</button>
+          </div>
+          <div class="pp-actions">
+            <button type="button" class="pp-clear" id="pp-clear">초기화</button>
+            <button type="button" class="pp-apply" id="pp-apply">적용</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 필터바 ===== -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="fg-l">성별</span>
+        <div class="pills" id="gender-pills">
+          <button class="pill on" data-gender="전체" type="button">전체</button>
+          <button class="pill" data-gender="남" type="button">남</button>
+          <button class="pill" data-gender="여" type="button">여</button>
+        </div>
+      </div>
+      <div class="fb-divider"></div>
+      <div class="filter-group">
+        <span class="fg-l">연령대</span>
+        <div class="pills" id="age-pills">
+          <button class="pill on" data-age="전체" type="button">전체</button>
+          <button class="pill" data-age="20대" type="button">20대</button>
+          <button class="pill" data-age="30대" type="button">30대</button>
+          <button class="pill" data-age="40대" type="button">40대</button>
+          <button class="pill" data-age="50대" type="button">50대</button>
+          <button class="pill" data-age="60대+" type="button">60대+</button>
+        </div>
+      </div>
+      <span class="fb-count" id="count">총 <b>0건</b> 조회됨</span>
+    </div>
+
+    <!-- ===== 리스트 ===== -->
+    <div class="list-panel">
+      <div class="table-head">
+        <span>등록일</span>
+        <span class="h-name">이름</span>
+        <span>성별</span>
+        <span>나이(만)</span>
+        <span></span>
+        <span>조회 연도</span>
+        <span class="h-amt">미청구보험금</span>
+        <span></span>
+      </div>
+      <div class="table-body" id="tbl-body"></div>
+      <div class="pagination">
+        <button class="pg-btn on" type="button">1</button>
+        <button class="pg-btn" type="button">2</button>
+        <button class="pg-btn" type="button">3</button>
+        <button class="pg-btn dots" type="button">…</button>
+        <button class="pg-btn" type="button">5</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script>
+(function () {
+  // ===== 데이터 =====
+  var ALL = [
+    { date:'2026.06.09', name:'김진주', gender:'여', age:43, phone:'010-1234-5678', year:2022, unclaimed:473600 },
+    { date:'2026.06.09', name:'박민호', gender:'남', age:28, phone:'010-9876-5432', year:2025, unclaimed:128400 },
+    { date:'2026.06.08', name:'장숙영', gender:'여', age:42, phone:'010-2345-6789', year:2024, unclaimed:312800 },
+    { date:'2026.06.08', name:'오미자', gender:'여', age:46, phone:'010-3456-7890', year:2023, unclaimed:215600 },
+    { date:'2026.06.08', name:'김정운', gender:'여', age:44, phone:'010-4567-8901', year:2022, unclaimed:184700 },
+    { date:'2026.06.08', name:'황정연', gender:'여', age:53, phone:'010-5678-9012', year:2025, unclaimed:542100 },
+    { date:'2026.06.08', name:'최부명', gender:'남', age:44, phone:'010-6789-0123', year:2024, unclaimed:267300 },
+    { date:'2026.06.07', name:'이성환', gender:'남', age:38, phone:'010-7890-1234', year:2023, unclaimed:96400 },
+    { date:'2026.06.07', name:'정하윤', gender:'여', age:31, phone:'010-8901-2345', year:2022, unclaimed:74800 },
+    { date:'2026.06.07', name:'송민재', gender:'남', age:62, phone:'010-9012-3456', year:2025, unclaimed:891200 },
+    { date:'2026.06.06', name:'유지원', gender:'여', age:27, phone:'010-0123-4567', year:2024, unclaimed:52400 },
+    { date:'2026.06.06', name:'한재현', gender:'남', age:55, phone:'010-1357-2468', year:2023, unclaimed:638700 },
+    { date:'2026.06.05', name:'권민서', gender:'여', age:35, phone:'010-2468-1357', year:2022, unclaimed:142500 },
+    { date:'2026.06.05', name:'전도현', gender:'남', age:51, phone:'010-1111-2222', year:2021, unclaimed:421900 },
+    { date:'2026.06.04', name:'배수진', gender:'여', age:29, phone:'010-3333-4444', year:2024, unclaimed:88700 }
+  ];
+
+  var state = {
+    gender: '전체',
+    age: '전체',
+    query: '',
+    dateFrom: '',
+    dateTo: ''
+  };
+
+  var AGE_TEST = {
+    '전체': function () { return true; },
+    '20대': function (a) { return a >= 20 && a < 30; },
+    '30대': function (a) { return a >= 30 && a < 40; },
+    '40대': function (a) { return a >= 40 && a < 50; },
+    '50대': function (a) { return a >= 50 && a < 60; },
+    '60대+': function (a) { return a >= 60; }
+  };
+
+  var TODAY = new Date(2026, 5, 10);
+
+  function filterList() {
+    return ALL.filter(function (p) {
+      var gOK = (state.gender === '전체') || (p.gender === state.gender);
+      var aOK = AGE_TEST[state.age](p.age);
+      var qOK = !state.query || p.name.indexOf(state.query) !== -1 || p.phone.indexOf(state.query) !== -1;
+      var dOK = true;
+      if (state.dateFrom || state.dateTo) {
+        var pDate = p.date.replace(/\./g, '-');
+        if (state.dateFrom && pDate < state.dateFrom) dOK = false;
+        if (state.dateTo && pDate > state.dateTo) dOK = false;
+      }
+      return gOK && aOK && qOK && dOK;
+    });
+  }
+
+  function toInputDate(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+  function fmtDot(s) { return s ? s.replace(/-/g, '.') : ''; }
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+  function won(n) { return n.toLocaleString('ko-KR'); }
+
+  function renderTable() {
+    var list = filterList();
+    var body = document.getElementById('tbl-body');
+    document.getElementById('count').innerHTML = '총 <b>' + list.length + '건</b> 조회됨';
+
+    if (list.length === 0) {
+      body.innerHTML = '<div class="empty-list">조건에 맞는 조회 내역이 없어요</div>';
+      return;
+    }
+
+    body.innerHTML = list.map(function (p) {
+      var genderCls = p.gender === '여' ? 'f' : 'm';
+      return ''
+        + '<a class="table-row" href="result.html">'
+        +   '<span class="tr-date">' + p.date + '</span>'
+        +   '<span class="tr-name">' + escapeHTML(p.name) + '</span>'
+        +   '<span class="tr-gender"><span class="gender-chip ' + genderCls + '">' + p.gender + '</span></span>'
+        +   '<span class="tr-age">' + p.age + '세</span>'
+        +   '<span></span>'
+        +   '<span class="tr-year">' + p.year + '년</span>'
+        +   '<span class="tr-amt">' + won(p.unclaimed) + '원</span>'
+        +   '<span class="tr-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>'
+        + '</a>';
+    }).join('');
+  }
+
+  // ===== 이벤트 바인딩 =====
+  document.querySelectorAll('#gender-pills .pill').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.gender = btn.dataset.gender;
+      document.querySelectorAll('#gender-pills .pill').forEach(function (b) {
+        b.classList.toggle('on', b.dataset.gender === state.gender);
+      });
+      renderTable();
+    });
+  });
+
+  document.querySelectorAll('#age-pills .pill').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.age = btn.dataset.age;
+      document.querySelectorAll('#age-pills .pill').forEach(function (b) {
+        b.classList.toggle('on', b.dataset.age === state.age);
+      });
+      renderTable();
+    });
+  });
+
+  document.getElementById('search-input').addEventListener('input', function (e) {
+    state.query = e.target.value.trim();
+    renderTable();
+  });
+
+  // ===== 기간 선택 팝오버 =====
+  var periodTrigger = document.getElementById('period-trigger');
+  var periodPopup = document.getElementById('period-popup');
+  var periodLabel = document.getElementById('period-label');
+  var ppStart = document.getElementById('pp-start');
+  var ppEnd = document.getElementById('pp-end');
+
+  function openPopup() {
+    periodPopup.hidden = false;
+    periodTrigger.setAttribute('aria-expanded', 'true');
+    ppStart.value = state.dateFrom || '';
+    ppEnd.value = state.dateTo || '';
+  }
+  function closePopup() {
+    periodPopup.hidden = true;
+    periodTrigger.setAttribute('aria-expanded', 'false');
+  }
+  function updatePeriodLabel() {
+    if (state.dateFrom || state.dateTo) {
+      periodLabel.textContent = (fmtDot(state.dateFrom) || '시작일') + ' ~ ' + (fmtDot(state.dateTo) || '종료일');
+      periodTrigger.classList.add('has-value');
+    } else {
+      periodLabel.textContent = '기간 선택';
+      periodTrigger.classList.remove('has-value');
+    }
+  }
+  function clearPresetActive() {
+    document.querySelectorAll('.pp-preset').forEach(function (b) { b.classList.remove('on'); });
+  }
+
+  periodTrigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (periodPopup.hidden) openPopup(); else closePopup();
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!periodPopup.hidden && !periodPopup.contains(e.target) && !periodTrigger.contains(e.target)) {
+      closePopup();
+    }
+  });
+
+  document.querySelectorAll('.pp-preset').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var months = parseInt(btn.dataset.months, 10);
+      var start = new Date(TODAY);
+      start.setMonth(start.getMonth() - months);
+      ppEnd.value = toInputDate(TODAY);
+      ppStart.value = toInputDate(start);
+      clearPresetActive();
+      btn.classList.add('on');
+    });
+  });
+  ppStart.addEventListener('change', clearPresetActive);
+  ppEnd.addEventListener('change', clearPresetActive);
+
+  document.getElementById('pp-apply').addEventListener('click', function () {
+    state.dateFrom = ppStart.value;
+    state.dateTo = ppEnd.value;
+    updatePeriodLabel();
+    renderTable();
+    closePopup();
+  });
+  document.getElementById('pp-clear').addEventListener('click', function () {
+    ppStart.value = '';
+    ppEnd.value = '';
+    clearPresetActive();
+    state.dateFrom = '';
+    state.dateTo = '';
+    updatePeriodLabel();
+    renderTable();
+  });
+
+  // 초기 렌더
+  renderTable();
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('claim');</script>
+</body>
+</html>

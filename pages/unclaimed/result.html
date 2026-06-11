@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 미청구보험금 조회 결과</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 — h1/sub 사이 간격 축소 ===== */
+  .cE .etop h1 { margin: 0; line-height: 1.3; }
+  .cE .etop .sub { margin-top: 8px; }
+
+  /* ===== 환자 헤더 (박스 없이, 상단으로) ===== */
+  .cE .uc-rep-head { padding: 12px 0 22px; border: none; border-radius: 0; margin-top: 0; }
+  .cE .uc-rep-right { display: flex; align-items: center; gap: 16px; }
+  .cE .rep-asof b { color: var(--ink); font-size: var(--fs-body); }
+  .cE .rep-id .cust-link { color: inherit; text-decoration: none; border-bottom: 2px dashed var(--ink-4); padding-bottom: 1px; transition: color .2s ease, border-bottom-color .2s ease; }
+  .cE .rep-id .cust-link:hover { color: var(--brand-deep); border-bottom-color: var(--brand); }
+  .cE .rep-id a.patient-avatar { cursor: pointer; transition: transform .15s ease, box-shadow .2s ease; display: grid; place-items: center; text-decoration: none; }
+  .cE .rep-id a.patient-avatar:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(20,120,200,.2); }
+
+  /* ===== 조회 조건 카드 ===== */
+  .cE .uc-filter { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 4px 28px 14px; margin-top: 20px; }
+  .cE .uc-filter-cap { display: flex; align-items: center; gap: 7px; padding: 18px 0 14px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); letter-spacing: 0.04em; }
+  .cE .uc-filter-row { display: grid; grid-template-columns: 132px 1fr; gap: 20px; align-items: flex-start; padding: 18px 0; border-top: 1px solid var(--line); }
+  .cE .uc-filter-row:last-of-type { padding-bottom: 8px; }
+  .cE .uc-filter-l { display: flex; align-items: center; gap: 8px; padding-top: 8px; font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .uc-filter-l svg { color: var(--ink-4); flex: none; }
+  .cE .uc-filter-b { min-width: 0; }
+  .cE .uc-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .cE .uc-chip { padding: 10px 22px; border-radius: var(--r-pill); font-size: var(--fs-body); font-weight: 500; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); cursor: pointer; font-family: inherit; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .uc-chip:hover:not(.on) { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
+  .cE .uc-chip.on.year { background: var(--ink); color: #fff; border-color: var(--ink); font-weight: 700; }
+  .cE .uc-chip.on.gen { background: var(--ink); color: #fff; border-color: var(--ink); font-weight: 700; }
+  .cE .uc-ycap { display: inline-flex; align-items: center; gap: 6px; margin-left: 6px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-4); }
+  .cE .uc-gen-desc { display: flex; align-items: baseline; gap: 8px; margin-top: 12px; font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .uc-gen-desc b { font-weight: 700; color: var(--brand-deep); white-space: nowrap; }
+
+  /* ===== 계산 결과 (의료비 − 받은실손보험금 = 미청구보험금) ===== */
+  .cE .uc-result { margin-top: 36px; }
+  .cE .uc-result-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .cE .uc-result-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; }
+  .cE .uc-result-head .s { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+  .cE .uc-result-head .s b { color: var(--brand-deep); font-weight: 700; }
+  .cE .uc-eq { display: flex; align-items: stretch; gap: 14px; }
+  .cE .uc-card { flex: 1; border-radius: var(--r-md); padding: 22px 24px; min-width: 0; background: var(--brand-pale); border: 1px solid transparent; display: flex; flex-direction: column; gap: 18px; }
+  .cE .uc-card.primary { background: var(--brand); border-color: var(--brand); box-shadow: var(--sh-brand); }
+  .cE .uc-card-l { display: flex; align-items: center; gap: 6px; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); }
+  .cE .uc-card.primary .uc-card-l { color: #fff; }
+  .cE .uc-card .hint-q { width: 16px; height: 16px; border-radius: 50%; border: 1.4px solid var(--ink-4); color: var(--ink-4); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex: none; }
+  .cE .uc-card.primary .hint-q { border-color: rgba(255,255,255,.85); color: rgba(255,255,255,.85); }
+  .cE .uc-amt { display: flex; align-items: baseline; gap: 2px; justify-content: flex-end; font-variant-numeric: tabular-nums; }
+  .cE .uc-amt .n { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
+  .cE .uc-amt .w { font-size: var(--fs-h2); font-weight: 700; }
+  .cE .uc-card.primary .uc-amt { color: #fff; }
+  .cE .uc-op { display: flex; align-items: center; font-size: 26px; font-weight: 700; color: var(--ink-4); flex: none; }
+
+  /* ===== 안내 박스 ===== */
+  .cE .uc-notice { margin-top: 20px; background: #F7F7F9; border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
+  .cE .uc-notice p { display: flex; gap: 8px; font-size: var(--fs-option); line-height: 1.6; color: var(--ink-3); margin: 0; }
+  .cE .uc-notice p + p { margin-top: 4px; }
+  .cE .uc-notice .dot { color: var(--ink-4); }
+
+  /* ===== 의료비내역 (헤더 rec-head/rec-tabs 패턴 재사용 — report/main.html과 통일) ===== */
+  .cE .uc-visits { margin-top: 36px; }
+  .cE .uc-visits .rec-head { align-items: center; }
+  .cE .uc-visits .rec-tab { padding: 10px 10px; }
+  .cE .uc-visits .rec-tab:first-child { padding-left: 0; }
+  .cE .uc-sec-count { font-size: var(--fs-option); color: var(--ink-3); margin-right: 4px; white-space: nowrap; }
+  .cE .uc-sec-count b { color: var(--ink); font-weight: 700; }
+  .cE .uc-sec-actions { display: flex; align-items: center; gap: 8px; }
+  .cE .uc-btn { height: 40px; padding: 0 16px; border-radius: var(--r-sm); border: 1px solid var(--line-strong); background: #fff; cursor: pointer; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .uc-btn:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
+  .cE .uc-btn svg { color: var(--brand-deep); }
+  .cE .uc-btn img { flex: none; }
+  /* ===== 위플랫 보험금청구 안내 모달 ===== */
+  .wp-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .wp-modal[hidden] { display: none; }
+  .wp-modal-card { position: relative; background: #fff; border-radius: 18px; padding: 36px 40px 32px; max-width: 420px; width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.25); box-sizing: border-box; text-align: center; font-family: 'Pretendard', system-ui, sans-serif; }
+  .wp-modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; padding: 6px; cursor: pointer; color: var(--ink-3); display: inline-flex; border-radius: 8px; transition: color .15s ease, background-color .15s ease; }
+  .wp-modal-close:hover { color: var(--ink); background: var(--bg-soft); }
+  .wp-modal-icon { width: 88px; height: 88px; margin: 4px auto 18px; display: block; }
+  .wp-modal-text { font-size: var(--fs-body); color: var(--ink); line-height: 1.4; margin: 0 0 24px; font-weight: 600; letter-spacing: -0.01em; }
+  .wp-modal-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .wp-modal-cta { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--brand); color: #fff; text-decoration: none; border-radius: var(--r-pill); font-weight: 700; font-size: var(--fs-body); box-shadow: var(--sh-brand); transition: background-color .2s ease; }
+  .wp-modal-cta:hover { background: var(--brand-hover); }
+  .wp-modal-copy { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); font-family: inherit; font-weight: 600; font-size: var(--fs-option); cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .wp-modal-copy:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
+  .wp-modal-copy.copied { background: var(--brand-pale); color: var(--brand-deep); border-color: var(--brand); }
+
+  /* ===== 페이지네이션 (history.html 패턴 재사용) ===== */
+  .cE .uc-pagination { margin-top: 24px; display: flex; justify-content: center; gap: 6px; }
+  .cE .uc-pg { min-width: 36px; height: 36px; padding: 0 11px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .uc-pg:hover:not(.on):not(.dots) { background: var(--bg-soft); border-color: var(--line-strong); color: var(--ink); }
+  .cE .uc-pg.on { background: var(--brand); color: #fff; border-color: var(--brand); cursor: default; }
+  .cE .uc-pg.dots { border: none; cursor: default; background: transparent; color: var(--ink-4); min-width: 24px; padding: 0; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- ===== 환자 헤더 (박스 없이) ===== -->
+    <div class="rep-head uc-rep-head">
+      <div class="rep-id">
+        <a class="patient-avatar" href="../customer/detail.html" data-name="김진주" aria-label="김진주님 상세정보 보기"></a>
+        <div>
+          <h1><a class="cust-link" href="../customer/detail.html" title="고객 상세정보 보기">김진주님</a>의 미청구보험금 조회 결과</h1>
+          <div class="rep-meta">
+            <span>성별 <b>여성</b></span>
+            <span>생년월일 <b>1983.02.15</b> (만 43세)</span>
+            <span>연락처 <b>010-1234-5678</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="uc-rep-right">
+        <div class="rep-asof">조회일자<br /><b>2026.06.09</b></div>
+        <div class="menu-popover">
+          <button class="menu-trigger" type="button" id="uc-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
+            <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
+          </button>
+          <div class="menu-list" id="uc-menu" hidden role="menu">
+            <button class="menu-item danger" type="button" role="menuitem" data-action="delete">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-trash"/></svg>
+              삭제하기
+            </button>
+            <button class="menu-item" type="button" role="menuitem" data-action="print">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+              리포트 출력하기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 조회 조건 ===== -->
+    <section class="uc-filter">
+      <div class="uc-filter-cap">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-search"/></svg>
+        조회 조건
+      </div>
+      <div class="uc-filter-row">
+        <div class="uc-filter-l">
+          <svg class="ic-svg" width="17" height="17"><use href="#i-calendar"/></svg>
+          조회년도
+        </div>
+        <div class="uc-filter-b">
+          <div class="uc-chips" id="year-chips">
+            <button type="button" class="uc-chip year" data-year="2025">2025년</button>
+            <button type="button" class="uc-chip year" data-year="2024">2024년</button>
+            <button type="button" class="uc-chip year" data-year="2023">2023년</button>
+            <button type="button" class="uc-chip year on" data-year="2022">2022년</button>
+            <button type="button" class="uc-chip year" data-year="2021">2021년</button>
+            <span class="uc-ycap">
+              <svg class="ic-svg" width="14" height="14"><use href="#i-calendar"/></svg>
+              최근 5개 연도 조회됨
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="uc-filter-row">
+        <div class="uc-filter-l">
+          <svg class="ic-svg" width="17" height="17"><use href="#i-shield"/></svg>
+          실손보험 세대
+          <span class="hint-q" title="실손보험 세대별 자기부담률이 다릅니다">?</span>
+        </div>
+        <div class="uc-filter-b">
+          <div class="uc-chips" id="gen-chips">
+            <button type="button" class="uc-chip gen" data-gen="1">1세대</button>
+            <button type="button" class="uc-chip gen on" data-gen="2">2세대</button>
+            <button type="button" class="uc-chip gen" data-gen="3">3세대</button>
+            <button type="button" class="uc-chip gen" data-gen="4">4세대</button>
+          </div>
+          <div class="uc-gen-desc">
+            <b id="gen-tag">표준화 실손 · 2009.10~2017.3</b>
+            <span id="gen-desc">급여·비급여 자기부담 10~20% 수준입니다.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 미청구보험금 계산 결과 ===== -->
+    <section class="uc-result">
+      <div class="uc-result-head">
+        <h2>미청구보험금 계산 결과</h2>
+        <span class="s">2022년 · <b id="result-gen">2세대 실손보험</b> 기준</span>
+      </div>
+      <div class="uc-eq">
+        <div class="uc-card">
+          <div class="uc-card-l">의료비 <span class="hint-q">?</span></div>
+          <div class="uc-amt"><span class="n">1,122,370</span><span class="w">원</span></div>
+        </div>
+        <div class="uc-op">−</div>
+        <div class="uc-card">
+          <div class="uc-card-l">받은 실손보험금 <span class="hint-q">?</span></div>
+          <div class="uc-amt"><span class="n" id="amt-received">648,770</span><span class="w">원</span></div>
+        </div>
+        <div class="uc-op">=</div>
+        <div class="uc-card primary">
+          <div class="uc-card-l">미청구보험금 <span class="hint-q">?</span></div>
+          <div class="uc-amt"><span class="n" id="amt-unclaimed">473,600</span><span class="w">원</span></div>
+        </div>
+      </div>
+
+      <div class="uc-notice">
+        <p><span class="dot">·</span><span>연말정산 간소화에서 자녀가 조회 대상에 포함되어 있고 자료 제공 동의가 되어 있으면 의료비 내역에도 자녀 내역까지 함께 조회됩니다.</span></p>
+        <p><span class="dot">·</span><span>비급여 미용진료 항목은 약관상 보상이 어려우나, 리스트에는 의료비 내역으로 포함됩니다.</span></p>
+        <p><span class="dot">·</span><span>미청구 보험금 청구 시 상세 내역은 심사 과정에서 조정될 수 있습니다.</span></p>
+      </div>
+    </section>
+
+    <!-- ===== 의료비내역 ===== -->
+    <section class="uc-visits">
+      <div class="rec-head">
+        <div class="rec-tabs" role="tablist">
+          <button class="rec-tab on" type="button" role="tab" data-tab="medical" aria-selected="true">의료비내역</button>
+          <button class="rec-tab" type="button" role="tab" data-tab="insurance" aria-selected="false">실손의료비보험료내역</button>
+        </div>
+        <div class="uc-sec-actions">
+          <span class="uc-sec-count">총 <b id="visit-count">11</b>건 조회됨</span>
+          <a class="uc-btn" href="https://cont.insure.or.kr/cont_web/intro.do" target="_blank" rel="noopener">
+            <img src="../../assets/icons/icn_unclaimed.png" height="18" alt="" />
+            숨은보험금찾기
+          </a>
+          <button type="button" class="uc-btn" id="weplat-btn">위플랫 보험금청구</button>
+          <button type="button" class="smart-cta">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
+            저장
+          </button>
+        </div>
+      </div>
+
+      <table>
+        <thead id="visit-thead"></thead>
+        <tbody id="visit-tbody"></tbody>
+      </table>
+
+      <div class="uc-pagination">
+        <button class="uc-pg" type="button" aria-label="이전"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg></button>
+        <button class="uc-pg on" type="button">1</button>
+        <button class="uc-pg" type="button">2</button>
+        <button class="uc-pg" type="button">3</button>
+        <button class="uc-pg dots" type="button">…</button>
+        <button class="uc-pg" type="button" aria-label="다음"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></button>
+      </div>
+    </section>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+
+<!-- ===== 위플랫 안내 모달 ===== -->
+<div class="wp-modal" id="weplat-modal" hidden role="dialog" aria-modal="true" aria-labelledby="wp-modal-text">
+  <div class="wp-modal-card">
+    <button class="wp-modal-close" type="button" id="weplat-close" aria-label="닫기">
+      <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+    </button>
+    <img class="wp-modal-icon" src="../../assets/icons/icn_unclaimed_weplat.png" alt="" />
+    <p class="wp-modal-text" id="wp-modal-text">고객님이 직접 청구하길 원한다면<br/>위플랫 보험금청구를 이용해 주세요</p>
+    <div class="wp-modal-actions">
+      <a class="wp-modal-cta" href="https://play.google.com/store/apps/details?id=com.percent99.app&hl=ko" target="_blank" rel="noopener">
+        Play 스토어에서 보기
+        <svg class="ic-svg" width="14" height="14"><use href="#i-arrow-right"/></svg>
+      </a>
+      <button type="button" class="wp-modal-copy" id="weplat-copy" data-url="https://play.google.com/store/apps/details?id=com.percent99.app&hl=ko">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-copy"/></svg>
+        <span>링크 복사</span>
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+(function () {
+  // ===== 데이터 =====
+  var MEDICAL = 1122370;
+
+  var GENS = {
+    1: { name: '1세대', tag: '구 실손 · ~2009.9',           received: 785660, desc: '자기부담이 거의 없어 보장 범위가 가장 큽니다.' },
+    2: { name: '2세대', tag: '표준화 실손 · 2009.10~2017.3', received: 648770, desc: '급여·비급여 자기부담 10~20% 수준입니다.' },
+    3: { name: '3세대', tag: '착한실손 · 2017.4~2021.6',     received: 561180, desc: '급여 10%·비급여 20% + 특약 구조입니다.' },
+    4: { name: '4세대', tag: '4세대 실손 · 2021.7~',         received: 471400, desc: '급여 20%·비급여 30%로 자기부담이 가장 큽니다.' }
+  };
+
+  var VISITS = [
+    { date: '2022.12.20', place: '퍼스트의원',   fee: 34200 },
+    { date: '2022.12.20', place: '서울약국',     fee: 3600 },
+    { date: '2022.12.07', place: '퍼스트의원',   fee: 4400 },
+    { date: '2022.12.07', place: '서울약국',     fee: 6400 },
+    { date: '2022.11.10', place: '퍼스트의원',   fee: 5600 },
+    { date: '2022.11.10', place: '서울약국',     fee: 6700 },
+    { date: '2022.09.18', place: '삼성내과',     fee: 18900 },
+    { date: '2022.09.18', place: '온누리약국',   fee: 5200 },
+    { date: '2022.06.03', place: '미소치과의원', fee: 42000 },
+    { date: '2022.03.22', place: '퍼스트의원',   fee: 7800 },
+    { date: '2022.03.22', place: '서울약국',     fee: 4100 }
+  ];
+
+  var INSURANCE_PAYMENTS = [
+    { paidDate:'2022년 12월', insurer:'삼성화재해상보험 (주)', product:'무배당 삼성화재 통합보험 수퍼', fee:38000 },
+    { paidDate:'2022년 11월', insurer:'삼성화재해상보험 (주)', product:'무배당 삼성화재 통합보험 수퍼', fee:12300 },
+    { paidDate:'2022년 09월', insurer:'현대해상화재보험 (주)', product:'하이라이프 실손의료비보험',      fee:24100 },
+    { paidDate:'2022년 06월', insurer:'현대해상화재보험 (주)', product:'하이라이프 실손의료비보험',      fee:42000 },
+    { paidDate:'2022년 03월', insurer:'삼성화재해상보험 (주)', product:'무배당 삼성화재 통합보험 수퍼', fee:8900 }
+  ];
+
+  var activeTab = 'medical';
+
+  var won = function (n) { return n.toLocaleString('ko-KR'); };
+
+  // ===== 실손보험 세대 → 결과 재계산 =====
+  var genId = 2;
+
+  function renderResult() {
+    var g = GENS[genId];
+    document.getElementById('amt-received').textContent = won(g.received);
+    document.getElementById('amt-unclaimed').textContent = won(MEDICAL - g.received);
+    document.getElementById('gen-tag').textContent = g.tag;
+    document.getElementById('gen-desc').textContent = g.desc;
+    document.getElementById('result-gen').textContent = g.name + ' 실손보험';
+
+    document.querySelectorAll('#gen-chips .uc-chip.gen').forEach(function (c) {
+      c.classList.toggle('on', parseInt(c.dataset.gen, 10) === genId);
+    });
+  }
+
+  document.querySelectorAll('#gen-chips .uc-chip.gen').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      genId = parseInt(chip.dataset.gen, 10);
+      renderResult();
+    });
+  });
+
+  // ===== 조회년도 칩 (선택 토글) =====
+  document.querySelectorAll('#year-chips .uc-chip.year').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      document.querySelectorAll('#year-chips .uc-chip.year').forEach(function (c) { c.classList.remove('on'); });
+      chip.classList.add('on');
+    });
+  });
+
+  // ===== 의료비내역 테이블 =====
+  function renderTable() {
+    var thead = document.getElementById('visit-thead');
+    var tbody = document.getElementById('visit-tbody');
+    var countEl = document.getElementById('visit-count');
+
+    if (activeTab === 'medical') {
+      thead.innerHTML = '<tr><th>진료일</th><th>병·의원, 약국</th><th class="amt">진료비</th></tr>';
+      tbody.innerHTML = VISITS.map(function (v) {
+        return '<tr>'
+          + '<td>' + v.date + '</td>'
+          + '<td class="num">' + v.place + '</td>'
+          + '<td class="amt">' + won(v.fee) + '원</td>'
+          + '</tr>';
+      }).join('');
+      countEl.textContent = VISITS.length;
+    } else {
+      thead.innerHTML = '<tr><th>지급일</th><th>보험사</th><th>상품명</th><th class="amt">진료비</th></tr>';
+      tbody.innerHTML = INSURANCE_PAYMENTS.map(function (p) {
+        return '<tr>'
+          + '<td>' + p.paidDate + '</td>'
+          + '<td class="num">' + p.insurer + '</td>'
+          + '<td>' + p.product + '</td>'
+          + '<td class="amt">' + won(p.fee) + '원</td>'
+          + '</tr>';
+      }).join('');
+      countEl.textContent = INSURANCE_PAYMENTS.length;
+    }
+  }
+
+  // 탭 전환
+  document.querySelectorAll('.rec-tab[data-tab]').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      activeTab = tab.dataset.tab;
+      document.querySelectorAll('.rec-tab[data-tab]').forEach(function (t) {
+        var on = t.dataset.tab === activeTab;
+        t.classList.toggle('on', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      renderTable();
+    });
+  });
+
+  renderTable();
+  renderResult();
+
+  // ===== 더보기 메뉴 (삭제 / 리포트 출력) =====
+  (function () {
+    var menuBtn = document.getElementById('uc-menu-btn');
+    var menu = document.getElementById('uc-menu');
+    if (!menuBtn || !menu) return;
+    var popover = menuBtn.closest('.menu-popover');
+    function openMenu() { menu.hidden = false; menuBtn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); }
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.hidden ? openMenu() : closeMenu();
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.hidden && popover && !popover.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !menu.hidden) closeMenu();
+    });
+  })();
+
+  // ===== 위플랫 안내 모달 open/close =====
+  var weplatBtn = document.getElementById('weplat-btn');
+  var weplatModal = document.getElementById('weplat-modal');
+  var weplatClose = document.getElementById('weplat-close');
+  var weplatCopy = document.getElementById('weplat-copy');
+  if (weplatBtn && weplatModal) {
+    weplatBtn.addEventListener('click', function () { weplatModal.hidden = false; });
+    weplatClose.addEventListener('click', function () { weplatModal.hidden = true; });
+    weplatModal.addEventListener('click', function (e) {
+      if (e.target === weplatModal) weplatModal.hidden = true;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !weplatModal.hidden) weplatModal.hidden = true;
+    });
+  }
+  if (weplatCopy) {
+    var copyLabel = weplatCopy.querySelector('span');
+    var copyDefault = copyLabel.textContent;
+    weplatCopy.addEventListener('click', function () {
+      var url = weplatCopy.dataset.url;
+      var done = function () {
+        weplatCopy.classList.add('copied');
+        copyLabel.textContent = '복사됨';
+        setTimeout(function () {
+          weplatCopy.classList.remove('copied');
+          copyLabel.textContent = copyDefault;
+        }, 1500);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done).catch(function () {
+          // fallback
+          var ta = document.createElement('textarea');
+          ta.value = url; document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); done(); } finally { document.body.removeChild(ta); }
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = url; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } finally { document.body.removeChild(ta); }
+      }
+    });
+  }
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('claim');</script>
+</body>
+</html>

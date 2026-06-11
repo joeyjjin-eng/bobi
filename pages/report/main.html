@@ -19,6 +19,10 @@
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
+  /* 환자 헤더 — 박스 없이 상단으로 (미청구보험금 결과 화면과 동일 패턴) */
+  .cE .rep-head { padding: 12px 0 22px; border: none; border-radius: 0; margin-top: 0; }
+  .cE .rep-head-right { display: flex; align-items: center; gap: 16px; }
+
   /* 환자 이름 → 고객 상세로 이동 링크 */
   .cE .rep-id .cust-link { color: inherit; text-decoration: none; border-bottom: 2px dashed var(--ink-4); padding-bottom: 1px; transition: color .2s ease, border-bottom-color .2s ease; }
   .cE .rep-id .cust-link:hover { color: var(--brand-deep); border-bottom-color: var(--brand); }
@@ -45,31 +49,6 @@
   <div id="gnb-host"></div>
 
   <main class="emain">
-    <div class="etop">
-      <div>
-        <h1>진료기록 리포트</h1>
-        <div class="sub">고객의 진료내역 분석 리포트</div>
-      </div>
-      <div class="menu-popover">
-        <button class="menu-trigger" type="button" id="report-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
-          <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
-        </button>
-        <div class="menu-list" id="report-menu" hidden role="menu">
-          <button class="menu-item danger" type="button" role="menuitem" data-action="delete">
-            <svg class="ic-svg" width="16" height="16"><use href="#i-trash"/></svg>
-            삭제
-          </button>
-          <button class="menu-item" type="button" role="menuitem" data-action="print">
-            <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
-            리포트 출력하기
-          </button>
-          <button class="menu-item" type="button" role="menuitem" data-action="send">
-            <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
-            리포트 전송하기
-          </button>
-        </div>
-      </div>
-    </div>
 
     <div class="rep-head">
       <div class="rep-id">
@@ -85,7 +64,28 @@
           </div>
         </div>
       </div>
-      <div class="rep-asof">조회일자<br /><b style="color:var(--ink);font-size:var(--fs-body)">2025.08.27</b></div>
+      <div class="rep-head-right">
+        <div class="rep-asof">조회일자<br /><b style="color:var(--ink);font-size:var(--fs-body)">2025.08.27</b></div>
+        <div class="menu-popover">
+          <button class="menu-trigger" type="button" id="report-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
+            <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
+          </button>
+          <div class="menu-list" id="report-menu" hidden role="menu">
+            <button class="menu-item danger" type="button" role="menuitem" data-action="delete">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-trash"/></svg>
+              삭제
+            </button>
+            <button class="menu-item" type="button" role="menuitem" data-action="print">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+              리포트 출력하기
+            </button>
+            <button class="menu-item" type="button" role="menuitem" data-action="send">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+              리포트 전송하기
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card-pad">
@@ -1031,17 +1031,7 @@
     }));
   })();
 
-  // 환자 프로필 아바타 — 성씨 기반 색상
-  (function(){
-    const palette = ['#8FB8C4','#E89A9A','#B89AC4','#9AC4A6','#D4B88A','#9AB8E0','#E0A8C0','#9AC4B8','#C49AAE','#A8BFA4'];
-    document.querySelectorAll('.patient-avatar[data-name]').forEach(el => {
-      const name = el.dataset.name;
-      if (!name) return;
-      el.textContent = name.charAt(0);
-      const idx = Math.abs(name.charCodeAt(0)) % palette.length;
-      el.style.background = palette[idx];
-    });
-  })();
+  // 환자 프로필 아바타 채색 → components/layout.js의 paintPatientAvatars()로 이전됨
 
   // 보충 설명 팝오버
   (function(){
