@@ -316,16 +316,16 @@
 (function () {
   // ===== 고객 데이터 =====
   var CUSTOMERS = [
-    { name:'김진주', phone:'010-1234-5678', gender:'여', birth:'1983.04.12', reg:'2026.05.20' },
+    { name:'김진주', phone:'010-1234-5678', gender:'여', birth:'1983.02.15', reg:'2026.06.09' },
     { name:'박민호', phone:'010-9876-5432', gender:'남', birth:'1997.11.03', reg:'2026.05.20' },
-    { name:'장숙영', phone:'010-2345-6789', gender:'여', birth:'1984.02.27', reg:'2026.05.18' },
+    { name:'장숙영', phone:'010-7715-2230', gender:'여', birth:'1983.03.28', reg:'2026.06.08' },
     { name:'오미자', phone:'010-3456-7890', gender:'여', birth:'1979.08.09', reg:'2026.05.17' },
     { name:'김정운', phone:'010-4567-8901', gender:'여', birth:'1982.06.30', reg:'2026.05.15' },
     { name:'황정연', phone:'010-5678-9012', gender:'여', birth:'1972.12.15', reg:'2026.05.14' },
     { name:'최부명', phone:'010-6789-0123', gender:'남', birth:'1981.03.22', reg:'2026.05.12' },
     { name:'이성환', phone:'010-7890-1234', gender:'남', birth:'1988.09.18', reg:'2026.05.11' },
     { name:'정하윤', phone:'010-8901-2345', gender:'여', birth:'1995.07.06', reg:'2026.05.09' },
-    { name:'송민재', phone:'010-9012-3456', gender:'남', birth:'1964.01.29', reg:'2026.05.08' },
+    { name:'송민재', phone:'010-3392-7741', gender:'남', birth:'1963.11.02', reg:'2026.06.09' },
     { name:'유지원', phone:'010-0123-4567', gender:'여', birth:'1999.05.14', reg:'2026.05.06' },
     { name:'한재현', phone:'010-1357-2468', gender:'남', birth:'1971.10.02', reg:'2026.05.05' }
   ];
@@ -719,6 +719,16 @@
   // 초기 렌더
   renderCustList();
   refreshUI();
+
+  // ===== URL 파라미터 ?customer=이름 → step 2(본인인증)로 자동 진입 =====
+  // (고객 상세에서 "조회 시작하기" 클릭 시 고객을 다시 고르지 않도록)
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var target = params.get('customer');
+    if (!target) return;
+    var matched = CUSTOMERS.filter(function (c) { return c.name === target; })[0];
+    if (matched) selectCustomer(matched);
+  })();
 })();
 </script>
 

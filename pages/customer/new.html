@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 고객 추가</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* 페이지 레이아웃 */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* 페이지 타이틀 */
+  .cE .page-title { display: flex; align-items: center; gap: 14px; padding: 28px 0 24px; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
+  .cE .page-title .pt-ic { width: 44px; height: 44px; border-radius: 12px; background: #FFE0CB; color: #C9603A; display: grid; place-items: center; flex: none; }
+  .cE .page-title h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .page-title .pt-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; line-height: 1.45; }
+
+  /* 폼 카드 (중앙 정렬, 단일 컬럼) */
+  .cE .form-wrap { display: flex; justify-content: center; margin-top: 8px; margin-bottom: 40px; }
+  .cE .form-card { width: 100%; max-width: 640px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px 36px 28px; box-shadow: var(--sh-1); }
+
+  /* 안내 배너 — 핵심: 연락처로 약관동의 링크 발송 */
+  .cE .info-banner { display: flex; gap: 11px; padding: 14px 16px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 12px; margin-bottom: 24px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.55; }
+  .cE .info-banner svg { color: var(--brand-deep); flex: none; margin-top: 1px; }
+  .cE .info-banner b { color: var(--brand-deep); font-weight: 800; }
+
+  /* 폼 필드 */
+  .cE .form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .cE .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cE .form-row .form-field { margin-bottom: 20px; }
+  .cE .f-label { font-size: var(--fs-option); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; display: flex; align-items: center; gap: 6px; }
+  .cE .f-label .req { color: #C9603A; font-weight: 800; }
+  .cE .f-label .opt { font-size: 11px; color: var(--ink-4); font-weight: 600; padding: 2px 7px; background: var(--bg-soft); border-radius: var(--r-pill); margin-left: 2px; }
+  .cE .f-input { height: 46px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: #fff; font-family: inherit; font-size: var(--fs-body); color: var(--ink); letter-spacing: -0.01em; transition: border-color .15s ease, box-shadow .15s ease; box-sizing: border-box; width: 100%; }
+  .cE .f-input::placeholder { color: var(--ink-4); }
+  .cE .f-input:hover { border-color: var(--ink-3); }
+  .cE .f-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,0.16); }
+  .cE .f-hint { font-size: var(--fs-option); color: var(--ink-3); margin: 0; line-height: 1.5; }
+
+  /* 성별 segmented control */
+  .cE .seg-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: 46px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); overflow: hidden; background: #fff; }
+  .cE .seg-btn { border: none; background: transparent; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background-color .15s ease, color .15s ease; letter-spacing: -0.01em; }
+  .cE .seg-btn + .seg-btn { border-left: 1px solid var(--line); }
+  .cE .seg-btn:hover { background: var(--bg-soft); color: var(--ink); }
+  .cE .seg-btn.on { background: var(--brand-pale); color: var(--brand-deep); font-weight: 800; }
+  .cE .seg-btn.on.f { background: #FBEEF0; color: #C16070; }
+  .cE .seg-btn .seg-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0; transition: opacity .15s ease; }
+  .cE .seg-btn.on .seg-dot { opacity: 1; }
+
+  /* 액션 바 */
+  .cE .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .cE .btn-cancel { display: inline-flex; align-items: center; justify-content: center; height: 46px; padding: 0 24px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; text-decoration: none; letter-spacing: -0.01em; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .btn-cancel:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
+  .cE .btn-submit { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 26px; background: linear-gradient(135deg, #FFC299 0%, #FF8E5C 45%, #C9603A 100%); color: #fff; border: 1px solid transparent; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; box-shadow: 0 10px 30px rgba(255, 142, 92, 0.32); transition: filter .15s ease, transform .15s ease, background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+  .cE .btn-submit:hover:not(:disabled) { filter: brightness(1.05); transform: translateY(-1px); }
+  .cE .btn-submit:disabled { background: #FFF1E8; color: #C9603A; border-color: #FFD4B5; box-shadow: none; cursor: not-allowed; filter: none; transform: none; }
+
+  /* ===== 발송 확인 모달 ===== */
+  .confirm-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
+  .confirm-modal[hidden] { display: none; }
+  .confirm-card { position: relative; background: #fff; border-radius: 18px; padding: 28px 32px 22px; max-width: 420px; width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.25); box-sizing: border-box; text-align: center; }
+  .confirm-card .cf-close { position: absolute; top: 12px; right: 12px; background: none; border: none; padding: 8px; cursor: pointer; color: var(--ink-3); display: inline-flex; border-radius: 8px; transition: color .15s ease, background-color .15s ease; }
+  .confirm-card .cf-close:hover { background: var(--bg-soft); color: var(--ink); }
+  .confirm-card .cf-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .confirm-card .cf-ic { width: 48px; height: 48px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; margin: 0 auto 14px; }
+  .confirm-card .cf-ic svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .confirm-card .cf-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 6px; line-height: 1.4; }
+  .confirm-card .cf-sub { font-size: var(--fs-option); color: var(--ink-3); margin: 0 0 20px; line-height: 1.55; font-weight: 500; }
+  .confirm-card .cf-sub b { color: var(--ink-2); font-weight: 700; }
+
+  .confirm-card .cf-info { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+  .confirm-card .ci-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .confirm-card .ci-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .confirm-card .ci-v { font-size: var(--fs-body); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  .confirm-card .ci-row.primary .ci-v { color: var(--brand-deep); font-variant-numeric: tabular-nums; }
+
+  .confirm-card .cf-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .confirm-card .cf-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 44px; padding: 0 16px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, border-color .15s ease, color .15s ease, filter .15s ease, transform .15s ease; box-sizing: border-box; }
+  .confirm-card .cf-btn.cancel { background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); }
+  .confirm-card .cf-btn.cancel:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
+  .confirm-card .cf-btn.send { background: var(--brand); color: #fff; border: 1px solid transparent; }
+  .confirm-card .cf-btn.send:hover { background: var(--brand-hover); }
+  .confirm-card .cf-btn svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <a class="back-btn" href="list.html" style="margin-top:4px">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
+    </a>
+
+    <div class="page-title">
+      <div class="pt-ic">
+        <svg class="ic-svg" width="22" height="22"><use href="#i-plus"/></svg>
+      </div>
+      <div>
+        <h1>고객 추가</h1>
+        <div class="pt-sub">새 고객 정보를 입력하면 연락처로 약관동의 링크가 자동 발송됩니다</div>
+      </div>
+    </div>
+
+    <div class="form-wrap">
+      <form class="form-card" id="add-form" autocomplete="off">
+
+        <div class="info-banner">
+          <svg class="ic-svg" width="18" height="18"><use href="#i-send"/></svg>
+          <span>입력하신 <b>연락처로 약관동의 링크가 SMS로 발송</b>됩니다. 고객이 동의를 완료해야 진료기록·미청구보험금 조회를 진행할 수 있어요.</span>
+        </div>
+
+        <div class="form-field">
+          <label class="f-label" for="f-name">이름 <span class="req">*</span></label>
+          <input type="text" id="f-name" class="f-input" placeholder="예: 김진주" required maxlength="20" />
+        </div>
+
+        <div class="form-field">
+          <label class="f-label" for="f-phone">연락처 <span class="req">*</span></label>
+          <input type="tel" id="f-phone" class="f-input" placeholder="010-0000-0000" required maxlength="13" inputmode="numeric" />
+          <p class="f-hint">약관동의 링크가 이 번호로 SMS 발송됩니다.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label class="f-label" for="f-birth">생년월일 <span class="opt">선택</span></label>
+            <input type="text" id="f-birth" class="f-input" placeholder="YYYY.MM.DD" maxlength="10" inputmode="numeric" autocomplete="off" />
+          </div>
+          <div class="form-field">
+            <label class="f-label">성별 <span class="opt">선택</span></label>
+            <div class="seg-group" id="f-gender" role="radiogroup" aria-label="성별">
+              <button type="button" class="seg-btn m" data-v="남" role="radio" aria-checked="false">
+                <span class="seg-dot"></span> 남성
+              </button>
+              <button type="button" class="seg-btn f" data-v="여" role="radio" aria-checked="false">
+                <span class="seg-dot"></span> 여성
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a class="btn-cancel" href="list.html">취소</a>
+          <button class="btn-submit" type="submit" id="f-submit" disabled>
+            <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+            등록하고 링크 발송
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<!-- ===== 발송 확인 모달 ===== -->
+<div class="confirm-modal" id="confirm-modal" hidden role="dialog" aria-modal="true" aria-labelledby="cf-title">
+  <div class="confirm-card">
+    <button class="cf-close" type="button" id="cf-close-x" aria-label="닫기">
+      <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+    </button>
+    <div class="cf-ic"><svg class="ic-svg" width="26" height="26"><use href="#i-send"/></svg></div>
+    <h3 class="cf-title" id="cf-title">약관동의 링크를 발송할까요?</h3>
+    <p class="cf-sub">발송 후엔 회수할 수 없으니 <b>연락처를 한 번 더 확인</b>해주세요.</p>
+
+    <div class="cf-info">
+      <div class="ci-row">
+        <span class="ci-l">이름</span>
+        <span class="ci-v" id="cf-name">—</span>
+      </div>
+      <div class="ci-row primary">
+        <span class="ci-l">연락처 (SMS 수신)</span>
+        <span class="ci-v" id="cf-phone">—</span>
+      </div>
+    </div>
+
+    <div class="cf-actions">
+      <button type="button" class="cf-btn cancel" id="cf-cancel">수정하기</button>
+      <button type="button" class="cf-btn send" id="cf-send">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+        발송하기
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var nameInput = document.getElementById('f-name');
+    var phoneInput = document.getElementById('f-phone');
+    var birthInput = document.getElementById('f-birth');
+    var submitBtn = document.getElementById('f-submit');
+    var form = document.getElementById('add-form');
+
+    // 연락처 자동 포맷 (010-XXXX-XXXX)
+    phoneInput.addEventListener('input', function (e) {
+      var digits = e.target.value.replace(/\D/g, '').slice(0, 11);
+      var out = digits;
+      if (digits.length > 3 && digits.length <= 7) {
+        out = digits.slice(0, 3) + '-' + digits.slice(3);
+      } else if (digits.length > 7) {
+        out = digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
+      }
+      e.target.value = out;
+      validate();
+    });
+
+    // 생년월일 자동 포맷 (YYYY.MM.DD)
+    birthInput.addEventListener('input', function (e) {
+      var digits = e.target.value.replace(/\D/g, '').slice(0, 8);
+      var out = digits;
+      if (digits.length > 4 && digits.length <= 6) {
+        out = digits.slice(0, 4) + '.' + digits.slice(4);
+      } else if (digits.length > 6) {
+        out = digits.slice(0, 4) + '.' + digits.slice(4, 6) + '.' + digits.slice(6);
+      }
+      e.target.value = out;
+    });
+
+    // 성별 선택
+    var gender = null;
+    document.querySelectorAll('#f-gender .seg-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('#f-gender .seg-btn').forEach(function (b) {
+          b.classList.remove('on');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('on');
+        btn.setAttribute('aria-checked', 'true');
+        gender = btn.dataset.v;
+      });
+    });
+
+    // 이름 입력
+    nameInput.addEventListener('input', validate);
+
+    function validate() {
+      var nameOk = nameInput.value.trim().length > 0;
+      // 연락처: 010-XXXX-XXXX (13자) 또는 숫자 11자
+      var phoneDigits = phoneInput.value.replace(/\D/g, '');
+      var phoneOk = phoneDigits.length === 10 || phoneDigits.length === 11;
+      submitBtn.disabled = !(nameOk && phoneOk);
+    }
+
+    // ===== 발송 확인 모달 =====
+    var confirmModal = document.getElementById('confirm-modal');
+    var cfName = document.getElementById('cf-name');
+    var cfPhone = document.getElementById('cf-phone');
+    var cfCancel = document.getElementById('cf-cancel');
+    var cfCloseX = document.getElementById('cf-close-x');
+    var cfSend = document.getElementById('cf-send');
+
+    function openConfirm() {
+      cfName.textContent = nameInput.value.trim() + '님';
+      cfPhone.textContent = phoneInput.value.trim();
+      confirmModal.hidden = false;
+      // 발송 버튼에 자동 포커스 — 키보드 사용자가 Enter로 빠르게 진행 가능
+      setTimeout(function () { cfSend.focus(); }, 50);
+    }
+    function closeConfirm() {
+      confirmModal.hidden = true;
+      submitBtn.focus();
+    }
+    cfCancel.addEventListener('click', closeConfirm);
+    cfCloseX.addEventListener('click', closeConfirm);
+    confirmModal.addEventListener('click', function (e) {
+      if (e.target === confirmModal) closeConfirm();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !confirmModal.hidden) closeConfirm();
+    });
+
+    // 폼 submit → 확인 모달 띄움 (즉시 발송 X)
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+      openConfirm();
+    });
+
+    // 최종 발송 (모달의 발송 버튼)
+    cfSend.addEventListener('click', function () {
+      var name = nameInput.value.trim();
+      var phone = phoneInput.value.trim();
+      var birth = birthInput.value || null;
+      var sex = gender || null;
+
+      var msg = '✓ ' + name + '님 고객 등록 완료\n\n약관동의 링크가 ' + phone + ' 로 SMS 발송되었습니다.';
+      alert(msg);
+      window.location.href = 'list.html';
+    });
+  })();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('customer');</script>
+</body>
+</html>

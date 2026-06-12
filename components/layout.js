@@ -108,7 +108,7 @@
       +   '</div>'
       +   '<nav class="enav">'
       +     navItem('home',     BASE + 'home.html',                  'i-home',         '홈')
-      +     navItem('customer', BASE + 'pages/customer/detail.html',    'i-users',        '내고객')
+      +     navItem('customer', BASE + 'pages/customer/list.html',      'i-users',        '내고객')
       +     navItem('report',   BASE + 'pages/report/history.html',     'i-file-text',    '진료기록 리포트')
       +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금')
       +     navItem('smart',    '#',                                    'i-sparkles',     '스마트보비', '<span class="badge"></span>')

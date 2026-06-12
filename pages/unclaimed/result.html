@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -243,7 +244,7 @@
             숨은보험금찾기
           </a>
           <button type="button" class="uc-btn" id="weplat-btn">위플랫 보험금청구</button>
-          <button type="button" class="smart-cta">
+          <button type="button" class="smart-cta" id="save-xlsx-btn">
             <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
             저장
           </button>
@@ -405,6 +406,42 @@
 
   renderTable();
   renderResult();
+
+  // ===== 저장 — xlsx 다운로드 (의료비내역 / 실손의료비보험료내역 2개 시트) =====
+  (function () {
+    var saveBtn = document.getElementById('save-xlsx-btn');
+    if (!saveBtn) return;
+    saveBtn.addEventListener('click', function () {
+      if (!window.XLSX) {
+        alert('엑셀 라이브러리 로드에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        return;
+      }
+      var wb = XLSX.utils.book_new();
+
+      // 시트 1: 의료비내역
+      var medRows = [['진료일', '병·의원, 약국', '진료비(원)']];
+      VISITS.forEach(function (v) {
+        medRows.push([v.date, v.place, v.fee]);
+      });
+      var ws1 = XLSX.utils.aoa_to_sheet(medRows);
+      ws1['!cols'] = [{ wch: 14 }, { wch: 24 }, { wch: 14 }];
+      XLSX.utils.book_append_sheet(wb, ws1, '의료비내역');
+
+      // 시트 2: 실손의료비보험료내역
+      var insRows = [['지급일', '보험사', '상품명', '진료비(원)']];
+      INSURANCE_PAYMENTS.forEach(function (p) {
+        insRows.push([p.paidDate, p.insurer, p.product, p.fee]);
+      });
+      var ws2 = XLSX.utils.aoa_to_sheet(insRows);
+      ws2['!cols'] = [{ wch: 14 }, { wch: 22 }, { wch: 32 }, { wch: 14 }];
+      XLSX.utils.book_append_sheet(wb, ws2, '실손의료비보험료내역');
+
+      // 파일명: 김진주_미청구보험금_2022.xlsx
+      var patient = '김진주';
+      var year = '2022';
+      XLSX.writeFile(wb, patient + '_미청구보험금_' + year + '.xlsx');
+    });
+  })();
 
   // ===== 더보기 메뉴 (삭제 / 리포트 출력) =====
   (function () {

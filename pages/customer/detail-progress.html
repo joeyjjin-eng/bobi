@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BoBi · 고객 상세정보</title>
+<title>BoBi · 고객 상세정보 (일부 조회)</title>
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
@@ -11,7 +11,7 @@
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  /* ===== 레이아웃 ===== */
   .layout { width: 100%; min-width: 1100px; }
   .cE { width: 100%; }
   .cE .emain { display: flex; flex-direction: column; align-items: center; }
@@ -19,10 +19,12 @@
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
-  /* ===== 고객 프로필 헤더 (결과 페이지 rep-head 패턴 — 플랫, 카드 배경 없음) ===== */
+  /* ===== 고객 프로필 헤더 ===== */
   .cE .cust-rep-head { padding: 28px 0 32px; border: none; border-radius: 0; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
   .cE .cust-rep-head .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 26px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
-  .cE .cust-rep-head .h-eyebrow { font-size: var(--fs-option); color: var(--brand-deep); font-weight: 700; letter-spacing: 0.02em; }
+  .cE .cust-rep-head .h-eyebrow { font-size: var(--fs-option); color: var(--brand-deep); font-weight: 700; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 8px; }
+  .cE .cust-rep-head .h-eyebrow .status-pill { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; border-radius: var(--r-pill); background: #FFF4E4; color: #B07816; font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em; }
+  .cE .cust-rep-head .h-eyebrow .status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #E6A23F; }
   .cE .cust-rep-head h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 4px 0 0; }
   .cE .cust-rep-head .rep-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; }
   .cE .cust-rep-head .rep-meta span { font-size: var(--fs-option); color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
@@ -33,7 +35,7 @@
   .cE .cust-rep-right .rep-asof { text-align: right; font-size: var(--fs-option); color: var(--ink-3); line-height: 1.5; }
   .cE .cust-rep-right .rep-asof b { color: var(--ink); font-size: var(--fs-body); font-weight: 800; }
 
-  /* ===== 영업 트리거 카드 — 액션을 유도하는 핵심 힌트 ===== */
+  /* ===== 영업 트리거 카드 ===== */
   .cE .trigger-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
   .cE .trigger-cards .label-row { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin-bottom: -2px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; letter-spacing: 0.02em; }
   .cE .trigger-cards .label-row svg { color: var(--brand-deep); }
@@ -49,7 +51,6 @@
   .cE .trig .tc-meta b { color: var(--ink); font-weight: 700; }
   .cE .trig .tc-go { color: var(--ink-4); display: flex; align-items: center; transition: color .12s ease, transform .12s ease; }
 
-  /* 변형: alert(위험 신호) · opp(회수 기회) · lead(영업 단서) */
   .cE .trig.alert::before { background: #D9352B; }
   .cE .trig.alert .tc-ic { background: #FDECEC; color: #C92238; }
   .cE .trig.alert .tc-tag { background: #FDECEC; color: #C92238; }
@@ -69,7 +70,7 @@
   .cE .cust-grid .card-pad h2 .h-action { margin-left: auto; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
   .cE .cust-grid .card-pad h2 .h-action:hover { color: var(--brand-deep); }
 
-  /* 기본 정보 — definition list */
+  /* 기본 정보 */
   .cE .info-dl { display: grid; grid-template-columns: 92px 1fr; row-gap: 14px; column-gap: 16px; align-items: baseline; }
   .cE .info-dl dt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
   .cE .info-dl dd { margin: 0; font-size: var(--fs-body); color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
@@ -78,7 +79,7 @@
   .cE .rel-tag.fresh { background: var(--brand-pale); color: var(--brand-deep); }
   .cE .info-dl .rel-tag { margin-left: 6px; }
 
-  /* 활동 요약 — 등록 / 최근 활동 2분할 */
+  /* 활동 요약 */
   .cE .act-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 16px 18px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-sm); margin: 0; }
   .cE .act-cell { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 0 8px; border-right: 1px solid var(--line); }
   .cE .act-cell:last-child { border-right: none; }
@@ -88,7 +89,7 @@
   .cE .act-cell .act-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
   .cE .act-cell .rel-tag { align-self: flex-start; }
 
-  /* ===== 활동 자세히 보기 모달 (print-modal 패턴 기반) ===== */
+  /* ===== 활동 자세히 보기 모달 ===== */
   .act-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
   .act-modal[hidden] { display: none; }
   .act-modal-card { background: #fff; border-radius: 18px; padding: 28px 32px 24px; max-width: 560px; width: 100%; max-height: 84vh; overflow: auto; box-shadow: 0 24px 60px rgba(0,0,0,0.25); box-sizing: border-box; }
@@ -98,22 +99,22 @@
   .act-modal .info-close { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; padding: 6px 10px; margin: -6px -10px; font-family: inherit; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); cursor: pointer; white-space: nowrap; border-radius: 8px; transition: color .15s ease, background-color .15s ease; }
   .act-modal .info-close:hover { color: var(--ink); background: var(--bg-soft); }
   .act-modal .info-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* 일자 헤더 + 타임라인 */
   .act-modal .act-day-h { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; letter-spacing: 0.02em; padding: 0 0 12px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
   .act-modal .act-day-h b { color: var(--ink); font-weight: 800; margin-right: 6px; font-size: var(--fs-body); }
   .act-modal .act-timeline { list-style: none; padding: 0; margin: 0; }
-  .act-modal .at-item { display: grid; grid-template-columns: 14px 52px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px dashed var(--line); align-items: start; }
+  .act-modal .at-item { display: grid; grid-template-columns: 14px 64px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px dashed var(--line); align-items: start; }
   .act-modal .at-item:last-child { border-bottom: none; padding-bottom: 4px; }
   .act-modal .at-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex: none; }
   .act-modal .at-item.milestone .at-dot { background: #15C0A0; box-shadow: 0 0 0 3px rgba(21,192,160,0.18); }
   .act-modal .at-item.action .at-dot { background: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,0.18); }
-  .act-modal .at-item.note .at-dot { background: var(--ink-3); box-shadow: 0 0 0 3px rgba(124,139,151,0.18); }
+  .act-modal .at-item.pending .at-dot { background: #E6A23F; box-shadow: 0 0 0 3px rgba(230,162,63,0.20); }
   .act-modal .at-time { font-size: var(--fs-option); color: var(--ink-2); font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; letter-spacing: -0.01em; }
   .act-modal .at-event { font-size: var(--fs-body); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 7px; }
   .act-modal .at-event svg { color: var(--ink-3); flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .act-modal .at-item.milestone .at-event svg { color: #15967F; }
   .act-modal .at-item.action .at-event svg { color: var(--brand-deep); }
+  .act-modal .at-item.pending .at-event svg { color: #B07816; }
+  .act-modal .at-item.pending .at-event { color: var(--ink-2); }
   .act-modal .at-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin-top: 4px; line-height: 1.55; }
   .act-modal .at-meta b { color: var(--ink-2); font-weight: 700; font-variant-numeric: tabular-nums; }
 
@@ -127,8 +128,6 @@
   .edit-modal-card .em-close { background: none; border: none; padding: 8px; margin: -8px; cursor: pointer; color: var(--ink-3); display: inline-flex; border-radius: 8px; transition: color .15s ease, background-color .15s ease; flex: none; }
   .edit-modal-card .em-close:hover { background: var(--bg-soft); color: var(--ink); }
   .edit-modal-card .em-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* 폼 필드 (new.html/edit.html 동일 패턴) */
   .edit-modal-card .form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
   .edit-modal-card .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
   .edit-modal-card .form-row .form-field { margin-bottom: 0; }
@@ -139,8 +138,6 @@
   .edit-modal-card .f-input:hover:not([readonly]) { border-color: var(--ink-3); }
   .edit-modal-card .f-input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,0.16); }
   .edit-modal-card .f-input[readonly] { background: var(--bg-soft); color: var(--ink-2); border-color: var(--line); cursor: not-allowed; font-weight: 600; }
-
-  /* 성별 segmented */
   .edit-modal-card .seg-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: 44px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); overflow: hidden; background: #fff; }
   .edit-modal-card .seg-btn { border: none; background: transparent; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background-color .15s ease, color .15s ease; letter-spacing: -0.01em; }
   .edit-modal-card .seg-btn + .seg-btn { border-left: 1px solid var(--line); }
@@ -149,8 +146,6 @@
   .edit-modal-card .seg-btn.on.f { background: #FBEEF0; color: #C16070; }
   .edit-modal-card .seg-btn .seg-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: 0; transition: opacity .15s ease; }
   .edit-modal-card .seg-btn.on .seg-dot { opacity: 1; }
-
-  /* 액션 바 */
   .edit-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
   .edit-modal-card .em-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 44px; padding: 0 22px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, border-color .15s ease, color .15s ease; box-sizing: border-box; }
   .edit-modal-card .em-btn.cancel { background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); }
@@ -171,7 +166,7 @@
   .cE .memo-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px; background: #fff; border: 1px dashed var(--line-strong); border-radius: 10px; color: var(--ink-3); font-family: inherit; font-size: var(--fs-body); font-weight: 600; cursor: pointer; transition: border-color .2s ease, color .2s ease, background-color .2s ease; }
   .cE .memo-add:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); border-style: solid; }
 
-  /* 리포트 발급 이력 테이블 (concept-e.css cd-table 재활용 변형) */
+  /* 리포트 발급 이력 테이블 */
   .cE .rep-table { width: 100%; border-collapse: collapse; }
   .cE .rep-table thead th { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); text-align: left; padding: 12px 12px; border-bottom: 2px solid var(--ink); background: var(--bg-soft); white-space: nowrap; }
   .cE .rep-table thead th.ctr { text-align: center; }
@@ -181,31 +176,26 @@
   .cE .rep-table tbody td.ctr { text-align: center; }
   .cE .rep-table tbody td.amt { color: var(--ink); font-weight: 700; text-align: right; white-space: nowrap; }
   .cE .rep-table tbody tr:hover { background: var(--bg-warm); }
+  .cE .rep-table tbody tr.in-progress { background: var(--bg-soft); }
+  .cE .rep-table tbody tr.in-progress:hover { background: var(--bg-soft); }
+  .cE .rep-table tbody tr.in-progress td { color: var(--ink-3); }
+  .cE .rep-table tbody tr.in-progress td.dt { color: var(--ink-3); font-weight: 500; }
+  .cE .rep-table tbody tr.in-progress td.amt { font-weight: 500; }
   .cE .rep-table .view-link { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); text-decoration: none; padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid var(--brand-soft); background: var(--brand-pale); transition: background-color .2s ease, border-color .2s ease; }
   .cE .rep-table .view-link:hover { background: var(--brand-soft); border-color: var(--brand); }
+  .cE .rep-table .prog-pill { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); padding: 6px 12px; border-radius: var(--r-pill); border: 1px solid var(--brand-soft); background: var(--brand-pale); }
+  .cE .rep-table .prog-pill svg { animation: spin 1.6s linear infinite; }
+  .cE .rep-table .prog-cell { color: var(--ink-4); font-weight: 500; font-style: normal; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* 청구 상태 배지 (조회내역 페이지와 동일) */
-  .cE .claim-badge { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-width: 78px; padding: 5px 12px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; }
-  .cE .claim-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
-  .cE .claim-badge.done { background: #E7FAF6; color: #15967F; }
-  .cE .claim-badge.done::before { background: #2ABBA7; }
-  .cE .claim-badge.pending { background: #FFF0F1; color: #E0445A; }
-  .cE .claim-badge.pending::before { background: #E0445A; }
-
-  /* 미청구 조회 이력 — 합계 산식 노트 */
-  .cE .uc-hist-note { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; padding: 12px 16px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 10px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.5; }
-  .cE .uc-hist-note svg { color: var(--brand-deep); flex: none; }
-  .cE .uc-hist-note b { color: var(--brand-deep); font-weight: 800; font-variant-numeric: tabular-nums; }
-
-  /* 청구 진행 현황 — 미니 타임라인 */
-  .cE .claim-list { display: flex; flex-direction: column; gap: 10px; }
-  .cE .claim-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; padding: 14px 16px; background: var(--bg-soft); border-radius: 10px; }
-  .cE .claim-row .c-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; background: #fff; }
-  .cE .claim-row.done .c-ic { color: #15967F; }
-  .cE .claim-row.pending .c-ic { color: #E0445A; }
-  .cE .claim-row .c-t { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
-  .cE .claim-row .c-d { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
-  .cE .claim-row .c-d b { color: var(--ink-2); font-weight: 700; }
+  /* ===== 빈 상태 + CTA ===== */
+  .cE .empty-state { padding: 36px 16px; text-align: center; border: 1px dashed var(--line-strong); border-radius: var(--r-md); background: var(--bg-soft); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .cE .empty-state .es-ic { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: var(--ink-4); border: 1px solid var(--line); }
+  .cE .empty-state .es-t { font-size: var(--fs-body); color: var(--ink-2); font-weight: 700; }
+  .cE .empty-state .es-d { font-size: var(--fs-option); color: var(--ink-3); line-height: 1.5; max-width: 420px; }
+  .cE .empty-state .es-d b { color: var(--ink-2); font-weight: 700; }
+  .cE .empty-state .es-cta { display: inline-flex; align-items: center; gap: 7px; margin-top: 6px; padding: 11px 22px; background: var(--brand); color: #fff; text-decoration: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; box-shadow: var(--sh-brand); transition: background-color .2s ease; }
+  .cE .empty-state .es-cta:hover { background: var(--brand-hover); }
 </style>
 </head>
 <body>
@@ -218,22 +208,22 @@
 
   <main class="emain">
 
-    <a class="back-btn" href="#">
+    <a class="back-btn" href="list.html">
       <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
     </a>
 
     <div class="rep-head cust-rep-head">
       <div class="rep-id">
-        <div class="patient-avatar" data-name="김진주"></div>
+        <div class="patient-avatar" data-name="송민재"></div>
         <div>
-          <div class="h-eyebrow">고객 상세정보</div>
-          <h1>김진주님</h1>
+          <div class="h-eyebrow">고객 상세정보 <span class="status-pill">미청구 조회 대기</span></div>
+          <h1>송민재님</h1>
           <div class="rep-meta">
-            <span>성별 <b class="sx-f">여성</b></span>
-            <span>생년월일 <b>1983.02.15</b> (만 43세)</span>
-            <span>보험나이 <b>43세</b></span>
-            <span><svg class="ic-svg" width="13" height="13"><use href="#i-phone"/></svg> <b>010-1234-5678</b></span>
-            <span><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> 대구광역시 수성구 범어동</span>
+            <span>성별 <b class="sx-m">남성</b></span>
+            <span>생년월일 <b>1963.11.02</b> (만 62세)</span>
+            <span>보험나이 <b>62세</b></span>
+            <span><svg class="ic-svg" width="13" height="13"><use href="#i-phone"/></svg> <b>010-3392-7741</b></span>
+            <span><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> 대구광역시 동구 신암동</span>
           </div>
         </div>
       </div>
@@ -253,38 +243,39 @@
       </div>
     </div>
 
+    <!-- 영업 트리거 카드 -->
     <div class="trigger-cards">
       <div class="label-row">
         <svg class="ic-svg" width="14" height="14"><use href="#i-sparkles"/></svg>
-        김진주님 영업 힌트
+        송민재님 영업 힌트
       </div>
 
       <a class="trig alert" href="../report/precheck.html">
         <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-alert"/></svg></div>
         <div class="tc-body">
-          <span class="tc-tag">알릴의무 정리</span>
-          <div class="tc-v">난소의 자궁내막증</div>
-          <div class="tc-meta">1년 내 진단 · <b>2024.09.05</b> 최초진단</div>
+          <span class="tc-tag">10대 주요질환</span>
+          <div class="tc-v">본태성 고혈압</div>
+          <div class="tc-meta">1년 내 진단 · <b>2026.03.18</b> 최초진단</div>
         </div>
         <span class="tc-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>
       </a>
 
-      <a class="trig opp" href="../unclaimed/result.html">
-        <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-shield"/></svg></div>
+      <a class="trig opp" href="../unclaimed/new.html?customer=송민재">
+        <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-search-check"/></svg></div>
         <div class="tc-body">
-          <span class="tc-tag">청구 안내</span>
-          <div class="tc-v">회수 가능 1,274,550원</div>
-          <div class="tc-meta">5개년 조회 완료 · 2024년 최대 <b>617,840원</b></div>
+          <span class="tc-tag">다음 액션</span>
+          <div class="tc-v">미청구보험금 조회 시작</div>
+          <div class="tc-meta">진료기록 완료 · 5개년 미청구 탐색으로 회수 가능 금액 확인</div>
         </div>
         <span class="tc-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>
       </a>
 
-      <a class="trig lead" href="../report/reexam.html">
+      <a class="trig lead" href="../report/main.html">
         <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-stethoscope"/></svg></div>
         <div class="tc-body">
           <span class="tc-tag">보장 공백 제안</span>
-          <div class="tc-v">재검사 키워드 3건</div>
-          <div class="tc-meta"><b>#CT · #X-RAY · #초음파</b> 흔적</div>
+          <div class="tc-v">만성질환 보장 강화</div>
+          <div class="tc-meta">고혈압 + 1년 <b>4회 통원</b> · 갱신·종신 리뷰 권장</div>
         </div>
         <span class="tc-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>
       </a>
@@ -299,12 +290,12 @@
             <button type="button" class="h-action" id="edit-info-btn"><svg class="ic-svg" width="13" height="13"><use href="#i-edit"/></svg> 수정</button>
           </h2>
           <dl class="info-dl">
-            <dt>성별</dt><dd>여성</dd>
-            <dt>생년월일</dt><dd>1983.02.15 <small>(만 43세)</small></dd>
-            <dt>보험나이</dt><dd>43세</dd>
-            <dt>연락처</dt><dd>010-1234-5678</dd>
-            <dt>주소</dt><dd>대구광역시 수성구 범어동 123-45</dd>
-            <dt>이메일</dt><dd>jjjj@example.com</dd>
+            <dt>성별</dt><dd>남성</dd>
+            <dt>생년월일</dt><dd>1963.11.02 <small>(만 62세)</small></dd>
+            <dt>보험나이</dt><dd>62세</dd>
+            <dt>연락처</dt><dd>010-3392-7741</dd>
+            <dt>주소</dt><dd>대구광역시 동구 신암동 412-7</dd>
+            <dt>이메일</dt><dd>songmj@example.com</dd>
           </dl>
         </div>
 
@@ -321,12 +312,12 @@
             <div class="act-cell">
               <span class="act-l">등록</span>
               <span class="act-v">2026.06.09</span>
-              <span class="rel-tag fresh">오늘 등록</span>
+              <span class="rel-tag fresh">사흘 전</span>
             </div>
             <div class="act-cell">
               <span class="act-l">최근 활동</span>
-              <span class="act-v">오늘 16:05</span>
-              <span class="act-meta">미청구 5개년 조회</span>
+              <span class="act-v">사흘 전 15:20</span>
+              <span class="act-meta">진료기록 리포트 발급</span>
             </div>
           </div>
         </div>
@@ -340,22 +331,8 @@
             <li class="memo-item">
               <span class="m-dot"></span>
               <div class="m-body">
-                <div class="m-meta"><b>2026.06.09 16:38</b> · 홍길동 FC</div>
-                <div class="m-text">5개년 미청구보험금 조회 완료 — 합계 <b>1,274,550원</b> 안내드림. 2024년이 가장 큼(617,840원). 1년 내 진단(난소의 자궁내막증) 사전 알릴의무 정리 예정.</div>
-              </div>
-            </li>
-            <li class="memo-item">
-              <span class="m-dot"></span>
-              <div class="m-body">
-                <div class="m-meta"><b>2025.11.22</b> · 홍길동 FC</div>
-                <div class="m-text">정기 건강검진 결과 상담. 가족력(고혈압) 확인. 종신보험 리뷰 필요.</div>
-              </div>
-            </li>
-            <li class="memo-item">
-              <span class="m-dot"></span>
-              <div class="m-body">
-                <div class="m-meta"><b>2024.08.03</b> · 홍길동 FC</div>
-                <div class="m-text">자녀 보험 가입 문의. 다음 미팅에서 상품 제안 예정.</div>
+                <div class="m-meta"><b>2026.06.09 16:42</b> · 홍길동 FC</div>
+                <div class="m-text">진료기록 리포트 발급 — 1년 내 본태성 고혈압 진단 확인. <b>10대 주요질환</b> 해당. 종신·실손 갱신 시 알릴의무 정리 필요. 미청구 5개년 조회는 다음 미팅 때 함께 진행 예정.</div>
               </div>
             </li>
           </ul>
@@ -385,7 +362,7 @@
               <tr>
                 <td class="dt">2026.06.09</td>
                 <td>2021.06 ~ 2026.06</td>
-                <td class="amt">1,958,980원</td>
+                <td class="amt">3,492,800원</td>
                 <td class="ctr"><a class="view-link" href="../report/main.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
               </tr>
             </tbody>
@@ -397,64 +374,16 @@
             <svg class="ic-svg" width="18" height="18"><use href="#i-search-check"/></svg>
             미청구보험금 조회 이력
           </h2>
-          <table class="rep-table">
-            <thead>
-              <tr>
-                <th>조회일</th>
-                <th class="ctr">조회연도</th>
-                <th class="ctr">실손세대</th>
-                <th class="amt">의료비</th>
-                <th class="amt">미청구보험금</th>
-                <th class="ctr">결과</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="dt">2026.06.09</td>
-                <td class="ctr">2025년</td>
-                <td class="ctr">2세대 실손</td>
-                <td class="amt">198,400원</td>
-                <td class="amt">79,360원</td>
-                <td class="ctr"><a class="view-link" href="../unclaimed/result.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
-              </tr>
-              <tr>
-                <td class="dt">2026.06.09</td>
-                <td class="ctr">2024년</td>
-                <td class="ctr">2세대 실손</td>
-                <td class="amt">1,500,820원</td>
-                <td class="amt">617,840원</td>
-                <td class="ctr"><a class="view-link" href="../unclaimed/result.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
-              </tr>
-              <tr>
-                <td class="dt">2026.06.09</td>
-                <td class="ctr">2023년</td>
-                <td class="ctr">2세대 실손</td>
-                <td class="amt">189,310원</td>
-                <td class="amt">75,720원</td>
-                <td class="ctr"><a class="view-link" href="../unclaimed/result.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
-              </tr>
-              <tr>
-                <td class="dt">2026.06.09</td>
-                <td class="ctr">2022년</td>
-                <td class="ctr">2세대 실손</td>
-                <td class="amt">1,122,370원</td>
-                <td class="amt">473,600원</td>
-                <td class="ctr"><a class="view-link" href="../unclaimed/result.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
-              </tr>
-              <tr>
-                <td class="dt">2026.06.09</td>
-                <td class="ctr">2021년</td>
-                <td class="ctr">2세대 실손</td>
-                <td class="amt">70,080원</td>
-                <td class="amt">28,030원</td>
-                <td class="ctr"><a class="view-link" href="../unclaimed/result.html">보기 <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg></a></td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="uc-hist-note">
-            <svg class="ic-svg" width="14" height="14"><use href="#i-check-circle"/></svg>
-            최근 5개년(2021~2025) 모두 조회 완료 · 미청구보험금 합계 <b>1,274,550원</b>
-          </p>
+          <div class="empty-state">
+            <div class="es-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-search-check"/></svg></div>
+            <div class="es-t">아직 미청구보험금 조회를 하지 않았어요</div>
+            <div class="es-d">진료기록 발급은 <b>완료</b>된 상태예요. 5개년 미청구 탐색으로 회수 가능 금액을 지금 확인할 수 있어요.</div>
+            <a class="es-cta" href="../unclaimed/new.html?customer=송민재">
+              <svg class="ic-svg" width="14" height="14"><use href="#i-search-check"/></svg>
+              미청구 조회 시작하기
+              <svg class="ic-svg" width="13" height="13"><use href="#i-arrow-right"/></svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -470,7 +399,7 @@
     <div class="act-modal-head">
       <div>
         <h3 id="act-modal-title">활동 내역</h3>
-        <p class="am-sub">김진주님 · 등록 이후 모든 활동 일시</p>
+        <p class="am-sub">송민재님 · 등록 이후 모든 활동 일시</p>
       </div>
       <button class="info-close" type="button" id="act-modal-close" aria-label="닫기">
         <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
@@ -478,43 +407,35 @@
       </button>
     </div>
 
-    <div class="act-day-h"><b>2026.06.09</b> 오늘 · 등록일</div>
+    <div class="act-day-h"><b>2026.06.09</b> 사흘 전 · 등록일</div>
     <ol class="act-timeline">
       <li class="at-item action">
         <span class="at-dot"></span>
-        <span class="at-time">16:05</span>
-        <div>
-          <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-search-check"/></svg>미청구보험금 5개년 조회 완료</div>
-          <div class="at-meta">2021 ~ 2025년 · 2세대 실손 · 합계 <b>1,274,550원</b></div>
-        </div>
-      </li>
-      <li class="at-item action">
-        <span class="at-dot"></span>
-        <span class="at-time">15:42</span>
+        <span class="at-time">15:20</span>
         <div>
           <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg>진료기록 리포트 발급</div>
-          <div class="at-meta">조회기간 <b>2021.06 ~ 2026.06</b> · 5년 / 총 의료비 1,958,980원</div>
+          <div class="at-meta">조회기간 <b>2021.06 ~ 2026.06</b> · 5년 / 총 의료비 3,492,800원</div>
         </div>
       </li>
       <li class="at-item milestone">
         <span class="at-dot"></span>
-        <span class="at-time">15:10</span>
+        <span class="at-time">14:48</span>
         <div>
           <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-check-circle"/></svg>약관동의 완료</div>
-          <div class="at-meta">고객 본인 · 휴대폰 본인인증 · 처리 시간 <b>45분</b></div>
+          <div class="at-meta">고객 본인 · 휴대폰 본인인증 · 처리 시간 <b>31분</b></div>
         </div>
       </li>
       <li class="at-item action">
         <span class="at-dot"></span>
-        <span class="at-time">14:25</span>
+        <span class="at-time">14:17</span>
         <div>
           <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>약관동의 링크 발송</div>
-          <div class="at-meta">SMS · <b>010-1234-5678</b> 수신 확인</div>
+          <div class="at-meta">SMS · <b>010-3392-7741</b> 수신 확인</div>
         </div>
       </li>
       <li class="at-item milestone">
         <span class="at-dot"></span>
-        <span class="at-time">14:23</span>
+        <span class="at-time">14:15</span>
         <div>
           <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-plus"/></svg>고객 등록</div>
           <div class="at-meta">홍길동 FC · 수기 입력</div>
@@ -530,7 +451,7 @@
     <div class="edit-modal-head">
       <div>
         <h3 id="edit-modal-title">기본 정보 수정</h3>
-        <p class="em-sub">김진주님의 기본 정보를 수정합니다</p>
+        <p class="em-sub">송민재님의 기본 정보를 수정합니다</p>
       </div>
       <button class="em-close" type="button" id="edit-modal-close" aria-label="닫기">
         <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
@@ -540,24 +461,24 @@
     <form id="edit-form" autocomplete="off">
       <div class="form-field">
         <label class="f-label" for="em-name">이름</label>
-        <input type="text" id="em-name" class="f-input" value="김진주" readonly />
+        <input type="text" id="em-name" class="f-input" value="송민재" readonly />
       </div>
       <div class="form-field">
         <label class="f-label" for="em-phone">연락처</label>
-        <input type="tel" id="em-phone" class="f-input" value="010-1234-5678" readonly />
+        <input type="tel" id="em-phone" class="f-input" value="010-3392-7741" readonly />
       </div>
       <div class="form-row">
         <div class="form-field">
           <label class="f-label" for="em-birth">생년월일 <span class="opt">선택</span></label>
-          <input type="text" id="em-birth" class="f-input" value="1983.02.15" placeholder="YYYY.MM.DD" maxlength="10" inputmode="numeric" autocomplete="off" />
+          <input type="text" id="em-birth" class="f-input" value="1963.11.02" placeholder="YYYY.MM.DD" maxlength="10" inputmode="numeric" autocomplete="off" />
         </div>
         <div class="form-field">
           <label class="f-label">성별 <span class="opt">선택</span></label>
           <div class="seg-group" id="em-gender" role="radiogroup" aria-label="성별">
-            <button type="button" class="seg-btn m" data-v="남" role="radio" aria-checked="false">
+            <button type="button" class="seg-btn m on" data-v="남" role="radio" aria-checked="true">
               <span class="seg-dot"></span> 남성
             </button>
-            <button type="button" class="seg-btn f on" data-v="여" role="radio" aria-checked="true">
+            <button type="button" class="seg-btn f" data-v="여" role="radio" aria-checked="false">
               <span class="seg-dot"></span> 여성
             </button>
           </div>
@@ -565,11 +486,11 @@
       </div>
       <div class="form-field">
         <label class="f-label" for="em-addr">주소 <span class="opt">선택</span></label>
-        <input type="text" id="em-addr" class="f-input" value="대구광역시 수성구 범어동 123-45" placeholder="시·도 시·군·구 도로명·번지" />
+        <input type="text" id="em-addr" class="f-input" value="대구광역시 동구 신암동 412-7" placeholder="시·도 시·군·구 도로명·번지" />
       </div>
       <div class="form-field">
         <label class="f-label" for="em-email">이메일 <span class="opt">선택</span></label>
-        <input type="email" id="em-email" class="f-input" value="jjjj@example.com" placeholder="example@email.com" autocomplete="off" />
+        <input type="email" id="em-email" class="f-input" value="songmj@example.com" placeholder="example@email.com" autocomplete="off" />
       </div>
 
       <div class="edit-modal-actions">
@@ -634,7 +555,7 @@
       birth: birthInput.value,
       addr: addrInput.value,
       email: emailInput.value,
-      gender: '여'
+      gender: '남'
     };
     var gender = initial.gender;
 
@@ -661,7 +582,6 @@
     modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
-    // 생년월일 자동 포맷 (YYYY.MM.DD)
     birthInput.addEventListener('input', function (e) {
       var digits = e.target.value.replace(/\D/g, '').slice(0, 8);
       var out = digits;
@@ -692,8 +612,7 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (saveBtn.disabled) return;
-      alert('✓ 김진주님 정보가 수정되었습니다.');
-      // 초기값을 새로 저장된 값으로 업데이트 (모달은 그대로 유지 가능하지만 닫음)
+      alert('✓ 송민재님 정보가 수정되었습니다.');
       initial.birth = birthInput.value;
       initial.addr = addrInput.value;
       initial.email = emailInput.value;

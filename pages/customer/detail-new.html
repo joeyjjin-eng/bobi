@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 고객 상세정보 (신규 등록)</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 고객 프로필 헤더 ===== */
+  .cE .cust-rep-head { padding: 28px 0 32px; border: none; border-radius: 0; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .cE .cust-rep-head .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 26px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
+  .cE .cust-rep-head .h-eyebrow { font-size: var(--fs-option); color: var(--brand-deep); font-weight: 700; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 8px; }
+  .cE .cust-rep-head .h-eyebrow .status-pill { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; border-radius: var(--r-pill); background: #FFF4E4; color: #B07816; font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em; }
+  .cE .cust-rep-head .h-eyebrow .status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #E6A23F; }
+  .cE .cust-rep-head h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 4px 0 0; }
+  .cE .cust-rep-head .rep-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; }
+  .cE .cust-rep-head .rep-meta span { font-size: var(--fs-option); color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
+  .cE .cust-rep-head .rep-meta b { color: var(--ink); font-weight: 700; }
+  .cE .cust-rep-head .rep-meta .empty-v { color: var(--ink-4); font-weight: 500; }
+  .cE .cust-rep-right { display: flex; align-items: center; gap: 14px; }
+  .cE .cust-rep-right .rep-asof { text-align: right; font-size: var(--fs-option); color: var(--ink-3); line-height: 1.5; }
+  .cE .cust-rep-right .rep-asof b { color: var(--ink); font-size: var(--fs-body); font-weight: 800; }
+  .cE .cust-rep-right .resend-cta { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 18px; background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; cursor: pointer; box-shadow: var(--sh-brand); transition: background-color .2s ease, transform .15s ease; white-space: nowrap; }
+  .cE .cust-rep-right .resend-cta:hover { background: var(--brand-hover); transform: translateY(-1px); }
+  .cE .cust-rep-right .resend-cta:active { transform: translateY(0); }
+
+  /* ===== 트리거 카드 ===== */
+  .cE .trigger-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .cE .trigger-cards .label-row { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin-bottom: -2px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; letter-spacing: 0.02em; }
+  .cE .trigger-cards .label-row svg { color: var(--brand-deep); }
+  .cE .trig { display: grid; grid-template-columns: 46px 1fr 18px; align-items: center; gap: 14px; padding: 18px 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); text-decoration: none; position: relative; overflow: hidden; transition: background-color .15s ease, border-color .15s ease, transform .15s ease; }
+  .cE .trig::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .cE .trig:hover { background: var(--bg-warm); border-color: var(--line-strong); transform: translateY(-1px); }
+  .cE .trig:hover .tc-go { color: var(--brand-deep); transform: translateX(2px); }
+  .cE .trig .tc-ic { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; flex: none; }
+  .cE .trig .tc-body { min-width: 0; }
+  .cE .trig .tc-tag { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 9px; border-radius: var(--r-pill); font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em; }
+  .cE .trig .tc-v { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-top: 6px; letter-spacing: -0.01em; line-height: 1.3; }
+  .cE .trig .tc-meta { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; line-height: 1.45; }
+  .cE .trig .tc-meta b { color: var(--ink); font-weight: 700; }
+  .cE .trig .tc-go { color: var(--ink-4); display: flex; align-items: center; transition: color .12s ease, transform .12s ease; }
+  .cE .trig .resend-link { color: var(--brand-deep); font-weight: 800; text-decoration: none; }
+  .cE .trig .resend-link:hover { text-decoration: underline; }
+
+  /* 변형: wait(약관동의 응답 대기) · idle(동의 후 가능 — 비활성) */
+  .cE .trig.wait::before { background: #E6A23F; }
+  .cE .trig.wait .tc-ic { background: #FFF4E4; color: #B07816; }
+  .cE .trig.wait .tc-tag { background: #FFF4E4; color: #B07816; }
+  .cE .trig.idle { background: var(--bg-soft); cursor: default; }
+  .cE .trig.idle::before { background: var(--ink-4); }
+  .cE .trig.idle .tc-ic { background: #fff; color: var(--ink-4); }
+  .cE .trig.idle .tc-tag { background: #fff; color: var(--ink-4); border: 1px solid var(--line); }
+  .cE .trig.idle .tc-v { color: var(--ink-3); }
+  .cE .trig.idle .tc-go { display: none; }
+  .cE .trig.idle:hover { background: var(--bg-soft); border-color: var(--line); transform: none; }
+
+  /* ===== 본문 2열 그리드 ===== */
+  .cE .cust-grid { display: grid; grid-template-columns: 1fr 1.45fr; gap: 20px; align-items: stretch; }
+  .cE .cust-grid > .col { display: flex; flex-direction: column; gap: 20px; }
+  .cE .cust-grid .card-pad { margin-top: 0; }
+  .cE .cust-grid .card-pad h2 { font-size: var(--fs-h2); font-weight: 800; margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
+  .cE .cust-grid .card-pad h2 svg { color: var(--brand-deep); }
+  .cE .cust-grid .card-pad h2 .h-action { margin-left: auto; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+  .cE .cust-grid .card-pad h2 .h-action:hover { color: var(--brand-deep); }
+
+  /* 기본 정보 — 수집 전 빈 값 */
+  .cE .info-dl { display: grid; grid-template-columns: 92px 1fr; row-gap: 14px; column-gap: 16px; align-items: baseline; }
+  .cE .info-dl dt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .info-dl dd { margin: 0; font-size: var(--fs-body); color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
+  .cE .info-dl dd.empty { color: var(--ink-4); font-weight: 500; }
+  .cE .info-dl dd small { color: var(--ink-3); font-weight: 500; margin-left: 4px; }
+  .cE .rel-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: var(--r-pill); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+  .cE .rel-tag.fresh { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .rel-tag.wait { background: #FFF4E4; color: #B07816; }
+  .cE .info-dl .rel-tag { margin-left: 6px; }
+
+  /* 활동 요약 */
+  .cE .act-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 16px 18px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-sm); margin: 0; }
+  .cE .act-cell { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 0 8px; border-right: 1px solid var(--line); }
+  .cE .act-cell:last-child { border-right: none; }
+  .cE .act-cell:first-child { padding-left: 0; }
+  .cE .act-cell .act-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; letter-spacing: 0.02em; }
+  .cE .act-cell .act-v { font-size: var(--fs-body); color: var(--ink); font-weight: 800; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .cE .act-cell .act-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+  .cE .act-cell .rel-tag { align-self: flex-start; }
+
+  /* ===== 활동 자세히 보기 모달 ===== */
+  .act-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
+  .act-modal[hidden] { display: none; }
+  .act-modal-card { background: #fff; border-radius: 18px; padding: 28px 32px 24px; max-width: 560px; width: 100%; max-height: 84vh; overflow: auto; box-shadow: 0 24px 60px rgba(0,0,0,0.25); box-sizing: border-box; }
+  .act-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .act-modal-head h3 { margin: 0 0 4px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .act-modal-head .am-sub { margin: 0; font-size: var(--fs-option); color: var(--ink-3); line-height: 1.55; font-weight: 500; }
+  .act-modal .info-close { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; padding: 6px 10px; margin: -6px -10px; font-family: inherit; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); cursor: pointer; white-space: nowrap; border-radius: 8px; transition: color .15s ease, background-color .15s ease; }
+  .act-modal .info-close:hover { color: var(--ink); background: var(--bg-soft); }
+  .act-modal .info-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .act-modal .act-day-h { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; letter-spacing: 0.02em; padding: 0 0 12px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .act-modal .act-day-h b { color: var(--ink); font-weight: 800; margin-right: 6px; font-size: var(--fs-body); }
+  .act-modal .act-timeline { list-style: none; padding: 0; margin: 0; }
+  .act-modal .at-item { display: grid; grid-template-columns: 14px 52px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px dashed var(--line); align-items: start; }
+  .act-modal .at-item:last-child { border-bottom: none; padding-bottom: 4px; }
+  .act-modal .at-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex: none; }
+  .act-modal .at-item.milestone .at-dot { background: #15C0A0; box-shadow: 0 0 0 3px rgba(21,192,160,0.18); }
+  .act-modal .at-item.action .at-dot { background: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,0.18); }
+  .act-modal .at-item.pending .at-dot { background: #E6A23F; box-shadow: 0 0 0 3px rgba(230,162,63,0.20); }
+  .act-modal .at-time { font-size: var(--fs-option); color: var(--ink-2); font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; letter-spacing: -0.01em; }
+  .act-modal .at-event { font-size: var(--fs-body); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 7px; }
+  .act-modal .at-event svg { color: var(--ink-3); flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .act-modal .at-item.milestone .at-event svg { color: #15967F; }
+  .act-modal .at-item.action .at-event svg { color: var(--brand-deep); }
+  .act-modal .at-item.pending .at-event svg { color: #B07816; }
+  .act-modal .at-item.pending .at-event { color: var(--ink-2); }
+  .act-modal .at-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin-top: 4px; line-height: 1.55; }
+  .act-modal .at-meta b { color: var(--ink-2); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  /* ===== 빈 상태 ===== */
+  .cE .empty-state { padding: 36px 16px; text-align: center; border: 1px dashed var(--line-strong); border-radius: var(--r-md); background: var(--bg-soft); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .cE .empty-state .es-ic { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: var(--ink-4); border: 1px solid var(--line); }
+  .cE .empty-state .es-t { font-size: var(--fs-body); color: var(--ink-2); font-weight: 700; }
+  .cE .empty-state .es-d { font-size: var(--fs-option); color: var(--ink-3); line-height: 1.5; }
+  .cE .empty-state .es-d b { color: var(--ink-2); font-weight: 700; }
+
+  /* 메모 카드 */
+  .cE .memo-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px; background: #fff; border: 1px dashed var(--line-strong); border-radius: 10px; color: var(--ink-3); font-family: inherit; font-size: var(--fs-body); font-weight: 600; cursor: pointer; transition: border-color .2s ease, color .2s ease, background-color .2s ease; margin-top: 14px; }
+  .cE .memo-add:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); border-style: solid; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <a class="back-btn" href="list.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
+    </a>
+
+    <div class="rep-head cust-rep-head">
+      <div class="rep-id">
+        <div class="patient-avatar" data-name="배태우"></div>
+        <div>
+          <div class="h-eyebrow">고객 상세정보 <span class="status-pill">약관동의 대기</span></div>
+          <h1>배태우님</h1>
+          <div class="rep-meta">
+            <span>성별 <span class="empty-v">—</span></span>
+            <span>생년월일 <span class="empty-v">—</span></span>
+            <span>보험나이 <span class="empty-v">—</span></span>
+            <span><svg class="ic-svg" width="13" height="13"><use href="#i-phone"/></svg> <b>010-4471-9920</b></span>
+            <span><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> <span class="empty-v">—</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="cust-rep-right">
+        <button class="resend-cta" type="button" id="resend-link-btn">
+          <svg class="ic-svg" width="15" height="15"><use href="#i-send"/></svg>
+          약관동의 링크 재전송
+        </button>
+        <div class="rep-asof">등록일<br /><b>2026.06.10</b></div>
+        <div class="menu-popover">
+          <button class="menu-trigger" type="button" id="cust-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
+            <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
+          </button>
+          <div class="menu-list" id="cust-menu" hidden role="menu">
+            <button class="menu-item danger" type="button" role="menuitem" data-action="delete">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-trash"/></svg>
+              고객 삭제
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 트리거 카드 — 신규 등록 / 약관동의 대기 단계 -->
+    <div class="trigger-cards">
+      <div class="label-row">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-layers"/></svg>
+        현재 진행 단계
+      </div>
+
+      <div class="trig wait">
+        <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-clock"/></svg></div>
+        <div class="tc-body">
+          <span class="tc-tag">응답 대기</span>
+          <div class="tc-v">약관동의 응답 대기</div>
+          <div class="tc-meta"><b>D+2</b> · 2026.06.10 14:25 발송 · <a class="resend-link" href="#">재전송</a></div>
+        </div>
+        <span class="tc-go"><svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg></span>
+      </div>
+
+      <div class="trig idle">
+        <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
+        <div class="tc-body">
+          <span class="tc-tag">동의 후 가능</span>
+          <div class="tc-v">진료기록 조회</div>
+          <div class="tc-meta">약관동의 완료 시 5년 진료기록을 한번에 불러옵니다.</div>
+        </div>
+        <span class="tc-go"></span>
+      </div>
+
+      <div class="trig idle">
+        <div class="tc-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-search-check"/></svg></div>
+        <div class="tc-body">
+          <span class="tc-tag">동의 후 가능</span>
+          <div class="tc-v">미청구보험금 조회</div>
+          <div class="tc-meta">최대 5개년의 받지 못한 실손보험금을 탐색합니다.</div>
+        </div>
+        <span class="tc-go"></span>
+      </div>
+    </div>
+
+    <div class="cust-grid">
+      <div class="col">
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-user"/></svg>
+            기본 정보
+            <button type="button" class="h-action"><svg class="ic-svg" width="13" height="13"><use href="#i-edit"/></svg> 수정</button>
+          </h2>
+          <dl class="info-dl">
+            <dt>성별</dt><dd class="empty">—</dd>
+            <dt>생년월일</dt><dd class="empty">—</dd>
+            <dt>보험나이</dt><dd class="empty">—</dd>
+            <dt>연락처</dt><dd>010-4471-9920</dd>
+            <dt>주소</dt><dd class="empty">—</dd>
+            <dt>이메일</dt><dd class="empty">—</dd>
+          </dl>
+        </div>
+
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-clock"/></svg>
+            활동
+            <button type="button" class="h-action" id="act-detail-btn" aria-haspopup="dialog">
+              자세히 보기 <svg class="ic-svg" width="12" height="12"><use href="#i-arrow-right"/></svg>
+            </button>
+          </h2>
+
+          <div class="act-summary">
+            <div class="act-cell">
+              <span class="act-l">등록</span>
+              <span class="act-v">2026.06.10</span>
+              <span class="rel-tag fresh">그제 등록</span>
+            </div>
+            <div class="act-cell">
+              <span class="act-l">최근 활동</span>
+              <span class="act-v">그제 14:25</span>
+              <span class="act-meta">약관동의 링크 발송</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-note"/></svg>
+            메모
+          </h2>
+          <div class="empty-state">
+            <div class="es-ic"><svg class="ic-svg" width="20" height="20"><use href="#i-note"/></svg></div>
+            <div class="es-t">아직 메모가 없어요</div>
+            <div class="es-d">고객과의 첫 연락·약속을 메모로 남겨보세요.</div>
+          </div>
+          <button class="memo-add" type="button">
+            <svg class="ic-svg" width="14" height="14"><use href="#i-plus"/></svg>
+            메모 추가
+          </button>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
+            진료기록 리포트 발급 이력
+          </h2>
+          <div class="empty-state">
+            <div class="es-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
+            <div class="es-t">아직 발급한 리포트가 없어요</div>
+            <div class="es-d"><b>약관동의 완료 후</b> 5년치 진료기록 리포트를 한번에 발급할 수 있어요.</div>
+          </div>
+        </div>
+
+        <div class="card-pad">
+          <h2>
+            <svg class="ic-svg" width="18" height="18"><use href="#i-search-check"/></svg>
+            미청구보험금 조회 이력
+          </h2>
+          <div class="empty-state">
+            <div class="es-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-search-check"/></svg></div>
+            <div class="es-t">아직 조회 이력이 없어요</div>
+            <div class="es-d"><b>약관동의 완료 후</b> 최대 5개년의 미청구보험금을 탐색할 수 있어요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<!-- ===== 활동 자세히 보기 모달 ===== -->
+<div class="act-modal" id="act-modal" hidden role="dialog" aria-modal="true" aria-labelledby="act-modal-title">
+  <div class="act-modal-card">
+    <div class="act-modal-head">
+      <div>
+        <h3 id="act-modal-title">활동 내역</h3>
+        <p class="am-sub">배태우님 · 등록 이후 모든 활동 일시</p>
+      </div>
+      <button class="info-close" type="button" id="act-modal-close" aria-label="닫기">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
+        닫기
+      </button>
+    </div>
+
+    <div class="act-day-h"><b>2026.06.12</b> 오늘</div>
+    <ol class="act-timeline">
+      <li class="at-item pending">
+        <span class="at-dot"></span>
+        <span class="at-time">현재</span>
+        <div>
+          <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-clock"/></svg>약관동의 응답 대기 중</div>
+          <div class="at-meta"><b>D+2</b> 경과 · 추가 안내 또는 재전송 권장</div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="act-day-h" style="margin-top: 18px;"><b>2026.06.10</b> 그제 · 등록일</div>
+    <ol class="act-timeline">
+      <li class="at-item action">
+        <span class="at-dot"></span>
+        <span class="at-time">14:25</span>
+        <div>
+          <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>약관동의 링크 발송</div>
+          <div class="at-meta">SMS · <b>010-4471-9920</b> 수신 확인</div>
+        </div>
+      </li>
+      <li class="at-item milestone">
+        <span class="at-dot"></span>
+        <span class="at-time">14:23</span>
+        <div>
+          <div class="at-event"><svg class="ic-svg" width="14" height="14"><use href="#i-plus"/></svg>고객 등록</div>
+          <div class="at-meta">홍길동 FC · 수기 입력</div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var openBtn = document.getElementById('act-detail-btn');
+    var modal = document.getElementById('act-modal');
+    var closeBtn = document.getElementById('act-modal-close');
+    if (!openBtn || !modal || !closeBtn) return;
+    var open = function () { modal.hidden = false; openBtn.setAttribute('aria-expanded', 'true'); };
+    var close = function () { modal.hidden = true; openBtn.setAttribute('aria-expanded', 'false'); };
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) close(); });
+  })();
+
+  // 고객 헤더 더보기 메뉴 (삭제)
+  (function () {
+    var btn = document.getElementById('cust-menu-btn');
+    var menu = document.getElementById('cust-menu');
+    if (!btn || !menu) return;
+    var popover = btn.closest('.menu-popover');
+    function openMenu() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.hidden ? openMenu() : closeMenu();
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.hidden && popover && !popover.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !menu.hidden) closeMenu();
+    });
+  })();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('customer');</script>
+</body>
+</html>
