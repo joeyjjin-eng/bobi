@@ -163,6 +163,9 @@
   .cE .pb-div { height: 1px; background: var(--line); margin: 2px 0; }
   .cE .pb-section-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; margin-bottom: 6px; }
   .cE .pb-dzlist { display: flex; flex-wrap: wrap; gap: 5px; }
+  /* 주요 질환 행 — 라벨 좌, 칩 우 정렬 */
+  .cE .pb-row-dz { align-items: flex-start; }
+  .cE .pb-row-dz .pb-dzlist { flex: 1; justify-content: flex-end; }
   .cE .pb-memo { width: 100%; height: 56px; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; font-size: var(--fs-option); color: var(--ink); font-family: inherit; resize: none; outline: none; background: var(--bg-soft); box-sizing: border-box; transition: border-color .2s ease; }
   .cE .pb-memo:focus { border-color: var(--brand); }
 
@@ -178,6 +181,126 @@
   /* 애니메이션 + 패널 내부 flex 컬럼 (head 고정 / body 스크롤 / cta 고정) */
   @keyframes pvFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .cE .preview-enter { animation: pvFadeIn 0.18s ease both; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+  /* ============================================================
+     반응형 — 960px 이하: 타이틀/검색바 스택, 테이블 → 카드 리스트
+     ============================================================ */
+  @media (max-width: 960px) {
+    /* 타이틀 — 풀폭 라인 + 카드 패딩에 맞춰 음의 마진 조정 */
+    .cE .hist-title-row { width: calc(100% + 32px) !important; margin: 0 -16px 16px !important; padding: 0 0 18px !important; }
+    .cE .hist-title-inner { padding: 0 16px; flex-wrap: wrap; gap: 12px; }
+    .cE .ht-l { gap: 12px; flex: 1; min-width: 0; }
+    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
+    .cE .ht-l h1 { font-size: var(--fs-h2); }
+    .cE .ht-sub { font-size: var(--fs-option); }
+    .cE .new-rep-btn { width: 100%; justify-content: center; padding: 12px 18px; font-size: var(--fs-body); }
+
+    /* 검색바 — 한 줄, 기간 버튼 라벨 축약 */
+    .cE .search-bar { padding: 10px 14px; gap: 8px; border-radius: var(--r-sm); flex-wrap: wrap; }
+    .cE .search-bar input { font-size: var(--fs-option); min-width: 0; }
+    .cE .sb-divider { display: none; }
+    .cE .period-trigger { font-size: var(--fs-option); }
+    .cE .period-popup { width: calc(100vw - 32px); right: -14px; padding: 18px 16px 14px; }
+    .cE .pp-range { grid-template-columns: 1fr; gap: 10px; }
+    .cE .pp-range .dash { display: none; }
+
+    /* 필터바 — 스택 */
+    .cE .filter-bar { padding: 12px 14px; gap: 12px; flex-direction: column; align-items: stretch; border-radius: var(--r-sm); }
+    .cE .filter-group { flex-wrap: wrap; gap: 8px; }
+    .cE .fb-divider { display: none; }
+    .cE .pills { flex-wrap: wrap; }
+    .cE .pill { padding: 6px 12px; font-size: var(--fs-option); }
+    .cE .fb-count { margin-left: 0; font-size: var(--fs-option); }
+
+    /* 메인 그리드 — 단일 컬럼, 미리보기는 아래로 */
+    .cE .main-grid { grid-template-columns: 1fr; gap: 14px; min-height: 0; }
+
+    /* 리스트 패널 → 카드 리스트로 변환 */
+    .cE .list-panel { border-radius: var(--r-md); }
+    .cE .table-head { display: none; }
+    .cE .table-row {
+      display: block;
+      padding: 14px 16px;
+      position: relative;
+    }
+    .cE .table-row.on::before { width: 3px; }
+    .cE .table-row .tr-go { display: none; }
+    /* 1행: 날짜 + 의료비 (양 끝) */
+    .cE .table-row::before { content: ''; }
+    .cE .table-row .tr-date { display: inline-block; font-size: var(--fs-option); margin-right: 8px; }
+    .cE .table-row .tr-cost { display: inline-block; margin-left: 0; font-size: var(--fs-body); font-weight: 700; }
+    /* 2행: 이름 / 성별 / 나이 */
+    .cE .table-row .tr-info { display: flex; gap: 8px; padding-right: 0; margin-top: 6px; }
+    .cE .table-row .tr-name { font-size: var(--fs-body); }
+    .cE .table-row .tr-meta { font-size: var(--fs-option); }
+    /* 3행: 질환 칩 */
+    .cE .table-row .tr-diseases { display: flex; justify-content: flex-start; margin-top: 8px; gap: 5px; }
+    .cE .table-row.on { padding-left: 19px; }
+    .cE .table-row.on .tr-date { padding-left: 0; }
+
+    /* 행 오른쪽 상단에 의료비 absolute 배치 */
+    .cE .table-row { padding-right: 100px; }
+    .cE .table-row .tr-cost { position: absolute; top: 14px; right: 16px; }
+
+    /* 페이지네이션 */
+    .cE .pagination { padding: 14px 16px; gap: 4px; flex-wrap: wrap; }
+    .cE .pg-btn { min-width: 32px; height: 32px; font-size: 12px; }
+
+    /* 미리보기 패널 → 모바일 바텀시트 모달 (내용 길이에 맞춰 자동 축소) */
+    .cE .preview-panel {
+      position: fixed !important;
+      top: auto !important;
+      left: 0; right: 0; bottom: 0;
+      z-index: 100;
+      width: auto;
+      max-width: none;
+      height: auto;
+      max-height: 85vh;
+      min-height: 0;
+      border-radius: 20px 20px 0 0;
+      border: none;
+      box-shadow: 0 -10px 32px rgba(8,22,32,.22);
+      transform: translateY(100%);
+      transition: transform .28s cubic-bezier(.2,.8,.2,1);
+      align-self: auto;
+    }
+    .cE .preview-panel.has { transform: translateY(0); }
+    /* 상단 드래그 핸들 */
+    .cE .preview-panel.has::before {
+      content: '';
+      position: absolute; top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 4px;
+      border-radius: 2px;
+      background: var(--ink-4);
+      opacity: .5;
+      z-index: 2;
+    }
+    .cE .preview-head { padding: 22px 18px 12px; }
+    .cE .ph-av { width: 42px; height: 42px; font-size: var(--fs-body); }
+    .cE .ph-name-link { font-size: var(--fs-body); }
+    .cE .preview-body { padding: 14px 18px; gap: 10px; flex: 0 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .cE .preview-enter { flex: 0 1 auto; }
+    .cE .preview-cta { padding: 12px 18px calc(16px + env(safe-area-inset-bottom, 0px)); }
+    .cE .preview-cta a { padding: 11px 18px; font-size: var(--fs-body); }
+
+    /* 백드롭 — 바텀시트가 열렸을 때만 보임 */
+    .cE .preview-backdrop,
+    .preview-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(8, 22, 32, .45);
+      z-index: 99;
+      animation: pvFadeIn .2s ease both;
+    }
+    .preview-backdrop.show { display: block; }
+    /* 모달 열렸을 때 body 스크롤 잠금 */
+    body.preview-modal-open { overflow: hidden; }
+  }
+  /* 데스크톱에서는 백드롭 항상 숨김 */
+  @media (min-width: 961px) {
+    .preview-backdrop { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -307,6 +430,9 @@
 </div>
 <div id="footer-host"></div>
 </div>
+
+<!-- 모바일 전용: 바텀시트 백드롭 -->
+<div class="preview-backdrop" id="preview-backdrop" aria-hidden="true"></div>
 
 <script>
 (function () {
@@ -446,11 +572,26 @@
     });
   }
 
+  // 모바일 바텀시트 — 백드롭 + body 스크롤 잠금
+  var MOBILE_QUERY = window.matchMedia('(max-width: 960px)');
+  function setMobileSheetOpen(open) {
+    var backdrop = document.getElementById('preview-backdrop');
+    if (!backdrop) return;
+    if (open && MOBILE_QUERY.matches) {
+      backdrop.classList.add('show');
+      document.body.classList.add('preview-modal-open');
+    } else {
+      backdrop.classList.remove('show');
+      document.body.classList.remove('preview-modal-open');
+    }
+  }
+
   function renderPreview() {
     var panel = document.getElementById('preview');
 
     if (state.selectedIdx === null || state.selectedIdx === undefined) {
       panel.classList.remove('has');
+      setMobileSheetOpen(false);
       panel.innerHTML = ''
         + '<div class="preview-empty">'
         +   '<div class="pe-ic"><svg class="ic-svg" width="28" height="28"><use href="#i-user-2"/></svg></div>'
@@ -464,11 +605,12 @@
 
     var p = ALL[state.selectedIdx];
     panel.classList.add('has');
+    setMobileSheetOpen(true);
     var dzSection = '';
     if (p.diseases && p.diseases.length) {
       dzSection = ''
-        + '<div>'
-        +   '<div class="pb-section-l">주요 질환</div>'
+        + '<div class="pb-row pb-row-dz">'
+        +   '<span class="pb-l">주요 질환</span>'
         +   '<div class="pb-dzlist">' + renderDiseaseChips(p.diseases) + '</div>'
         + '</div>';
     }
@@ -629,6 +771,28 @@
     state.selectedIdx = null;
     renderTable();
     renderPreview();
+  });
+
+  // 바텀시트 닫기 (백드롭 클릭 / ESC)
+  var backdropEl = document.getElementById('preview-backdrop');
+  if (backdropEl) {
+    backdropEl.addEventListener('click', function () {
+      state.selectedIdx = null;
+      renderTable();
+      renderPreview();
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && state.selectedIdx !== null && MOBILE_QUERY.matches) {
+      state.selectedIdx = null;
+      renderTable();
+      renderPreview();
+    }
+  });
+  // 뷰포트가 데스크톱으로 넓어지면 body 잠금 해제
+  MOBILE_QUERY.addEventListener('change', function (e) {
+    if (!e.matches) setMobileSheetOpen(false);
+    else if (state.selectedIdx !== null) setMobileSheetOpen(true);
   });
 
   // 초기 렌더

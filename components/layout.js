@@ -87,7 +87,7 @@
     + '<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M6.5 17.5h11"/></symbol>'
     + '<symbol id="i-user-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>';
 
-  // ===== GNB 템플릿 =====
+  // ===== GNB 템플릿 (데스크탑) =====
   function gnbHTML(active) {
     function navItem(key, href, icon, label, extra) {
       var cls = (active === key) ? ' class="on"' : '';
@@ -117,6 +117,47 @@
       +   '<div class="logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
       + '</aside>';
   }
+
+  // ===== 모바일 상단 헤더 + 하단 탭바 =====
+  function mobileShellHTML(active) {
+    function tab(key, href, icon, label) {
+      var cls = (active === key) ? ' on' : '';
+      return '<a class="m-tab' + cls + '" href="' + href + '"><svg class="ic-svg" width="22" height="22"><use href="#' + icon + '"/></svg><span>' + label + '</span></a>';
+    }
+    return ''
+      + '<header class="m-topbar">'
+      +   '<button class="m-ham" type="button" aria-label="메뉴 열기"><svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg></button>'
+      +   '<a class="m-logo" href="' + BASE + 'home.html"><img src="' + BASE + 'assets/bobi-logo.png" alt="BoBi" /></a>'
+      +   '<button class="m-bell" type="button" aria-label="알림"><svg class="ic-svg" width="22" height="22"><use href="#i-bell"/></svg><span class="m-dot"></span></button>'
+      + '</header>'
+      + '<nav class="m-tabbar">'
+      +   tab('home',     BASE + 'home.html',                    'i-home',         '홈')
+      +   tab('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
+      +   tab('report',   BASE + 'pages/report/history.html',    'i-file-text',    '리포트')
+      +   tab('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구')
+      +   '<button class="m-tab m-more" type="button" aria-label="더보기"><svg class="ic-svg" width="22" height="22"><use href="#i-more-horizontal"/></svg><span>더보기</span></button>'
+      + '</nav>'
+      + '<div class="m-drawer" id="m-drawer" hidden aria-hidden="true">'
+      +   '<div class="m-drawer-bg"></div>'
+      +   '<div class="m-drawer-panel">'
+      +     '<div class="m-drawer-head">'
+      +       '<div class="m-drawer-pa"><div class="m-drawer-av">홍</div><div><div class="m-drawer-nm">홍길동님</div><div class="m-drawer-rl">메가미래라이프 · FC</div></div></div>'
+      +       '<button class="m-drawer-close" type="button" aria-label="닫기"><svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg></button>'
+      +     '</div>'
+      +     '<button class="m-drawer-mybtn">마이페이지</button>'
+      +     '<div class="m-drawer-list">'
+      +       '<a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-sparkles"/></svg>스마트보비</a>'
+      +       '<a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-bell"/></svg>공지사항</a>'
+      +     '</div>'
+      +     '<div class="m-drawer-logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
+      +   '</div>'
+      + '</div>';
+  }
+
+  // 모바일 헤더/탭바에 필요한 아이콘 추가
+  ICONS_SVG += ''
+    + '<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>'
+    + '<symbol id="i-more-horizontal" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>';
 
   // ===== 푸터 템플릿 =====
   function footerHTML() {
@@ -165,9 +206,29 @@
       iconsHost.outerHTML = '<svg width="0" height="0" style="position:absolute" aria-hidden="true">' + ICONS_SVG + '</svg>';
     }
     var gnbHost = document.getElementById('gnb-host');
-    if (gnbHost) gnbHost.outerHTML = gnbHTML(active);
+    if (gnbHost) {
+      // 데스크탑 GNB + 모바일 헤더/탭바를 함께 주입. CSS @media로 토글.
+      gnbHost.outerHTML = gnbHTML(active) + mobileShellHTML(active);
+    }
     var footerHost = document.getElementById('footer-host');
     if (footerHost) footerHost.outerHTML = footerHTML();
     window.paintPatientAvatars();
+    bindMobileShell();
   };
+
+  // 햄버거 + 더보기 → 드로어 토글
+  function bindMobileShell() {
+    var drawer = document.getElementById('m-drawer');
+    if (!drawer) return;
+    var ham   = document.querySelector('.m-ham');
+    var more  = document.querySelector('.m-more');
+    var close = drawer.querySelector('.m-drawer-close');
+    var bg    = drawer.querySelector('.m-drawer-bg');
+    function open() { drawer.hidden = false; drawer.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
+    function shut() { drawer.hidden = true;  drawer.setAttribute('aria-hidden','true');  document.body.style.overflow = ''; }
+    if (ham)   ham.addEventListener('click', open);
+    if (more)  more.addEventListener('click', open);
+    if (close) close.addEventListener('click', shut);
+    if (bg)    bg.addEventListener('click', shut);
+  }
 })();
