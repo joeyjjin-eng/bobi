@@ -14,16 +14,19 @@
   /* 페이지 레이아웃 */
   .layout { width: 100%; min-width: 1100px; }
   .cE { width: 100%; }
-  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; background: var(--bg-soft); }
   .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
-  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; background: var(--bg-soft); }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
-  /* 페이지 타이틀 */
-  .cE .page-title { display: flex; align-items: center; gap: 14px; padding: 28px 0 24px; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
-  .cE .page-title .pt-ic { width: 44px; height: 44px; border-radius: 12px; background: #FFE0CB; color: #C9603A; display: grid; place-items: center; flex: none; }
-  .cE .page-title h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
-  .cE .page-title .pt-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; line-height: 1.45; }
+  /* 페이지 타이틀 — 좌우 꽉찬 흰 바 안에 뒤로 + 제목 인라인 */
+  .cE .nr-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: -28px -36px 28px; padding: 22px 0; background: #fff; border-bottom: 1px solid var(--line); }
+  .cE .nr-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 22px; }
+  .cE .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); text-decoration: none; font-weight: 600; margin: 0; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .back-btn:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
+  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .nr-title-row .sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; line-height: 1.45; }
+  .cE .nr-title-info { display: flex; flex-direction: column; }
 
   /* 폼 카드 (중앙 정렬, 단일 컬럼) */
   .cE .form-wrap { display: flex; justify-content: center; margin-top: 8px; margin-bottom: 40px; }
@@ -103,17 +106,17 @@
 
   <main class="emain">
 
-    <a class="back-btn" href="list.html" style="margin-top:4px">
-      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
-    </a>
-
-    <div class="page-title">
-      <div class="pt-ic">
-        <svg class="ic-svg" width="22" height="22"><use href="#i-plus"/></svg>
-      </div>
-      <div>
-        <h1>고객 추가</h1>
-        <div class="pt-sub">새 고객 정보를 입력하면 연락처로 약관동의 링크가 자동 발송됩니다</div>
+    <!-- 타이틀 (좌우 꽉차는 흰 박스) -->
+    <div class="nr-title-row">
+      <div class="nr-title-inner">
+        <a class="back-btn" href="list.html">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>
+          뒤로
+        </a>
+        <div class="nr-title-info">
+          <h1>고객 추가</h1>
+          <div class="sub">새 고객 정보를 입력하면 연락처로 약관동의 링크가 자동 발송됩니다</div>
+        </div>
       </div>
     </div>
 

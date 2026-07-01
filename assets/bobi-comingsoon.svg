@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Left wing (behind body) -->
+  <path d="M 90 195 Q 42 240 55 320 Q 62 356 78 358 Q 100 335 115 300 Q 130 250 130 210 Z"
+        fill="#ffffff" stroke="#E14848" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Right wing (behind body) -->
+  <path d="M 300 190 Q 350 200 360 260 Q 355 300 328 316 Q 310 292 296 260 Q 282 225 285 200 Z"
+        fill="#ffffff" stroke="#E14848" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Motion lines by right wing -->
+  <path d="M 348 208 L 366 208 M 350 232 L 372 232 M 348 254 L 366 254"
+        stroke="#E14848" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Body (main round) -->
+  <path d="M 200 108 C 108 108 90 195 100 260 C 108 322 155 350 200 350 C 250 350 300 320 305 258 C 312 195 292 108 200 108 Z"
+        fill="#ffffff" stroke="#E14848" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Tail curl at bottom-left -->
+  <path d="M 118 316 Q 108 340 122 348 Q 132 342 126 328"
+        fill="#ffffff" stroke="#E14848" stroke-width="11" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Cheeks (pink blush) -->
+  <ellipse cx="150" cy="230" rx="18" ry="10" fill="#F9D3D3"/>
+  <ellipse cx="256" cy="222" rx="17" ry="10" fill="#F9D3D3"/>
+  <!-- Cheek hatches -->
+  <path d="M 142 228 L 148 232 M 146 234 L 152 238 M 250 220 L 256 224 M 254 226 L 260 230"
+        stroke="#F0B4B4" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Eyes -->
+  <circle cx="176" cy="200" r="11" fill="#1F1F1F"/>
+  <circle cx="230" cy="192" r="11" fill="#1F1F1F"/>
+
+  <!-- Beak / open mouth -->
+  <path d="M 190 218 L 225 210 L 230 240 Q 218 250 205 250 Q 194 246 190 218 Z"
+        fill="#F09A55" stroke="#E14848" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Tongue -->
+  <path d="M 199 236 Q 210 246 220 236 Q 213 232 199 236 Z"
+        fill="#F7B3A3"/>
+
+  <!-- Flower on head -->
+  <g transform="translate(140 130)">
+    <path d="M 0 -22
+             C 12 -30 22 -18 18 -6
+             C 30 -8 34 8 24 16
+             C 28 28 12 34 4 24
+             C -6 32 -20 22 -16 10
+             C -28 12 -30 -6 -18 -10
+             C -22 -22 -8 -30 0 -22 Z"
+          fill="#F7D0D5" stroke="#E14848" stroke-width="6" stroke-linejoin="round"/>
+    <circle cx="0" cy="2" r="6" fill="#E14848"/>
+  </g>
+  <!-- Flower stem -->
+  <path d="M 140 148 Q 148 176 160 200" stroke="#E14848" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- Speech bubble -->
+  <g>
+    <ellipse cx="326" cy="82" rx="58" ry="46" fill="#FAD8DB" stroke="#E14848" stroke-width="7"/>
+    <path d="M 288 118 L 274 138 L 300 122 Z" fill="#FAD8DB" stroke="#E14848" stroke-width="7" stroke-linejoin="round"/>
+    <!-- Music note -->
+    <path d="M 302 62 L 302 92 M 302 62 L 322 58 L 322 88" stroke="#E14848" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="298" cy="94" rx="8" ry="6" fill="#E14848"/>
+    <ellipse cx="318" cy="90" rx="8" ry="6" fill="#E14848"/>
+    <!-- Heart -->
+    <path d="M 350 74
+             C 350 66 342 62 338 68
+             C 334 62 326 66 326 74
+             C 326 82 338 92 338 92
+             C 338 92 350 82 350 74 Z"
+          fill="#E14848"/>
+  </g>
+</svg>

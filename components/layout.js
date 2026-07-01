@@ -111,7 +111,7 @@
       +     navItem('customer', BASE + 'pages/customer/list.html',      'i-users',        '내고객')
       +     navItem('report',   BASE + 'pages/report/history.html',     'i-file-text',    '진료기록 리포트')
       +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금')
-      +     navItem('smart',    '#',                                    'i-sparkles',     '스마트보비', '<span class="badge"></span>')
+      +     navItem('smart',    '#smart-coming-soon',                   'i-sparkles',     '스마트보비', '<span class="badge"></span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +   '</nav>'
       +   '<div class="logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
@@ -146,7 +146,7 @@
       +     '</div>'
       +     '<button class="m-drawer-mybtn">마이페이지</button>'
       +     '<div class="m-drawer-list">'
-      +       '<a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-sparkles"/></svg>스마트보비</a>'
+      +       '<a href="#smart-coming-soon"><svg class="ic-svg" width="19" height="19"><use href="#i-sparkles"/></svg>스마트보비</a>'
       +       '<a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-bell"/></svg>공지사항</a>'
       +     '</div>'
       +     '<div class="m-drawer-logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
@@ -158,6 +158,66 @@
   ICONS_SVG += ''
     + '<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>'
     + '<symbol id="i-more-horizontal" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>';
+
+  // ===== 스마트보비 준비중 모달 =====
+  var SMART_MODAL_CSS = ''
+    + '.sm-modal { position: fixed; inset: 0; background: rgba(15,23,42,0.45); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: "Pretendard", system-ui, sans-serif; }'
+    + '.sm-modal[hidden] { display: none; }'
+    + '.sm-modal-card { position: relative; background: #fff; border-radius: 20px; padding: 36px 36px 28px; max-width: 420px; width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.25); box-sizing: border-box; text-align: center; animation: smPop .24s cubic-bezier(0.16,1,0.3,1) both; }'
+    + '@keyframes smPop { from { opacity: 0; transform: scale(0.94) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }'
+    + '.sm-modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; padding: 8px; cursor: pointer; color: var(--ink-3); display: inline-flex; border-radius: 8px; transition: color .15s ease, background-color .15s ease; }'
+    + '.sm-modal-close:hover { color: var(--ink); background: var(--bg-soft); }'
+    + '.sm-modal-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
+    + '.sm-modal-ic { width: 168px; height: 168px; margin: 4px auto 14px; display: grid; place-items: center; position: relative; }'
+    + '.sm-modal-ic::before { content: ""; position: absolute; inset: 8px; border-radius: 50%; background: radial-gradient(circle at 50% 55%, var(--brand-pale) 0%, #FFF1E8 55%, transparent 78%); z-index: 0; }'
+    + '.sm-modal-ic img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; animation: smFloat 3.6s ease-in-out infinite; }'
+    + '@keyframes smFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }'
+    + '.sm-modal-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-pale); color: var(--brand-deep); border-radius: var(--r-pill); padding: 5px 12px; font-size: var(--fs-option); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 12px; }'
+    + '.sm-modal-tag svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
+    + '.sm-modal-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0 0 10px; }'
+    + '.sm-modal-desc { font-size: var(--fs-body); color: var(--ink-3); line-height: 1.6; margin: 0 0 26px; font-weight: 500; }'
+    + '.sm-modal-desc b { color: var(--ink); font-weight: 700; }'
+    + '.sm-modal-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 14px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); letter-spacing: -0.01em; transition: filter .2s ease; }'
+    + '.sm-modal-cta:hover { filter: brightness(1.05); }';
+
+  function smartModalHTML() {
+    return ''
+      + '<div class="sm-modal" id="smart-modal" hidden role="dialog" aria-modal="true" aria-labelledby="sm-modal-title">'
+      +   '<div class="sm-modal-card">'
+      +     '<button class="sm-modal-close" type="button" id="sm-modal-close" aria-label="닫기">'
+      +       '<svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>'
+      +     '</button>'
+      +     '<div class="sm-modal-ic">'
+      +       '<img src="' + BASE + 'assets/img_jjapt.png" alt="보비 마스코트" />'
+      +     '</div>'
+      +     '<div class="sm-modal-tag">'
+      +       '<svg class="ic-svg" width="13" height="13"><use href="#i-clock"/></svg>'
+      +       'COMING SOON'
+      +     '</div>'
+      +     '<h3 class="sm-modal-title" id="sm-modal-title">스마트보비, 출시 준비 중이에요</h3>'
+      +     '<p class="sm-modal-desc">더 똑똑해진 <b>AI 보험 비서</b>로<br/>곧 새로운 모습으로 찾아뵐게요.<br/>조금만 기다려주세요!</p>'
+      +     '<button class="sm-modal-cta" type="button" id="sm-modal-ok">기대할게요</button>'
+      +   '</div>'
+      + '</div>';
+  }
+
+  function bindSmartModal() {
+    var modal = document.getElementById('smart-modal');
+    if (!modal) return;
+    function open(e) { if (e) e.preventDefault(); modal.hidden = false; document.body.style.overflow = 'hidden'; }
+    function shut() { modal.hidden = true; document.body.style.overflow = ''; }
+    window.openSmartComingSoon = open;
+    var close = document.getElementById('sm-modal-close');
+    var ok = document.getElementById('sm-modal-ok');
+    if (close) close.addEventListener('click', shut);
+    if (ok)    ok.addEventListener('click', shut);
+    modal.addEventListener('click', function (e) { if (e.target === modal) shut(); });
+    document.addEventListener('keydown', function (e) { if (!modal.hidden && e.key === 'Escape') shut(); });
+    // 클릭 트리거 자동 바인딩: href="#smart-coming-soon" 링크, .smart-cta 버튼
+    document.querySelectorAll('a[href="#smart-coming-soon"], .smart-cta').forEach(function (el) {
+      el.addEventListener('click', open);
+    });
+  }
 
   // ===== 푸터 템플릿 =====
   function footerHTML() {
@@ -212,8 +272,18 @@
     }
     var footerHost = document.getElementById('footer-host');
     if (footerHost) footerHost.outerHTML = footerHTML();
+    // 스마트보비 준비중 모달 — body 끝에 한 번만 주입
+    if (!document.getElementById('smart-modal')) {
+      var style = document.createElement('style');
+      style.textContent = SMART_MODAL_CSS;
+      document.head.appendChild(style);
+      var holder = document.createElement('div');
+      holder.innerHTML = smartModalHTML();
+      document.body.appendChild(holder.firstChild);
+    }
     window.paintPatientAvatars();
     bindMobileShell();
+    bindSmartModal();
   };
 
   // 햄버거 + 더보기 → 드로어 토글
