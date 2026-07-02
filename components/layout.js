@@ -95,7 +95,7 @@
     }
     return ''
       + '<aside class="eside">'
-      +   '<div class="brand"><img src="' + BASE + 'assets/bobi-logo.png" alt="BoBi" /></div>'
+      +   '<div class="brand"><a href="' + BASE + 'home.html" aria-label="홈으로"><img src="' + BASE + 'assets/bobi-logo.png" alt="BoBi" /></a></div>'
       +   '<div class="eprofile">'
       +     '<div class="pa">'
       +       '<div class="eav">홍</div>'

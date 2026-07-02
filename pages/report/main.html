@@ -45,6 +45,66 @@
   /* 데스크톱에서는 토글 버튼 숨김 */
   .cE .rep-toggle { display: none; }
 
+  /* ===== 리포트 뷰 세그먼트 — 문서 최상위 탭 (일반/교통사고 전환) ===== */
+  .cE .report-viewseg { display: flex; align-items: stretch; gap: 4px; margin: 28px 0 12px; border-bottom: 1px solid var(--line); position: relative; }
+  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
+  .cE .report-viewseg-btn::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 3px; background: transparent; border-radius: 3px 3px 0 0; transition: background-color .2s ease; }
+  .cE .report-viewseg-btn:hover { color: var(--ink); }
+  .cE .report-viewseg-btn svg { color: currentColor; }
+  .cE .report-viewseg-btn.on[data-view-btn="general"] { color: var(--brand-deep); }
+  .cE .report-viewseg-btn.on[data-view-btn="general"]::after { background: var(--brand); }
+  .cE .report-viewseg-btn.on[data-view-btn="car"] { color: #B07816; }
+  .cE .report-viewseg-btn.on[data-view-btn="car"]::after { background: #E67E22; }
+  .cE .report-viewseg-btn .cnt { font-size: var(--fs-option); font-weight: 800; color: var(--ink-4); background: var(--bg-soft); padding: 3px 10px; border-radius: var(--r-pill); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  .cE .report-viewseg-btn.on[data-view-btn="general"] .cnt { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .report-viewseg-btn.on[data-view-btn="car"] .cnt { background: #FFF4E4; color: #B07816; }
+
+  /* 뷰 토글 — data-view 로 카드 표시/숨김 */
+  .cE .emain[data-view="general"] .view-car { display: none !important; }
+  .cE .emain[data-view="car"] .view-general { display: none !important; }
+
+  /* ===== 교통사고 요약 카드 (교통사고 뷰 진입 시 최상단) ===== */
+  .cE .car-summary { position: relative; overflow: hidden; }
+  .cE .car-summary-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .cE .car-summary-head-l { display: flex; align-items: center; gap: 12px; }
+  .cE .car-summary-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; }
+  .cE .car-summary-head .car-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .car-summary-head .car-sub b { color: var(--ink); font-weight: 700; }
+  .cE .car-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .cE .car-stat { background: #FFFAEC; border: none; border-radius: var(--r-md); padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+  /* 불릿 색상에 맞춘 은은한 배경 — 총액(앰버)은 기본 유지 */
+  .cE .car-stat:has(.dot.out)  { background: var(--c-out-bg); }
+  .cE .car-stat:has(.dot.in)   { background: var(--c-in-bg); }
+  .cE .car-stat:has(.dot.surg) { background: var(--c-surg-bg); }
+  .cE .car-stat .car-stat-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+  .cE .car-stat .car-stat-l .dot { width: 8px; height: 8px; border-radius: 3px; }
+  .cE .car-stat .car-stat-l .dot.out { background: var(--c-out); }
+  .cE .car-stat .car-stat-l .dot.in { background: var(--c-in); }
+  .cE .car-stat .car-stat-l .dot.surg { background: var(--c-surg); }
+  .cE .car-stat .car-stat-l .dot.total { background: #C77E22; }
+  .cE .car-stat .car-stat-v { font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cE .car-stat .car-stat-v small { font-size: var(--fs-body); font-weight: 700; color: var(--ink-3); margin-left: 4px; }
+  .cE .car-stat .car-stat-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+  .cE .car-stat .car-stat-sub b { color: var(--ink-2); font-weight: 700; }
+
+  /* ===== 교통사고 진료기록 카드 ===== */
+  .cE .car-card { position: relative; overflow: hidden; }
+  .cE .car-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; gap: 16px; flex-wrap: wrap; }
+  .cE .car-head-l { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .cE .car-badge { display: inline-flex; align-items: center; gap: 6px; background: #FFF4E4; color: #B07816; border: 1px solid #F6DDB0; padding: 5px 12px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 800; letter-spacing: -0.01em; align-self: flex-start; }
+  .cE .car-badge svg { color: currentColor; }
+  .cE .car-tabs { display: flex; gap: 0; }
+  .cE .car-tab { background: none; border: none; padding: 10px 18px; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; transition: color .2s ease; -webkit-tap-highlight-color: transparent; }
+  .cE .car-tab:first-child { padding-left: 0; }
+  .cE .car-tab:hover { color: var(--ink); }
+  .cE .car-tab.on { color: #B07816; }
+  .cE .car-tab:focus { outline: none; }
+  .cE .car-tab:focus-visible { outline: 2px solid #E67E22; outline-offset: 2px; border-radius: 4px; }
+  .cE .car-head .more { font-size: var(--fs-label); color: var(--ink-3); cursor: pointer; padding-bottom: 12px; text-decoration: none; }
+  .cE .car-head .more:hover { color: #B07816; }
+  .cE .car-pane[hidden] { display: none; }
+  /* 통원/입원/수술 typechip 변형 재사용 — 별도 스타일 불필요 */
+
   @media (max-width: 960px) {
     /* ===== 환자 헤더 — 모바일 컴팩트 + 접기/펼치기 ===== */
     .cE .rep-head {
@@ -147,8 +207,43 @@
     .cE .rec-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .cE .rec-pane > table { min-width: 580px; font-size: var(--fs-option); }
 
+    /* 리포트 뷰 세그먼트 — 모바일 */
+    .cE .report-viewseg { width: 100%; box-sizing: border-box; gap: 2px; margin: 4px 0 18px; }
+    .cE .report-viewseg-btn { flex: 1; justify-content: center; padding: 12px 8px 14px; font-size: var(--fs-body); gap: 8px; }
+    .cE .report-viewseg-btn::after { left: 10px; right: 10px; }
+    .cE .report-viewseg-btn svg { width: 16px; height: 16px; }
+    .cE .report-viewseg-btn .cnt { padding: 2px 8px; }
+
+    /* 교통사고 요약 카드 — 모바일 (2x2) */
+    .cE .car-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cE .car-stat { padding: 14px 14px; }
+
+    /* 교통사고 진료기록 카드 — 모바일 */
+    .cE .car-head { flex-wrap: wrap; gap: 8px; }
+    .cE .car-tabs { overflow-x: auto; flex-wrap: nowrap; max-width: 100%; }
+    .cE .car-tab { font-size: var(--fs-body); padding: 8px 14px; white-space: nowrap; }
+    .cE .car-head .more { padding-bottom: 0; font-size: var(--fs-option); }
+    .cE .car-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .cE .car-pane > table { min-width: 580px; font-size: var(--fs-option); }
+
     /* 전체보기 버튼 풀폭 */
     .cE .rec-viewall-btn { width: 100%; justify-content: center; padding: 11px 18px; }
+  }
+
+  /* ===== 인쇄 — 교통사고 진료기록 pane 표시 및 라벨 (rec-pane 룰 미러링) ===== */
+  @media print {
+    body.printing .car-pane[hidden].print-show { display: block !important; }
+    body.printing .car-pane.print-show::before {
+      content: attr(data-print-label);
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      color: #0E1A24;
+      margin: 0 0 10px;
+      padding-top: 4px;
+    }
+    body.printing .car-pane.print-show + .car-pane.print-show { margin-top: 18px; padding-top: 14px; border-top: 1px dashed #DDD; }
+    body.printing .car-card::before { display: none; }
   }
 </style>
 </head>
@@ -160,7 +255,7 @@
 <div class="cA cE bobi">
   <div id="gnb-host"></div>
 
-  <main class="emain">
+  <main class="emain" data-view="general">
 
     <div class="rep-head">
       <div class="rep-id">
@@ -204,6 +299,18 @@
       </div>
     </div>
 
+    <!-- ===== 리포트 뷰 세그먼트 — 일반 / 교통사고 ===== -->
+    <div class="report-viewseg" role="tablist" aria-label="리포트 유형">
+      <button class="report-viewseg-btn on" type="button" role="tab" aria-selected="true" data-view-btn="general">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
+        일반 진료기록
+      </button>
+      <button class="report-viewseg-btn" type="button" role="tab" aria-selected="false" data-view-btn="car">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-alert"/></svg>
+        교통사고 진료기록
+      </button>
+    </div>
+
     <div class="card-pad">
       <h2>조회기간 <span class="hint">· 최대 5년간 진료기록을 볼 수 있습니다</span></h2>
       <div class="period">
@@ -230,7 +337,7 @@
       </div>
     </div>
 
-    <div class="card-pad print-host">
+    <div class="card-pad print-host view-general">
       <h2 data-print="summary">주요정보</h2>
       <div class="sum-grid" data-print="summary">
         <a class="sumc out" href="treatment.html?tab=outpatient">
@@ -264,7 +371,7 @@
       </div>
     </div>
 
-    <div class="card-pad precheck" data-print="precheck">
+    <div class="card-pad precheck view-general" data-print="precheck">
       <div class="pc-head">
         <div>
           <h2>사전 확인 자료</h2>
@@ -323,7 +430,7 @@
       </div>
     </div>
 
-    <div class="chartrow" data-print="cost">
+    <div class="chartrow view-general" data-print="cost">
       <div class="card-pad">
         <h2>의료비 정보</h2>
         <div class="costnums">
@@ -389,7 +496,7 @@
       </div>
     </div>
 
-    <div class="card-pad" data-print="top10">
+    <div class="card-pad view-general" data-print="top10">
       <h2>10대 주요질환<span class="info-popover">
         <button class="info-trigger" type="button" aria-expanded="false">
           <svg class="ic-svg" width="15" height="15"><use href="#i-help-circle"/></svg>
@@ -447,7 +554,7 @@
       </div>
     </div>
 
-    <div class="card-pad print-host">
+    <div class="card-pad print-host view-general">
       <div class="rec-head">
         <div class="rec-tabs" role="tablist">
           <button class="rec-tab on" type="button" role="tab" aria-selected="true" data-rec="all">전체 진료기록</button>
@@ -519,7 +626,7 @@
         </div>
       </div>
 
-      <!-- 처방조제정보 (청구 명세서 로우 데이터) -->
+      <!-- 처방조제정보 (청구 명세서 로우 데이터) — 일반 진료기록의 마지막 탭 -->
       <div class="rec-pane" data-rec-pane="prescription" data-print="records-prescription" data-print-label="처방조제정보" hidden>
         <div class="raw-scroll">
           <table class="raw-table">
@@ -559,6 +666,109 @@
       </div>
     </div>
 
+    <!-- ===== 교통사고 요약 카드 (view-car 진입 시 최상단) ===== -->
+    <div class="card-pad view-car car-summary">
+      <div class="car-summary-head">
+        <div class="car-summary-head-l">
+          <div>
+            <h2>교통사고 진료 요약</h2>
+            <div class="car-sub">사고 관련 진료건 <b>7건</b> · 최초진료 <b>2025.05.20</b> · 최근진료 <b>2025.06.14</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="car-stats">
+        <div class="car-stat">
+          <div class="car-stat-l"><span class="dot total"></span>총 의료비</div>
+          <div class="car-stat-v">2,342,300<small>원</small></div>
+          <div class="car-stat-sub">일반 대비 <b>1.2배</b></div>
+        </div>
+        <div class="car-stat">
+          <div class="car-stat-l"><span class="dot out"></span>통원</div>
+          <div class="car-stat-v">5<small>회</small></div>
+          <div class="car-stat-sub">신경외과·재활의학과</div>
+        </div>
+        <div class="car-stat">
+          <div class="car-stat-l"><span class="dot in"></span>입원</div>
+          <div class="car-stat-v">4<small>일</small></div>
+          <div class="car-stat-sub">정형외과</div>
+        </div>
+        <div class="car-stat">
+          <div class="car-stat-l"><span class="dot surg"></span>수술</div>
+          <div class="car-stat-v">1<small>건</small></div>
+          <div class="car-stat-sub">반월판 절제술</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 교통사고 진료기록 카드 ===== -->
+    <div class="card-pad print-host view-car car-card">
+      <div class="car-head">
+        <div class="car-head-l">
+          <div class="car-tabs" role="tablist">
+            <button class="car-tab on" type="button" role="tab" aria-selected="true" data-car="all">전체 진료기록</button>
+            <button class="car-tab" type="button" role="tab" aria-selected="false" data-car="detail">세부진료기록</button>
+          </div>
+        </div>
+        <a class="more" id="car-viewall-top" href="records.html?view=all&amp;kind=car">전체보기 ›</a>
+      </div>
+
+      <!-- 전체 진료기록 (통원/입원/수술만, 투약 없음) -->
+      <div class="car-pane" data-car-pane="all" data-print="records-car-all" data-print-label="교통사고 전체 진료기록">
+        <table>
+          <thead><tr>
+            <th>진료시작일</th><th>병·의원</th><th>질병(진단과)</th><th class="ctr">진단코드</th><th class="ctr">입원/외래</th><th class="ctr">내원일수</th><th class="amt">의료비</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>2025.06.14</td><td class="num">푸른신경외과의원</td><td>목의 편타손상(신경외과)</td><td class="ctr">S134</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">18,300원</td></tr>
+            <tr><td>2025.06.10</td><td class="num">한사랑재활의학과의원</td><td>요추부 염좌 및 긴장(재활의학과)</td><td class="ctr">S335</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">21,800원</td></tr>
+            <tr><td>2025.06.03</td><td class="num">한사랑재활의학과의원</td><td>요추부 염좌 및 긴장(재활의학과)</td><td class="ctr">S335</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">15,600원</td></tr>
+            <tr><td>2025.05.28</td><td class="num">대구탑연합정형외과의원</td><td>슬관절 반월판의 파열(정형외과)</td><td class="ctr">S832</td><td class="ctr"><span class="typechip in">입원</span></td><td class="ctr">4</td><td class="amt">1,284,500원</td></tr>
+            <tr><td>2025.05.28</td><td class="num">대구탑연합정형외과의원</td><td>관절경적 반월판 절제술(정형외과)</td><td class="ctr">N0824</td><td class="ctr"><span class="typechip pres">수술</span></td><td class="ctr">1</td><td class="amt">946,200원</td></tr>
+            <tr><td>2025.05.24</td><td class="num">푸른신경외과의원</td><td>목의 편타손상(신경외과)</td><td class="ctr">S134</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">13,700원</td></tr>
+            <tr><td>2025.05.20</td><td class="num">푸른신경외과의원</td><td>목의 편타손상(신경외과)</td><td class="ctr">S134</td><td class="ctr"><span class="typechip">외래</span></td><td class="ctr">1</td><td class="amt">42,100원</td></tr>
+          </tbody>
+        </table>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="records.html?view=all&amp;kind=car">전체보기 ›</a>
+        </div>
+      </div>
+
+      <!-- 세부진료기록 (청구 명세서 로우 데이터) — 투약 관련 컬럼 제외 -->
+      <div class="car-pane" data-car-pane="detail" data-print="records-car-detail" data-print-label="교통사고 세부진료기록" hidden>
+        <div class="raw-scroll">
+          <table class="raw-table">
+            <thead>
+              <tr>
+                <th>진료시작일</th>
+                <th>병·의원</th>
+                <th>진료내역</th>
+                <th class="wrap">코드명</th>
+                <th class="ctr">입원/외래</th>
+                <th class="ctr">시행횟수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2025-06-14</td><td class="num">푸른신경외과의원</td><td>진찰료/재진(양방)</td><td>재진진찰료-의원</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-06-14</td><td class="num">푸른신경외과의원</td><td>이학요법료/이학요법(양방)</td><td>표층열치료</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-06-10</td><td class="num">한사랑재활의학과의원</td><td>이학요법료/이학요법(양방)</td><td>간섭파전류치료[ICT]</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-06-10</td><td class="num">한사랑재활의학과의원</td><td>이학요법료/이학요법(양방)</td><td>도수치료</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-28</td><td class="num">대구탑연합정형외과의원</td><td>처치 및 수술/처치 및 수술(양방)</td><td>관절경적 반월판 절제술-부분절제</td><td class="ctr">입원</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-28</td><td class="num">대구탑연합정형외과의원</td><td>마취료/마취(양방)</td><td>척추마취</td><td class="ctr">입원</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-28</td><td class="num">대구탑연합정형외과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>자기공명영상진단-슬관절</td><td class="ctr">입원</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-28</td><td class="num">대구탑연합정형외과의원</td><td>입원료/입원료(양방)</td><td>입원료-종합병원</td><td class="ctr">입원</td><td class="ctr">4</td></tr>
+              <tr><td>2025-05-24</td><td class="num">푸른신경외과의원</td><td>진찰료/재진(양방)</td><td>재진진찰료-의원</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-20</td><td class="num">푸른신경외과의원</td><td>진찰료/초진(양방)</td><td>초진진찰료-의원</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-20</td><td class="num">푸른신경외과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>자기공명영상진단-경추</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+              <tr><td>2025-05-20</td><td class="num">푸른신경외과의원</td><td>영상진단 및 방사선치료료/진단(양방)</td><td>경추2매</td><td class="ctr">외래</td><td class="ctr">1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rec-foot">
+          <a class="rec-viewall-btn" href="records.html?view=detail&amp;kind=car">전체보기 ›</a>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -582,7 +792,7 @@
       </colgroup>
       <tbody>
         <tr>
-          <th rowspan="8" class="lv1">
+          <th rowspan="10" class="lv1">
             <label class="tree-chk">
               <input type="checkbox" id="ck-all" />
               <span class="tree-box" aria-hidden="true"></span>
@@ -608,6 +818,11 @@
         </tr>
         <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="records-detail" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">세부진료기록</span></label></td></tr>
         <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="records-prescription" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">처방조제정보</span></label></td></tr>
+        <tr>
+          <td rowspan="2" class="lv2-empty" aria-hidden="true"></td>
+          <td><label class="tree-chk"><input type="checkbox" data-print-check value="records-car-all" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">교통사고 전체진료기록</span></label></td>
+        </tr>
+        <tr><td><label class="tree-chk"><input type="checkbox" data-print-check value="records-car-detail" /><span class="tree-box" aria-hidden="true"></span><span class="tree-text">교통사고 세부진료기록</span></label></td></tr>
       </tbody>
     </table>
     <div class="print-modal-actions">
@@ -1143,6 +1358,41 @@
       });
       panes.forEach(p => { p.hidden = p.dataset.recPane !== name; });
       if (topMore) topMore.href = 'records.html?view=' + name;
+    }));
+  })();
+
+  // 리포트 뷰 세그먼트 — 일반/교통사고 뷰 전환
+  (function(){
+    const main = document.querySelector('.emain');
+    const btns = document.querySelectorAll('.report-viewseg-btn');
+    if (!main || !btns.length) return;
+    btns.forEach(btn => btn.addEventListener('click', () => {
+      const view = btn.dataset.viewBtn;
+      btns.forEach(b => {
+        const on = b === btn;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+      main.dataset.view = view;
+      // 뷰 전환 시 페이지 상단으로 부드럽게 스크롤
+      main.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+  })();
+
+  // 교통사고 진료기록 카드 탭 — 전체/세부 전환 + 상단 전체보기 링크 동기화
+  (function(){
+    const tabs = document.querySelectorAll('.car-tab');
+    const panes = document.querySelectorAll('.car-pane');
+    const topMore = document.getElementById('car-viewall-top');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      const name = t.dataset.car;
+      tabs.forEach(b => {
+        const on = b === t;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', String(on));
+      });
+      panes.forEach(p => { p.hidden = p.dataset.carPane !== name; });
+      if (topMore) topMore.href = 'records.html?view=' + name + '&kind=car';
     }));
   })();
 

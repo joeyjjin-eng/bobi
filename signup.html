@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 회원가입</title>
+<link rel="stylesheet" href="styles/tokens.css" />
+<link rel="stylesheet" href="styles/auth.css" />
+</head>
+<body>
+
+<div class="auth-page">
+
+  <header class="auth-header">
+    <a href="index.html" style="display:inline-flex;align-items:center"><img src="assets/bobi-logo.png" alt="BoBi" /></a>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+
+      <h1 class="sg-title">회원가입</h1>
+
+      <!-- ===== 스텝퍼 ===== -->
+      <nav class="sg-stepper" aria-label="회원가입 진행 단계">
+        <div class="sg-step cur reachable" data-step="1"><span class="num">1</span><span class="lbl">본인인증</span></div>
+        <div class="sg-step-line" aria-hidden="true"></div>
+        <div class="sg-step" data-step="2"><span class="num">2</span><span class="lbl">계정정보</span></div>
+        <div class="sg-step-line" aria-hidden="true"></div>
+        <div class="sg-step" data-step="3"><span class="num">3</span><span class="lbl">소속정보</span></div>
+      </nav>
+
+      <form class="sg-form" onsubmit="event.preventDefault(); alert('가입이 완료되었습니다.'); location.href='login.html';">
+
+        <!-- ===== STEP 1: 본인인증 ===== -->
+        <div class="sg-pane" data-step="1">
+          <div class="sg-fields">
+
+            <div class="lg-field">
+              <label for="sg-name">이름</label>
+              <input id="sg-name" type="text" autocomplete="name" placeholder="홍길동" />
+            </div>
+
+            <div class="lg-field">
+              <label for="sg-birth">생년월일</label>
+              <input id="sg-birth" type="text" inputmode="numeric" maxlength="8" placeholder="19901212" />
+            </div>
+
+            <div class="lg-field">
+              <label for="sg-gender">성별</label>
+              <select id="sg-gender" required>
+                <option value="" selected disabled>선택해 주세요</option>
+                <option value="female">여성</option>
+                <option value="male">남성</option>
+              </select>
+            </div>
+
+            <div class="sg-field-row">
+              <div class="lg-field">
+                <label for="sg-phone">연락처</label>
+                <input id="sg-phone" type="tel" autocomplete="tel" placeholder="01012345678" />
+              </div>
+              <button class="sg-field-btn" type="button" onclick="document.getElementById('sg-verify').hidden=false; this.textContent='재전송';">인증번호받기</button>
+            </div>
+
+            <div class="sg-field-row" id="sg-verify" hidden>
+              <div class="lg-field">
+                <label for="sg-verify-code">인증번호</label>
+                <input id="sg-verify-code" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+              </div>
+              <button class="sg-field-btn" type="button">확인</button>
+            </div>
+
+          </div>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="button" onclick="goStep(2)">다음</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: 계정정보 ===== -->
+        <div class="sg-pane" data-step="2" hidden>
+          <div class="sg-fields">
+
+            <div class="sg-field-row">
+              <div class="lg-field">
+                <label for="sg-id">아이디</label>
+                <input id="sg-id" type="text" autocomplete="username" placeholder="아이디를 입력하세요." />
+              </div>
+              <button class="sg-field-btn" type="button" onclick="alert('사용 가능한 아이디입니다.')">중복체크</button>
+            </div>
+
+            <div class="lg-field">
+              <label for="sg-pw">비밀번호</label>
+              <input id="sg-pw" type="password" autocomplete="new-password" placeholder="숫자 + 영문 8자 이상" />
+            </div>
+
+            <div class="lg-field">
+              <label for="sg-pw2">비밀번호 확인</label>
+              <input id="sg-pw2" type="password" autocomplete="new-password" placeholder="비밀번호를 한번 더 입력해 주세요." />
+            </div>
+
+          </div>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="button" onclick="goStep(3)">다음</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 3: 소속정보 ===== -->
+        <div class="sg-pane" data-step="3" hidden>
+
+          <section class="sg-section">
+            <h2 class="sg-section-title">소속정보</h2>
+            <div class="sg-fields">
+
+              <div class="lg-field">
+                <label for="sg-org">소속</label>
+                <select id="sg-org" required>
+                  <option value="" selected disabled>선택해 주세요</option>
+                  <option value="samsung">삼성생명</option>
+                  <option value="hanwha">한화생명</option>
+                  <option value="kyobo">교보생명</option>
+                  <option value="mirae">미래에셋생명</option>
+                  <option value="hyundai">현대해상</option>
+                  <option value="db">DB손해보험</option>
+                  <option value="meritz">메리츠화재</option>
+                  <option value="ga">GA(대리점)</option>
+                  <option value="etc">기타</option>
+                </select>
+              </div>
+
+              <div class="lg-field">
+                <label for="sg-role">직급</label>
+                <select id="sg-role" required>
+                  <option value="" selected disabled>선택해 주세요</option>
+                  <option value="staff">사원</option>
+                  <option value="manager">팀장</option>
+                  <option value="branch">지점장</option>
+                  <option value="director">본부장</option>
+                  <option value="etc">기타</option>
+                </select>
+              </div>
+
+              <div class="lg-field">
+                <label for="sg-code">고유번호</label>
+                <input id="sg-code" type="text" placeholder="고유번호를 입력해주세요." />
+              </div>
+
+            </div>
+          </section>
+
+          <section class="sg-section">
+            <h2 class="sg-section-title">추천인 정보</h2>
+            <div class="sg-fields">
+
+              <div class="lg-field">
+                <label for="sg-ref">추천인 이름</label>
+                <input id="sg-ref" type="text" placeholder="김길동" />
+              </div>
+
+              <div class="lg-field">
+                <label for="sg-ref-phone">추천인 연락처</label>
+                <input id="sg-ref-phone" type="tel" placeholder="01087654321" />
+              </div>
+
+            </div>
+          </section>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="submit">완료</button>
+          </div>
+        </div>
+
+      </form>
+
+      <div class="sg-back">
+        이미 계정이 있으신가요? <a href="login.html">로그인</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="auth-ft">
+    <div>
+      <div class="auth-ft-links">
+        <button class="auth-ft-link">이용약관</button>
+        <span class="auth-ft-sep">|</span>
+        <button class="auth-ft-link bold">개인정보처리방침</button>
+      </div>
+      <div class="auth-ft-info">
+        <p>주식회사 천호인터내셔널<span class="dot">·</span>대표 이승엽<span class="dot">·</span>사업자등록번호 342-81-00261</p>
+        <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
+      </div>
+    </div>
+    <div class="auth-ft-cs">
+      <div class="cs-call">고객센터 <b>1644-0161</b></div>
+      <div>운영시간 10:00 ~ 17:00</div>
+      <div class="cs-mail"><a href="mailto:cs@weplat.co.kr">cs@weplat.co.kr</a></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  let maxReached = 1;
+  function goStep(n) {
+    if (n > maxReached) maxReached = n;
+    document.querySelectorAll('.sg-pane').forEach(p => {
+      p.hidden = Number(p.dataset.step) !== n;
+    });
+    document.querySelectorAll('.sg-step').forEach(s => {
+      const step = Number(s.dataset.step);
+      s.classList.toggle('cur', step === n);
+      s.classList.toggle('reachable', step <= maxReached);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.sg-step').forEach(s => {
+    s.addEventListener('click', () => {
+      const step = Number(s.dataset.step);
+      if (step <= maxReached) goStep(step);
+    });
+  });
+</script>
+
+</body>
+</html>

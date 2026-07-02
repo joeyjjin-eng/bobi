@@ -39,7 +39,7 @@
   .cE .period-trigger { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-3); font-size: var(--fs-option); font-weight: 600; cursor: pointer; user-select: none; background: transparent; border: none; padding: 0; font-family: inherit; }
   .cE .period-trigger:hover { color: var(--ink); }
   .cE .period-trigger[aria-expanded="true"], .cE .period-trigger.has-value { color: var(--ink); }
-  .cE .sb-btn { background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); padding: 10px 28px; font-size: var(--fs-body); font-weight: 700; font-family: inherit; cursor: pointer; letter-spacing: -0.01em; box-shadow: var(--sh-brand); transition: background-color .2s ease; }
+  .cE .sb-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); padding: 10px 24px; font-size: var(--fs-body); font-weight: 700; font-family: inherit; cursor: pointer; letter-spacing: -0.01em; box-shadow: var(--sh-brand); transition: background-color .2s ease; flex: none; }
   .cE .sb-btn:hover { background: var(--brand-hover); }
 
   /* ===== 기간 선택 팝오버 ===== */
@@ -197,9 +197,10 @@
 
     /* 검색바 — 한 줄, 기간 버튼 라벨 축약 */
     .cE .search-bar { padding: 10px 14px; gap: 8px; border-radius: var(--r-sm); flex-wrap: wrap; }
-    .cE .search-bar input { font-size: var(--fs-option); min-width: 0; }
+    .cE .search-bar input { font-size: var(--fs-option); min-width: 0; flex: 1 1 140px; }
     .cE .sb-divider { display: none; }
     .cE .period-trigger { font-size: var(--fs-option); }
+    .cE .sb-btn { padding: 9px 18px; font-size: var(--fs-option); }
     .cE .period-popup { width: calc(100vw - 32px); right: -14px; padding: 18px 16px 14px; }
     .cE .pp-range { grid-template-columns: 1fr; gap: 10px; }
     .cE .pp-range .dash { display: none; }
@@ -374,6 +375,10 @@
           </div>
         </div>
       </div>
+      <button class="sb-btn" type="button" id="search-btn">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-search"/></svg>
+        <span>검색</span>
+      </button>
     </div>
 
     <!-- 필터바 -->
@@ -684,11 +689,17 @@
     });
   });
 
-  document.getElementById('search-input').addEventListener('input', function (e) {
-    state.query = e.target.value.trim();
+  // 검색 — 버튼 클릭 또는 Enter로만 실행 (페이징 UX 대응)
+  function applySearch() {
+    var input = document.getElementById('search-input');
+    state.query = input.value.trim();
     state.selectedIdx = null;
     renderTable();
     renderPreview();
+  }
+  document.getElementById('search-btn').addEventListener('click', applySearch);
+  document.getElementById('search-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); applySearch(); }
   });
 
   // ===== 기간 선택 팝오버 =====

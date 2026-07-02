@@ -101,6 +101,124 @@ body { font-family: 'Pretendard', system-ui, sans-serif; color: var(--ink); -web
 }
 .lg-submit:hover { background: var(--brand-hover); }
 
+/* 로그인 하단 - 대체 액션 버튼 (카카오 / 회원가입) */
+.lg-alt {
+  width: 100%; padding: 17px;
+  margin-top: 10px;
+  border-radius: var(--r-md); border: none;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+  text-align: center; text-decoration: none; cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color .2s ease;
+}
+.lg-alt.kakao { background: #FEE500; color: #191919; }
+.lg-alt.kakao:hover { background: #FADA0A; }
+.lg-alt.signup { background: var(--brand-ink); color: #fff; }
+.lg-alt.signup:hover { background: #14333f; }
+
+/* === 회원가입 (3단계 위저드) === */
+.sg-title {
+  font-size: var(--fs-h1); font-weight: 800;
+  text-align: center; margin: 0 0 24px;
+  color: var(--ink); letter-spacing: -0.02em;
+}
+
+/* 스텝퍼 */
+.sg-stepper {
+  display: flex; align-items: flex-start; justify-content: center;
+  gap: 10px; margin: 0 0 36px;
+}
+.sg-step { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: none; cursor: default; }
+.sg-step.reachable:not(.cur) { cursor: pointer; }
+.sg-step.reachable:not(.cur):hover .num { border-color: var(--brand); }
+.sg-step .num {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--brand-pale); border: 1px solid var(--brand-soft);
+  color: var(--brand-deep);
+  font-size: var(--fs-option); font-weight: 800;
+  transition: background-color .25s ease, border-color .25s ease, color .25s ease;
+}
+.sg-step .lbl {
+  font-size: var(--fs-option); color: var(--ink-3); font-weight: 600;
+  transition: color .25s ease;
+}
+.sg-step.cur .num {
+  background: var(--brand); border-color: var(--brand); color: #fff;
+  box-shadow: 0 4px 12px rgba(66,186,255,.35);
+}
+.sg-step.cur .lbl { color: var(--brand-deep); font-weight: 700; }
+.sg-step-line {
+  flex: none; width: 44px; height: 1px; background: var(--line);
+  margin-top: 17px;
+}
+
+/* 스텝 pane */
+.sg-form { display: flex; flex-direction: column; }
+.sg-pane[hidden] { display: none; }
+.sg-pane { display: flex; flex-direction: column; gap: 24px; }
+.sg-section { display: flex; flex-direction: column; gap: 10px; }
+.sg-section-title {
+  font-size: var(--fs-body); font-weight: 800;
+  color: var(--ink); margin: 0 0 2px; letter-spacing: -0.01em;
+}
+.sg-fields { display: flex; flex-direction: column; gap: 10px; }
+
+/* 필드 + 인라인 액션 버튼 (인증번호받기 / 중복체크) */
+.sg-field-row { display: flex; gap: 8px; align-items: center; }
+.sg-field-row .lg-field { flex: 1; }
+.sg-field-btn {
+  flex: none; padding: 12px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--brand); background: #fff; color: var(--brand-deep);
+  font-family: inherit; font-size: var(--fs-option); font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  transition: background-color .2s ease;
+}
+.sg-field-btn:hover { background: var(--brand-pale); }
+
+/* 셀렉트 (lg-field 안) — 성별/소속 공통 */
+.lg-field select {
+  width: 100%; border: none; outline: none;
+  font-family: inherit; font-size: var(--fs-body); color: var(--ink);
+  padding: 0 24px 0 0; background: transparent;
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right center;
+  cursor: pointer;
+}
+.lg-field select:invalid { color: var(--ink-4); }
+.lg-field select option { color: var(--ink); }
+.lg-field select option:disabled { color: var(--ink-4); }
+
+/* 단계 이동 버튼 영역 */
+.sg-actions {
+  display: flex; gap: 10px; margin-top: 28px;
+}
+.sg-actions .lg-submit { margin-top: 0; }
+.sg-actions .sg-prev {
+  flex: none; padding: 17px 22px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong); background: #fff;
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+  color: var(--ink-2); cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.sg-actions .sg-prev:hover { background: var(--bg-soft); border-color: var(--ink-4); }
+
+/* 회원가입 하단 링크 */
+.sg-back {
+  margin-top: 20px; text-align: center;
+  font-size: var(--fs-option); color: var(--ink-3);
+}
+.sg-back a { color: var(--brand-deep); font-weight: 700; text-decoration: none; margin-left: 6px; }
+.sg-back a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .sg-step-line { width: 28px; }
+}
+
 /* === 푸터 (인증 페이지) === */
 .auth-ft {
   background: #fff; border-top: 1px solid var(--line);
@@ -124,6 +242,70 @@ body { font-family: 'Pretendard', system-ui, sans-serif; color: var(--ink); -web
 .auth-ft-cs .cs-call b { color: var(--brand-deep); }
 .auth-ft-cs .cs-mail a { color: var(--brand-deep); text-decoration: none; }
 .auth-ft-cs .cs-mail a:hover { text-decoration: underline; }
+
+/* === 아이디/비밀번호 찾기 === */
+.find-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 28px;
+}
+.find-tab {
+  flex: 1; padding: 14px 0;
+  background: none; border: none;
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+  color: var(--ink-3); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .2s ease, border-color .2s ease;
+}
+.find-tab:hover { color: var(--ink); }
+.find-tab.on { color: var(--brand-deep); border-bottom-color: var(--brand); }
+
+.find-pane[hidden] { display: none; }
+.find-pane { display: flex; flex-direction: column; gap: 10px; }
+.find-pane [data-state][hidden] { display: none; }
+
+/* 결과 카드 — 아이디 노출 */
+.find-result {
+  background: var(--brand-pale);
+  border: 1px solid var(--brand-soft);
+  border-radius: var(--r-md);
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.find-result-label {
+  font-size: var(--fs-body); color: var(--ink-2); font-weight: 600;
+  margin-bottom: 10px;
+}
+.find-result-value {
+  font-size: var(--fs-h1); font-weight: 800;
+  color: var(--brand-deep); letter-spacing: -0.02em;
+}
+.find-result-meta {
+  font-size: var(--fs-option); color: var(--ink-3);
+  margin-top: 10px;
+}
+
+/* 결과 하단 액션 (2버튼 나란히) */
+.find-actions {
+  display: flex; gap: 10px; margin-top: 20px;
+}
+.find-actions > * { flex: 1; margin-top: 0 !important; }
+
+/* 아웃라인 보조 버튼 (find, sg 공용) */
+.lg-alt.outline {
+  background: #fff; color: var(--ink-2);
+  border: 1px solid var(--line-strong);
+}
+.lg-alt.outline:hover { background: var(--bg-soft); border-color: var(--ink-4); }
+
+/* 재설정 안내 문구 */
+.find-reset-lead {
+  font-size: var(--fs-body); color: var(--ink-2); line-height: 1.6;
+  margin: 0 0 20px; text-align: center;
+}
+.find-reset-lead b { color: var(--ink); font-weight: 700; }
 
 /* 모바일 대응 */
 @media (max-width: 640px) {

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 아이디/비밀번호 찾기</title>
+<link rel="stylesheet" href="styles/tokens.css" />
+<link rel="stylesheet" href="styles/auth.css" />
+</head>
+<body>
+
+<div class="auth-page">
+
+  <header class="auth-header">
+    <a href="index.html" style="display:inline-flex;align-items:center"><img src="assets/bobi-logo.png" alt="BoBi" /></a>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+
+      <h1 class="sg-title">아이디/비밀번호 찾기</h1>
+
+      <!-- ===== 탭 ===== -->
+      <div class="find-tabs" role="tablist">
+        <button class="find-tab on" type="button" role="tab" aria-selected="true" data-tab="id">아이디 찾기</button>
+        <button class="find-tab" type="button" role="tab" aria-selected="false" data-tab="pw">비밀번호 찾기</button>
+      </div>
+
+      <!-- ===== 아이디 찾기 pane ===== -->
+      <div class="find-pane" data-pane="id">
+
+        <!-- 폼 상태 -->
+        <div data-state="form">
+          <div class="sg-fields">
+
+            <div class="lg-field">
+              <label for="fid-name">이름</label>
+              <input id="fid-name" type="text" autocomplete="name" placeholder="홍길동" />
+            </div>
+
+            <div class="sg-field-row">
+              <div class="lg-field">
+                <label for="fid-phone">연락처</label>
+                <input id="fid-phone" type="tel" autocomplete="tel" placeholder="01012345678" />
+              </div>
+              <button class="sg-field-btn" type="button" onclick="document.getElementById('fid-verify').hidden=false; this.textContent='재전송';">인증번호받기</button>
+            </div>
+
+            <div class="sg-field-row" id="fid-verify" hidden>
+              <div class="lg-field">
+                <label for="fid-code">인증번호</label>
+                <input id="fid-code" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+              </div>
+              <button class="sg-field-btn" type="button">확인</button>
+            </div>
+
+          </div>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="button" onclick="showIdResult()">아이디 찾기</button>
+          </div>
+        </div>
+
+        <!-- 결과 상태 -->
+        <div data-state="result" hidden>
+          <div class="find-result">
+            <div class="find-result-label">고객님의 아이디는</div>
+            <div class="find-result-value" id="fid-result-value">bobi***1</div>
+            <div class="find-result-meta">2025.03.14 가입</div>
+          </div>
+
+          <div class="find-actions">
+            <button class="lg-alt outline" type="button" onclick="switchTab('pw')">비밀번호 찾기</button>
+            <a class="lg-submit" href="login.html" style="display:flex;align-items:center;justify-content:center;text-decoration:none">로그인</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== 비밀번호 찾기 pane ===== -->
+      <div class="find-pane" data-pane="pw" hidden>
+
+        <!-- 폼 상태 (아이디 + SMS 인증) -->
+        <div data-state="form">
+          <div class="sg-fields">
+
+            <div class="lg-field">
+              <label for="fpw-id">아이디</label>
+              <input id="fpw-id" type="text" autocomplete="username" placeholder="아이디를 입력하세요." />
+            </div>
+
+            <div class="sg-field-row">
+              <div class="lg-field">
+                <label for="fpw-phone">연락처</label>
+                <input id="fpw-phone" type="tel" autocomplete="tel" placeholder="01012345678" />
+              </div>
+              <button class="sg-field-btn" type="button" onclick="document.getElementById('fpw-verify').hidden=false; this.textContent='재전송';">인증번호받기</button>
+            </div>
+
+            <div class="sg-field-row" id="fpw-verify" hidden>
+              <div class="lg-field">
+                <label for="fpw-code">인증번호</label>
+                <input id="fpw-code" type="text" inputmode="numeric" maxlength="6" placeholder="6자리 숫자" />
+              </div>
+              <button class="sg-field-btn" type="button">확인</button>
+            </div>
+
+          </div>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="button" onclick="showPwReset()">다음</button>
+          </div>
+        </div>
+
+        <!-- 비밀번호 재설정 상태 -->
+        <div data-state="reset" hidden>
+          <p class="find-reset-lead">본인 확인이 완료되었습니다.<br /><b>새 비밀번호</b>를 설정해 주세요.</p>
+
+          <div class="sg-fields">
+
+            <div class="lg-field">
+              <label for="fpw-new">새 비밀번호</label>
+              <input id="fpw-new" type="password" autocomplete="new-password" placeholder="숫자 + 영문 8자 이상" />
+            </div>
+
+            <div class="lg-field">
+              <label for="fpw-new2">새 비밀번호 확인</label>
+              <input id="fpw-new2" type="password" autocomplete="new-password" placeholder="비밀번호를 한번 더 입력해 주세요." />
+            </div>
+
+          </div>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="button" onclick="alert('비밀번호가 재설정되었습니다.'); location.href='login.html';">비밀번호 재설정 완료</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sg-back">
+        <a href="login.html">로그인으로 돌아가기</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="auth-ft">
+    <div>
+      <div class="auth-ft-links">
+        <button class="auth-ft-link">이용약관</button>
+        <span class="auth-ft-sep">|</span>
+        <button class="auth-ft-link bold">개인정보처리방침</button>
+      </div>
+      <div class="auth-ft-info">
+        <p>주식회사 천호인터내셔널<span class="dot">·</span>대표 이승엽<span class="dot">·</span>사업자등록번호 342-81-00261</p>
+        <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
+      </div>
+    </div>
+    <div class="auth-ft-cs">
+      <div class="cs-call">고객센터 <b>1644-0161</b></div>
+      <div>운영시간 10:00 ~ 17:00</div>
+      <div class="cs-mail"><a href="mailto:cs@weplat.co.kr">cs@weplat.co.kr</a></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.find-tab').forEach(t => {
+      const on = t.dataset.tab === name;
+      t.classList.toggle('on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.find-pane').forEach(p => {
+      p.hidden = p.dataset.pane !== name;
+    });
+    document.querySelectorAll('.find-pane [data-state]').forEach(s => {
+      s.hidden = s.dataset.state !== 'form';
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setState(paneName, stateName) {
+    const pane = document.querySelector(`.find-pane[data-pane="${paneName}"]`);
+    pane.querySelectorAll('[data-state]').forEach(s => {
+      s.hidden = s.dataset.state !== stateName;
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showIdResult() { setState('id', 'result'); }
+  function showPwReset() { setState('pw', 'reset'); }
+
+  document.querySelectorAll('.find-tab').forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+</script>
+
+</body>
+</html>
