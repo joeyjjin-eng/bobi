@@ -1,0 +1,401 @@
+/* ============================================================
+   BoBi v2 — 상세페이지 공통 모바일 패턴
+   대상 페이지: pages/report/treatment.html, reexam.html, precheck.html
+
+   구성:
+   - 데스크탑에서 숨김 처리 (기본 룰)
+   - @media (max-width: 960px):
+     · .etop 숨김 (내용은 topbar로 이동)
+     · GNB topbar 재구성 스타일 (.detail-mode: back · title · actions)
+     · 액션 메뉴 팝오버 (.m-actions-menu)
+     · 컴팩트 필터 트리거 바 (.tr-filter-compact + .tr-fc-chip)
+     · 필터 바텀시트 (.tr-filter · .tr-filter-bg)
+     · 시트 내부 컴팩션 (dlabel/dateinput/searchinput/actions)
+     · CD 탭 · 정렬 칩 스크롤화
+     · .cd-pane 표 → 카드 리스트 (공통 base)
+     · 상세정보 바텀시트 (.tr-detail-modal)
+   ============================================================ */
+
+/* 데스크탑 기본: 모두 숨김 */
+.tr-filter-compact { display: none; }
+.tr-filter-bg { display: none; }
+.tr-detail-modal { display: none; }
+.m-actions-menu { display: none; }
+
+@media (max-width: 960px) {
+  /* ===== 상단 (.etop) — 모바일에서는 GNB topbar로 이동 ===== */
+  .cE .etop { display: none !important; }
+
+  /* ===== 상세페이지용 GNB topbar: 뒤로가기 · 제목 · 액션 메뉴 ===== */
+  .m-topbar.detail-mode { padding: 0 4px !important; }
+  .m-topbar.detail-mode .m-back {
+    width: 42px; height: 42px;
+    display: grid; place-items: center;
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-2); text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .m-topbar.detail-mode .m-back:hover { color: var(--ink); }
+  .m-topbar.detail-mode .m-title {
+    flex: 1; min-width: 0;
+    text-align: center;
+    font-size: var(--fs-body);
+    font-weight: 800; color: var(--ink);
+    letter-spacing: -0.02em; line-height: 1.2;
+    padding: 0 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .m-topbar.detail-mode .m-actions-btn {
+    width: 42px; height: 42px;
+    display: grid; place-items: center;
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-2); position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .m-topbar.detail-mode .m-actions-btn:hover { color: var(--ink); }
+  /* 액션 없음 페이지용 우측 스페이서 (시각적 밸런스) */
+  .m-topbar.detail-mode .m-spacer { width: 42px; height: 42px; }
+
+  /* 액션 팝오버 (우상단) */
+  .m-actions-menu {
+    display: block;
+    position: fixed;
+    top: calc(54px + 4px);
+    right: 8px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    box-shadow: 0 12px 32px rgba(8, 22, 32, .18);
+    padding: 6px;
+    min-width: 172px;
+    z-index: 90;
+    animation: mActionsIn .18s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  @keyframes mActionsIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .m-actions-menu[hidden] { display: none; }
+  .m-actions-item {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 10px 14px;
+    background: none; border: none;
+    color: var(--ink-2); font-family: inherit;
+    font-size: var(--fs-body); font-weight: 600;
+    text-align: left; cursor: pointer;
+    border-radius: 8px;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+  }
+  .m-actions-item:hover { background: var(--bg-soft); color: var(--ink); }
+  .m-actions-item svg { color: var(--brand-deep); flex: none; }
+
+  /* ===== 컴팩트 필터 바 — 여러 칩 분리 ===== */
+  .tr-filter-compact {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 4px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tr-filter-compact::-webkit-scrollbar { display: none; }
+  .tr-fc-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    font-family: inherit;
+    font-size: var(--fs-option);
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+    flex: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .tr-fc-chip:hover { border-color: var(--ink-4); }
+  .tr-fc-chip:active { background: var(--bg-soft); }
+  .tr-fc-chip > svg:first-child { color: var(--ink-3); flex: none; }
+  .tr-fc-chip .tr-fc-chev { color: var(--ink-4); flex: none; margin-left: 2px; }
+  .tr-fc-chip.on {
+    background: var(--brand); border-color: var(--brand);
+    color: #fff; font-weight: 700;
+  }
+  .tr-fc-chip.on > svg:first-child,
+  .tr-fc-chip.on .tr-fc-chev { color: currentColor; opacity: .9; }
+
+  /* ===== 필터 카드 → 바텀시트로 변환 (.tr-filter · card-pad.period-host 공통) ===== */
+  .cE .tr-filter,
+  .cE .card-pad.period-host {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 210;
+    width: 100%; max-width: 520px;
+    margin: 0 auto !important;
+    padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    background: #fff;
+    border: none !important;
+    border-radius: 20px 20px 0 0 !important;
+    box-shadow: 0 -10px 32px rgba(8, 22, 32, .22);
+    max-height: 85vh; overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .3s;
+    visibility: hidden;
+  }
+  .cE .tr-filter.open,
+  .cE .card-pad.period-host.open {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform .28s cubic-bezier(.2, .8, .2, 1);
+  }
+  /* Sheet handle */
+  .cE .tr-filter::before,
+  .cE .card-pad.period-host::before {
+    content: '';
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 4px;
+    border-radius: 2px;
+    background: var(--ink-4); opacity: .5;
+  }
+
+  /* Backdrop */
+  .tr-filter-bg {
+    display: block;
+    position: fixed; inset: 0;
+    z-index: 209;
+    background: rgba(8, 22, 32, .45);
+    opacity: 0; visibility: hidden;
+    pointer-events: none;
+    transition: opacity .2s ease, visibility 0s linear .2s;
+  }
+  .tr-filter-bg.open {
+    opacity: 1; visibility: visible;
+    pointer-events: auto;
+    transition: opacity .2s ease;
+  }
+
+  /* ===== 필터 시트 내부 스타일 — 크게, 터치 편하게 ===== */
+  .cE .tr-filter-h {
+    display: block !important;
+    font-size: var(--fs-body) !important; font-weight: 800 !important;
+    margin: 8px 0 16px !important; color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .cE .tr-filter .dlabel,
+  .cE .card-pad.period-host .dlabel {
+    font-size: 12px !important; padding-left: 2px !important;
+    font-weight: 600 !important; color: var(--ink-3) !important;
+    margin-bottom: 4px;
+  }
+  .cE .tr-filter-row { grid-template-columns: 1fr 1fr; gap: 10px; align-items: end; }
+  .cE .tr-filter-row .dash { display: none; }
+  .cE .tr-filter-row > .date-field { min-width: 0; gap: 4px; }
+  .cE .tr-filter-row > .search-field { grid-column: 1 / -1; gap: 4px; }
+  .cE .tr-filter-row > .tr-filter-actions { grid-column: 1 / -1; gap: 8px; margin-top: 4px; }
+  /* 시트 focus 모드 — 날짜 시트에서는 검색 숨김, 검색 시트에서는 날짜 숨김 */
+  .cE .tr-filter[data-focus="date"] .search-field { display: none !important; }
+  .cE .tr-filter[data-focus="search"] .date-field { display: none !important; }
+  .cE .tr-filter[data-focus="search"] .tr-filter-row > .search-field { grid-column: 1 / -1; }
+  .cE .tr-filter-row .dateinput,
+  .cE .card-pad.period-host .dateinput { padding: 10px 12px !important; gap: 8px !important; }
+  .cE .tr-filter-row .dateinput svg,
+  .cE .card-pad.period-host .dateinput svg { width: 16px; height: 16px; }
+  .cE .tr-filter-row .dateinput input[type="date"],
+  .cE .card-pad.period-host .dateinput input[type="date"] { font-size: var(--fs-body); }
+  .cE .searchinput { padding: 10px 14px !important; gap: 10px !important; }
+  .cE .searchinput svg { width: 16px; height: 16px; }
+  .cE .searchinput input { font-size: var(--fs-body); }
+  .cE .tr-filter-actions .reset-btn,
+  .cE .card-pad.period-host .reset-btn { width: 44px; height: 44px; flex: none; padding: 0; }
+  .cE .tr-filter-actions .reset-btn svg,
+  .cE .card-pad.period-host .reset-btn svg { width: 16px; height: 16px; }
+  .cE .tr-filter-actions .search-btn,
+  .cE .card-pad.period-host .search-btn { flex: 1; padding: 12px 20px; font-size: var(--fs-body); height: 44px; font-weight: 700; }
+  .cE .tr-filter-meta { font-size: var(--fs-option); margin-top: 12px; padding: 8px 12px; }
+
+  /* ===== CD 탭 — 가로 스크롤 ===== */
+  .cE .cd-tabs {
+    overflow-x: auto; flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    margin-top: 18px;
+  }
+  .cE .cd-tabs::-webkit-scrollbar { display: none; }
+  .cE .cd-tab { padding: 12px 12px; font-size: var(--fs-body); flex: none; white-space: nowrap; gap: 8px; }
+  .cE .cd-tab-ic { width: 26px; height: 26px; }
+  .cE .cd-tab-code { font-size: 12px; }
+
+  /* ===== 정렬 칩 — 가로 스크롤 ===== */
+  .cE .sort-chips {
+    flex-wrap: nowrap; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    margin: 12px -4px 8px; padding: 0 4px 4px;
+  }
+  .cE .sort-chips::-webkit-scrollbar { display: none; }
+  .cE .sort-chip { flex: none; padding: 6px 12px; white-space: nowrap; }
+
+  /* ===== .cd-pane 표 → 카드 리스트 (탭할 수 있는 행) — base ===== */
+  .cE .cd-pane table,
+  .cE .cd-pane tbody,
+  .cE .cd-pane tr,
+  .cE .cd-pane td { display: block; width: 100%; box-sizing: border-box; }
+  .cE .cd-pane thead { display: none; }
+  .cE .cd-pane table { min-width: 0 !important; border-collapse: separate; border-spacing: 0; }
+
+  .cE .cd-pane tbody tr {
+    position: relative;
+    padding: 14px 24px 14px 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .12s ease;
+  }
+  .cE .cd-pane tbody tr:hover { background: transparent; }
+  .cE .cd-pane tbody tr:active { background: var(--bg-soft); }
+  .cE .cd-pane tbody tr:first-child { padding-top: 4px; }
+  .cE .cd-pane tbody tr:last-child { border-bottom: none; padding-bottom: 6px; }
+  /* 우측 chevron 힌트 */
+  .cE .cd-pane tbody tr::after {
+    content: '';
+    position: absolute;
+    top: 50%; right: 4px;
+    width: 8px; height: 8px;
+    margin-top: -4px;
+    border-right: 1.5px solid var(--ink-4);
+    border-top: 1.5px solid var(--ink-4);
+    transform: rotate(45deg);
+    opacity: .55;
+  }
+
+  /* 셀 리셋 */
+  .cE .cd-pane tbody td {
+    padding: 0 !important;
+    border: none !important;
+    text-align: left !important;
+    color: var(--ink);
+    line-height: 1.45;
+    white-space: normal;
+  }
+  /* (1) 날짜 — 상단 회색 캡션 */
+  .cE .cd-pane tbody td:nth-child(1) {
+    font-size: var(--fs-option) !important;
+    color: var(--ink-3) !important;
+    font-weight: 500 !important;
+    margin-bottom: 6px;
+  }
+  /* (2) 병원 — 굵은 본문 */
+  .cE .cd-pane tbody td:nth-child(2) {
+    font-size: var(--fs-body) !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    margin-bottom: 4px;
+    padding-right: 4px;
+  }
+  /* .amt — 우상단 absolute */
+  .cE .cd-pane tbody td.amt {
+    position: absolute !important;
+    top: 14px !important;
+    right: 24px !important;
+    width: auto !important;
+    max-width: 110px;
+    font-size: var(--fs-body) !important;
+    font-weight: 700 !important;
+    color: var(--ink) !important;
+    text-align: right !important;
+    white-space: nowrap;
+    margin: 0 !important;
+  }
+  /* typechip vertical align */
+  .cE .cd-pane tbody td .typechip { vertical-align: middle; }
+
+  /* ===== 상세정보 바텀시트 (탭 시 오픈) ===== */
+  .tr-detail-modal {
+    display: flex !important;
+    position: fixed; inset: 0; z-index: 200;
+    align-items: flex-end; justify-content: center;
+  }
+  .tr-detail-modal[hidden] { display: none !important; }
+  .tr-detail-bg {
+    position: absolute; inset: 0;
+    background: rgba(8, 22, 32, .45);
+    animation: trBgIn .2s ease both;
+  }
+  @keyframes trBgIn { from { opacity: 0; } to { opacity: 1; } }
+  .tr-detail-panel {
+    position: relative;
+    width: 100%; max-width: 520px; max-height: 85vh;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 32px rgba(8, 22, 32, .22);
+    display: flex; flex-direction: column;
+    animation: trSheetUp .28s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes trSheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .tr-detail-panel::before {
+    content: '';
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 4px;
+    border-radius: 2px;
+    background: var(--ink-4); opacity: .5;
+  }
+  .tr-detail-head {
+    padding: 22px 20px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tr-detail-head-t { min-width: 0; }
+  .tr-detail-head h3 {
+    margin: 0; font-size: var(--fs-body);
+    font-weight: 800; letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .tr-detail-head .tr-detail-sub {
+    display: block; font-size: var(--fs-option);
+    color: var(--ink-3); font-weight: 500;
+    margin-top: 2px;
+  }
+  .tr-detail-close {
+    background: var(--bg-soft); border: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center;
+    cursor: pointer; color: var(--ink-3);
+    flex: none; padding: 0;
+  }
+  .tr-detail-close:hover { background: var(--line); color: var(--ink); }
+  .tr-detail-body {
+    padding: 4px 20px 20px calc(20px + env(safe-area-inset-left, 0px));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tr-detail-row {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tr-detail-row:last-child { border-bottom: none; }
+  .tr-detail-l {
+    font-size: var(--fs-option);
+    color: var(--ink-3); font-weight: 600;
+    flex: none;
+    min-width: 92px;
+  }
+  .tr-detail-v {
+    font-size: var(--fs-body);
+    color: var(--ink); font-weight: 500;
+    text-align: right;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    flex: 1;
+  }
+  .tr-detail-v.em { font-weight: 800; color: var(--brand-deep); }
+  .tr-detail-v .typechip { display: inline-block; }
+  body.tr-modal-open { overflow: hidden; }
+}

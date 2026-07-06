@@ -124,6 +124,10 @@
       var cls = (active === key) ? ' on' : '';
       return '<a class="m-tab' + cls + '" href="' + href + '"><svg class="ic-svg" width="22" height="22"><use href="#' + icon + '"/></svg><span>' + label + '</span></a>';
     }
+    function drawerItem(key, href, icon, label, extra) {
+      var cls = (active === key) ? ' class="on"' : '';
+      return '<a' + cls + ' href="' + href + '"><svg class="ic-svg" width="19" height="19"><use href="#' + icon + '"/></svg>' + label + (extra || '') + '</a>';
+    }
     return ''
       + '<header class="m-topbar">'
       +   '<button class="m-ham" type="button" aria-label="메뉴 열기"><svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg></button>'
@@ -146,8 +150,12 @@
       +     '</div>'
       +     '<button class="m-drawer-mybtn">마이페이지</button>'
       +     '<div class="m-drawer-list">'
-      +       '<a href="#smart-coming-soon"><svg class="ic-svg" width="19" height="19"><use href="#i-sparkles"/></svg>스마트보비</a>'
-      +       '<a href="#"><svg class="ic-svg" width="19" height="19"><use href="#i-bell"/></svg>공지사항</a>'
+      +       drawerItem('home',     BASE + 'home.html',                    'i-home',         '홈')
+      +       drawerItem('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
+      +       drawerItem('report',   BASE + 'pages/report/history.html',    'i-file-text',    '진료기록 리포트')
+      +       drawerItem('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금')
+      +       drawerItem('smart',    '#smart-coming-soon',                  'i-sparkles',     '스마트보비', '<span class="m-drawer-badge"></span>')
+      +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +     '</div>'
       +     '<div class="m-drawer-logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
       +   '</div>'

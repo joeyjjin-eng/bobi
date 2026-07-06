@@ -373,6 +373,11 @@
    ============================================================ */
 .m-topbar, .m-tabbar, .m-drawer { display: none; }
 
+/* 데스크탑(전체화면)에서는 하단 탭바/상단 헤더/드로어 완전 숨김 강제 */
+@media (min-width: 961px) {
+  .m-topbar, .m-tabbar, .m-drawer { display: none !important; }
+}
+
 /* ============================================================
    반응형 — 960px 이하: GNB 사이드바 → 모바일 셸 전환
    ============================================================ */
@@ -439,6 +444,8 @@
   .m-drawer-list { display: flex; flex-direction: column; gap: 2px; }
   .m-drawer-list a { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--ink-2); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
   .m-drawer-list a:hover { background: var(--bg-soft); color: var(--ink); }
+  .m-drawer-list a.on { background: var(--brand-pale); color: var(--brand-deep); box-shadow: inset 2px 0 0 var(--brand); }
+  .m-drawer-badge { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
   .m-drawer-logout { margin-top: auto; display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: var(--fs-body); font-weight: 600; padding: 12px 14px; cursor: pointer; }
 
   /* ===== 공통 카드 / 차트 모바일 오버라이드 ===== */
@@ -523,8 +530,61 @@
   .print-tree th, .print-tree td { padding: 10px 12px; font-size: var(--fs-option); }
   .print-tree col.c-lv1 { width: 70px; }
   .print-tree col.c-lv2 { width: 70px; }
-  .disclosure-content { width: calc(100vw - 32px) !important; right: -8px !important; }
-  .modal-text { font-size: var(--fs-option); }
+  /* ===== 알릴의무 모달 — 모바일 바텀시트 (main.html · precheck.html 공통) ===== */
+  /* 백드롭 (:has 지원 브라우저에서만 노출) */
+  body:has(.disclosure-content:not([hidden]))::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: rgba(8, 22, 32, .45);
+    z-index: 299;
+    animation: dcBgIn .2s ease both;
+  }
+  @keyframes dcBgIn { from { opacity: 0; } to { opacity: 1; } }
+  body:has(.disclosure-content:not([hidden])) { overflow: hidden; }
+  /* 컨테이너 → 화면 하단 바텀시트 */
+  .cE .disclosure-content {
+    position: fixed !important;
+    left: 0 !important; right: 0 !important; bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 520px !important;
+    margin: 0 auto !important;
+    max-height: 85vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    box-shadow: 0 -10px 32px rgba(8, 22, 32, .22) !important;
+    z-index: 300 !important;
+    overflow-y: auto;
+  }
+  .cE .disclosure-content:not([hidden]) {
+    animation: dcSheetUp .28s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes dcSheetUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  /* 드래그 핸들 */
+  .cE .disclosure-content::before {
+    content: '';
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 4px;
+    border-radius: 2px;
+    background: var(--ink-4); opacity: .5;
+  }
+  /* 내부 요소 조정 */
+  .cE .disclosure-content .disclosure-head { padding-top: 4px; margin-bottom: 14px; gap: 12px; }
+  .cE .disclosure-content .disclosure-head h3 { font-size: var(--fs-body) !important; }
+  .cE .disclosure-content .modal-desc { font-size: var(--fs-option) !important; }
+  .cE .disclosure-content .modal-text {
+    min-height: 180px !important;
+    max-height: 38vh !important;
+    font-size: var(--fs-option) !important;
+    padding: 12px 14px !important;
+  }
+  .cE .disclosure-content .modal-actions { margin-top: 14px; }
+  .cE .disclosure-content .modal-btn { padding: 12px 20px !important; font-size: var(--fs-body) !important; }
+  .cE .disclosure-content .modal-btn.primary { flex: 1; justify-content: center; }
 }
 
 /* ===== 인쇄(@media print) — 선택된 섹션만 출력 ===== */

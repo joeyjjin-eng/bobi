@@ -203,10 +203,6 @@
     /* 10대 주요질환 — 정보 popover 모바일 */
     .cE .info-content { width: calc(100vw - 32px); left: auto; right: -8px; max-width: 380px; }
 
-    /* 진료기록 카드 — 테이블 가로 스크롤 (카드 패딩은 공통 룰 유지) */
-    .cE .rec-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .cE .rec-pane > table { min-width: 580px; font-size: var(--fs-option); }
-
     /* 리포트 뷰 세그먼트 — 모바일 */
     .cE .report-viewseg { width: 100%; box-sizing: border-box; gap: 2px; margin: 4px 0 18px; }
     .cE .report-viewseg-btn { flex: 1; justify-content: center; padding: 12px 8px 14px; font-size: var(--fs-body); gap: 8px; }
@@ -218,16 +214,193 @@
     .cE .car-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
     .cE .car-stat { padding: 14px 14px; }
 
-    /* 교통사고 진료기록 카드 — 모바일 */
+    /* 교통사고 진료기록 헤더 */
     .cE .car-head { flex-wrap: wrap; gap: 8px; }
     .cE .car-tabs { overflow-x: auto; flex-wrap: nowrap; max-width: 100%; }
     .cE .car-tab { font-size: var(--fs-body); padding: 8px 14px; white-space: nowrap; }
     .cE .car-head .more { padding-bottom: 0; font-size: var(--fs-option); }
-    .cE .car-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .cE .car-pane > table { min-width: 580px; font-size: var(--fs-option); }
 
     /* 전체보기 버튼 풀폭 */
     .cE .rec-viewall-btn { width: 100%; justify-content: center; padding: 11px 18px; }
+
+    /* ============================================================
+       진료기록 / 교통사고 진료기록 표 → 카드 리스트 변환
+       ============================================================ */
+    /* 스크롤 컨테이너 무효화 */
+    .cE .rec-pane { overflow: visible; }
+    .cE .car-pane { overflow: visible; }
+    .cE .rec-pane .raw-scroll,
+    .cE .car-pane .raw-scroll { overflow: visible; margin: 0; padding: 0; }
+
+    /* table/thead/tbody/tr/td 블록 변환 */
+    .cE .rec-pane table,
+    .cE .rec-pane tbody,
+    .cE .rec-pane tr,
+    .cE .rec-pane td,
+    .cE .car-pane table,
+    .cE .car-pane tbody,
+    .cE .car-pane tr,
+    .cE .car-pane td { display: block; width: 100%; box-sizing: border-box; }
+    .cE .rec-pane thead,
+    .cE .car-pane thead { display: none; }
+    .cE .rec-pane table,
+    .cE .car-pane table { min-width: 0 !important; border-collapse: separate; border-spacing: 0; }
+
+    /* 각 tr → 카드 (구분선 스타일, 컨테이너 card-pad와 중첩된 카드 느낌 피함) */
+    .cE .rec-pane tbody tr,
+    .cE .car-pane tbody tr {
+      position: relative;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .cE .rec-pane tbody tr:first-child,
+    .cE .car-pane tbody tr:first-child { padding-top: 4px; }
+    .cE .rec-pane tbody tr:last-child,
+    .cE .car-pane tbody tr:last-child { border-bottom: none; padding-bottom: 6px; }
+
+    /* 셀 기본 리셋 (concept-a/e의 padding/border 무효화) */
+    .cE .rec-pane tbody td,
+    .cE .car-pane tbody td {
+      padding: 0 !important;
+      border: none !important;
+      text-align: left !important;
+      color: var(--ink);
+      line-height: 1.45;
+      white-space: normal;
+    }
+
+    /* (1) 진료시작일 — 상단 회색 캡션 */
+    .cE .rec-pane tbody td:nth-child(1),
+    .cE .car-pane tbody td:nth-child(1) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+      font-weight: 500 !important;
+      margin-bottom: 6px;
+    }
+    /* (2) 병·의원 — 굵은 본문 */
+    .cE .rec-pane tbody td:nth-child(2),
+    .cE .car-pane tbody td:nth-child(2) {
+      font-size: var(--fs-body) !important;
+      font-weight: 700 !important;
+      color: var(--ink) !important;
+      margin-bottom: 4px;
+    }
+    /* (3) 질병 / 진료내역 / 약품명 — 서브 본문 */
+    .cE .rec-pane tbody td:nth-child(3),
+    .cE .car-pane tbody td:nth-child(3) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-2) !important;
+      margin-bottom: 4px;
+      font-weight: 500 !important;
+    }
+
+    /* ===== 의료비 (td.amt) — 카드 우상단 absolute ===== */
+    .cE .rec-pane tbody td.amt,
+    .cE .car-pane tbody td.amt {
+      position: absolute !important;
+      top: 14px !important;
+      right: 0 !important;
+      width: auto !important;
+      max-width: 110px;
+      font-size: var(--fs-body) !important;
+      font-weight: 700 !important;
+      color: var(--ink) !important;
+      text-align: right !important;
+      white-space: nowrap;
+      margin: 0 !important;
+    }
+    /* amt 카드 우측 여백 확보 (전체진료기록 · 교통사고 전체) */
+    .cE .rec-pane[data-rec-pane="all"] tbody tr,
+    .cE .car-pane[data-car-pane="all"] tbody tr { padding-right: 100px; }
+
+    /* ===== 전체진료기록 · 교통사고 전체 — (4)진단코드 (5)입원/외래 (6)내원일수 메타 라인 ===== */
+    .cE .rec-pane[data-rec-pane="all"] tbody td:nth-child(4),
+    .cE .rec-pane[data-rec-pane="all"] tbody td:nth-child(5),
+    .cE .rec-pane[data-rec-pane="all"] tbody td:nth-child(6),
+    .cE .car-pane[data-car-pane="all"] tbody td:nth-child(4),
+    .cE .car-pane[data-car-pane="all"] tbody td:nth-child(5),
+    .cE .car-pane[data-car-pane="all"] tbody td:nth-child(6) {
+      display: inline-block !important;
+      width: auto !important;
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+      font-weight: 500 !important;
+      margin: 4px 4px 0 0 !important;
+      vertical-align: middle;
+    }
+    /* (6)내원일수 앞에만 · 구분자 (진단코드 → 유형칩 → · 내원일수 순으로 자연스럽게) */
+    .cE .rec-pane[data-rec-pane="all"] tbody td:nth-child(6)::before,
+    .cE .car-pane[data-car-pane="all"] tbody td:nth-child(6)::before {
+      content: "· ";
+      color: var(--ink-4);
+      margin-right: 2px;
+    }
+    /* (6)내원일수 뒤에 "일" */
+    .cE .rec-pane[data-rec-pane="all"] tbody td:nth-child(6)::after,
+    .cE .car-pane[data-car-pane="all"] tbody td:nth-child(6)::after {
+      content: "일";
+      color: var(--ink-4);
+      margin-left: 1px;
+    }
+    /* typechip 세로 정렬 */
+    .cE .rec-pane tbody td .typechip,
+    .cE .car-pane tbody td .typechip { vertical-align: middle; }
+
+    /* ===== 세부진료기록 · 처방조제정보 (raw-table) — (4)코드명/성분명 & (5)(6)(7) 투약 메타 ===== */
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(4),
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(4),
+    .cE .car-pane[data-car-pane="detail"] tbody td:nth-child(4) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+      font-weight: 500 !important;
+      margin-bottom: 6px;
+    }
+
+    /* (5)(6)(7) 인라인 메타 라인 */
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(5),
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(6),
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(7),
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(5),
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(6),
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(7),
+    .cE .car-pane[data-car-pane="detail"] tbody td:nth-child(5),
+    .cE .car-pane[data-car-pane="detail"] tbody td:nth-child(6) {
+      display: inline-block !important;
+      width: auto !important;
+      font-size: var(--fs-option) !important;
+      color: var(--ink-2) !important;
+      font-weight: 600 !important;
+      margin: 2px 2px 0 0 !important;
+      vertical-align: middle;
+    }
+    /* rec-detail / prescription: 1회 / · 1일 / · 총 X일 라벨 */
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(5)::before,
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(5)::before {
+      content: "1회 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(6)::before,
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(6)::before {
+      content: " · 1일 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(7)::before,
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(7)::before {
+      content: " · 총 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .rec-pane[data-rec-pane="detail"] tbody td:nth-child(7)::after,
+    .cE .rec-pane[data-rec-pane="prescription"] tbody td:nth-child(7)::after {
+      content: "일"; color: var(--ink-4); font-weight: 500;
+    }
+    /* car-detail: (5) 입원/외래 텍스트 그대로, (6) · 시행 X회 */
+    .cE .car-pane[data-car-pane="detail"] tbody td:nth-child(6)::before {
+      content: " · 시행 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .car-pane[data-car-pane="detail"] tbody td:nth-child(6)::after {
+      content: "회"; color: var(--ink-4); font-weight: 500;
+    }
+
+    /* rec-foot 상단 여백 축소 */
+    .cE .rec-pane .rec-foot,
+    .cE .car-pane .rec-foot { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
   }
 
   /* ===== 인쇄 — 교통사고 진료기록 pane 표시 및 라벨 (rec-pane 룰 미러링) ===== */

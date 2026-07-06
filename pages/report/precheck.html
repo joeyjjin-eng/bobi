@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -18,6 +19,159 @@
   .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ============================================================
+     반응형 — 페이지 고유 (조회기간 시트 · pc-table → 카드 리스트)
+     공통 패턴은 styles/detail-mobile.css 참조
+     ============================================================ */
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+
+    /* ===== .etop 오버라이드 — display: contents로 자손만 순차 배치 ===== */
+    /* .etop 안 disclosure-modal이 살아 있어야 하므로 display: none 대신 contents */
+    .cE .etop { display: contents !important; }
+    /* 타이틀·서브 영역만 숨김 (제목은 topbar로 이동) */
+    .cE .etop > div:first-child { display: none !important; }
+    /* 알릴의무 보기 버튼 — 좌우 풀폭, 하단 여백 */
+    .cE .etop > .etop-actions {
+      align-self: stretch;
+      display: block;
+      margin: 4px 0 8px;
+    }
+    .cE .etop > .etop-actions .disclosure-popover { display: block; }
+    .cE .etop > .etop-actions .disclosure-btn {
+      display: inline-flex; width: 100%;
+      justify-content: center;
+      padding: 12px 18px;
+      font-size: var(--fs-body);
+      font-weight: 700;
+    }
+    /* 알릴의무 모달 바텀시트는 concept-e.css의 공통 룰에서 처리됨 */
+
+    /* ===== 조회기간 카드(period-host) 내부 시트 스타일 ===== */
+    .cE .card-pad.period-host .period {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      align-items: end;
+    }
+    .cE .card-pad.period-host .period > .date-field { min-width: 0; gap: 4px; }
+    .cE .card-pad.period-host .period .dash { display: none; }
+    /* 프리셋 3개 + 초기화 + 조회를 시트 안에서 정리 */
+    .cE .card-pad.period-host .period > .preset {
+      grid-column: span 1; padding: 10px 0; font-size: var(--fs-option);
+    }
+    .cE .card-pad.period-host .period > .reset-btn {
+      grid-column: 1; width: 44px; height: 44px; flex: none;
+    }
+    .cE .card-pad.period-host .period > .search-btn {
+      grid-column: 2 / -1; padding: 12px 20px; font-size: var(--fs-body); height: 44px; font-weight: 700;
+    }
+
+    /* period 카드 h2 (조회기간) — 시트 안에서 h2 스타일 */
+    .cE .card-pad.period-host > h2 {
+      display: block !important;
+      font-size: var(--fs-body) !important; font-weight: 800 !important;
+      margin: 8px 0 16px !important; color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .cE .card-pad.period-host > h2 .hint { display: none; }
+
+    /* ===== 진료이력 카드(pc-host) — 카드 상단 그룹: 제목 + 총건 (밀착) ===== */
+    .cE .card-pad.pc-host { margin-top: 8px !important; padding: 16px !important; }
+    .cE .card-pad.pc-host > h2 {
+      font-size: var(--fs-h2);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+    .cE .card-pad.pc-host > h2 .pc-count {
+      display: block;
+      margin: 4px 0 0 0 !important;
+      font-size: var(--fs-body);
+      font-weight: 500;
+      color: var(--ink-3);
+    }
+
+    /* ===== pc-table → 카드 리스트 ===== */
+    .cE .pc-table,
+    .cE .pc-table thead,
+    .cE .pc-table tbody,
+    .cE .pc-table tr,
+    .cE .pc-table td { display: block; width: 100%; box-sizing: border-box; }
+    .cE .pc-table thead { display: none; }
+    .cE .pc-table { min-width: 0 !important; border-collapse: separate; border-spacing: 0; margin-top: 16px; }
+
+    /* 각 행 카드 — 그룹 분리를 위한 상단/하단 여백 */
+    .cE .pc-table tbody tr {
+      position: relative;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cE .pc-table tbody tr:first-child {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .cE .pc-table tbody tr:last-child { border-bottom: none; }
+
+    /* 셀 공통 리셋 + 폰트 크기 통일 (본문 = fs-body) */
+    .cE .pc-table tbody td {
+      padding: 0 !important;
+      border: none !important;
+      text-align: left !important;
+      font-size: var(--fs-body) !important;
+      color: var(--ink);
+      line-height: 1.4;
+      white-space: normal;
+    }
+    /* (1) 진료일자 — 회색 톤 (크기 동일, 계층은 색상으로만) */
+    .cE .pc-table tbody td:nth-child(1),
+    .cE .pc-table tbody td.dt {
+      color: var(--ink-3) !important;
+      font-weight: 500 !important;
+      margin-bottom: 6px;
+    }
+    /* (2) 병명 — 굵게 */
+    .cE .pc-table tbody td:nth-child(2),
+    .cE .pc-table tbody td.nm {
+      font-weight: 700 !important;
+      color: var(--ink) !important;
+      margin-bottom: 8px;
+      padding-right: 4px;
+    }
+    /* (3)(4)(5)(6) O/X 이력 — 라벨 텍스트 + O/X만 원형 배경 (PC와 동일) */
+    .cE .pc-table tbody td:nth-child(3),
+    .cE .pc-table tbody td:nth-child(4),
+    .cE .pc-table tbody td:nth-child(5),
+    .cE .pc-table tbody td:nth-child(6) {
+      display: inline-flex !important;
+      align-items: center;
+      gap: 6px;
+      width: auto !important;
+      margin: 0 14px 0 0 !important;
+      background: transparent !important;
+      border-radius: 0 !important;
+      color: var(--ink-2) !important;
+      font-weight: 600 !important;
+      vertical-align: middle;
+    }
+    .cE .pc-table tbody td:nth-child(3)::before { content: "통원"; }
+    .cE .pc-table tbody td:nth-child(4)::before { content: "입원"; }
+    .cE .pc-table tbody td:nth-child(5)::before { content: "수술"; }
+    .cE .pc-table tbody td:nth-child(6)::before { content: "투약"; }
+    /* .pc-yn 원형 배경 유지 (PC와 같은 색상 규칙), 모바일용 크기만 살짝 축소 */
+    .cE .pc-table tbody td .pc-yn {
+      width: 24px !important; height: 24px !important;
+      font-size: var(--fs-option) !important;
+      font-weight: 800 !important;
+    }
+
+    /* pager 컴팩트 */
+    .cE .card-pad.pc-host .pager { margin-top: 14px; gap: 4px; }
+    .cE .card-pad.pc-host .pager button { width: 32px; height: 32px; }
+    .cE .card-pad.pc-host .pager .pp { font-size: var(--fs-option); padding: 0 6px; }
+  }
 </style>
 </head>
 <body>
@@ -63,7 +217,16 @@
       </div>
     </div>
 
-    <div class="card-pad">
+    <div class="tr-filter-compact">
+      <button class="tr-fc-chip" type="button" id="tr-fc-date-btn" aria-controls="pc-period-sheet" aria-expanded="false">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-calendar"/></svg>
+        <span id="tr-fc-date-label">2024.08.27 ~ 2025.08.27</span>
+        <svg class="ic-svg tr-fc-chev" width="12" height="12"><use href="#i-chevron-down"/></svg>
+      </button>
+    </div>
+    <div class="tr-filter-bg" id="tr-filter-bg" aria-hidden="true"></div>
+
+    <div class="card-pad period-host" id="pc-period-sheet" role="dialog" aria-label="조회기간">
       <h2>조회기간 <span class="hint">· 기준일로부터 과거 진단 이력을 조회합니다</span></h2>
       <div class="period">
         <div class="date-field">
@@ -89,8 +252,8 @@
       </div>
     </div>
 
-    <div class="card-pad">
-      <h2>진료이력 <span class="pc-count">총 <b>12건</b> · 통원 O <b>12</b> · 입원 O <b>1</b> · 수술 O <b>2</b> · 투약 O <b>10</b></span></h2>
+    <div class="card-pad pc-host">
+      <h2>진료이력 <span class="pc-count">총 <b>12건</b> · 통원 <b>12</b> · 입원 <b>1</b> · 수술 <b>2</b> · 투약 <b>10</b></span></h2>
       <table class="pc-table">
         <thead>
           <tr>
@@ -338,7 +501,100 @@
   })();
 </script>
 
+<script>
+  // ===== 모바일: 조회기간 칩 ↔ period-host 바텀시트 =====
+  (function () {
+    const dateChipBtn = document.getElementById('tr-fc-date-btn');
+    const sheet = document.getElementById('pc-period-sheet');
+    const bg = document.getElementById('tr-filter-bg');
+    const startEl = document.getElementById('pc-start');
+    const refEl = document.getElementById('pc-ref');
+    const searchBtn = sheet && sheet.querySelector('.search-btn');
+    const resetBtn = document.getElementById('pc-reset');
+    const dateLabel = document.getElementById('tr-fc-date-label');
+    if (!dateChipBtn || !sheet || !bg) return;
+
+    const defaultStart = startEl.value;
+    const defaultEnd = refEl.value;
+    const fmtDate = iso => iso ? iso.replace(/-/g, '.') : '';
+
+    function updateChip() {
+      dateLabel.textContent = fmtDate(startEl.value) + ' ~ ' + fmtDate(refEl.value);
+      const changed = (startEl.value !== defaultStart) || (refEl.value !== defaultEnd);
+      dateChipBtn.classList.toggle('on', changed);
+    }
+    function openSheet() {
+      sheet.classList.add('open');
+      bg.classList.add('open');
+      document.body.classList.add('tr-modal-open');
+      dateChipBtn.setAttribute('aria-expanded', 'true');
+    }
+    function closeSheet() {
+      sheet.classList.remove('open');
+      bg.classList.remove('open');
+      document.body.classList.remove('tr-modal-open');
+      dateChipBtn.setAttribute('aria-expanded', 'false');
+    }
+    dateChipBtn.addEventListener('click', openSheet);
+    bg.addEventListener('click', closeSheet);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && sheet.classList.contains('open')) closeSheet();
+    });
+    if (searchBtn) searchBtn.addEventListener('click', () => { updateChip(); closeSheet(); });
+    resetBtn.addEventListener('click', () => { setTimeout(updateChip, 20); });
+    // 프리셋/기준일 변경 시에도 칩 라벨 갱신 (기존 recalc 이후)
+    startEl.addEventListener('change', updateChip);
+    refEl.addEventListener('change', updateChip);
+    document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => setTimeout(updateChip, 20)));
+    updateChip();
+  })();
+
+</script>
+
 <script src="../../components/layout.js"></script>
 <script>injectShell('report');</script>
+<script>
+  // 모바일 GNB topbar 재구성 — 뒤로가기 · 화면 제목 · 알릴의무 액션 메뉴
+  (function () {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<a class="m-back" href="main.html" aria-label="뒤로가기">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</a>'
+      + '<span class="m-title">사전 확인 자료</span>'
+      + '<button class="m-actions-btn" type="button" id="m-actions-btn" aria-label="메뉴" aria-expanded="false" aria-haspopup="true">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg>'
+      + '</button>'
+      + '<div class="m-actions-menu" id="m-actions-menu" hidden role="menu">'
+      +   '<button class="m-actions-item" type="button" data-action="disclosure" role="menuitem">'
+      +     '<svg class="ic-svg" width="18" height="18"><use href="#i-copy"/></svg>'
+      +     '<span>알릴의무 보기</span>'
+      +   '</button>'
+      + '</div>';
+
+    var actionsBtn = document.getElementById('m-actions-btn');
+    var actionsMenu = document.getElementById('m-actions-menu');
+    function openMenu() { actionsMenu.hidden = false; actionsBtn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { actionsMenu.hidden = true; actionsBtn.setAttribute('aria-expanded', 'false'); }
+    actionsBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      actionsMenu.hidden ? openMenu() : closeMenu();
+    });
+    document.addEventListener('click', function (e) {
+      if (!actionsMenu.hidden && !actionsMenu.contains(e.target) && !actionsBtn.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !actionsMenu.hidden) closeMenu();
+    });
+    // 알릴의무 액션 → 기존 데스크탑 트리거 버튼을 클릭 (동일 로직 재사용)
+    actionsMenu.querySelector('[data-action="disclosure"]').addEventListener('click', function () {
+      closeMenu();
+      var trigger = document.getElementById('open-disclosure');
+      if (trigger) trigger.click();
+    });
+  })();
+</script>
 </body>
 </html>

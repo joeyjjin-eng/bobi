@@ -108,6 +108,134 @@
   .cE .uc-pg:hover:not(.on):not(.dots) { background: var(--bg-soft); border-color: var(--line-strong); color: var(--ink); }
   .cE .uc-pg.on { background: var(--brand); color: #fff; border-color: var(--brand); cursor: default; }
   .cE .uc-pg.dots { border: none; cursor: default; background: transparent; color: var(--ink-4); min-width: 24px; padding: 0; }
+
+  /* ============================================================
+     반응형 — 960px 이하: 카드/필터/계산결과/액션바 모바일 최적화
+     ============================================================ */
+  @media (max-width: 960px) {
+    /* 컨테이너 폭 해제 */
+    .layout { min-width: 0; }
+
+    /* ===== 환자 헤더 — uc-rep-head 커스텀 패딩 오버라이드 ===== */
+    .cE .uc-rep-head { padding: 4px 0 14px !important; gap: 12px; }
+    .cE .uc-rep-right { width: 100%; justify-content: space-between; gap: 12px; }
+    .cE .rep-asof { font-size: var(--fs-option); color: var(--ink-3); }
+    .cE .rep-asof br { display: none; }
+    .cE .rep-asof b { font-size: var(--fs-option) !important; margin-left: 4px; }
+    .cA .rep-id .patient-avatar { width: 44px; height: 44px; font-size: 22px; }
+    .cA .rep-id h1 { font-size: var(--fs-h2); line-height: 1.35; }
+
+    /* ===== 조회 조건 — 라벨 위/칩 아래 스택 ===== */
+    .cE .uc-filter { padding: 4px 16px 14px; margin-top: 4px; border-radius: var(--r-md); }
+    .cE .uc-filter-cap { padding: 14px 0 10px; }
+    .cE .uc-filter-row { grid-template-columns: 1fr; gap: 10px; padding: 14px 0; }
+    .cE .uc-filter-l { padding-top: 0; font-size: var(--fs-body); }
+    .cE .uc-chips { gap: 6px; }
+    .cE .uc-chip { padding: 8px 14px; font-size: var(--fs-option); }
+    .cE .uc-ycap { display: none; }
+    .cE .uc-gen-desc { flex-wrap: wrap; gap: 4px 8px; margin-top: 10px; font-size: var(--fs-option); }
+
+    /* ===== 미청구보험금 계산 결과 — 세로 스택 (카드 안: 라벨 좌 / 금액 우) ===== */
+    .cE .uc-result { margin-top: 24px; }
+    .cE .uc-result-head { margin-bottom: 12px; gap: 8px; }
+    .cE .uc-result-head h2 { font-size: var(--fs-h2); }
+    .cE .uc-result-head .s { font-size: var(--fs-option); }
+    .cE .uc-eq { flex-direction: column; gap: 6px; }
+    .cE .uc-card {
+      flex-direction: row; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px 16px;
+    }
+    .cE .uc-card-l { font-size: var(--fs-body); }
+    .cE .uc-amt { justify-content: flex-end; }
+    .cE .uc-amt .n { font-size: 22px; }
+    .cE .uc-amt .w { font-size: var(--fs-body); }
+    .cE .uc-card.primary { padding: 16px 18px; }
+    .cE .uc-card.primary .uc-amt .n { font-size: 26px; }
+    .cE .uc-op { justify-content: center; font-size: 18px; height: 6px; color: var(--ink-3); }
+
+    /* ===== 안내 박스 ===== */
+    .cE .uc-notice { padding: 14px 16px; margin-top: 14px; }
+    .cE .uc-notice p { font-size: var(--fs-option); }
+
+    /* ===== 의료비내역 — 헤더 스택 + 액션 wrap + 표 가로 스크롤 ===== */
+    .cE .uc-visits { margin-top: 24px; }
+    .cE .uc-visits .rec-head { flex-direction: column; align-items: stretch; gap: 10px; padding-bottom: 8px; }
+    .cE .uc-sec-actions { flex-wrap: wrap; gap: 6px; width: 100%; }
+    .cE .uc-sec-count { flex: 1 1 100%; margin: 0 0 4px; font-size: var(--fs-option); }
+    .cE .uc-btn { height: 36px; padding: 0 12px; font-size: var(--fs-option); flex: 1 1 auto; justify-content: center; min-width: 0; }
+    .cE .uc-visits .smart-cta { height: 36px; padding: 0 14px; font-size: var(--fs-option); flex: 0 0 auto; }
+    /* ===== 표 → 카드 리스트 변환 (thead 숨김 · tr = 카드 · td = 영역) ===== */
+    .cE .uc-visits-scroll { overflow: visible; margin: 0; padding: 0; }
+    .cE .uc-visits-scroll > table { min-width: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+    .cE .uc-visits table,
+    .cE .uc-visits tbody,
+    .cE .uc-visits tr,
+    .cE .uc-visits td { display: block; width: 100%; box-sizing: border-box; }
+    .cE .uc-visits thead { display: none; }
+
+    /* 각 행 → 카드 */
+    .cE .uc-visits tbody tr {
+      position: relative;
+      padding: 14px 118px 14px 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      margin-bottom: 8px;
+    }
+    .cE .uc-visits tbody tr:last-child { margin-bottom: 0; }
+
+    /* 셀 기본 리셋 (concept-a 기본 padding/border 해제) */
+    .cE .uc-visits tbody td {
+      padding: 0 !important;
+      border: none !important;
+      text-align: left !important;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    /* 1행 · 첫 번째 셀: 진료일 / 지급일 — 작은 회색 캡션 */
+    .cE .uc-visits tbody td:nth-child(1) {
+      font-size: var(--fs-option);
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    /* 2행 · 두 번째 셀: 병·의원 / 보험사 — 굵은 본문 */
+    .cE .uc-visits tbody td:nth-child(2) {
+      font-size: var(--fs-body);
+      font-weight: 700;
+      color: var(--ink);
+    }
+    /* 3행 · 세 번째 셀 (실손 탭에서만 존재): 상품명 — 회색 서브텍스트 */
+    .cE .uc-visits tbody td:nth-child(3):not(.amt) {
+      font-size: var(--fs-option);
+      color: var(--ink-3);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    /* 마지막 셀(td.amt): 진료비 — 우상단 absolute, 강조 */
+    .cE .uc-visits tbody td.amt {
+      position: absolute;
+      top: 14px; right: 16px;
+      width: auto !important;
+      max-width: 100px;
+      font-size: var(--fs-body);
+      font-weight: 700;
+      color: var(--ink);
+      text-align: right !important;
+      white-space: nowrap;
+    }
+
+    /* ===== 페이지네이션 ===== */
+    .cE .uc-pagination { gap: 4px; margin-top: 20px; flex-wrap: wrap; }
+    .cE .uc-pg { min-width: 32px; height: 32px; font-size: 12px; padding: 0 8px; }
+
+    /* ===== 위플랫 모달 — 모바일 폭에 맞춤 ===== */
+    .wp-modal { padding: 16px; }
+    .wp-modal-card { padding: 28px 22px 22px; }
+    .wp-modal-icon { width: 72px; height: 72px; margin-bottom: 14px; }
+    .wp-modal-text { font-size: var(--fs-body); margin-bottom: 18px; }
+    .wp-modal-cta { padding: 11px 22px; font-size: var(--fs-body); }
+  }
 </style>
 </head>
 <body>
@@ -251,10 +379,12 @@
         </div>
       </div>
 
-      <table>
-        <thead id="visit-thead"></thead>
-        <tbody id="visit-tbody"></tbody>
-      </table>
+      <div class="uc-visits-scroll">
+        <table>
+          <thead id="visit-thead"></thead>
+          <tbody id="visit-tbody"></tbody>
+        </table>
+      </div>
 
       <div class="uc-pagination">
         <button class="uc-pg" type="button" aria-label="이전"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg></button>
