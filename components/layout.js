@@ -118,12 +118,8 @@
       + '</aside>';
   }
 
-  // ===== 모바일 상단 헤더 + 하단 탭바 =====
+  // ===== 모바일 상단 헤더 + 드로어 (하단 탭바 제거) =====
   function mobileShellHTML(active) {
-    function tab(key, href, icon, label) {
-      var cls = (active === key) ? ' on' : '';
-      return '<a class="m-tab' + cls + '" href="' + href + '"><svg class="ic-svg" width="22" height="22"><use href="#' + icon + '"/></svg><span>' + label + '</span></a>';
-    }
     function drawerItem(key, href, icon, label, extra) {
       var cls = (active === key) ? ' class="on"' : '';
       return '<a' + cls + ' href="' + href + '"><svg class="ic-svg" width="19" height="19"><use href="#' + icon + '"/></svg>' + label + (extra || '') + '</a>';
@@ -134,13 +130,6 @@
       +   '<a class="m-logo" href="' + BASE + 'home.html"><img src="' + BASE + 'assets/bobi-logo.png" alt="BoBi" /></a>'
       +   '<button class="m-bell" type="button" aria-label="알림"><svg class="ic-svg" width="22" height="22"><use href="#i-bell"/></svg><span class="m-dot"></span></button>'
       + '</header>'
-      + '<nav class="m-tabbar">'
-      +   tab('home',     BASE + 'home.html',                    'i-home',         '홈')
-      +   tab('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
-      +   tab('report',   BASE + 'pages/report/history.html',    'i-file-text',    '리포트')
-      +   tab('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구')
-      +   '<button class="m-tab m-more" type="button" aria-label="더보기"><svg class="ic-svg" width="22" height="22"><use href="#i-more-horizontal"/></svg><span>더보기</span></button>'
-      + '</nav>'
       + '<div class="m-drawer" id="m-drawer" hidden aria-hidden="true">'
       +   '<div class="m-drawer-bg"></div>'
       +   '<div class="m-drawer-panel">'
@@ -294,18 +283,16 @@
     bindSmartModal();
   };
 
-  // 햄버거 + 더보기 → 드로어 토글
+  // 햄버거 → 드로어 토글
   function bindMobileShell() {
     var drawer = document.getElementById('m-drawer');
     if (!drawer) return;
     var ham   = document.querySelector('.m-ham');
-    var more  = document.querySelector('.m-more');
     var close = drawer.querySelector('.m-drawer-close');
     var bg    = drawer.querySelector('.m-drawer-bg');
     function open() { drawer.hidden = false; drawer.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
     function shut() { drawer.hidden = true;  drawer.setAttribute('aria-hidden','true');  document.body.style.overflow = ''; }
     if (ham)   ham.addEventListener('click', open);
-    if (more)  more.addEventListener('click', open);
     if (close) close.addEventListener('click', shut);
     if (bg)    bg.addEventListener('click', shut);
   }

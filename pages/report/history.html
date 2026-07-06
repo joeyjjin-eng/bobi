@@ -200,10 +200,53 @@
     .cE .search-bar input { font-size: var(--fs-option); min-width: 0; flex: 1 1 140px; }
     .cE .sb-divider { display: none; }
     .cE .period-trigger { font-size: var(--fs-option); }
-    .cE .sb-btn { padding: 9px 18px; font-size: var(--fs-option); }
-    .cE .period-popup { width: calc(100vw - 32px); right: -14px; padding: 18px 16px 14px; }
+
+    /* 기간 선택 팝오버 → 바텀시트로 변환 (팝오버가 화면 밖 잘림 해결) */
+    .cE .period-popover { position: static; }
+    .cE .period-popup {
+      position: fixed !important;
+      left: 0 !important; right: 0 !important; bottom: 0 !important;
+      top: auto !important;
+      width: 100% !important;
+      max-width: 520px !important;
+      margin: 0 auto !important;
+      max-height: 85vh !important;
+      border-radius: 20px 20px 0 0 !important;
+      padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+      box-shadow: 0 -10px 32px rgba(8, 22, 32, .22) !important;
+      z-index: 300 !important;
+      overflow-y: auto;
+    }
+    .cE .period-popup:not([hidden]) {
+      animation: ppSheetUp .28s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes ppSheetUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    /* 드래그 핸들 */
+    .cE .period-popup::before {
+      content: '';
+      position: absolute; top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 4px;
+      border-radius: 2px;
+      background: var(--ink-4); opacity: .5;
+    }
+    /* 백드롭 */
+    body:has(.period-popup:not([hidden]))::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: rgba(8, 22, 32, .45);
+      z-index: 299;
+      animation: ppBgIn .2s ease both;
+    }
+    @keyframes ppBgIn { from { opacity: 0; } to { opacity: 1; } }
+    body:has(.period-popup:not([hidden])) { overflow: hidden; }
+
     .cE .pp-range { grid-template-columns: 1fr; gap: 10px; }
     .cE .pp-range .dash { display: none; }
+    .cE .pp-title { padding-top: 4px; margin-bottom: 18px; }
 
     /* 필터바 — 스택 */
     .cE .filter-bar { padding: 12px 14px; gap: 12px; flex-direction: column; align-items: stretch; border-radius: var(--r-sm); }
@@ -375,10 +418,6 @@
           </div>
         </div>
       </div>
-      <button class="sb-btn" type="button" id="search-btn">
-        <svg class="ic-svg" width="14" height="14"><use href="#i-search"/></svg>
-        <span>검색</span>
-      </button>
     </div>
 
     <!-- 필터바 -->
@@ -689,17 +728,12 @@
     });
   });
 
-  // 검색 — 버튼 클릭 또는 Enter로만 실행 (페이징 UX 대응)
-  function applySearch() {
-    var input = document.getElementById('search-input');
-    state.query = input.value.trim();
+  // 검색 — 입력할 때마다 실시간 반영 (미청구 조회 내역과 동일 UX)
+  document.getElementById('search-input').addEventListener('input', function (e) {
+    state.query = e.target.value.trim();
     state.selectedIdx = null;
     renderTable();
     renderPreview();
-  }
-  document.getElementById('search-btn').addEventListener('click', applySearch);
-  document.getElementById('search-input').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); applySearch(); }
   });
 
   // ===== 기간 선택 팝오버 =====

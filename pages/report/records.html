@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -18,6 +19,124 @@
   .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ============================================================
+     반응형 — 페이지 고유 컬럼 스타일 (3개 pane, 각 7열)
+     공통 패턴(카드 리스트 · topbar · 상세 시트)은 styles/detail-mobile.css 참조
+     ============================================================ */
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+
+    /* rec-toolbar — 저장 버튼 숨김 (topbar 액션 메뉴로 이동) */
+    .cE .rec-toolbar { display: block; }
+    .cE .rec-toolbar > h2 { font-size: var(--fs-h2); line-height: 1.35; margin: 0 0 4px; }
+    .cE .rec-toolbar > h2 .hint { display: block; font-size: var(--fs-body); font-weight: 500; color: var(--ink-3); margin-top: 4px; }
+    .cE .rec-toolbar > .smart-cta { display: none; }
+
+    /* raw-scroll → 무효화 (카드 리스트로 전환) */
+    .cE .cd-pane .raw-scroll { overflow: visible; margin: 0; padding: 0; }
+    .cE .cd-pane .raw-table { min-width: 0 !important; }
+
+    /* 상세 모달 없음 (모든 컬럼이 카드에 노출됨) — 탭 힌트/커서 제거 */
+    .cE .cd-pane tbody tr {
+      padding: 18px 0 !important;
+      cursor: default !important;
+    }
+    .cE .cd-pane tbody tr::after { display: none !important; }
+    /* 병원명 max-width 해제 (concept-e의 .num 220px 제한 제거) */
+    .cE .cd-pane tbody td.num { max-width: none !important; }
+
+    /* 카드 내부 셀 간격 확대 (숨쉴 공간) */
+    .cE .cd-pane tbody td:nth-child(1) { margin-bottom: 8px !important; }
+    .cE .cd-pane tbody td:nth-child(2) { margin-bottom: 6px !important; }
+
+    /* ===== 페이지네이션 컴팩트 ===== */
+    .cE .raw-pagination { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .cE .page-info { font-size: var(--fs-option); color: var(--ink-3); text-align: center; }
+    .cE .page-nav { justify-content: center; flex-wrap: wrap; gap: 4px; }
+    .cE .page-btn { min-width: 32px; height: 32px; font-size: 12px; padding: 0 8px; }
+
+    /* ===== 전체 진료기록 (all) — cols: date · hospital · 질병 · 코드(ctr) · 유형칩(ctr) · 일수(ctr) · 의료비(amt) ===== */
+    .cE .cd-pane[data-pane="all"] tbody tr { padding-right: 110px !important; }
+    .cE .cd-pane[data-pane="all"] tbody td:nth-child(3) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-2) !important;
+      font-weight: 500 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 8px !important;
+    }
+    /* (4) 진단코드 · (5) 유형칩 · (6) 내원일수 → 인라인 메타 라인 */
+    .cE .cd-pane[data-pane="all"] tbody td:nth-child(4),
+    .cE .cd-pane[data-pane="all"] tbody td:nth-child(5),
+    .cE .cd-pane[data-pane="all"] tbody td:nth-child(6) {
+      display: inline-block !important;
+      width: auto !important;
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+      font-weight: 500 !important;
+      margin: 6px 4px 0 0 !important;
+      vertical-align: middle;
+    }
+    /* (6) 내원일수 앞 · 구분자, 뒤 "일" */
+    .cE .cd-pane[data-pane="all"] tbody td:nth-child(6)::before {
+      content: "· "; color: var(--ink-4); margin-right: 2px;
+    }
+    .cE .cd-pane[data-pane="all"] tbody td:nth-child(6)::after {
+      content: "일"; color: var(--ink-4); margin-left: 1px;
+    }
+
+    /* ===== 세부진료기록 (detail) · 처방조제정보 (prescription) — cols: date · hospital · (3) · (4) · 투약메타 ===== */
+    /* (3) 진료내역 or 약품명 — 서브 본문 */
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(3),
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(3) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-2) !important;
+      font-weight: 500 !important;
+      margin-bottom: 6px !important;
+    }
+    /* (4) 코드명 or 성분명 — 회색 서브텍스트 */
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(4),
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(4) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+      font-weight: 500 !important;
+      margin-bottom: 8px !important;
+    }
+    /* (5)(6)(7) 투약량/횟수/일수 — 인라인 메타 with 라벨 */
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(5),
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(6),
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(7),
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(5),
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(6),
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(7) {
+      display: inline-block !important;
+      width: auto !important;
+      font-size: var(--fs-option) !important;
+      color: var(--ink-2) !important;
+      font-weight: 600 !important;
+      margin: 4px 2px 0 0 !important;
+      vertical-align: middle;
+    }
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(5)::before,
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(5)::before {
+      content: "1회 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(6)::before,
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(6)::before {
+      content: " · 1일 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(7)::before,
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(7)::before {
+      content: " · 총 "; color: var(--ink-4); font-weight: 500;
+    }
+    .cE .cd-pane[data-pane="detail"] tbody td:nth-child(7)::after,
+    .cE .cd-pane[data-pane="prescription"] tbody td:nth-child(7)::after {
+      content: "일"; color: var(--ink-4); font-weight: 500;
+    }
+  }
 </style>
 </head>
 <body>
@@ -575,5 +694,53 @@ document.querySelectorAll('[data-export]').forEach(btn => {
 
 <script src="../../components/layout.js"></script>
 <script>injectShell('report');</script>
+<script>
+  // 모바일 GNB topbar 재구성 — 뒤로가기 · 화면 제목 · 저장 액션 메뉴
+  (function () {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<a class="m-back" href="main.html" aria-label="뒤로가기">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</a>'
+      + '<span class="m-title">진료기록 전체 내역</span>'
+      + '<button class="m-actions-btn" type="button" id="m-actions-btn" aria-label="메뉴" aria-expanded="false" aria-haspopup="true">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg>'
+      + '</button>'
+      + '<div class="m-actions-menu" id="m-actions-menu" hidden role="menu">'
+      +   '<button class="m-actions-item" type="button" data-action="save" role="menuitem">'
+      +     '<svg class="ic-svg" width="18" height="18"><use href="#i-download"/></svg>'
+      +     '<span>저장하기</span>'
+      +   '</button>'
+      + '</div>';
+
+    var actionsBtn = document.getElementById('m-actions-btn');
+    var actionsMenu = document.getElementById('m-actions-menu');
+    function openMenu() { actionsMenu.hidden = false; actionsBtn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { actionsMenu.hidden = true; actionsBtn.setAttribute('aria-expanded', 'false'); }
+    actionsBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      actionsMenu.hidden ? openMenu() : closeMenu();
+    });
+    document.addEventListener('click', function (e) {
+      if (!actionsMenu.hidden && !actionsMenu.contains(e.target) && !actionsBtn.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !actionsMenu.hidden) closeMenu();
+    });
+    // 저장 액션 — 현재 활성 탭의 pane 저장 버튼 트리거
+    actionsMenu.querySelector('[data-action="save"]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeMenu();
+      var activeTab = document.querySelector('.cd-tab.on');
+      var type = activeTab && activeTab.dataset.tab;
+      if (!type) return;
+      var saveBtn = document.querySelector('[data-export="' + type + '"]');
+      if (saveBtn) saveBtn.click();
+    });
+  })();
+</script>
 </body>
 </html>

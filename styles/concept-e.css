@@ -369,13 +369,13 @@
 .send-info-v { font-size: var(--fs-body); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
 
 /* ============================================================
-   모바일 셸 — 상단 헤더 + 하단 탭바 + 드로어 (기본 숨김)
+   모바일 셸 — 상단 헤더 + 드로어 (기본 숨김)
    ============================================================ */
-.m-topbar, .m-tabbar, .m-drawer { display: none; }
+.m-topbar, .m-drawer { display: none; }
 
-/* 데스크탑(전체화면)에서는 하단 탭바/상단 헤더/드로어 완전 숨김 강제 */
+/* 데스크탑(전체화면)에서는 상단 헤더/드로어 완전 숨김 강제 */
 @media (min-width: 961px) {
-  .m-topbar, .m-tabbar, .m-drawer { display: none !important; }
+  .m-topbar, .m-drawer { display: none !important; }
 }
 
 /* ============================================================
@@ -392,8 +392,8 @@
   /* 메인 — 사이드바 사라졌으므로 패딩 축소 */
   .cE .emain { padding: 16px 16px 32px !important; }
 
-  /* 푸터 — GNB 오프셋 제거 + 하단 탭바 클리어 */
-  .ft { padding: 24px 20px calc(28px + 64px + env(safe-area-inset-bottom)) !important; }
+  /* 푸터 — GNB 오프셋 제거 */
+  .ft { padding: 24px 20px calc(28px + env(safe-area-inset-bottom)) !important; }
   .ft-inner { max-width: 100% !important; }
 
   /* ===== 상단 헤더 (스티키) ===== */
@@ -406,22 +406,6 @@
   .m-bell .m-dot { position: absolute; top: 10px; right: 10px; width: 7px; height: 7px; border-radius: 50%; background: var(--c-out); }
   .m-logo { display: inline-flex; align-items: center; }
   .m-logo img { height: 20px; display: block; }
-
-  /* ===== 하단 탭바 (고정) ===== */
-  .m-tabbar {
-    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-    height: 64px; padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
-    background: rgba(255,255,255,0.96); backdrop-filter: blur(18px);
-    border-top: 1px solid var(--line);
-  }
-  .m-tab {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-    background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;
-    color: var(--ink-4); text-decoration: none;
-  }
-  .m-tab span { font-size: 11px; font-weight: 600; letter-spacing: -0.01em; }
-  .m-tab.on { color: var(--brand); }
-  .m-tab.on span { font-weight: 700; }
 
   /* ===== 드로어 (오버레이) ===== */
   .m-drawer { display: block; position: fixed; inset: 0; z-index: 100; }
@@ -498,7 +482,7 @@
   .cE .costnums .v { font-size: var(--fs-h2); }
   .cA .chart { height: 140px; gap: 10px; padding: 0 10px 0 4px; }
   .cA .chart-years { gap: 10px; padding: 8px 10px 0 4px; }
-  .cA .chart-years > span { font-size: 11px; }
+  .cA .chart-years > span { font-size: 12px; }
   .cE .radials { height: auto; gap: 12px; }
 
   /* 10대 주요질환 — 스탯 wrap */
@@ -585,6 +569,45 @@
   .cE .disclosure-content .modal-actions { margin-top: 14px; }
   .cE .disclosure-content .modal-btn { padding: 12px 20px !important; font-size: var(--fs-body) !important; }
   .cE .disclosure-content .modal-btn.primary { flex: 1; justify-content: center; }
+
+  /* ===== 10대 주요질환 안내 팝오버 → 모바일 바텀시트 (main.html · condition.html 공통) ===== */
+  body:has(.info-popover .info-content:not([hidden]))::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: rgba(8, 22, 32, .45);
+    z-index: 299;
+    animation: dcBgIn .2s ease both;
+  }
+  body:has(.info-popover .info-content:not([hidden])) { overflow: hidden; }
+  .cE .info-popover .info-content {
+    position: fixed !important;
+    left: 0 !important; right: 0 !important; bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 520px !important;
+    margin: 0 auto !important;
+    max-height: 85vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+    box-shadow: 0 -10px 32px rgba(8, 22, 32, .22) !important;
+    z-index: 300 !important;
+    overflow-y: auto;
+    font-size: var(--fs-body) !important;
+    line-height: 1.5 !important;
+  }
+  .cE .info-popover .info-content:not([hidden]) {
+    animation: dcSheetUp .28s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .cE .info-popover .info-content::before {
+    content: '';
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 4px;
+    border-radius: 2px;
+    background: var(--ink-4); opacity: .5;
+  }
+  .cE .info-popover .info-content .info-head { padding-top: 4px; margin-bottom: 14px; }
+  .cE .info-popover .info-content .disease-list td { padding: 12px 14px; font-size: var(--fs-body); }
 }
 
 /* ===== 인쇄(@media print) — 선택된 섹션만 출력 ===== */
@@ -599,7 +622,7 @@
   .pc-actions, .rec-tabs, .rec-head .more, .rec-foot, .more,
   .preset, .reset-btn, .search-btn, .dlabel, .period,
   .info-trigger, .info-content, .print-modal,
-  .m-topbar, .m-tabbar, .m-drawer {
+  .m-topbar, .m-drawer {
     display: none !important;
   }
   .layout, .cA, .cE, .bobi, .emain { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; }

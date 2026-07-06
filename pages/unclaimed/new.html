@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -192,6 +193,166 @@
   .nr-pop { animation: nrPop 0.22s cubic-bezier(0.16,1,0.3,1) both; }
 
   .step-pane[hidden] { display: none; }
+
+  /* ============================================================
+     반응형 — 페이지 고유 (진료기록 새 리포트 패턴과 통일)
+     ============================================================ */
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+
+    /* 페이지 전체 회색 배경 (topbar 아래 · footer 위 모두 채움) */
+    html, body { background: var(--bg-soft); }
+    .cE .emain { flex: 1; min-height: calc(100vh - 54px); padding: 12px 16px 32px !important; }
+    .m-topbar { background: #fff; }
+
+    /* nr-title-row는 topbar로 대체 → 완전 숨김 */
+    .cE .nr-title-row { display: none !important; }
+
+    /* ===== 스텝 인디케이터 컴팩션 ===== */
+    .cE .step-dots { padding: 12px 14px; gap: 6px; margin-bottom: 12px; border-radius: var(--r-sm); }
+    .cE .step { gap: 6px; }
+    .cE .step .num { width: 22px; height: 22px; font-size: 12px; }
+    .cE .step .lbl { font-size: var(--fs-option); letter-spacing: -0.02em; }
+    .cE .step-line { flex: 1; }
+
+    /* ===== Step 1: 검색바 컴팩션 ===== */
+    .cE .nr-search { padding: 10px 14px; gap: 10px; margin-bottom: 12px; border-radius: var(--r-sm); }
+    .cE .nr-search input { font-size: var(--fs-body); }
+
+    /* ===== 고객 목록 카드 헤더 — 스택 ===== */
+    .cE .cust-panel { border-radius: var(--r-md); }
+    .cE .cust-panel-head { flex-direction: column; align-items: stretch; gap: 10px; padding: 14px 16px; }
+    .cE .cust-panel-title { font-size: var(--fs-body); gap: 8px; }
+    .cE .cust-panel-title .cnt { font-size: var(--fs-option); }
+    .cE .new-cust-btn { width: 100%; justify-content: center; padding: 10px 14px; font-size: var(--fs-option); }
+
+    /* ===== 고객 리스트 → 카드 (5열 그리드 해체) ===== */
+    .cE .cust-thead { display: none !important; }
+    .cE .cust-row {
+      display: grid !important;
+      grid-template-columns: 44px 1fr auto;
+      grid-template-rows: auto auto auto;
+      column-gap: 12px;
+      row-gap: 3px;
+      padding: 14px 32px 14px 16px !important;
+      position: relative;
+    }
+    .cE .cust-row::after {
+      content: '';
+      position: absolute;
+      top: 50%; right: 14px;
+      width: 8px; height: 8px;
+      margin-top: -4px;
+      border-right: 1.5px solid var(--ink-4);
+      border-top: 1.5px solid var(--ink-4);
+      transform: rotate(45deg);
+      opacity: .55;
+    }
+    .cE .cust-row .cust-cell-name { display: contents; }
+    .cE .cust-row .cust-av {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      width: 42px !important; height: 42px !important;
+      align-self: start;
+      margin-top: 2px;
+    }
+    .cE .cust-row .cust-nm {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: var(--fs-body) !important;
+    }
+    .cE .cust-row .cust-cell-name > .gender-chip {
+      grid-column: 3;
+      grid-row: 1;
+      align-self: center;
+      justify-self: end;
+    }
+    .cE .cust-row > span.cust-text:nth-of-type(1) {
+      grid-column: 2 / -1;
+      grid-row: 2;
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+    }
+    .cE .cust-row > span.cust-text:nth-of-type(2) {
+      grid-column: 2 / -1;
+      grid-row: 3;
+      font-size: var(--fs-option) !important;
+      color: var(--ink-3) !important;
+    }
+    .cE .cust-row > span.cust-reg { display: none !important; }
+    .cE .cust-row .cust-action { display: none !important; }
+
+    .cE .cust-foot { padding: 12px 16px; }
+    .cE .cust-pg-btn { min-width: 32px; height: 32px; font-size: 12px; }
+
+    /* ===== Step 2: 본인인증 카드 — 풀폭 ===== */
+    .cE .auth-card { max-width: none; border-radius: var(--r-md); }
+    .cE .auth-head { padding: 18px 20px 16px; gap: 12px; }
+    .cE .auth-avatar { width: 44px; height: 44px; font-size: var(--fs-body); }
+    .cE .auth-name { font-size: var(--fs-body); gap: 6px; }
+    .cE .auth-meta { font-size: var(--fs-option); }
+
+    .cE .auth-body { padding: 18px 20px; gap: 14px; }
+    .cE .auth-info { padding: 10px 14px; gap: 8px; }
+    .cE .auth-info .txt { font-size: var(--fs-option); line-height: 1.5; }
+
+    /* 조회 연도 섹션 컴팩션 */
+    .cE .year-section { padding: 14px 16px; gap: 10px; }
+    .cE .year-section .year-l { flex-wrap: wrap; gap: 4px 8px; font-size: var(--fs-option); }
+    .cE .year-section .year-hint { font-size: 12px; }
+    .cE .year-row-list { gap: 8px 14px; }
+    .cE .year-check .lbl { font-size: var(--fs-option); }
+
+    /* 입력 필드 컴팩션 */
+    .cE .input-box { height: 44px; padding: 0 12px; font-size: var(--fs-body); }
+    .cE .field-l { font-size: var(--fs-option); }
+    .cE .field-hint { font-size: var(--fs-option); }
+
+    /* 통신사 6개 — 3열 유지 (2행) */
+    .cE .carrier-row { gap: 6px; }
+    .cE .carrier-btn { height: 42px; font-size: var(--fs-option); }
+
+    /* 주민번호 뒷자리 */
+    .cE .rrn-row { gap: 6px; }
+    .cE .rrn-row .input-box { padding: 0 8px; font-size: var(--fs-option); }
+
+    /* 카카오톡 인증 대기 화면 */
+    .cE .kakao-wait { padding: 8px 0; gap: 12px; }
+    .cE .kakao-ic { width: 64px; height: 64px; }
+    .cE .kakao-title { font-size: var(--fs-body); }
+    .cE .kakao-desc { font-size: var(--fs-option); }
+
+    /* 인증 완료 화면 */
+    .cE .done-wrap { padding: 4px 0; gap: 12px; }
+    .cE .done-ic { width: 68px; height: 68px; }
+    .cE .done-title { font-size: var(--fs-body); }
+    .cE .done-desc { font-size: var(--fs-option); }
+
+    /* CTA — 세로 스택, primary 하단(thumb reach) */
+    .cE .auth-cta {
+      padding: 14px 20px 20px;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cE .auth-cta .btn-secondary,
+    .cE .auth-cta .btn-primary {
+      width: 100%; padding: 12px 18px;
+      font-size: var(--fs-body);
+      justify-content: center;
+    }
+
+    /* ===== 신규 고객 등록 모달 — 모바일 컴팩션 ===== */
+    .nr-modal { padding: 12px; }
+    .nr-modal-card { max-width: 100%; border-radius: 16px; }
+    .nr-modal-head { padding: 18px 20px 14px; gap: 12px; }
+    .nr-modal-head-ic { width: 36px; height: 36px; border-radius: 10px; }
+    .nr-modal-head h3 { font-size: var(--fs-body); }
+    .nr-modal-head .desc { font-size: var(--fs-option); }
+    .nr-modal-body { padding: 18px 20px; gap: 14px; }
+    .nr-modal-row { flex-direction: column; gap: 14px; }
+    .nr-modal-actions { padding: 14px 20px 20px; flex-direction: column; gap: 8px; }
+    .nr-modal-actions > button { width: 100% !important; padding: 12px 18px !important; justify-content: center !important; }
+  }
 </style>
 </head>
 <body>
@@ -735,5 +896,25 @@
 
 <script src="../../components/layout.js"></script>
 <script>injectShell('claim');</script>
+<script>
+  // 모바일 GNB topbar 재구성 — 뒤로가기 · 화면 제목 (액션 없음)
+  // 뒤로가기는 nr-title-row의 back-link click을 프록시 → 스텝별 동작 유지
+  (function () {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<button class="m-back" type="button" aria-label="뒤로가기" id="m-back-proxy">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</button>'
+      + '<span class="m-title">새롭게 조회하기</span>'
+      + '<span class="m-spacer" aria-hidden="true"></span>';
+
+    document.getElementById('m-back-proxy').addEventListener('click', function () {
+      var backLink = document.getElementById('back-link');
+      if (backLink) backLink.click();
+    });
+  })();
+</script>
 </body>
 </html>

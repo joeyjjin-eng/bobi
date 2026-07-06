@@ -62,6 +62,9 @@
   .cE .pp-apply { background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); padding: 9px 24px; font-size: var(--fs-option); font-weight: 700; font-family: inherit; cursor: pointer; box-shadow: var(--sh-brand); transition: background-color .2s ease; }
   .cE .pp-apply:hover { background: var(--brand-hover); }
 
+  /* ===== 필터 트리거 (모바일 전용, 데스크탑에서는 숨김) ===== */
+  .cE .filter-trigger { display: none; }
+
   /* ===== 필터바 ===== */
   .cE .filter-bar { background: #fff; border-radius: var(--r-md); border: 1px solid var(--line); padding: 14px 22px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
   .cE .filter-group { display: flex; align-items: center; gap: 10px; }
@@ -122,17 +125,138 @@
     .cE .search-bar input { font-size: var(--fs-option); min-width: 0; flex: 1 1 140px; }
     .cE .sb-divider { display: none; }
     .cE .period-trigger { font-size: var(--fs-option); }
-    .cE .period-popup { width: calc(100vw - 32px); right: -14px; padding: 18px 16px 14px; }
+
+    /* 기간 선택 팝오버 → 바텀시트로 변환 (팝오버가 화면 밖 잘림 해결) */
+    .cE .period-popover { position: static; }
+    .cE .period-popup {
+      position: fixed !important;
+      left: 0 !important; right: 0 !important; bottom: 0 !important;
+      top: auto !important;
+      width: 100% !important;
+      max-width: 520px !important;
+      margin: 0 auto !important;
+      max-height: 85vh !important;
+      border-radius: 20px 20px 0 0 !important;
+      padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+      box-shadow: 0 -10px 32px rgba(8, 22, 32, .22) !important;
+      z-index: 300 !important;
+      overflow-y: auto;
+    }
+    .cE .period-popup:not([hidden]) {
+      animation: ppSheetUp .28s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes ppSheetUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    /* 드래그 핸들 */
+    .cE .period-popup::before {
+      content: '';
+      position: absolute; top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 4px;
+      border-radius: 2px;
+      background: var(--ink-4); opacity: .5;
+    }
+    /* 백드롭 */
+    body:has(.period-popup:not([hidden]))::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: rgba(8, 22, 32, .45);
+      z-index: 299;
+      animation: ppBgIn .2s ease both;
+    }
+    @keyframes ppBgIn { from { opacity: 0; } to { opacity: 1; } }
+    body:has(.period-popup:not([hidden])) { overflow: hidden; }
+
     .cE .pp-range { grid-template-columns: 1fr; gap: 10px; }
     .cE .pp-range .dash { display: none; }
+    .cE .pp-title { padding-top: 4px; margin-bottom: 18px; }
 
-    /* 필터바 — 스택 */
-    .cE .filter-bar { padding: 12px 14px; gap: 12px; flex-direction: column; align-items: stretch; border-radius: var(--r-sm); }
-    .cE .filter-group { flex-wrap: wrap; gap: 8px; }
-    .cE .fb-divider { display: none; }
-    .cE .pills { flex-wrap: wrap; }
-    .cE .pill { padding: 6px 12px; font-size: var(--fs-option); }
-    .cE .fb-count { margin-left: 0; font-size: var(--fs-option); }
+    /* ===== 필터 트리거 칩 (모바일 전용) ===== */
+    .cE .filter-trigger {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: #fff; border: 1px solid var(--line-strong);
+      border-radius: var(--r-pill);
+      font-family: inherit; font-size: var(--fs-option);
+      font-weight: 600; color: var(--ink);
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      margin-bottom: 12px;
+      transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    }
+    .cE .filter-trigger:hover { border-color: var(--ink-4); }
+    .cE .filter-trigger:active { background: var(--bg-soft); }
+    .cE .filter-trigger > svg:first-child { color: var(--ink-3); flex: none; }
+    .cE .filter-trigger > svg:last-child { color: var(--ink-4); flex: none; }
+    .cE .filter-trigger.on {
+      background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 700;
+    }
+    .cE .filter-trigger.on > svg { color: currentColor; opacity: .9; }
+
+    /* 필터바 — 기본 숨김, .open일 때 바텀시트로 노출 */
+    .cE .filter-bar {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      top: auto;
+      width: 100%; max-width: 520px;
+      margin: 0 auto;
+      max-height: 85vh; overflow-y: auto;
+      background: #fff;
+      border: none;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -10px 32px rgba(8, 22, 32, .22);
+      padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+      z-index: 300;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 18px;
+    }
+    .cE .filter-bar.open {
+      display: flex;
+      animation: fbSheetUp .28s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes fbSheetUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    /* 드래그 핸들 */
+    .cE .filter-bar.open::before {
+      content: '';
+      position: absolute; top: 8px; left: 50%;
+      transform: translateX(-50%);
+      width: 40px; height: 4px;
+      border-radius: 2px;
+      background: var(--ink-4); opacity: .5;
+    }
+    /* 백드롭 */
+    body:has(.filter-bar.open)::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: rgba(8, 22, 32, .45);
+      z-index: 299;
+      animation: fbBgIn .2s ease both;
+    }
+    @keyframes fbBgIn { from { opacity: 0; } to { opacity: 1; } }
+    body:has(.filter-bar.open) { overflow: hidden; }
+
+    /* 시트 내부 요소 스타일 */
+    .cE .filter-bar .filter-group {
+      flex-direction: column; align-items: flex-start;
+      gap: 8px; padding-top: 4px;
+    }
+    .cE .filter-bar .fg-l {
+      font-size: var(--fs-body); font-weight: 700; color: var(--ink);
+    }
+    .cE .filter-bar .fb-divider { display: none; }
+    .cE .filter-bar .pills { flex-wrap: wrap; gap: 8px; }
+    .cE .filter-bar .pill { padding: 8px 14px; font-size: var(--fs-option); }
+    .cE .filter-bar .fb-count {
+      margin-left: 0; margin-top: 4px;
+      padding-top: 14px; border-top: 1px solid var(--line);
+      font-size: var(--fs-option); text-align: center;
+    }
 
     /* 리스트 패널 → 카드 리스트로 변환 */
     .cE .list-panel { border-radius: var(--r-md); }
@@ -235,8 +359,15 @@
       </div>
     </div>
 
+    <!-- 필터 트리거 (모바일에서만 노출) — 성별·연령대 시트 오픈 -->
+    <button class="filter-trigger" id="filter-trigger" type="button" aria-expanded="false" aria-controls="filter-sheet">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-menu"/></svg>
+      <span id="filter-label">필터</span>
+      <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-down"/></svg>
+    </button>
+
     <!-- ===== 필터바 ===== -->
-    <div class="filter-bar">
+    <div class="filter-bar" id="filter-sheet">
       <div class="filter-group">
         <span class="fg-l">성별</span>
         <div class="pills" id="gender-pills">
@@ -480,8 +611,49 @@
     renderTable();
   });
 
+  // ===== 필터 시트 (모바일 전용) =====
+  var filterTrigger = document.getElementById('filter-trigger');
+  var filterSheet = document.getElementById('filter-sheet');
+  var filterLabel = document.getElementById('filter-label');
+
+  function updateFilterChip() {
+    var changed = state.gender !== '전체' || state.age !== '전체';
+    if (changed) {
+      filterLabel.textContent = '필터 적용됨';
+      filterTrigger.classList.add('on');
+    } else {
+      filterLabel.textContent = '필터';
+      filterTrigger.classList.remove('on');
+    }
+  }
+  function openFilterSheet() {
+    filterSheet.classList.add('open');
+    filterTrigger.setAttribute('aria-expanded', 'true');
+  }
+  function closeFilterSheet() {
+    filterSheet.classList.remove('open');
+    filterTrigger.setAttribute('aria-expanded', 'false');
+  }
+  filterTrigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    filterSheet.classList.contains('open') ? closeFilterSheet() : openFilterSheet();
+  });
+  document.addEventListener('click', function (e) {
+    if (!filterSheet.classList.contains('open')) return;
+    if (filterSheet.contains(e.target) || filterTrigger.contains(e.target)) return;
+    closeFilterSheet();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && filterSheet.classList.contains('open')) closeFilterSheet();
+  });
+  // 필터 pill 클릭 시 상태 라벨 갱신 (기존 리스트 렌더는 pill 핸들러가 처리)
+  document.querySelectorAll('#gender-pills .pill, #age-pills .pill').forEach(function (btn) {
+    btn.addEventListener('click', function () { setTimeout(updateFilterChip, 20); });
+  });
+
   // 초기 렌더
   renderTable();
+  updateFilterChip();
 })();
 </script>
 

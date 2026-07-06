@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -19,31 +20,54 @@
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
-  /* ===== 반응형 (모바일) ===== */
+  /* ============================================================
+     반응형 — 페이지 고유 컬럼 스타일 (7열 · amt 포함)
+     cols: date · hospital · 질병 · 진단코드 · 유형칩 · 내원일수 · 의료비(amt)
+     공통 패턴은 styles/detail-mobile.css 참조
+     ============================================================ */
   @media (max-width: 960px) {
-    /* 상단 — 제목/저장 세로 스택, h1 줄바꿈 허용 */
-    .cE .etop { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 16px; }
-    .cE .etop h1 { white-space: normal; line-height: 1.3; }
-    .cE .etop .smart-cta { align-self: flex-end; }
+    .layout { min-width: 0; }
 
-    /* 10대 주요질환 팝오버 — 화면 폭에 맞춤 */
-    .cE .info-popover { position: static; }
-    .cE .info-content { position: fixed; left: 16px; right: 16px; top: auto; width: auto; max-height: 70vh; overflow-y: auto; }
+    /* ===== .etop 오버라이드 — info-popover가 h1 안에 있어 display:none로는 못 감춤 ===== */
+    .cE .etop { display: contents !important; }
+    .cE .etop > div:first-child { display: contents !important; }
+    .cE .etop > div:first-child > .back-btn { display: none !important; }
+    .cE .etop > div:first-child > .sub { display: none !important; }
+    .cE .etop > .smart-cta { display: none !important; }
+    /* h1 텍스트는 감추되 안의 info-popover는 살아있어야 → font-size: 0 트릭 */
+    .cE .etop > div:first-child > h1 {
+      font-size: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: 0 !important;
+      height: 0 !important;
+      overflow: hidden;
+    }
+    .cE .etop > div:first-child > h1 .info-popover .info-trigger { display: none !important; }
 
-    /* 질환 탭 — 가로 스크롤 */
-    .cE .cd-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; margin-top: 18px; }
-    .cE .cd-tab { padding: 10px 16px; font-size: var(--fs-option); white-space: nowrap; flex: none; }
-    .cE .cd-tab-code { font-size: 11px; }
+    /* 10대 주요질환 안내 바텀시트는 concept-e.css의 공통 룰에서 처리됨 */
 
     /* pane h2 + hint — hint 별도 줄로 */
-    .cE .cd-pane h2 { font-size: var(--fs-h2); line-height: 1.4; }
-    .cE .cd-pane h2 .hint { display: block; font-size: var(--fs-option); font-weight: 400; margin-top: 4px; }
+    .cE .cd-pane > h2 { font-size: var(--fs-h2); line-height: 1.35; margin: 0 0 6px; }
+    .cE .cd-pane > h2 .hint { display: block; font-size: var(--fs-body); font-weight: 500; color: var(--ink-3); margin-top: 4px; }
 
-    /* 테이블 — 가로 스크롤 + 셀 압축 */
-    .cE .cd-pane { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .cE .cd-pane table { min-width: 720px; }
-    .cE .cd-pane thead th,
-    .cE .cd-pane tbody td { font-size: var(--fs-option); padding: 10px 10px; white-space: nowrap; }
+    /* amt 있으므로 카드 우측 여백 확보 */
+    .cE .cd-pane tbody tr { padding-right: 120px; }
+
+    /* (3) 질병 — 1줄 말줄임 */
+    .cE .cd-pane tbody td:nth-child(3) {
+      font-size: var(--fs-option) !important;
+      color: var(--ink-2) !important;
+      font-weight: 500 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    /* (4) 진단코드 · (5) 유형칩 · (6) 내원일수 → 상세 모달에서 확인 */
+    .cE .cd-pane tbody td:nth-child(4),
+    .cE .cd-pane tbody td:nth-child(5),
+    .cE .cd-pane tbody td:nth-child(6) { display: none !important; }
   }
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -154,6 +178,23 @@
   </main>
 </div>
 <div id="footer-host"></div>
+</div>
+
+<!-- ===== 상세정보 바텀시트 (모바일에서 행 탭 시 오픈) ===== -->
+<div class="tr-detail-modal" id="tr-detail-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tr-detail-title">
+  <div class="tr-detail-bg" data-close></div>
+  <div class="tr-detail-panel">
+    <div class="tr-detail-head">
+      <div class="tr-detail-head-t">
+        <h3 id="tr-detail-title">진료 상세</h3>
+        <span class="tr-detail-sub" id="tr-detail-sub"></span>
+      </div>
+      <button class="tr-detail-close" type="button" aria-label="닫기" data-close>
+        <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="tr-detail-body" id="tr-detail-body"></div>
+  </div>
 </div>
 
 <script>
@@ -280,9 +321,120 @@
       XLSX.writeFile(wb, '주요질환_상세_' + todayStr() + '.xlsx');
     });
   })();
+
+  // ===== 모바일: 표 카드 → 상세정보 바텀시트 =====
+  (function () {
+    const modal = document.getElementById('tr-detail-modal');
+    if (!modal) return;
+    const body = document.getElementById('tr-detail-body');
+    const subEl = document.getElementById('tr-detail-sub');
+    const MOBILE_Q = window.matchMedia('(max-width: 960px)');
+    const PANE_LABEL = { hypertension: '고혈압 진료 이력', diabetes: '당뇨병 진료 이력' };
+
+    function openSheet(pane, tr) {
+      const headers = [...pane.querySelectorAll('thead th')].map(th => th.textContent.replace(/\s+/g, ' ').trim());
+      const cells = tr.children;
+      const rows = [];
+      for (let i = 0; i < cells.length; i++) {
+        const label = headers[i] || '';
+        const html = cells[i].innerHTML.trim();
+        if (!label || !html) continue;
+        const isAmt = cells[i].classList.contains('amt');
+        rows.push(
+          '<div class="tr-detail-row">'
+          +   '<span class="tr-detail-l">' + label + '</span>'
+          +   '<span class="tr-detail-v' + (isAmt ? ' em' : '') + '">' + html + '</span>'
+          + '</div>'
+        );
+      }
+      body.innerHTML = rows.join('');
+      subEl.textContent = PANE_LABEL[pane.dataset.pane] || '';
+      modal.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('tr-modal-open');
+    }
+    function closeSheet() {
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('tr-modal-open');
+    }
+    document.querySelectorAll('.cd-pane').forEach(pane => {
+      pane.addEventListener('click', e => {
+        if (!MOBILE_Q.matches) return;
+        const tr = e.target.closest('tbody tr');
+        if (!tr || !pane.contains(tr)) return;
+        openSheet(pane, tr);
+      });
+    });
+    modal.addEventListener('click', e => {
+      if (e.target.hasAttribute('data-close') || e.target.closest('[data-close]')) closeSheet();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !modal.hidden) closeSheet();
+    });
+    MOBILE_Q.addEventListener('change', e => {
+      if (!e.matches && !modal.hidden) closeSheet();
+    });
+  })();
 </script>
 
 <script src="../../components/layout.js"></script>
 <script>injectShell('report');</script>
+<script>
+  // 모바일 GNB topbar 재구성 — 뒤로가기 · 화면 제목 · 저장 액션 메뉴
+  (function () {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<a class="m-back" href="main.html" aria-label="뒤로가기">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</a>'
+      + '<span class="m-title">10대 주요질환 상세</span>'
+      + '<button class="m-actions-btn" type="button" id="m-actions-btn" aria-label="메뉴" aria-expanded="false" aria-haspopup="true">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg>'
+      + '</button>'
+      + '<div class="m-actions-menu" id="m-actions-menu" hidden role="menu">'
+      +   '<button class="m-actions-item" type="button" data-action="save" role="menuitem">'
+      +     '<svg class="ic-svg" width="18" height="18"><use href="#i-download"/></svg>'
+      +     '<span>저장하기</span>'
+      +   '</button>'
+      +   '<button class="m-actions-item" type="button" data-action="info" role="menuitem">'
+      +     '<svg class="ic-svg" width="18" height="18"><use href="#i-help-circle"/></svg>'
+      +     '<span>10대 주요질환 안내</span>'
+      +   '</button>'
+      + '</div>';
+
+    var actionsBtn = document.getElementById('m-actions-btn');
+    var actionsMenu = document.getElementById('m-actions-menu');
+    function openMenu() { actionsMenu.hidden = false; actionsBtn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { actionsMenu.hidden = true; actionsBtn.setAttribute('aria-expanded', 'false'); }
+    actionsBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      actionsMenu.hidden ? openMenu() : closeMenu();
+    });
+    document.addEventListener('click', function (e) {
+      if (!actionsMenu.hidden && !actionsMenu.contains(e.target) && !actionsBtn.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !actionsMenu.hidden) closeMenu();
+    });
+    // 저장 액션 — 기존 데스크탑 저장 버튼 트리거
+    actionsMenu.querySelector('[data-action="save"]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeMenu();
+      var saveBtn = document.getElementById('save-condition');
+      if (saveBtn) saveBtn.click();
+    });
+    // 10대 주요질환 안내 — 기존 info-popover 트리거 (stopPropagation으로 document click-outside 방지)
+    actionsMenu.querySelector('[data-action="info"]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeMenu();
+      var trigger = document.querySelector('.info-popover .info-trigger');
+      if (trigger) trigger.click();
+    });
+  })();
+</script>
 </body>
 </html>

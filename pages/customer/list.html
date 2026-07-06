@@ -174,32 +174,32 @@
     .cE .ht-l { align-items: flex-start; gap: 12px; }
     .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
     .cE .ht-l h1 { font-size: var(--fs-h1); }
-    .cE .ht-sub { font-size: 11.5px; }
+    .cE .ht-sub { font-size: var(--fs-option); }
     .cE .ht-actions { align-self: flex-end; }
     .cE .add-btn { padding: 10px 16px; font-size: var(--fs-option); box-shadow: 0 6px 16px rgba(255,142,92,0.28); }
 
     /* KPI 3개 → 1열 세로 스택 (숫자 오른쪽, 라벨/트렌드 왼쪽) */
     .cE .kpi-row { grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
     .cE .kpi-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; padding: 12px 14px; column-gap: 12px; }
-    .cE .kc-l { grid-column: 1; font-size: 11.5px; white-space: normal; }
+    .cE .kc-l { grid-column: 1; font-size: var(--fs-option); white-space: normal; }
     .cE .kc-v { grid-column: 2; grid-row: 1 / span 2; font-size: var(--fs-sub); margin-top: 0; align-self: center; white-space: nowrap; }
-    .cE .kc-v small { font-size: 11px; margin-left: 2px; }
-    .cE .kc-trend { grid-column: 1; grid-row: 2; font-size: 11px; margin-top: 0; }
+    .cE .kc-v small { font-size: 12px; margin-left: 2px; }
+    .cE .kc-trend { grid-column: 1; grid-row: 2; font-size: var(--fs-option); margin-top: 0; }
 
     /* 검색바 — 정렬 셀렉트 폰트 축소, 구분선 제거 */
     .cE .search-bar { padding: 10px 14px; gap: 10px; }
     .cE .search-bar input { min-width: 0; font-size: var(--fs-option); }
     .cE .sb-divider { display: none; }
-    .cE .sort-select select { font-size: 11px; padding-right: 18px; }
+    .cE .sort-select select { font-size: var(--fs-option); padding-right: 18px; }
     .cE .sort-select svg.ic-svg { right: 2px; }
 
     /* 필터바 — 세로 스택, 카운트는 오른쪽 정렬 별도 줄 */
     .cE .filter-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
     .cE .filter-group { flex-wrap: wrap; gap: 8px; }
     .cE .fb-divider { display: none; }
-    .cE .fb-count { margin-left: 0; text-align: right; font-size: 11.5px; }
+    .cE .fb-count { margin-left: 0; text-align: right; font-size: var(--fs-option); }
     .cE .pills { flex-wrap: wrap; gap: 5px; }
-    .cE .pill { padding: 6px 11px; font-size: 11px; }
+    .cE .pill { padding: 6px 12px; font-size: var(--fs-option); }
 
     /* 리스트 — 테이블 그리드를 카드형으로 재배치 */
     .cE .table-head { display: none; }
@@ -227,8 +227,8 @@
     .cE .table-row .tr-gender,
     .cE .table-row .tr-age,
     .cE .table-row .tr-phone { display: none; }
-    .cE .table-row .mobile-meta { grid-area: meta; justify-self: stretch; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
-    .cE .table-row .mobile-meta .gender-chip { padding: 2px 7px; font-size: 11px; }
+    .cE .table-row .mobile-meta { grid-area: meta; justify-self: stretch; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-3); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+    .cE .table-row .mobile-meta .gender-chip { padding: 2px 7px; font-size: 12px; }
     .cE .table-row .mobile-meta .mm-sep { color: var(--ink-4); }
     .cE .table-row .mobile-meta .mm-age { color: var(--ink-2); font-weight: 600; }
     .cE .table-row .mobile-meta .mm-phone { color: var(--ink-2); }
@@ -237,17 +237,17 @@
     .cE .table-row > *:nth-child(7) { display: none; }
     .cE .table-row > *:nth-child(8) { grid-area: cons; justify-self: start; min-width: 0; }
     .cE .table-row > *:nth-child(9) { grid-area: task; justify-self: end; min-width: 0; }
-    .cE .table-row .tr-date { grid-area: date; font-size: 11px; color: var(--ink-4); justify-self: end; }
+    .cE .table-row .tr-date { grid-area: date; font-size: 12px; color: var(--ink-4); justify-self: end; }
     .cE .table-row .tr-go { grid-area: go; align-self: center; justify-self: center; }
     .cE .consent-stack { align-items: flex-start; gap: 3px; }
-    .cE .consent-badge { padding: 0 9px; font-size: 11px; height: 24px; }
-    .cE .consent-meta { text-align: left; font-size: 11px; }
-    .cE .task-pill { padding: 0 10px; font-size: 11px; height: 25px; }
+    .cE .consent-badge { padding: 0 9px; font-size: 12px; height: 24px; }
+    .cE .consent-meta { text-align: left; font-size: var(--fs-option); }
+    .cE .task-pill { padding: 0 10px; font-size: 12px; height: 26px; }
     .cE .task .tip { display: none; }
 
     /* 페이지네이션 — 여백 축소 */
     .cE .pagination { padding: 14px 12px; gap: 4px; }
-    .cE .pg-btn { min-width: 32px; height: 32px; padding: 0 8px; font-size: 11.5px; }
+    .cE .pg-btn { min-width: 32px; height: 32px; padding: 0 8px; font-size: var(--fs-option); }
   }
 </style>
 </head>
