@@ -20,8 +20,9 @@
 .cE .eprofile .plan { display: flex; justify-content: space-between; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: var(--fs-label); }
 .cE .eprofile .plan .k { color: var(--ink-3); }
 .cE .eprofile .plan .v { font-weight: 800; color: var(--brand-deep); }
-.cE .eprofile .mybtn { display: block; text-align: center; margin-top: 14px; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-size: var(--fs-body); font-weight: 700; padding: 9px; border-radius: var(--r-pill); width: 100%; cursor: pointer; }
+.cE .eprofile .mybtn { display: block; text-align: center; margin-top: 14px; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-size: var(--fs-body); font-weight: 700; padding: 9px; border-radius: var(--r-pill); width: 100%; cursor: pointer; text-decoration: none; box-sizing: border-box; }
 .cE .eprofile .mybtn:hover { background: var(--brand-pale); }
+.cE .eprofile .mybtn.on { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); box-shadow: inset 2px 0 0 var(--brand); }
 .cE .enav { display: flex; flex-direction: column; gap: 3px; margin-top: 18px; }
 .cE .enav a { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; color: var(--ink-2); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
 .cE .enav a:hover { background: var(--bg-soft); color: var(--ink); }
@@ -424,7 +425,8 @@
   .m-drawer-nm { font-size: var(--fs-body); font-weight: 800; }
   .m-drawer-rl { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
   .m-drawer-close { width: 34px; height: 34px; border: none; background: var(--bg-soft); border-radius: 50%; display: grid; place-items: center; color: var(--ink-2); cursor: pointer; flex: none; }
-  .m-drawer-mybtn { display: block; width: 100%; text-align: center; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-family: inherit; font-size: var(--fs-body); font-weight: 700; padding: 11px; border-radius: var(--r-pill); cursor: pointer; margin-bottom: 14px; }
+  .m-drawer-mybtn { display: block; width: 100%; text-align: center; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-family: inherit; font-size: var(--fs-body); font-weight: 700; padding: 11px; border-radius: var(--r-pill); cursor: pointer; margin-bottom: 14px; text-decoration: none; box-sizing: border-box; }
+  .m-drawer-mybtn.on { background: var(--brand-pale); border-color: var(--brand); }
   .m-drawer-list { display: flex; flex-direction: column; gap: 2px; }
   .m-drawer-list a { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; color: var(--ink-2); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
   .m-drawer-list a:hover { background: var(--bg-soft); color: var(--ink); }

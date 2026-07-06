@@ -104,7 +104,7 @@
       +         '<div class="rl">메가미래라이프 · FC</div>'
       +       '</div>'
       +     '</div>'
-      +     '<button class="mybtn">마이페이지</button>'
+      +     '<a class="mybtn' + (active === 'mypage' ? ' on' : '') + '" href="' + BASE + 'pages/mypage/index.html">마이페이지</a>'
       +   '</div>'
       +   '<nav class="enav">'
       +     navItem('home',     BASE + 'home.html',                  'i-home',         '홈')
@@ -137,7 +137,7 @@
       +       '<div class="m-drawer-pa"><div class="m-drawer-av">홍</div><div><div class="m-drawer-nm">홍길동님</div><div class="m-drawer-rl">메가미래라이프 · FC</div></div></div>'
       +       '<button class="m-drawer-close" type="button" aria-label="닫기"><svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg></button>'
       +     '</div>'
-      +     '<button class="m-drawer-mybtn">마이페이지</button>'
+      +     '<a class="m-drawer-mybtn' + (active === 'mypage' ? ' on' : '') + '" href="' + BASE + 'pages/mypage/index.html">마이페이지</a>'
       +     '<div class="m-drawer-list">'
       +       drawerItem('home',     BASE + 'home.html',                    'i-home',         '홈')
       +       drawerItem('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
