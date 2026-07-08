@@ -26,8 +26,10 @@
   .cE .nr-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 22px; }
   .cE .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); text-decoration: none; font-weight: 600; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
   .cE .back-btn:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
-  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; }
+  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; display: inline-flex; align-items: center; gap: 8px; }
+  .cE .nr-title-row h1 .nr-beta { font-size: 11px; font-weight: 800; letter-spacing: 0.04em; color: #fff; background: #C92238; border: 1px solid #C92238; border-radius: 4px; padding: 3px 7px; line-height: 1; vertical-align: middle; }
   .cE .nr-title-row .sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
+  .cE .nr-title-row .sub b { color: var(--ink-2); font-weight: 700; }
   .cE .nr-title-info { display: flex; flex-direction: column; }
 
   /* ===== 스텝 인디케이터 ===== */
@@ -373,8 +375,8 @@
           뒤로
         </a>
         <div class="nr-title-info">
-          <h1>새롭게 미청구보험금 조회하기</h1>
-          <div class="sub">미청구보험금을 조회할 고객을 선택하고 본인인증을 진행하세요</div>
+          <h1>새롭게 미청구보험금 조회하기 <span class="nr-beta">BETA</span></h1>
+          <div class="sub">계산 금액은 <b>참고용</b>이며 실제 지급 금액과 차이가 있을 수 있어요</div>
         </div>
       </div>
     </div>

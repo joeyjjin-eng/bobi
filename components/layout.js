@@ -110,7 +110,7 @@
       +     navItem('home',     BASE + 'home.html',                  'i-home',         '홈')
       +     navItem('customer', BASE + 'pages/customer/list.html',      'i-users',        '내고객')
       +     navItem('report',   BASE + 'pages/report/history.html',     'i-file-text',    '진료기록 리포트')
-      +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금')
+      +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금', '<span class="beta-tag">BETA</span>')
       +     navItem('smart',    '#smart-coming-soon',                   'i-sparkles',     '스마트보비', '<span class="badge"></span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +   '</nav>'
@@ -142,7 +142,7 @@
       +       drawerItem('home',     BASE + 'home.html',                    'i-home',         '홈')
       +       drawerItem('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
       +       drawerItem('report',   BASE + 'pages/report/history.html',    'i-file-text',    '진료기록 리포트')
-      +       drawerItem('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금')
+      +       drawerItem('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="m-drawer-beta">BETA</span>')
       +       drawerItem('smart',    '#smart-coming-soon',                  'i-sparkles',     '스마트보비', '<span class="m-drawer-badge"></span>')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +     '</div>'

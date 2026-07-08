@@ -104,9 +104,14 @@
 
   /* ===== 안내 박스 ===== */
   .cE .uc-notice { margin-top: 20px; background: #F7F7F9; border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
-  .cE .uc-notice p { display: flex; gap: 8px; font-size: var(--fs-option); line-height: 1.6; color: var(--ink-3); margin: 0; }
+  .cE .uc-notice p { display: flex; gap: 8px; font-size: var(--fs-option); line-height: 1.4; color: var(--ink-3); margin: 0; }
   .cE .uc-notice p + p { margin-top: 4px; }
   .cE .uc-notice .dot { color: var(--ink-4); }
+
+  /* ===== 베타 참고용 안내 (계산 결과 상단) ===== */
+  .cE .uc-beta-notice { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 12px 16px; background: #FFF5F6; border: 1px solid #F5BFC3; border-radius: var(--r-sm); font-size: var(--fs-option); color: #7A1826; line-height: 1.4; }
+  .cE .uc-beta-notice .bn-tag { flex: none; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; color: #fff; background: #C92238; border: 1px solid #C92238; border-radius: 4px; padding: 3px 7px; line-height: 1; }
+  .cE .uc-beta-notice b { color: #C92238; font-weight: 800; }
 
   /* ===== 의료비내역 (헤더 rec-head/rec-tabs 패턴 재사용 — report/main.html과 통일) ===== */
   .cE .uc-visits { margin-top: 36px; }
@@ -441,6 +446,10 @@
       <div class="uc-result-head">
         <h2>미청구보험금 계산 결과</h2>
         <span class="s">2022년 · <b id="result-gen">2세대 실손보험</b> 기준</span>
+      </div>
+      <div class="uc-beta-notice">
+        <span class="bn-tag">BETA</span>
+        <span>계산된 금액은 <b>참고용</b>이에요. 실제 지급 금액과 차이가 있을 수 있어요.</span>
       </div>
       <div class="uc-eq">
         <div class="uc-card">
