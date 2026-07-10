@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 째피티</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- ===== 째피티 히어로 ===== -->
+    <div class="sm-hero">
+      <div class="sm-hero-inner">
+        <div class="sm-hero-r">
+          <img src="../../assets/img_jjapt.png" alt="째피티" />
+        </div>
+        <div class="sm-hero-l">
+          <span class="sm-hero-badge">
+            <svg class="ic-svg" width="11" height="11"><use href="#i-sparkles"/></svg>
+            BoBi Original AI
+          </span>
+          <h1 class="sm-hero-title"><span class="lead">스마트보비,</span> <span class="mark">째피티</span></h1>
+          <p class="sm-hero-sub">
+            복잡한 과정은 이제 AI가 함께합니다.<br/>
+            <b>째피티</b>가 설계사님의 스마트한 영업 파트너가 되어드릴게요.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 상단 탭 ===== -->
+    <div class="sm-tabs" role="tablist">
+      <div class="sm-tabs-inner">
+        <button class="sm-tab on" type="button" data-screen="search" role="tab" aria-selected="true">간편보험 인수가이드</button>
+        <button class="sm-tab" type="button" data-screen="history" role="tab" aria-selected="false">조회 내역</button>
+      </div>
+    </div>
+
+    <!-- ===== 화면 A · 간편보험 인수가이드 ===== -->
+    <section class="sm-screen" data-screen="search">
+
+      <div class="sm-tip-row">
+        <p class="sm-tip">
+          <svg class="ic-svg" width="15" height="15"><use href="#i-sparkles"/></svg>
+          <span>병력을 입력하고 <strong>결과 확인하기</strong>를 누르면 째피티가 예상 인수 가능 상품을 알려드려요.</span>
+        </p>
+        <span class="sm-tabs-info" tabindex="0" role="button" aria-label="인수가이드 유의사항">
+          <svg class="ic-svg sm-tabs-info-tri" width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3.5 L21.5 20 L2.5 20 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <line x1="12" y1="10" x2="12" y2="14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="17.5" r="1.1" fill="currentColor"/>
+          </svg>
+          <span class="sm-tabs-info-label">이용 시 꼭 확인해주세요</span>
+          <div class="sm-tabs-tip" role="tooltip">
+            <p class="sm-tabs-tip-t">"보험 회사별 내부 규정이나 상세 진단코드에 따라 인수 심사 시 결과가 달라질 수 있습니다."</p>
+            <ul>
+              <li>해당사 사정이나 고객의 상세 데이터에 따라 변동이 있을 수 있습니다.</li>
+              <li>AIG손해보험은 수술/시술 여부에 따라 인수 결과가 달라질 수 있습니다.</li>
+              <li>현대해상은 2Q패스 가능할 경우 인수가능(전산자동심사)합니다.</li>
+            </ul>
+          </div>
+        </span>
+      </div>
+
+      <div class="sm-grid">
+
+        <!-- 좌측 : 병력 입력 -->
+        <div class="sm-form">
+          <div class="sm-form-head">
+            <h3>병력 입력</h3>
+          </div>
+
+          <div id="entriesContainer"></div>
+
+          <button class="sm-form-add" id="addEntryBtn" type="button">
+            <span class="sm-add-ic"><svg class="ic-svg" width="14" height="14"><use href="#i-plus"/></svg></span>
+            항목 추가
+            <span class="sm-add-count">1/5</span>
+          </button>
+
+          <div class="sm-actions">
+            <button class="sm-btn-primary" type="button" id="submitBtn" disabled>결과 확인하기 →</button>
+          </div>
+          <div class="sm-feedback-row">
+            <button class="sm-feedback-link" type="button">
+              <svg class="ic-svg" width="13" height="13"><use href="#i-message"/></svg>
+              째피티에게 의견 보내기
+            </button>
+          </div>
+        </div>
+
+        <!-- 우측 : 결과 -->
+        <div class="sm-result">
+          <div class="sm-form-head">
+            <h3>인수 가능 상품</h3>
+            <button id="saveBtn" class="sm-save" type="button" hidden>
+              <svg class="ic-svg" width="14" height="14"><use href="#i-download"/></svg> 결과 저장
+            </button>
+          </div>
+          <div class="sm-result-head">
+            <div class="sm-result-label">
+              <span id="rightDot" class="sm-dot idle"></span>
+              <span id="rightLabel">가이드 대기 중</span>
+            </div>
+          </div>
+          <div class="sm-insight-caveat">
+            ⓘ 예상 가이드이며, 실제 인수 여부는 보험사 심사 결과에 따라 다를 수 있어요.
+          </div>
+
+          <!-- 빈 상태 -->
+          <div id="pEmpty" class="sm-center">
+            <div class="sm-mascot-wrap"><img class="sm-mascot" src="../../assets/img_jjapt_sitting.png" alt="보비" /></div>
+            <h4>아직 조회 전이에요</h4>
+            <p>좌측에서 병력을 입력하고 <strong>결과 확인하기</strong>를 누르면, 보비가 가입 가능성이 있는 상품을 예상해드려요.</p>
+          </div>
+
+          <!-- 로딩 상태 -->
+          <div id="pLoading" class="sm-center" hidden>
+            <div class="sm-mascot-wrap"><img class="sm-mascot float" src="../../assets/img_jjapt_loading.svg" alt="보비" /></div>
+            <h4>AI가 인수 기준을 분석하고 있어요</h4>
+            <p><strong id="loadDisease">입력한 병력</strong> 기준으로 보험사별 인수 조건을 대조하고 있어요.</p>
+            <div class="sm-bar-wrap">
+              <div class="sm-bar-top"><span>분석 진행 중</span><span class="sub">156개 상품 확인</span></div>
+              <div class="sm-bar-bg"><div id="loadBar" class="sm-bar"></div></div>
+            </div>
+          </div>
+
+          <!-- 결과 -->
+          <div id="pResults" hidden>
+            <div class="sm-insight">
+              <div class="sm-insight-in">
+                <img class="mascot" src="../../assets/img_jjapt_result.svg" alt="보비" />
+                <div style="flex:1;min-width:0">
+                  <div class="sm-badge">
+                    <svg class="ic-svg" width="11" height="11"><use href="#i-sparkles"/></svg> 보비 AI 분석 완료
+                  </div>
+                  <div class="sm-insight-txt" id="insightText">
+                    입력하신 <strong id="resDisease">병력</strong> 기준으로는 바로 인수 가능성이 높은 상품은 없지만,
+                    보비가 <strong style="color:var(--brand-deep)">예외질환 기준 148개 상품</strong>에서 가입 가능성을 찾았어요.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sm-sec">
+              <svg class="ic-svg" width="16" height="16" style="color:var(--brand-deep)"><use href="#i-check-circle"/></svg>
+              <h4>인수 가능 상품 <span class="cnt" id="possibleCount">(0건)</span></h4>
+            </div>
+            <div id="possibleWrap">
+              <div class="sm-empty-line">해당 조건으로 인수 가능한 상품이 없습니다.</div>
+            </div>
+
+            <div class="sm-sec mt">
+              <svg class="ic-svg" width="16" height="16" style="color:var(--ink-2)"><use href="#i-help-circle"/></svg>
+              <h4>예외질환 인수 가능 상품 <span class="cnt" id="exceptCount">(148건)</span></h4>
+            </div>
+            <div id="exceptList" class="sm-ex-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 화면 B · 조회 내역 ===== -->
+    <section class="sm-screen" data-screen="history" hidden>
+      <div class="sm-hist-top">
+        <div>
+          <h3>인수 가이드 조회 내역</h3>
+          <p>저장한 인수 가이드를 다시 확인하세요</p>
+        </div>
+      </div>
+
+      <div class="filter-bar" style="background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:14px 22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px;">
+        <div class="filter-group" style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:var(--fs-option);color:var(--ink-3);font-weight:700;">기간</span>
+          <div class="pills" style="display:flex;gap:6px;">
+            <button class="pill" type="button" data-period="1m">1개월</button>
+            <button class="pill on" type="button" data-period="3m">3개월</button>
+            <button class="pill" type="button" data-period="6m">6개월</button>
+            <button class="pill" type="button" data-period="1y">1년</button>
+          </div>
+        </div>
+        <div style="width:1px;height:20px;background:var(--line-strong);"></div>
+        <div class="hist-search" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line-strong);border-radius:10px;background:#fff;min-width:240px;transition:border-color .15s ease, box-shadow .15s ease;">
+          <svg class="ic-svg" width="14" height="14" style="color:var(--ink-3);flex:none;"><use href="#i-search"/></svg>
+          <input type="text" id="histSearch" placeholder="병력으로 검색" autocomplete="off" style="border:none;outline:none;font-family:inherit;font-size:var(--fs-option);font-weight:600;color:var(--ink);background:none;flex:1;min-width:0;letter-spacing:-0.01em;" />
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:14px;">
+          <button id="histDeleteBtn" class="hist-delete-btn" type="button" disabled>
+            <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
+            <span>선택 삭제 <b id="histDeleteCount">0</b></span>
+          </button>
+          <span style="font-size:var(--fs-option);color:var(--ink-3);font-weight:600;">총 <b id="histCount" style="color:var(--brand-deep);font-weight:800;">3</b>건</span>
+        </div>
+      </div>
+
+      <div class="sm-table">
+        <div class="sm-thead">
+          <div class="sm-th sm-th-check">
+            <label class="sm-tbl-check">
+              <input type="checkbox" id="histSelectAll" />
+              <span class="box"></span>
+            </label>
+          </div>
+          <div class="sm-th">조회일</div>
+          <div class="sm-th">병력</div>
+          <div class="sm-th">조회 조건</div>
+          <div class="sm-th r">결과</div>
+        </div>
+        <div id="histRows"></div>
+      </div>
+
+      <div class="raw-pagination">
+        <div class="page-info">총 <b id="pagerTotal">3</b>건 · <b>1</b> / 1 페이지</div>
+        <div class="page-nav">
+          <button class="page-btn current" type="button">1</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== 삭제 확인 모달 ===== -->
+  <div id="deleteModal" class="sm-modal" hidden>
+    <div class="sm-modal-backdrop" data-close="1"></div>
+    <div class="sm-modal-box sm-modal-confirm">
+      <button class="sm-modal-close sm-confirm-close" type="button" data-close="1" aria-label="닫기">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-x"/></svg>
+      </button>
+      <h3 class="sm-confirm-title">선택한 조회 내역을 삭제할까요?</h3>
+      <p class="sm-confirm-desc">
+        <b><span id="deleteCountLabel">0</span>건</b>의 조회 내역이 삭제돼요.<br/>
+        삭제한 내역은 되돌릴 수 없어요.
+      </p>
+      <div class="sm-confirm-actions">
+        <button type="button" class="sm-confirm-btn ghost" data-close="1">취소할래요</button>
+        <button type="button" class="sm-confirm-btn danger" id="confirmDelete">네, 삭제할래요</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 저장 안내 컨펌 모달 ===== -->
+  <div id="unsavedModal" class="sm-modal" hidden>
+    <div class="sm-modal-backdrop" data-close="1"></div>
+    <div class="sm-modal-box sm-modal-confirm">
+      <button class="sm-modal-close sm-confirm-close" type="button" data-close="1" aria-label="닫기">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-x"/></svg>
+      </button>
+      <h3 class="sm-confirm-title">잠깐, 결과를 저장할까요?</h3>
+      <p class="sm-confirm-desc">
+        이 결과는 아직 저장되지 않았어요.<br/>
+        지금 다시 입력하시면 <b>조회 내역에 남지 않아요.</b>
+      </p>
+      <div class="sm-confirm-actions">
+        <button type="button" class="sm-confirm-btn ghost" id="confirmDiscard">저장 없이 진행할래요</button>
+        <button type="button" class="sm-confirm-btn primary" id="confirmSave">결과 저장할래요</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 조회 내역 상세 모달 ===== -->
+  <div id="historyModal" class="sm-modal" hidden>
+    <div class="sm-modal-backdrop" data-close="1"></div>
+    <div class="sm-modal-box">
+      <div class="sm-modal-head">
+        <div>
+          <div class="sm-modal-date" id="histModalDate"></div>
+          <h3>인수 가이드 상세</h3>
+        </div>
+        <button class="sm-modal-close" type="button" data-close="1" aria-label="닫기">
+          <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <div class="sm-modal-body">
+        <div class="sm-modal-section">
+          <h4>입력한 병력<span class="sm-modal-count" id="histModalEntryCount"></span></h4>
+          <div id="histModalEntries" class="sm-modal-history"></div>
+        </div>
+        <div class="sm-modal-section">
+          <h4>결과</h4>
+          <div id="histModalResults"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<div id="toast" class="sm-toast">
+  <svg class="ic-svg" width="17" height="17" style="color:var(--brand)"><use href="#i-check"/></svg>
+  조회 내역에 저장되었어요
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('jjaepity');</script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -19,7 +19,7 @@
      <script>injectShell('report');</script>
    </body>
 
-   active 키: 'home' | 'customer' | 'report' | 'claim' | 'smart' | 'notice'
+   active 키: 'home' | 'customer' | 'report' | 'claim' | 'jjaepity' | 'notice'
    ============================================================ */
 (function () {
   // 스크립트가 로드된 경로에서 프로젝트 루트의 상대경로 추출
@@ -42,6 +42,7 @@
     + '<symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 13h7M8.5 16.5h7M8.5 9.5h2"/></symbol>'
     + '<symbol id="i-search-check" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="m8.5 11 2 2 3.5-3.7"/></symbol>'
     + '<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z"/><path d="M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></symbol>'
+    + '<symbol id="i-wing" viewBox="0 0 24 24"><path d="M4 20.5C4 12 10 5 20 3.5C19 12 13 20 4 20.5Z"/><path d="M8 18C11 15 14 12 17 9"/></symbol>'
     + '<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>'
     + '<symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 16 4-4-4-4M20 12H9"/></symbol>'
     // chevron / arrows
@@ -111,7 +112,7 @@
       +     navItem('customer', BASE + 'pages/customer/list.html',      'i-users',        '내고객')
       +     navItem('report',   BASE + 'pages/report/history.html',     'i-file-text',    '진료기록 리포트')
       +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금', '<span class="beta-tag">BETA</span>')
-      +     navItem('smart',    '#smart-coming-soon',                   'i-sparkles',     '스마트보비', '<span class="badge"></span>')
+      +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +   '</nav>'
       +   '<div class="logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
@@ -143,7 +144,7 @@
       +       drawerItem('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
       +       drawerItem('report',   BASE + 'pages/report/history.html',    'i-file-text',    '진료기록 리포트')
       +       drawerItem('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="m-drawer-beta">BETA</span>')
-      +       drawerItem('smart',    '#smart-coming-soon',                  'i-sparkles',     '스마트보비', '<span class="m-drawer-badge"></span>')
+      +       drawerItem('jjaepity', BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +     '</div>'
       +     '<div class="m-drawer-logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
@@ -210,8 +211,9 @@
     if (ok)    ok.addEventListener('click', shut);
     modal.addEventListener('click', function (e) { if (e.target === modal) shut(); });
     document.addEventListener('keydown', function (e) { if (!modal.hidden && e.key === 'Escape') shut(); });
-    // 클릭 트리거 자동 바인딩: href="#smart-coming-soon" 링크, .smart-cta 버튼
-    document.querySelectorAll('a[href="#smart-coming-soon"], .smart-cta').forEach(function (el) {
+    // 클릭 트리거 자동 바인딩: button.smart-cta (저장·내보내기 등 아직 준비중인 액션)
+    // 앵커(<a class="smart-cta">)는 href로 이동 — 모달 열지 않음.
+    document.querySelectorAll('button.smart-cta').forEach(function (el) {
       el.addEventListener('click', open);
     });
   }

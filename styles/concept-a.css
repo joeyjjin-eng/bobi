@@ -24,6 +24,7 @@
   font-size: var(--fs-body); font-weight: 700; color: #fff;
   background: var(--brand-grad); padding: 9px 16px; border-radius: var(--r-pill);
   border: none; cursor: pointer; box-shadow: var(--sh-brand);
+  text-decoration: none;
 }
 .cA .avatar {
   width: 36px; height: 36px; border-radius: 50%; background: var(--brand-pale);
