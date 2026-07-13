@@ -232,6 +232,11 @@
     var plus = $('#jmHospPlus');
     if (!el) return;
     var max = maxHospDaysFromForm() || 0;
+    // iOS Safari 등의 폼 값 자동 복원 무시 — state 값으로 강제 세팅
+    var initN = state.draft.inpatientDays || 0;
+    if (max > 0 && initN > max) initN = max;
+    el.value = String(initN);
+    state.draft.inpatientDays = initN;
     function clamp() {
       var n = parseInt(el.value, 10);
       if (isNaN(n) || n < 0) n = 0;
@@ -268,6 +273,11 @@
     var treating = $('#jmPeriodTreating');
     var errEl = $('#jmPeriodErr');
     if (!start || !end || !treating) return;
+    // iOS Safari 등 브라우저의 폼 값 자동 복원(back-forward cache 포함)을 무시하고 state 값으로 강제 세팅
+    start.value = state.periodForm.dateStart || '';
+    end.value = state.periodForm.dateEnd || '';
+    treating.checked = !!state.periodForm.treating;
+    end.disabled = !!state.periodForm.treating;
     var today = todayIso();
     function clearErr() { if (errEl) errEl.hidden = true; }
     function showErr(msg) { if (errEl) { errEl.textContent = msg; errEl.hidden = false; } }
@@ -680,18 +690,18 @@
         var pf = s.periodForm;
         var today = todayIso(); // 오늘 이후 날짜는 선택/입력 불가
         var endDisabled = pf.treating ? ' disabled' : '';
-        return '<div class="jm-opts">' +
+        return '<div class="jm-opts jm-opts-form">' +
                  '<div class="jm-period">' +
                    '<div class="jm-period-row">' +
                      '<label class="jm-period-lbl" for="jmPeriodStart">시작일</label>' +
-                     '<input type="date" class="jm-period-in" id="jmPeriodStart" max="' + today + '" value="' + esc(pf.dateStart) + '" />' +
+                     '<input type="date" class="jm-period-in" id="jmPeriodStart" autocomplete="off" max="' + today + '" value="' + esc(pf.dateStart) + '" />' +
                    '</div>' +
                    '<div class="jm-period-row">' +
                      '<label class="jm-period-lbl" for="jmPeriodEnd">종료일</label>' +
-                     '<input type="date" class="jm-period-in" id="jmPeriodEnd" max="' + today + '" value="' + esc(pf.dateEnd) + '"' + endDisabled + ' />' +
+                     '<input type="date" class="jm-period-in" id="jmPeriodEnd" autocomplete="off" max="' + today + '" value="' + esc(pf.dateEnd) + '"' + endDisabled + ' />' +
                    '</div>' +
                    '<label class="jm-period-check">' +
-                     '<input type="checkbox" id="jmPeriodTreating"' + (pf.treating ? ' checked' : '') + ' />' +
+                     '<input type="checkbox" id="jmPeriodTreating" autocomplete="off"' + (pf.treating ? ' checked' : '') + ' />' +
                      '<span class="jm-period-check-box"></span>' +
                      '<span class="jm-period-check-t">지금도 치료 중이에요</span>' +
                    '</label>' +
@@ -707,7 +717,7 @@
         var hintTxt = max > 0
           ? ('치료 기간 안에서 최대 ' + max + '일까지 입력할 수 있어요. 입원한 적이 없다면 0으로 두세요.')
           : '입원한 적이 없다면 0으로 두세요.';
-        return '<div class="jm-opts">' +
+        return '<div class="jm-opts jm-opts-form">' +
                  '<div class="jm-hosp">' +
                    '<div class="jm-hosp-lbl">입원 일수' + (max > 0 ? ' <span class="jm-hosp-max">/ 최대 ' + max + '일</span>' : '') + '</div>' +
                    '<div class="jm-hosp-stepper">' +
@@ -715,7 +725,7 @@
                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>' +
                      '</button>' +
                      '<div class="jm-hosp-in-wrap">' +
-                       '<input type="text" class="jm-hosp-in" id="jmHospDays" inputmode="numeric" value="' + days + '" />' +
+                       '<input type="text" class="jm-hosp-in" id="jmHospDays" inputmode="numeric" autocomplete="off" value="' + days + '" />' +
                        '<span class="jm-hosp-unit">일</span>' +
                      '</div>' +
                      '<button type="button" class="jm-hosp-btn" id="jmHospPlus" aria-label="1일 증가">' +

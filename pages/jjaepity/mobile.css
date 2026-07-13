@@ -221,6 +221,12 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   padding-left: 36px; /* 아바타 자리만큼 들여쓰기 */
   animation: jm-in .22s ease-out;
 }
+/* 치료 기간/입원 일수처럼 폼을 담는 옵션 그룹은 폭을 고정해
+   input intrinsic width 변화로 컨테이너가 흔들리지 않도록 함 */
+.jm-opts.jm-opts-form {
+  align-self: stretch;
+  max-width: 92%;
+}
 .jm-opt {
   width: 100%;
   padding: 14px 16px;
