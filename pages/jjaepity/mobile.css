@@ -298,33 +298,58 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   letter-spacing: -0.01em;
   line-height: 1.4;
 }
-.jm-period-in {
+/* ===== 날짜 인풋 (표시용 span + 투명 date input 오버레이)
+       iOS Safari의 <input type="date"> 는 값이 채워지면 자기 폭을 텍스트 크기로 강제로 잡아
+       옆 인풋과 폭이 달라져 버림. 그래서 시각적으로는 항상 고정 폭인 표시용 박스를 두고,
+       그 위에 실제 date input 을 opacity: 0 으로 겹쳐 클릭 시 네이티브 피커가 뜨게 함. */
+.jm-date-wrap {
+  position: relative;
   min-width: 0;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding: 12px 12px;
+  height: 46px;
+}
+.jm-date-disp {
+  display: flex; align-items: center;
+  width: 100%; height: 100%;
+  padding: 0 34px 0 14px; /* 우측: 캘린더 아이콘 공간 */
   background: #fff;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-sm);
+  box-sizing: border-box;
   font-family: inherit;
   font-size: var(--fs-body); font-weight: 600;
   color: var(--ink);
-  letter-spacing: -0.01em;
-  outline: none;
   line-height: 1.4;
-  /* iOS Safari에서 인풋 자체가 flexbox처럼 놓이는 걸 막고 텍스트 정렬 명시 */
-  display: block;
-  text-align: left;
-  -webkit-appearance: none;
-  appearance: none;
+  letter-spacing: -0.01em;
   transition: border-color .14s ease, box-shadow .14s ease, background-color .14s ease, color .14s ease;
 }
-.jm-period-in:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,.16); }
-.jm-period-in:disabled { background: var(--bg-soft); color: var(--ink-4); cursor: not-allowed; }
-.jm-period-in::-webkit-calendar-picker-indicator { cursor: pointer; }
-/* iOS Safari — placeholder 텍스트 스타일 및 인디케이터 정리 */
-.jm-period-in::-webkit-date-and-time-value { text-align: left; }
+.jm-date-disp.empty { color: var(--ink-4); font-weight: 500; }
+.jm-date-ic {
+  position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-3);
+  pointer-events: none;
+}
+.jm-date-real {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  margin: 0; padding: 0;
+  border: none; background: transparent;
+  color: transparent; /* 실제 값 텍스트는 안 보이게 */
+  font-size: 16px; /* iOS 확대 방지 */
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.jm-date-real::-webkit-date-and-time-value { color: transparent; }
+.jm-date-real::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0; }
+.jm-date-wrap:focus-within .jm-date-disp {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(66,186,255,.16);
+}
+.jm-date-wrap.disabled .jm-date-disp { background: var(--bg-soft); color: var(--ink-4); cursor: not-allowed; }
+.jm-date-wrap.disabled .jm-date-real { pointer-events: none; }
 
 .jm-period-check {
   display: inline-flex; align-items: center; gap: 8px;

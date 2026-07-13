@@ -266,43 +266,66 @@
       state.draft.inpatientDays = +el.value;
     });
   }
-  // 재렌더링 없이 종료일 disable 상태만 갱신
+  // 재렌더링 없이 종료일 disable 상태 · 표시 텍스트만 갱신
   function bindPeriodForm() {
     var start = $('#jmPeriodStart');
     var end = $('#jmPeriodEnd');
+    var startDisp = $('#jmPeriodStartDisp');
+    var endDisp = $('#jmPeriodEndDisp');
+    var endWrap = end && end.parentElement;
     var treating = $('#jmPeriodTreating');
     var errEl = $('#jmPeriodErr');
     if (!start || !end || !treating) return;
-    // iOS Safari 등 브라우저의 폼 값 자동 복원(back-forward cache 포함)을 무시하고 state 값으로 강제 세팅
+    // iOS Safari 등의 폼 값 자동 복원 방어 — state 값으로 강제 세팅
     start.value = state.periodForm.dateStart || '';
     end.value = state.periodForm.dateEnd || '';
     treating.checked = !!state.periodForm.treating;
     end.disabled = !!state.periodForm.treating;
+    if (endWrap) endWrap.classList.toggle('disabled', !!state.periodForm.treating);
     var today = todayIso();
     function clearErr() { if (errEl) errEl.hidden = true; }
     function showErr(msg) { if (errEl) { errEl.textContent = msg; errEl.hidden = false; } }
-    // 브라우저별로 max 속성을 무시하고 미래 날짜가 들어오는 경우를 방어
-    function clampFuture(el, key) {
+    function updateDisp(input, disp, isEndAndTreating) {
+      var v = input.value;
+      if (v) {
+        disp.textContent = isoToDot(v);
+        disp.classList.remove('empty');
+      } else if (isEndAndTreating) {
+        disp.textContent = '진행 중';
+        disp.classList.remove('empty');
+      } else {
+        disp.textContent = '날짜 선택';
+        disp.classList.add('empty');
+      }
+    }
+    function clampFuture(el, key, disp, isEndAndTreating) {
       if (el.value && el.value > today) {
         el.value = '';
         state.periodForm[key] = '';
+        if (disp) updateDisp(el, disp, isEndAndTreating);
         showErr('오늘 이후 날짜는 선택할 수 없어요.');
       }
     }
     start.addEventListener('change', function () {
       state.periodForm.dateStart = start.value;
+      updateDisp(start, startDisp, false);
       clearErr();
-      clampFuture(start, 'dateStart');
+      clampFuture(start, 'dateStart', startDisp, false);
     });
     end.addEventListener('change', function () {
       state.periodForm.dateEnd = end.value;
+      updateDisp(end, endDisp, false);
       clearErr();
-      clampFuture(end, 'dateEnd');
+      clampFuture(end, 'dateEnd', endDisp, false);
     });
     treating.addEventListener('change', function () {
       state.periodForm.treating = treating.checked;
       end.disabled = treating.checked;
-      if (treating.checked) { end.value = ''; state.periodForm.dateEnd = ''; }
+      if (endWrap) endWrap.classList.toggle('disabled', treating.checked);
+      if (treating.checked) {
+        end.value = ''; state.periodForm.dateEnd = '';
+      }
+      updateDisp(end, endDisp, treating.checked);
       clearErr();
     });
   }
@@ -689,16 +712,27 @@
       if (s.sub === 'period') {
         var pf = s.periodForm;
         var today = todayIso(); // 오늘 이후 날짜는 선택/입력 불가
-        var endDisabled = pf.treating ? ' disabled' : '';
+        var endDisabled = pf.treating;
+        var startDisp = pf.dateStart ? isoToDot(pf.dateStart) : '날짜 선택';
+        var endDisp = pf.dateEnd ? isoToDot(pf.dateEnd) : (endDisabled ? '진행 중' : '날짜 선택');
+        var CAL = '<svg class="jm-date-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>';
         return '<div class="jm-opts jm-opts-form">' +
                  '<div class="jm-period">' +
                    '<div class="jm-period-row">' +
-                     '<label class="jm-period-lbl" for="jmPeriodStart">시작일</label>' +
-                     '<input type="date" class="jm-period-in" id="jmPeriodStart" autocomplete="off" max="' + today + '" value="' + esc(pf.dateStart) + '" />' +
+                     '<span class="jm-period-lbl">시작일</span>' +
+                     '<div class="jm-date-wrap">' +
+                       '<span class="jm-date-disp' + (pf.dateStart ? '' : ' empty') + '" id="jmPeriodStartDisp">' + esc(startDisp) + '</span>' +
+                       CAL +
+                       '<input type="date" class="jm-date-real" id="jmPeriodStart" autocomplete="off" max="' + today + '" value="' + esc(pf.dateStart) + '" />' +
+                     '</div>' +
                    '</div>' +
                    '<div class="jm-period-row">' +
-                     '<label class="jm-period-lbl" for="jmPeriodEnd">종료일</label>' +
-                     '<input type="date" class="jm-period-in" id="jmPeriodEnd" autocomplete="off" max="' + today + '" value="' + esc(pf.dateEnd) + '"' + endDisabled + ' />' +
+                     '<span class="jm-period-lbl">종료일</span>' +
+                     '<div class="jm-date-wrap' + (endDisabled ? ' disabled' : '') + '">' +
+                       '<span class="jm-date-disp' + (pf.dateEnd || endDisabled ? '' : ' empty') + '" id="jmPeriodEndDisp">' + esc(endDisp) + '</span>' +
+                       CAL +
+                       '<input type="date" class="jm-date-real" id="jmPeriodEnd" autocomplete="off" max="' + today + '" value="' + esc(pf.dateEnd) + '"' + (endDisabled ? ' disabled' : '') + ' />' +
+                     '</div>' +
                    '</div>' +
                    '<label class="jm-period-check">' +
                      '<input type="checkbox" id="jmPeriodTreating" autocomplete="off"' + (pf.treating ? ' checked' : '') + ' />' +
