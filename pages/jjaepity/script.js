@@ -545,13 +545,13 @@
       +   '</div>'
       + '</div></div>';
     r += '<div class="sm-insight-caveat" style="margin: 0 0 20px;">ⓘ 예상 가이드이며, 실제 인수 여부는 보험사 심사 결과에 따라 다를 수 있어요.</div>';
-    r += '<div class="sm-sec"><svg class="ic-svg" width="16" height="16" style="color:var(--ink-2)"><use href="#i-help-circle"/></svg><h4>인수 가능 상품 <span class="cnt">(' + item.possible + '건)</span></h4></div>';
+    r += '<div class="sm-sec"><svg class="ic-svg" width="16" height="16" style="color:var(--brand-deep)"><use href="#i-check-circle"/></svg><h4>인수 가능 상품 <span class="cnt">(' + item.possible + '건)</span></h4></div>';
     if (item.possible === 0) {
       r += '<div class="sm-empty-line">해당 조건으로 인수 가능성이 높은 상품이 없어요.</div>';
     } else {
       r += '<div class="sm-empty-line">인수 가능 상품 ' + item.possible + '건이 확인되었어요.</div>';
     }
-    r += '<div class="sm-sec mt"><svg class="ic-svg" width="16" height="16" style="color:var(--brand-deep)"><use href="#i-check-circle"/></svg><h4>예외질환 인수 가능 상품 <span class="cnt">(' + item.except + '건)</span></h4></div>';
+    r += '<div class="sm-sec mt"><svg class="ic-svg" width="16" height="16" style="color:var(--ink-2)"><use href="#i-alert"/></svg><h4>예외질환 인수 가능 상품 <span class="cnt">(' + item.except + '건)</span></h4></div>';
     r += exceptListHTML();
 
     $('#histModalResults').innerHTML = r;
@@ -925,10 +925,16 @@
     state.saved = true;
     renderHistory();
     state.screen = 'history'; render();
-    var t = $('#toast'); t.style.display = 'flex';
+    showToast('<svg class="ic-svg" width="17" height="17" style="color:var(--brand)"><use href="#i-check"/></svg> 조회 내역에 저장되었어요');
+  });
+
+  function showToast(html) {
+    var t = $('#toast');
+    t.innerHTML = html;
+    t.style.display = 'flex';
     clearTimeout(window.__tt);
     window.__tt = setTimeout(function () { t.style.display = 'none'; }, 2600);
-  });
+  }
 
   document.querySelectorAll('.sm-tab').forEach(function (el) {
     el.addEventListener('click', function () { state.screen = this.getAttribute('data-screen'); render(); });
@@ -1061,11 +1067,76 @@
     if (t) closeHistoryModal();
   });
 
+  // ===== 의견 보내기 모달 =====
+  function openFeedbackModal() {
+    var today = new Date();
+    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var todayStr = today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+    var mins = Math.floor(today.getMinutes() / 5) * 5;
+    $('#fbErrorDate').value = todayStr;
+    $('#fbErrorDate').max = todayStr;
+    $('#fbErrorTime').value = pad(today.getHours()) + ':' + pad(mins);
+    // 초기 상태: 데이터 오류 제보
+    var radios = document.querySelectorAll('input[name="fbType"]');
+    radios.forEach(function (r) { r.checked = (r.value === 'error'); });
+    $('#fbFieldsError').hidden = false;
+    $('#fbFieldsProduct').hidden = true;
+    $('#fbErrorContent').value = '';
+    $('#fbProductContent').value = '';
+    $('#feedbackModal').hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFeedbackModal() {
+    $('#feedbackModal').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.sm-feedback-link').forEach(function (el) {
+    el.addEventListener('click', function () { openFeedbackModal(); });
+  });
+
+  $('#feedbackModal').addEventListener('change', function (e) {
+    var r = e.target.closest('input[name="fbType"]');
+    if (r) {
+      var isError = r.value === 'error';
+      $('#fbFieldsError').hidden = !isError;
+      $('#fbFieldsProduct').hidden = isError;
+      return;
+    }
+    if (e.target && e.target.id === 'fbErrorDate') {
+      var max = e.target.max;
+      if (max && e.target.value && e.target.value > max) e.target.value = max;
+      return;
+    }
+  });
+
+  $('#feedbackModal').addEventListener('click', function (e) {
+    if (e.target.closest('[data-close="1"]')) { closeFeedbackModal(); return; }
+    if (e.target.closest('#fbSubmit')) {
+      var type = document.querySelector('input[name="fbType"]:checked').value;
+      var ok = false;
+      if (type === 'error') {
+        var d = $('#fbErrorDate').value.trim();
+        var c = $('#fbErrorContent').value.trim();
+        ok = !!(d && c);
+      } else {
+        ok = !!$('#fbProductContent').value.trim();
+      }
+      if (!ok) {
+        (type === 'error' ? $('#fbErrorContent') : $('#fbProductContent')).focus();
+        return;
+      }
+      closeFeedbackModal();
+      showToast('<svg class="ic-svg" width="17" height="17" style="color:var(--brand)"><use href="#i-check"/></svg> 의견이 전송되었어요. 감사합니다!');
+    }
+  });
+
   // ESC 키로 닫기
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if (!$('#deleteModal').hidden) { $('#deleteModal').hidden = true; document.body.style.overflow = ''; return; }
     if (!$('#unsavedModal').hidden) { closeUnsavedModal(); return; }
+    if (!$('#feedbackModal').hidden) { closeFeedbackModal(); return; }
     if (!$('#historyModal').hidden) closeHistoryModal();
   });
 

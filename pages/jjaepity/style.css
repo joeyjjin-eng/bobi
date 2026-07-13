@@ -447,3 +447,39 @@ html, body { margin: 0; background: #fff; }
 .sm-modal-history-multi + .sm-modal-history-multi { margin-top: 10px; }
 .sm-modal-history-num { padding: 8px 16px; background: var(--bg-soft); font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep); letter-spacing: 0.04em; border-bottom: 1px solid var(--line); }
 .sm-modal-count { color: var(--brand-deep); font-weight: 800; font-size: var(--fs-option); margin-left: 6px; letter-spacing: 0; }
+
+/* ===== 의견 보내기 모달 ===== */
+.sm-modal-feedback { max-width: 460px; }
+.sm-modal-feedback .sm-modal-head { padding: 20px 24px 16px; }
+.sm-modal-feedback .sm-modal-head h3 { font-size: var(--fs-h2); }
+.sm-fb-body { padding: 20px 24px 8px; }
+.sm-fb-field + .sm-fb-field { margin-top: 16px; }
+.sm-fb-fields { margin-top: 16px; }
+.sm-fb-label { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); margin-bottom: 8px; letter-spacing: -0.01em; }
+.sm-fb-label .req { color: #E14848; margin-left: 2px; }
+.sm-fb-label .opt { color: var(--ink-3); font-weight: 600; margin-left: 4px; }
+
+/* 라디오 */
+.sm-fb-radios { display: flex; flex-wrap: wrap; gap: 20px; }
+.sm-fb-radio { position: relative; display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-body); font-weight: 600; color: var(--ink); cursor: pointer; user-select: none; letter-spacing: -0.01em; }
+.sm-fb-radio input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+.sm-fb-radio .dot { position: relative; width: 18px; height: 18px; border: 1.5px solid var(--line-strong); border-radius: 50%; background: #fff; flex: none; transition: border-color .15s ease, background-color .15s ease; }
+.sm-fb-radio:hover .dot { border-color: var(--brand); }
+.sm-fb-radio input:checked + .dot { border-color: var(--brand); background: #fff; }
+.sm-fb-radio input:checked + .dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--brand); }
+.sm-fb-radio input:focus-visible + .dot { box-shadow: 0 0 0 3px rgba(66,186,255,.22); }
+
+/* 입력 */
+.sm-fb-input { width: 100%; height: 44px; border: 1px solid var(--line-strong); border-radius: 10px; padding: 0 14px; font-family: inherit; font-size: var(--fs-body); color: var(--ink); background: #fff; outline: none; box-sizing: border-box; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.sm-fb-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,.18); }
+.sm-fb-textarea { width: 100%; min-height: 140px; border: 1px solid var(--line-strong); border-radius: 10px; padding: 12px 14px; font-family: inherit; font-size: var(--fs-body); line-height: 1.5; color: var(--ink); background: #fff; outline: none; box-sizing: border-box; letter-spacing: -0.01em; resize: vertical; }
+.sm-fb-textarea::placeholder { color: var(--ink-4); }
+.sm-fb-textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,.18); }
+
+/* 액션 푸터 */
+.sm-fb-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 16px 24px 20px; flex: none; border-top: 1px solid var(--line); background: #fff; }
+.sm-fb-actions .sm-confirm-btn { flex: none; min-width: 100px; padding: 11px 18px; }
+
+/* 피드백 링크 활성 상태 */
+.cE .sm-feedback-link.on { color: var(--brand-deep); background: var(--brand-pale); }
+.cE .sm-feedback-link.on svg { color: var(--brand); }

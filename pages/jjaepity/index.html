@@ -162,7 +162,7 @@
             </div>
 
             <div class="sm-sec mt">
-              <svg class="ic-svg" width="16" height="16" style="color:var(--ink-2)"><use href="#i-help-circle"/></svg>
+              <svg class="ic-svg" width="16" height="16" style="color:var(--ink-2)"><use href="#i-alert"/></svg>
               <h4>예외질환 인수 가능 상품 <span class="cnt" id="exceptCount">(148건)</span></h4>
             </div>
             <div id="exceptList" class="sm-ex-list"></div>
@@ -264,6 +264,64 @@
       <div class="sm-confirm-actions">
         <button type="button" class="sm-confirm-btn ghost" id="confirmDiscard">저장 없이 진행할래요</button>
         <button type="button" class="sm-confirm-btn primary" id="confirmSave">결과 저장할래요</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 의견 보내기 모달 ===== -->
+  <div id="feedbackModal" class="sm-modal" hidden>
+    <div class="sm-modal-backdrop" data-close="1"></div>
+    <div class="sm-modal-box sm-modal-feedback">
+      <div class="sm-modal-head">
+        <h3>의견 보내기</h3>
+        <button class="sm-modal-close" type="button" data-close="1" aria-label="닫기">
+          <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <div class="sm-modal-body sm-fb-body">
+        <div class="sm-fb-field">
+          <div class="sm-fb-label">구분 <span class="req">*</span></div>
+          <div class="sm-fb-radios" role="radiogroup" aria-label="구분">
+            <label class="sm-fb-radio">
+              <input type="radio" name="fbType" value="error" checked />
+              <span class="dot"></span>
+              <span>데이터 오류 제보</span>
+            </label>
+            <label class="sm-fb-radio">
+              <input type="radio" name="fbType" value="product" />
+              <span class="dot"></span>
+              <span>상품 추가 요청</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 데이터 오류 제보 -->
+        <div id="fbFieldsError" class="sm-fb-fields">
+          <div class="sm-fb-field">
+            <div class="sm-fb-label">발생 날짜 <span class="req">*</span></div>
+            <input type="date" id="fbErrorDate" class="sm-fb-input" />
+          </div>
+          <div class="sm-fb-field">
+            <div class="sm-fb-label">발생 시간 <span class="opt">(선택)</span></div>
+            <input type="time" id="fbErrorTime" class="sm-fb-input" step="300" />
+          </div>
+          <div class="sm-fb-field">
+            <div class="sm-fb-label">내용 <span class="req">*</span></div>
+            <textarea id="fbErrorContent" class="sm-fb-textarea" rows="6" placeholder="어떤 데이터가 잘못됐는지 구체적으로 입력해 주세요.&#10;(현재 상태, 원래 노출되어야 하는 값 등)"></textarea>
+          </div>
+        </div>
+
+        <!-- 상품 추가 요청 -->
+        <div id="fbFieldsProduct" class="sm-fb-fields" hidden>
+          <div class="sm-fb-field">
+            <div class="sm-fb-label">추가를 원하는 상품 정보 <span class="req">*</span></div>
+            <textarea id="fbProductContent" class="sm-fb-textarea" rows="9" placeholder="추가를 원하는 보험사/상품명 등을 구체적으로 입력해 주세요."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="sm-fb-actions">
+        <button type="button" class="sm-confirm-btn ghost" data-close="1">취소</button>
+        <button type="button" class="sm-confirm-btn primary" id="fbSubmit">보내기</button>
       </div>
     </div>
   </div>
