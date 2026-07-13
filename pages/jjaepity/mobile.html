@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>BoBi · 째피티 (모바일)</title>
+<script>
+  // 데스크탑 뷰포트에서는 원래 페이지로 복귀
+  (function () {
+    if (window.matchMedia && window.matchMedia('(min-width: 961px)').matches) {
+      location.replace('index.html' + location.search + location.hash);
+    }
+  })();
+</script>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="mobile.css" />
+</head>
+<body class="bobi">
+
+<div id="icons-host"></div>
+<div id="gnb-host"></div>
+
+<div class="jm-app">
+
+  <!-- ===== 챗봇 서브헤더 (째피티 프로필) ===== -->
+  <header class="jm-subhead">
+    <div class="jm-ava">
+      <img src="../../assets/img_jjapt.png" alt="째피티" />
+      <span class="jm-on" aria-hidden="true"></span>
+    </div>
+    <div class="jm-subhead-t">
+      <div class="jm-name">스마트보비, 째피티</div>
+      <div class="jm-status"><span class="jm-status-dot"></span>AI 인수 가이드 · 온라인</div>
+    </div>
+    <button class="jm-subhead-btn" type="button" id="jmHistory" aria-label="조회 내역">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+    </button>
+    <button class="jm-subhead-btn" type="button" id="jmRestart" aria-label="처음부터 다시">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+  </header>
+
+  <!-- ===== 유의사항 안내 (접힘/펼침) ===== -->
+  <div class="jm-notice" id="jmNotice" data-open="0">
+    <button class="jm-notice-trigger" type="button" id="jmNoticeToggle" aria-expanded="false" aria-controls="jmNoticePanel">
+      <svg class="jm-notice-tri" width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3.5 L21.5 20 L2.5 20 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="12" y1="10" x2="12" y2="14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="17.5" r="1.1" fill="currentColor"/>
+      </svg>
+      <span>이용 시 꼭 확인해주세요</span>
+      <svg class="jm-notice-caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="jm-notice-panel" id="jmNoticePanel" hidden>
+      <p class="jm-notice-title">"보험 회사별 내부 규정이나 상세 진단코드에 따라 인수 심사 시 결과가 달라질 수 있습니다."</p>
+      <ul class="jm-notice-list">
+        <li>해당사 사정이나 고객의 상세 데이터에 따라 변동이 있을 수 있습니다.</li>
+        <li>AIG손해보험은 수술/시술 여부에 따라 인수 결과가 달라질 수 있습니다.</li>
+        <li>현대해상은 2Q패스 가능할 경우 인수가능(전산자동심사)합니다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== 채팅 로그 ===== -->
+  <main class="jm-chat" id="jmChat" role="log" aria-live="polite"></main>
+
+  <!-- ===== 입력바 (질병명 입력 단계에서만 표시) ===== -->
+  <div class="jm-inputbar" id="jmInputBar" hidden>
+    <div class="jm-sug" id="jmSug" hidden></div>
+    <div class="jm-inrow">
+      <input id="jmInput" class="jm-input" type="text" placeholder="질병명 직접 입력 (예: 갑상선 결절)" autocomplete="off" inputmode="text" />
+      <button id="jmSend" class="jm-send" type="button" aria-label="보내기" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div id="footer-host"></div>
+
+<!-- ===== 조회 내역 시트 ===== -->
+<div id="jmSheet" class="jm-sheet" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jmSheetTitle">
+  <div class="jm-sheet-bg" data-close="1"></div>
+  <div class="jm-sheet-panel">
+
+    <!-- 목록 뷰 -->
+    <div class="jm-sheet-view" data-view="list">
+      <div class="jm-sheet-head">
+        <h3 id="jmSheetTitle">조회 내역</h3>
+        <button class="jm-sheet-close" type="button" data-close="1" aria-label="닫기">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="jm-hist-filter">
+        <button class="jm-pill" type="button" data-period="1m">1개월</button>
+        <button class="jm-pill on" type="button" data-period="3m">3개월</button>
+        <button class="jm-pill" type="button" data-period="6m">6개월</button>
+        <button class="jm-pill" type="button" data-period="1y">1년</button>
+      </div>
+      <div class="jm-hist-body" id="jmHistList"></div>
+    </div>
+
+    <!-- 상세 뷰 -->
+    <div class="jm-sheet-view" data-view="detail" hidden>
+      <div class="jm-sheet-head">
+        <button class="jm-sheet-back" type="button" id="jmSheetBack" aria-label="뒤로">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
+        </button>
+        <h3>인수 가이드 상세</h3>
+        <button class="jm-sheet-close" type="button" data-close="1" aria-label="닫기">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="jm-hist-body" id="jmHistDetail"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 상품 리스트 시트 (전체 상품 · 보험사별 아코디언) ===== -->
+<div id="jmProductSheet" class="jm-sheet" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jmProductSheetTitle">
+  <div class="jm-sheet-bg" data-close="1"></div>
+  <div class="jm-sheet-panel">
+    <div class="jm-sheet-view">
+      <div class="jm-sheet-head">
+        <h3 id="jmProductSheetTitle">인수 가능 상품 전체</h3>
+        <button class="jm-sheet-close" type="button" data-close="1" aria-label="닫기">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="jm-prod-tabs" id="jmProductTabs" role="tablist"></div>
+      <div class="jm-prod-body" id="jmProductBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 토스트 ===== -->
+<div id="jmToast" class="jm-toast" hidden>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
+  <span id="jmToastMsg">저장되었어요</span>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('jjaepity');</script>
+<script src="mobile.js"></script>
+</body>
+</html>

@@ -4,6 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BoBi · 째피티</title>
+<script>
+  // 모바일 뷰포트에서는 챗봇형 UI로 전환
+  (function () {
+    if (window.matchMedia && window.matchMedia('(max-width: 960px)').matches) {
+      location.replace('mobile.html' + location.search + location.hash);
+    }
+  })();
+</script>
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
