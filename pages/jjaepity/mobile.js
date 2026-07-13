@@ -87,6 +87,7 @@
       focused: false,
       hist: [],
       periodForm: { dateStart: '', dateEnd: '', treating: false },
+      saved: false,
       history: HISTORY_SEED.slice(),
       historyPeriod: '3m',
       sheetView: 'list',
@@ -433,6 +434,7 @@
       possible: r.possibleTotal,
       except: r.exceptTotal
     });
+    state.saved = true;
   }
 
   // ===== 조회 내역 시트 =====
@@ -860,11 +862,11 @@
                      '<div class="jm-btxt">' + summary + '</div>' +
                      '<div class="jm-res-chips">' + chips + '</div>' +
                      '<div class="jm-res-stats">' +
-                       '<button type="button" class="jm-stat" data-action="open-products" data-section="possible" aria-label="인수 가능 상품 전체 보기">' +
+                       '<button type="button" class="jm-stat blue" data-action="open-products" data-section="possible" aria-label="인수 가능 상품 전체 보기">' +
                          '<div class="k">인수 가능</div>' +
                          '<div class="v">' + r.possibleTotal + '<span class="u">건</span></div>' +
                        '</button>' +
-                       '<button type="button" class="jm-stat blue" data-action="open-products" data-section="except" aria-label="예외질환 인수 가능 상품 전체 보기">' +
+                       '<button type="button" class="jm-stat outline" data-action="open-products" data-section="except" aria-label="예외질환 인수 가능 상품 전체 보기">' +
                          '<div class="k">예외질환 인수 가능</div>' +
                          '<div class="v">' + r.exceptTotal + '<span class="u">건</span></div>' +
                        '</button>' +
@@ -974,6 +976,11 @@
     } else if (a === 'start-analysis') {
       startAnalysis();
     } else if (a === 'restart') {
+      // 결과 화면 · 미저장 상태에서 처음으로 → 저장 확인 모달
+      if (state.phase === 'result' && !state.saved) {
+        openUnsavedModal();
+        return;
+      }
       restart();
     } else if (a === 'save-result') {
       saveCurrentResult();
@@ -1054,11 +1061,41 @@
     renderSheet();
   });
 
-  // ESC로 시트 닫기
+  // ESC로 시트/모달 닫기
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
+    if (!$('#jmUnsavedModal').hidden) { closeUnsavedModal(); return; }
     if (!$('#jmProductSheet').hidden) { closeProductSheet(); return; }
     if (!$('#jmSheet').hidden) { closeSheet(); return; }
+  });
+
+  // ===== 저장 확인 모달 =====
+  function openUnsavedModal() {
+    var m = $('#jmUnsavedModal');
+    m.hidden = false;
+    m.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeUnsavedModal() {
+    var m = $('#jmUnsavedModal');
+    m.hidden = true;
+    m.setAttribute('aria-hidden', 'true');
+    // 다른 시트가 열려 있지 않을 때만 body overflow 복구
+    if ($('#jmProductSheet').hidden && $('#jmSheet').hidden) document.body.style.overflow = '';
+  }
+  $('#jmUnsavedModal').addEventListener('click', function (e) {
+    if (e.target.closest('[data-close="1"]')) { closeUnsavedModal(); return; }
+    if (e.target.closest('#jmUnsavedDiscard')) {
+      closeUnsavedModal();
+      restart();
+      return;
+    }
+    if (e.target.closest('#jmUnsavedSave')) {
+      saveCurrentResult();
+      closeUnsavedModal();
+      toast('조회 내역에 저장되었어요');
+      return;
+    }
   });
 
   var mi = $('#jmInput');

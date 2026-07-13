@@ -150,6 +150,9 @@ button, a, label, input, select, [role="button"], [data-action] {
   scroll-behavior: smooth;
 }
 .jm-chat::-webkit-scrollbar { width: 0; }
+/* 챗봇 표준 패턴 — 콘텐츠가 뷰포트보다 짧아도 항상 하단에 붙게.
+   Android Chrome 에서 주소창 감춰지며 100dvh 가 커질 때 하단이 비어 보이던 문제 해결. */
+.jm-chat > *:first-child { margin-top: auto; }
 
 .jm-daysep {
   align-self: center;
@@ -646,8 +649,11 @@ button.jm-stat:hover {
   border-color: var(--brand);
   box-shadow: 0 4px 12px rgba(66,186,255,.16);
 }
+/* 두 stat 카드의 시각 무게를 맞춤 — 배경 명도 · 테두리 명도 · 텍스트 명도가 각각 대칭이 되도록 */
 button.jm-stat.blue { background: var(--brand-pale); border-color: var(--brand-soft); }
 button.jm-stat.blue:hover { border-color: var(--brand); box-shadow: 0 4px 12px rgba(66,186,255,.20); }
+button.jm-stat.outline { background: var(--bg-soft); border-color: var(--line-strong); }
+button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12px rgba(14,26,36,.10); }
 .jm-stat .k {
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink-3);
@@ -666,6 +672,7 @@ button.jm-stat.blue:hover { border-color: var(--brand); box-shadow: 0 4px 12px r
   letter-spacing: -0.01em;
 }
 .jm-stat.blue .v, .jm-stat.blue .k { color: var(--brand-deep); }
+.jm-stat.outline .v, .jm-stat.outline .k { color: var(--ink); }
 
 .jm-res-cta {
   width: 100%;
@@ -1179,6 +1186,87 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   border: 1px solid var(--line);
   border-radius: var(--r-md);
 }
+
+/* ===== 확인 모달 (미저장 알림 등) ===== */
+.jm-confirm[hidden] { display: none !important; }
+.jm-confirm {
+  position: fixed; inset: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.jm-confirm-bg {
+  position: absolute; inset: 0;
+  background: rgba(15,23,42,0.5);
+  animation: jm-sheet-bg .22s ease both;
+}
+.jm-confirm-box {
+  position: relative;
+  width: 100%; max-width: 400px;
+  padding: 32px 28px 24px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  text-align: center;
+  animation: jm-confirm-in .22s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes jm-confirm-in {
+  from { opacity: 0; transform: scale(.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.jm-confirm-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 34px; height: 34px;
+  background: none; border: none;
+  color: var(--ink-3);
+  border-radius: 8px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+.jm-confirm-close:hover { background: var(--bg-soft); color: var(--ink); }
+.jm-confirm-title {
+  margin: 0 0 12px;
+  font-size: var(--fs-h2); font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+.jm-confirm-desc {
+  margin: 0 0 24px;
+  font-size: var(--fs-body); font-weight: 500;
+  color: var(--ink-3);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+.jm-confirm-desc b { color: var(--brand-deep); font-weight: 700; }
+.jm-confirm-actions {
+  display: flex; flex-direction: column;
+  gap: 8px;
+}
+.jm-confirm-btn {
+  flex: 1;
+  padding: 14px 12px;
+  border-radius: var(--r-sm);
+  font-family: inherit;
+  font-size: var(--fs-body); font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: filter .14s ease, background-color .14s ease, border-color .14s ease, color .14s ease, box-shadow .14s ease;
+}
+.jm-confirm-btn.primary {
+  background: var(--brand-grad);
+  border: none;
+  color: #fff;
+  box-shadow: var(--sh-brand);
+}
+.jm-confirm-btn.primary:hover { filter: brightness(1.05); }
+.jm-confirm-btn.ghost {
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-2);
+}
+.jm-confirm-btn.ghost:hover { background: var(--bg-soft); color: var(--ink); }
 
 /* ===== 토스트 ===== */
 .jm-toast[hidden] { display: none !important; }

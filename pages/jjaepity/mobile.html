@@ -134,6 +134,25 @@
   </div>
 </div>
 
+<!-- ===== 저장하지 않고 나가기 확인 모달 ===== -->
+<div id="jmUnsavedModal" class="jm-confirm" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="jmUnsavedTitle">
+  <div class="jm-confirm-bg" data-close="1"></div>
+  <div class="jm-confirm-box">
+    <button class="jm-confirm-close" type="button" data-close="1" aria-label="닫기">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+    <h3 class="jm-confirm-title" id="jmUnsavedTitle">잠깐, 결과를 저장할까요?</h3>
+    <p class="jm-confirm-desc">
+      이 결과는 아직 저장되지 않았어요.<br/>
+      지금 다시 입력하시면 <b>조회 내역에 남지 않아요.</b>
+    </p>
+    <div class="jm-confirm-actions">
+      <button type="button" class="jm-confirm-btn ghost" id="jmUnsavedDiscard">저장 없이 진행할래요</button>
+      <button type="button" class="jm-confirm-btn primary" id="jmUnsavedSave">결과 저장할래요</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== 토스트 ===== -->
 <div id="jmToast" class="jm-toast" hidden>
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
