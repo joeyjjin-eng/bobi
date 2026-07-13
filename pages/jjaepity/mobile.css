@@ -50,28 +50,29 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   background: var(--success);
   border: 2px solid #fff;
 }
-.jm-subhead-t { flex: 1; min-width: 0; line-height: 1.4; }
+.jm-subhead-t { flex: 1; min-width: 0; line-height: 1.4; display: flex; align-items: center; }
 .jm-name {
   font-size: var(--fs-body); font-weight: 800;
   color: var(--ink);
   letter-spacing: -0.02em;
 }
-.jm-status {
-  margin-top: 2px;
-  font-size: var(--fs-option); font-weight: 600;
-  color: var(--success);
+.jm-subhead-pill {
+  flex: none;
   display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 12px;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  font-family: inherit;
+  font-size: var(--fs-option); font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
 }
-.jm-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
-.jm-subhead-btn {
-  width: 36px; height: 36px; flex: none;
-  border: none; background: transparent;
-  color: var(--ink-3);
-  border-radius: 10px; cursor: pointer;
-  display: grid; place-items: center;
-  transition: background-color .15s ease, color .15s ease;
-}
-.jm-subhead-btn:hover { background: var(--bg-soft); color: var(--ink); }
+.jm-subhead-pill:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
+.jm-subhead-pill svg { flex: none; }
 
 /* ===== 유의사항 안내 (서브헤더 아래 접힘/펼침) ===== */
 .jm-notice { flex: none; background: #fff; border-bottom: 1px solid var(--line); }
@@ -277,9 +278,12 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
+  min-width: 0;
 }
 .jm-period-row {
-  display: grid; grid-template-columns: 64px 1fr;
+  display: grid;
+  /* 라벨 64px · 인풋은 minmax(0, 1fr) 로 iOS Safari 의 native date input 최소 너비를 이기게 함 */
+  grid-template-columns: 60px minmax(0, 1fr);
   align-items: center; gap: 10px;
 }
 .jm-period-lbl {
@@ -289,8 +293,11 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   line-height: 1.4;
 }
 .jm-period-in {
+  min-width: 0;
   width: 100%;
-  padding: 12px 14px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px 12px;
   background: #fff;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-sm);
@@ -300,11 +307,18 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   letter-spacing: -0.01em;
   outline: none;
   line-height: 1.4;
+  /* iOS Safari에서 인풋 자체가 flexbox처럼 놓이는 걸 막고 텍스트 정렬 명시 */
+  display: block;
+  text-align: left;
+  -webkit-appearance: none;
+  appearance: none;
   transition: border-color .14s ease, box-shadow .14s ease, background-color .14s ease, color .14s ease;
 }
 .jm-period-in:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,.16); }
 .jm-period-in:disabled { background: var(--bg-soft); color: var(--ink-4); cursor: not-allowed; }
 .jm-period-in::-webkit-calendar-picker-indicator { cursor: pointer; }
+/* iOS Safari — placeholder 텍스트 스타일 및 인디케이터 정리 */
+.jm-period-in::-webkit-date-and-time-value { text-align: left; }
 
 .jm-period-check {
   display: inline-flex; align-items: center; gap: 8px;
@@ -376,6 +390,11 @@ body { -webkit-font-smoothing: antialiased; color: var(--ink); }
   color: var(--ink-2);
   letter-spacing: -0.01em;
   line-height: 1.4;
+}
+.jm-hosp-max {
+  margin-left: 2px;
+  font-size: var(--fs-option); font-weight: 600;
+  color: var(--ink-3);
 }
 .jm-hosp-stepper {
   display: flex; align-items: stretch; gap: 8px;

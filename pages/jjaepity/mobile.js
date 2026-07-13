@@ -154,6 +154,12 @@
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || '').trim());
     return m ? (m[1] + '.' + m[2] + '.' + m[3]) : '';
   }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  // 오늘 (데모 기준일 2026-07-09) — 데스크탑 script.js와 동일
+  function todayIso() {
+    var d = new Date(2026, 6, 9);
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
   function readPeriodForm() {
     var start = $('#jmPeriodStart');
     var end = $('#jmPeriodEnd');
@@ -172,8 +178,11 @@
       errEl.textContent = msg;
       errEl.hidden = false;
     }
+    var today = todayIso();
     if (!pf.dateStart) return fail('시작일을 선택해 주세요.');
+    if (pf.dateStart > today) return fail('시작일은 오늘 이후로 선택할 수 없어요.');
     if (!pf.treating && !pf.dateEnd) return fail('종료일을 선택하거나 "지금도 치료 중"을 체크해 주세요.');
+    if (!pf.treating && pf.dateEnd && pf.dateEnd > today) return fail('종료일은 오늘 이후로 선택할 수 없어요.');
     if (!pf.treating && pf.dateEnd && pf.dateEnd < pf.dateStart) return fail('종료일이 시작일보다 앞설 수 없어요.');
 
     var s = isoToDot(pf.dateStart);
@@ -187,12 +196,25 @@
   }
 
   // ===== 입원 일수 폼 =====
+  // 데모 기준일 (desktop과 동일: 2026.07.09)
+  function demoToday() { return new Date(2026, 6, 9); }
+  // 치료 기간(periodForm)으로부터 입원 가능 최대 일수 계산
+  function maxHospDaysFromForm() {
+    var pf = state.periodForm;
+    if (!pf || !pf.dateStart) return 0;
+    var sd = new Date(pf.dateStart);
+    var ed = pf.treating ? demoToday() : (pf.dateEnd ? new Date(pf.dateEnd) : null);
+    if (!ed || isNaN(sd.getTime()) || isNaN(ed.getTime())) return 0;
+    var days = Math.floor((ed.getTime() - sd.getTime()) / 86400000) + 1;
+    return Math.max(0, days);
+  }
   function readHospField() {
     var el = $('#jmHospDays');
     if (!el) return 0;
+    var max = maxHospDaysFromForm() || 0;
     var n = parseInt(el.value, 10);
     if (isNaN(n) || n < 0) n = 0;
-    if (n > 999) n = 999;
+    if (max > 0 && n > max) n = max;
     return n;
   }
   function submitHosp() {
@@ -209,16 +231,22 @@
     var minus = $('#jmHospMinus');
     var plus = $('#jmHospPlus');
     if (!el) return;
+    var max = maxHospDaysFromForm() || 0;
     function clamp() {
       var n = parseInt(el.value, 10);
       if (isNaN(n) || n < 0) n = 0;
-      if (n > 999) n = 999;
+      if (max > 0 && n > max) n = max;
       el.value = String(n);
       state.draft.inpatientDays = n;
     }
     el.addEventListener('input', function () {
       var raw = el.value.replace(/\D/g, '');
       if (raw !== el.value) el.value = raw;
+      // 입력 중에도 최대치 초과는 즉시 잘라내기
+      if (max > 0) {
+        var n = parseInt(el.value, 10);
+        if (!isNaN(n) && n > max) el.value = String(max);
+      }
     });
     el.addEventListener('blur', clamp);
     if (minus) minus.addEventListener('click', function () {
@@ -228,7 +256,8 @@
     });
     if (plus) plus.addEventListener('click', function () {
       var n = parseInt(el.value, 10); if (isNaN(n)) n = 0;
-      el.value = String(Math.min(999, n + 1));
+      var cap = max > 0 ? max : 999;
+      el.value = String(Math.min(cap, n + 1));
       state.draft.inpatientDays = +el.value;
     });
   }
@@ -239,9 +268,27 @@
     var treating = $('#jmPeriodTreating');
     var errEl = $('#jmPeriodErr');
     if (!start || !end || !treating) return;
+    var today = todayIso();
     function clearErr() { if (errEl) errEl.hidden = true; }
-    start.addEventListener('change', function () { state.periodForm.dateStart = start.value; clearErr(); });
-    end.addEventListener('change', function () { state.periodForm.dateEnd = end.value; clearErr(); });
+    function showErr(msg) { if (errEl) { errEl.textContent = msg; errEl.hidden = false; } }
+    // 브라우저별로 max 속성을 무시하고 미래 날짜가 들어오는 경우를 방어
+    function clampFuture(el, key) {
+      if (el.value && el.value > today) {
+        el.value = '';
+        state.periodForm[key] = '';
+        showErr('오늘 이후 날짜는 선택할 수 없어요.');
+      }
+    }
+    start.addEventListener('change', function () {
+      state.periodForm.dateStart = start.value;
+      clearErr();
+      clampFuture(start, 'dateStart');
+    });
+    end.addEventListener('change', function () {
+      state.periodForm.dateEnd = end.value;
+      clearErr();
+      clampFuture(end, 'dateEnd');
+    });
     treating.addEventListener('change', function () {
       state.periodForm.treating = treating.checked;
       end.disabled = treating.checked;
@@ -631,7 +678,7 @@
       }
       if (s.sub === 'period') {
         var pf = s.periodForm;
-        var today = '2026-07-09'; // 데스크탑과 동일한 데모 기준일
+        var today = todayIso(); // 오늘 이후 날짜는 선택/입력 불가
         var endDisabled = pf.treating ? ' disabled' : '';
         return '<div class="jm-opts">' +
                  '<div class="jm-period">' +
@@ -654,10 +701,15 @@
                '</div>';
       }
       if (s.sub === 'inpatient') {
+        var max = maxHospDaysFromForm() || 0;
         var days = state.draft.inpatientDays || 0;
+        if (max > 0 && days > max) days = max;
+        var hintTxt = max > 0
+          ? ('치료 기간 안에서 최대 ' + max + '일까지 입력할 수 있어요. 입원한 적이 없다면 0으로 두세요.')
+          : '입원한 적이 없다면 0으로 두세요.';
         return '<div class="jm-opts">' +
                  '<div class="jm-hosp">' +
-                   '<div class="jm-hosp-lbl">입원 일수</div>' +
+                   '<div class="jm-hosp-lbl">입원 일수' + (max > 0 ? ' <span class="jm-hosp-max">/ 최대 ' + max + '일</span>' : '') + '</div>' +
                    '<div class="jm-hosp-stepper">' +
                      '<button type="button" class="jm-hosp-btn" id="jmHospMinus" aria-label="1일 감소">' +
                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>' +
@@ -670,7 +722,7 @@
                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>' +
                      '</button>' +
                    '</div>' +
-                   '<div class="jm-hosp-hint">입원한 적이 없다면 0으로 두세요.</div>' +
+                   '<div class="jm-hosp-hint">' + hintTxt + '</div>' +
                    '<button class="jm-opt dark" type="button" data-action="submit-hosp">다음 →</button>' +
                  '</div>' +
                '</div>';
@@ -951,11 +1003,6 @@
     if (e.key === 'Enter') { e.preventDefault(); pickDisease(state.textVal); }
   });
   $('#jmSend').addEventListener('click', function () { pickDisease(state.textVal); });
-
-  $('#jmRestart').addEventListener('click', function () {
-    if (state.log.length <= 2 && !state.entries.length && !state.draft.disease) return;
-    restart();
-  });
 
   // 유의사항 안내 토글
   $('#jmNoticeToggle').addEventListener('click', function () {
