@@ -557,8 +557,8 @@
       +   '<h4>결과</h4>'
       +   '<div class="jm-hist-summary">' + summary + '</div>'
       +   '<div class="jm-hist-badges" style="margin-top:0">' +
-             '<span class="jm-hist-badge gray">인수 가능 ' + item.possible + '건</span>' +
-             '<span class="jm-hist-badge blue">예외질환 인수 가능 ' + item.except + '건</span>' +
+             '<button type="button" class="jm-hist-badge gray" data-action="open-hist-products" data-idx="' + state.sheetIdx + '" data-section="possible">인수 가능 ' + item.possible + '건 ›</button>' +
+             '<button type="button" class="jm-hist-badge blue" data-action="open-hist-products" data-idx="' + state.sheetIdx + '" data-section="except">예외질환 인수 가능 ' + item.except + '건 ›</button>' +
           '</div>'
       + '</div>';
     $('#jmHistDetail').innerHTML = h;
@@ -613,7 +613,7 @@
     return h;
   }
   function renderProductSheet() {
-    var r = calcResult();
+    var r = state.productContext || calcResult();
     var tab = state.productTab || 'possible';
     var groups = tab === 'except'
       ? groupByInsurer(EXCEPT)
@@ -646,8 +646,9 @@
     $('#jmProductBody').innerHTML = section;
     $('#jmProductBody').scrollTop = 0;
   }
-  function openProductSheet(focusSection) {
+  function openProductSheet(focusSection, contextOverride) {
     state.productTab = (focusSection === 'except') ? 'except' : 'possible';
+    state.productContext = contextOverride || null;
     var s = $('#jmProductSheet');
     s.hidden = false;
     s.setAttribute('aria-hidden', 'false');
@@ -658,7 +659,9 @@
     var s = $('#jmProductSheet');
     s.hidden = true;
     s.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    // 조회 내역 시트가 여전히 열려있다면 body overflow 유지
+    if ($('#jmSheet').hidden) document.body.style.overflow = '';
+    state.productContext = null;
   }
 
   // ===== 결과 계산 =====
@@ -1028,6 +1031,20 @@
       state.sheetIdx = Number(openDetail.getAttribute('data-idx'));
       state.sheetView = 'detail';
       renderSheet();
+      return;
+    }
+    var openHistProd = e.target.closest('[data-action="open-hist-products"]');
+    if (openHistProd) {
+      var idx = Number(openHistProd.getAttribute('data-idx'));
+      var section = openHistProd.getAttribute('data-section');
+      var item = state.history[idx];
+      if (item) {
+        openProductSheet(section, {
+          isFracture: item.possible > 0,
+          possibleTotal: item.possible,
+          exceptTotal: item.except
+        });
+      }
       return;
     }
   });

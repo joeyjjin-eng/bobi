@@ -5,6 +5,13 @@
 html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
 body { -webkit-font-smoothing: antialiased; color: var(--ink); }
 
+/* iOS Safari의 double-tap zoom 제거 — 연타 시 확대되는 문제 방지.
+   모든 인터랙티브 요소 및 체크 라벨에 적용. */
+button, a, label, input, select, [role="button"], [data-action] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* 데스크탑 페이지들엔 <head>에 인라인으로 들어있지만 여긴 없어서 layout.js가 주입하는
    햄버거·아이콘의 stroke가 렌더링되지 않음 → 전역 룰 추가. */
 .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -912,14 +919,22 @@ button.jm-stat.blue:hover { border-color: var(--brand); box-shadow: 0 4px 12px r
 }
 .jm-hist-badge {
   display: inline-flex; align-items: center;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: var(--r-pill);
+  font-family: inherit;
   font-size: var(--fs-option); font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-hist-badge.gray { background: var(--bg-soft); color: var(--ink-2); border: 1px solid var(--line); }
 .jm-hist-badge.blue { background: var(--brand-pale); color: var(--brand-deep); border: 1px solid var(--brand-soft); }
+/* button 태그로 렌더된 경우엔 상호작용 스타일 */
+button.jm-hist-badge {
+  cursor: pointer;
+  transition: transform .1s ease, border-color .15s ease, box-shadow .15s ease;
+}
+button.jm-hist-badge:hover { border-color: var(--brand); box-shadow: 0 3px 10px rgba(66,186,255,.16); }
+button.jm-hist-badge:active { transform: scale(0.97); }
 
 .jm-hist-empty {
   padding: 60px 16px;
