@@ -69,6 +69,9 @@
     { date: "2026.06.28 14:05", disease: "I10 본태성 고혈압",      cond: "2026.01.15 ~ 04.15 · 일수 3일 · 수술 아니오", possible: 23, except: 74  }
   ];
 
+  // ===== 상수 =====
+  var MAX_ENTRIES = 5; // desktop과 동일
+
   // ===== 상태 =====
   function initState() {
     return {
@@ -331,7 +334,8 @@
   }
 
   function finishEntry(surgery, userText) {
-    advance(userText, function () {
+    var willReachMax = (state.entries.length + 1) >= MAX_ENTRIES;
+    var patch = function () {
       var entry = {
         id: nid(),
         disease: state.draft.disease,
@@ -342,9 +346,14 @@
       return {
         entries: state.entries.concat([entry]),
         draft: { disease: '', period: '', inpatientDays: 0, surgery: null },
-        sub: 'more'
+        phase: willReachMax ? 'confirm' : 'collecting',
+        sub: willReachMax ? '' : 'more'
       };
-    }, '이 외에도 알려주실 병력이 있나요?');
+    };
+    var botText = willReachMax
+      ? '병력은 최대 ' + MAX_ENTRIES + '개까지 입력할 수 있어요. 입력하신 병력을 확인해 주세요.'
+      : '이 외에도 알려주실 병력이 있나요?';
+    advance(userText, patch, botText);
   }
 
   function undo() {
@@ -359,6 +368,7 @@
   }
 
   function addMore() {
+    if (state.entries.length >= MAX_ENTRIES) return; // 최대치 초과 방어
     state.hist.push(snap());
     state.phase = 'collecting';
     state.sub = 'disease';
@@ -798,15 +808,16 @@
                   '<button class="jm-conf-x" type="button" data-action="remove-entry" data-id="' + e.id + '" aria-label="삭제">' + IC_X + '</button>' +
                 '</div>';
       }
-      var body = '입력하신 <strong>병력 ' + s.entries.length + '건</strong>이에요. 맞으면 바로 심사를 시작할게요.';
+      var body = '입력하신 <strong>병력 ' + s.entries.length + '건</strong> (' + s.entries.length + '/' + MAX_ENTRIES + ')이에요. 맞으면 바로 심사를 시작할게요.';
       var canStart = s.entries.length > 0;
+      var canAdd = s.entries.length < MAX_ENTRIES;
       return '<div class="jm-row bot">' +
                '<div class="jm-row-ava"><img src="' + IMG_BOT + '" alt="" /></div>' +
                '<div class="jm-bubble bot card">' +
                  '<div class="jm-btxt">' + body + '</div>' +
                  '<div class="jm-conf-list">' + rows + '</div>' +
                  '<div class="jm-conf-actions">' +
-                   '<button class="jm-btn-ghost" type="button" data-action="add-more">+ 병력 추가</button>' +
+                   '<button class="jm-btn-ghost" type="button" data-action="add-more"' + (canAdd ? '' : ' disabled') + '>+ 병력 추가</button>' +
                    '<button class="jm-btn-dark" type="button" data-action="start-analysis"' + (canStart ? '' : ' disabled') + '>이대로 심사 시작</button>' +
                  '</div>' +
                '</div>' +
