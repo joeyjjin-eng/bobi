@@ -13,18 +13,29 @@
   var COMMON = ["I10 본태성 고혈압", "E11 2형 당뇨병", "E78 고지혈증", "E04 갑상선 결절", "M51 추간판탈출증(디스크)", "S52 아래팔 골절"];
 
   var EXCEPT = [
-    { insurer: "NH농협손해보험", name: "NH335굿플러스건강보험" },
-    { insurer: "NH농협손해보험", name: "NH헤아림3.10.10건강보험" },
-    { insurer: "NH농협손해보험", name: "NH헤아림355건강보험" },
-    { insurer: "AIG손해보험",   name: "AIG 315플러스 간편건강보험" },
-    { insurer: "AIG손해보험",   name: "AIG 325플러스 간편건강보험" },
-    { insurer: "흥국화재",       name: "흥GOOD 든든한 325 아마시가한도 간편종합보험" },
-    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고지혈증·당뇨병 제외" },
-    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고지혈증 제외" },
-    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고혈압·고지혈증 제외" },
-    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고혈압·당뇨병 제외" },
-    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고혈압 제외" },
-    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 당뇨병 제외" }
+    { insurer: "NH농협손해보험", name: "NH335굿플러스건강보험", notes: null },
+    { insurer: "NH농협손해보험", name: "NH헤아림3.10.10건강보험", notes: null },
+    { insurer: "NH농협손해보험", name: "NH헤아림355건강보험", notes: null },
+    { insurer: "AIG손해보험",   name: "AIG 315플러스 간편건강보험", notes: ["최대 인수 가능 질병 갯수는 AIG의 경우 인수심사로만 알 수 있어요."] },
+    { insurer: "AIG손해보험",   name: "AIG 325플러스 간편건강보험", notes: ["최대 인수 가능 질병 갯수는 AIG의 경우 인수심사로만 알 수 있어요."] },
+    { insurer: "흥국화재",       name: "흥GOOD 든든한 325 아마시가한도 간편종합보험", notes: [
+      "양성종양(물혹, 낭종 등)의 경우 수술 제거 및 치료 종결 후 심사 가능",
+      "이측성 질환의 경우 이측 수술 후 심사 가능",
+      "재발 / 합병증 / 후유장해 없을 것"
+    ]},
+    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고지혈증·당뇨병 제외", notes: [
+      "양성종양(물혹, 낭종 등)의 경우 수술 제거 및 치료 종결 후 심사 가능",
+      "재발 / 합병증 / 후유장해 없을 것"
+    ]},
+    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고지혈증 제외", notes: [
+      "양성종양(물혹, 낭종 등)의 경우 수술 제거 및 치료 종결 후 심사 가능"
+    ]},
+    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고혈압·고지혈증 제외", notes: null },
+    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고혈압·당뇨병 제외", notes: null },
+    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 고혈압 제외", notes: null },
+    { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 당뇨병 제외", notes: [
+      "이측성 질환의 경우 이측 수술 후 심사 가능"
+    ]}
   ];
 
   // 데스크탑 script.js의 DATA.possibleFracture와 동일 (전체 상품 리스트 소스)
@@ -331,6 +342,11 @@
       }
       updateDisp(end, endDisp, treating.checked);
       clearErr();
+      // Android Chrome이 checkbox focus로 스크롤을 튀기는 경우가 있어 하단 재정렬
+      requestAnimationFrame(function () {
+        var c = document.getElementById('jmChat');
+        if (c) c.scrollTop = c.scrollHeight;
+      });
     });
   }
 
@@ -1125,5 +1141,13 @@
   });
 
   render();
+
+  // Android Chrome 주소창 토글 등으로 뷰포트 높이가 바뀔 때 챗 스크롤을 하단으로 재정렬
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', function () {
+      var c = document.getElementById('jmChat');
+      if (c) c.scrollTop = c.scrollHeight;
+    });
+  }
 
 })();

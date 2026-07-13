@@ -150,9 +150,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   scroll-behavior: smooth;
 }
 .jm-chat::-webkit-scrollbar { width: 0; }
-/* 챗봇 표준 패턴 — 콘텐츠가 뷰포트보다 짧아도 항상 하단에 붙게.
-   Android Chrome 에서 주소창 감춰지며 100dvh 가 커질 때 하단이 비어 보이던 문제 해결. */
-.jm-chat > *:first-child { margin-top: auto; }
 
 .jm-daysep {
   align-self: center;
@@ -362,6 +359,7 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-date-wrap.disabled .jm-date-real { pointer-events: none; }
 
 .jm-period-check {
+  position: relative; /* 안 걸면 안쪽 position:absolute 인풋이 뷰포트 기준으로 붕떠서 Android Chrome이 focus scroll을 크게 튀김 */
   display: inline-flex; align-items: center; gap: 8px;
   padding: 2px 0;
   cursor: pointer;
@@ -1162,19 +1160,21 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   background: var(--brand-deep);
 }
 .jm-grp-item .notes {
-  margin-top: 6px; padding-top: 6px;
+  margin-top: 10px; padding-top: 10px;
   border-top: 1px dashed var(--line-strong);
   font-size: var(--fs-option); font-weight: 500;
-  color: var(--ink-3);
+  color: var(--ink-2);
+  line-height: 1.5;
 }
 .jm-grp-item .notes-t {
   display: block;
-  color: var(--ink-2);
-  font-weight: 700;
-  margin-bottom: 4px;
+  color: var(--brand-deep);
+  font-weight: 800;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 }
-.jm-grp-item .notes-l { display: block; }
-.jm-grp-item .notes-l + .notes-l { margin-top: 3px; }
+.jm-grp-item .notes-l { display: block; padding-left: 2px; }
+.jm-grp-item .notes-l + .notes-l { margin-top: 4px; }
 
 .jm-prod-empty {
   padding: 20px 12px;
