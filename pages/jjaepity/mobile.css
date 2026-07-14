@@ -48,9 +48,8 @@ button, a, label, input, select, [role="button"], [data-action] {
   border-radius: 50%;
   background: var(--brand-pale);
   display: grid; place-items: center;
-  overflow: hidden;
 }
-.jm-ava img { width: 34px; height: 34px; object-fit: contain; }
+.jm-ava img { width: 34px; height: 34px; object-fit: contain; border-radius: 50%; }
 .jm-on {
   position: absolute; right: -1px; bottom: -1px;
   width: 10px; height: 10px; border-radius: 50%;
@@ -606,6 +605,67 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-dots span:nth-child(2) { animation-delay: .2s; }
 .jm-dots span:nth-child(3) { animation-delay: .4s; }
 
+/* ===== 분석 중 (로딩 카드) — 데스크톱 pLoading과 동일 톤 ===== */
+.jm-bubble.jm-load {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 20px 22px;
+}
+.jm-load-mascot-wrap {
+  position: relative;
+  width: 108px; height: 94px;
+  display: grid; place-items: center;
+  margin-bottom: 4px;
+}
+.jm-load-mascot-wrap::before {
+  content: ''; position: absolute; inset: -12px;
+  background:
+    radial-gradient(circle at 50% 55%, rgba(252,212,213,.65) 0%, transparent 55%),
+    radial-gradient(circle at 42% 42%, rgba(102,225,255,.42) 0%, transparent 60%);
+  filter: blur(10px); z-index: 0;
+}
+.jm-load-mascot {
+  position: relative; z-index: 1;
+  width: 100px; height: 88px; object-fit: contain;
+  animation: jm-float 2.6s ease-in-out infinite;
+}
+.jm-load-title {
+  margin: 12px 0 6px;
+  font-size: var(--fs-h2); font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em; line-height: 1.4;
+}
+.jm-load-sub {
+  margin: 0 0 20px;
+  font-size: var(--fs-option); line-height: 1.5;
+  color: var(--ink-3);
+}
+.jm-load-sub strong { color: var(--brand-deep); font-weight: 800; }
+.jm-load-bar-wrap { width: 100%; }
+.jm-load-bar-top {
+  display: flex; justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: var(--fs-option); font-weight: 700;
+  color: var(--brand-deep);
+}
+.jm-load-bar-top .sub { color: var(--ink-3); font-weight: 600; }
+.jm-load-bar-bg {
+  height: 8px; border-radius: 999px;
+  background: var(--bg-soft); overflow: hidden;
+}
+.jm-load-bar {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-deep));
+  width: 100%;
+  animation: jm-load-prog 2s ease-out forwards;
+}
+@keyframes jm-load-prog {
+  from { width: 6%; }
+  to   { width: 100%; }
+}
+
 /* ===== 결과 카드 ===== */
 .jm-res-chips {
   display: flex; flex-wrap: wrap;
@@ -697,6 +757,28 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   color: var(--ink-2);
   line-height: 1.4;
   letter-spacing: -0.01em;
+}
+
+/* ===== 결과 카드 히어로 (마스코트) ===== */
+.jm-res-hero {
+  position: relative;
+  display: grid; place-items: center;
+  width: 100%; height: 112px;
+  margin: 4px 0 14px;
+}
+.jm-res-hero::before {
+  content: ''; position: absolute;
+  width: 130px; height: 104px;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle at 50% 55%, rgba(252,212,213,.65) 0%, transparent 55%),
+    radial-gradient(circle at 42% 42%, rgba(102,225,255,.42) 0%, transparent 60%);
+  filter: blur(12px); z-index: 0;
+}
+.jm-res-mascot {
+  position: relative; z-index: 1;
+  width: 92px; height: 108px; object-fit: contain;
+  animation: jm-float 2.8s ease-in-out infinite;
 }
 
 /* ===== 결과 후 빠른 실행 ===== */

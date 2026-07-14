@@ -122,7 +122,7 @@
   function $(s) { return document.querySelector(s); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-  var IMG_BOT = '../../assets/img_jjapt.png';
+  var IMG_BOT = '../../assets/img_jjapt_profile.svg';
   var IMG_BOT_LOADING = '../../assets/img_jjapt_loading.svg';
   var IMG_BOT_RESULT = '../../assets/img_jjapt_result.svg';
 
@@ -846,12 +846,20 @@
     }
 
     if (s.phase === 'analyzing') {
+      var loadLabel = (s.entries.length === 1)
+        ? esc(s.entries[0].disease)
+        : ('입력한 병력 ' + s.entries.length + '건');
       return '<div class="jm-row bot">' +
-               '<div class="jm-row-ava float"><img src="' + IMG_BOT_LOADING + '" alt="" /></div>' +
-               '<div class="jm-bubble bot">' +
-                 '<div class="jm-typing">' +
-                   '<span class="jm-typing-t">156개 상품 인수 기준 확인 중</span>' +
-                   '<span class="jm-dots"><span></span><span></span><span></span></span>' +
+               '<div class="jm-row-ava"><img src="' + IMG_BOT + '" alt="" /></div>' +
+               '<div class="jm-bubble bot card jm-load">' +
+                 '<div class="jm-load-mascot-wrap">' +
+                   '<img class="jm-load-mascot" src="' + IMG_BOT_LOADING + '" alt="" />' +
+                 '</div>' +
+                 '<h4 class="jm-load-title">AI가 인수 기준을 분석하고 있어요</h4>' +
+                 '<p class="jm-load-sub"><strong>' + loadLabel + '</strong> 기준으로 보험사별 인수 조건을 대조하고 있어요.</p>' +
+                 '<div class="jm-load-bar-wrap">' +
+                   '<div class="jm-load-bar-top"><span>분석 진행 중</span><span class="sub">156개 상품 확인</span></div>' +
+                   '<div class="jm-load-bar-bg"><div class="jm-load-bar"></div></div>' +
                  '</div>' +
                '</div>' +
              '</div>';
@@ -872,8 +880,11 @@
       }
 
       var card = '<div class="jm-row bot">' +
-                   '<div class="jm-row-ava"><img src="' + IMG_BOT_RESULT + '" alt="" /></div>' +
+                   '<div class="jm-row-ava"><img src="' + IMG_BOT + '" alt="" /></div>' +
                    '<div class="jm-bubble bot card">' +
+                     '<div class="jm-res-hero">' +
+                       '<img class="jm-res-mascot" src="' + IMG_BOT_RESULT + '" alt="" />' +
+                     '</div>' +
                      '<div class="jm-res-caveat">ⓘ 예상 가이드이며, 실제 인수 여부는 보험사 심사 결과에 따라 달라질 수 있어요.</div>' +
                      '<div class="jm-btxt">' + summary + '</div>' +
                      '<div class="jm-res-chips">' + chips + '</div>' +
