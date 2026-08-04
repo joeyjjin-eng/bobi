@@ -238,7 +238,7 @@
       input.disabled = !canHosp;
       if (String(entry.hospDays) !== input.value) input.value = String(entry.hospDays);
     }
-    if (hint) hint.textContent = canHosp ? '최대 ' + max + '일' : 'DAYS';
+    if (hint) hint.textContent = canHosp ? '치료기간 내 최대 ' + max + '일' : 'DAYS';
   }
 
   function refreshEndDateField(idx) {
@@ -311,7 +311,7 @@
         '<div>' +
           '<label class="sm-lbl">입원일</label>' +
           '<input type="text" class="sm-num-input sm-hosp-days" data-entry-idx="' + idx + '" value="' + entry.hospDays + '" inputmode="numeric" placeholder="0"' + (canHosp ? '' : ' disabled') + ' />' +
-          '<div class="sm-days">' + (canHosp ? '최대 ' + maxDays + '일' : 'DAYS') + '</div>' +
+          '<div class="sm-days">' + (canHosp ? '치료기간 내 최대 ' + maxDays + '일' : 'DAYS') + '</div>' +
         '</div>' +
         '<div><label class="sm-lbl">수술 여부</label><div class="sm-seg"><button type="button">예</button><button type="button" class="on">아니오</button></div></div>' +
       '</div>' +
@@ -333,22 +333,52 @@
     btn.disabled = state.entries.length >= MAX_ENTRIES;
   }
 
-  function renderExcept() {
-    var h = '';
-    for (var i = 0; i < DATA.except.length; i++) {
-      var p = DATA.except[i];
-      h += '<div class="sm-ex-card">'
-         +   '<div class="sm-ex-head"><span class="sm-ex-ins">' + esc(p.insurer) + '</span><span class="sm-ex-name">' + esc(p.name) + '</span></div>';
-      if (p.notes && p.notes.length) {
-        h += '<div class="sm-ex-notes"><div class="sm-ex-notes-t">특이조건</div>';
-        for (var j = 0; j < p.notes.length; j++) {
-          h += '<div class="sm-ex-line"><span>·</span><span>' + esc(p.notes[j]) + '</span></div>';
+  function exceptGroupsHTML() {
+    var list = DATA.except;
+    if (!list.length) return '';
+    var groups = [];
+    var gmap = {};
+    for (var i = 0; i < list.length; i++) {
+      var p = list[i];
+      if (!gmap[p.insurer]) { gmap[p.insurer] = { insurer: p.insurer, products: [] }; groups.push(gmap[p.insurer]); }
+      gmap[p.insurer].products.push(p);
+    }
+    var CHEV = '<svg class="ic-svg" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var h = '<div class="sm-grp-actions">'
+          +   '<span class="sm-grp-summary">' + groups.length + '개 회사 · ' + list.length + '건</span>'
+          +   '<button type="button" class="sm-grp-toggle-all" data-action="expand">모두 펼치기</button>'
+          + '</div>'
+          + '<div class="sm-grp-list">';
+    for (var g = 0; g < groups.length; g++) {
+      var grp = groups[g];
+      h += '<div class="sm-grp" data-open="0">'
+        +    '<button class="sm-grp-head" type="button">'
+        +      '<span class="sm-grp-name">' + esc(grp.insurer) + '</span>'
+        +      '<span class="sm-grp-count">' + grp.products.length + '건</span>'
+        +      '<span class="sm-grp-arrow" aria-hidden="true">' + CHEV + '</span>'
+        +    '</button>'
+        +    '<div class="sm-grp-body">';
+      for (var k = 0; k < grp.products.length; k++) {
+        var pr = grp.products[k];
+        h += '<div class="sm-ex-item">'
+          +    '<div class="sm-ex-name">' + esc(pr.name) + '</div>';
+        if (pr.notes && pr.notes.length) {
+          h += '<div class="sm-ex-notes"><div class="sm-ex-notes-t">특이조건</div>';
+          for (var j = 0; j < pr.notes.length; j++) {
+            h += '<div class="sm-ex-line"><span>·</span><span>' + esc(pr.notes[j]) + '</span></div>';
+          }
+          h += '</div>';
         }
         h += '</div>';
       }
-      h += '</div>';
+      h += '</div></div>';
     }
-    $('#exceptList').innerHTML = h;
+    h += '</div>';
+    return h;
+  }
+
+  function renderExcept() {
+    $('#exceptList').innerHTML = exceptGroupsHTML();
   }
 
   function parseHistoryDate(s) {
@@ -464,22 +494,7 @@
   }
 
   function exceptListHTML() {
-    var h = '<div class="sm-ex-list">';
-    for (var i = 0; i < DATA.except.length; i++) {
-      var p = DATA.except[i];
-      h += '<div class="sm-ex-card">'
-         +   '<div class="sm-ex-head"><span class="sm-ex-ins">' + esc(p.insurer) + '</span><span class="sm-ex-name">' + esc(p.name) + '</span></div>';
-      if (p.notes && p.notes.length) {
-        h += '<div class="sm-ex-notes"><div class="sm-ex-notes-t">특이조건</div>';
-        for (var j = 0; j < p.notes.length; j++) {
-          h += '<div class="sm-ex-line"><span>·</span><span>' + esc(p.notes[j]) + '</span></div>';
-        }
-        h += '</div>';
-      }
-      h += '</div>';
-    }
-    h += '</div>';
-    return h;
+    return exceptGroupsHTML();
   }
 
   function openHistoryModal(idx) {
@@ -940,24 +955,32 @@
     el.addEventListener('click', function () { state.screen = this.getAttribute('data-screen'); render(); });
   });
 
-  // 인수 가능 상품 그룹 토글
-  $('#pResults').addEventListener('click', function (e) {
-    var head = e.target.closest('.sm-grp-head');
-    if (head) {
-      var grp = head.closest('.sm-grp');
-      grp.dataset.open = grp.dataset.open === '1' ? '0' : '1';
-      return;
-    }
-    var toggle = e.target.closest('.sm-grp-toggle-all');
-    if (toggle) {
-      var action = toggle.dataset.action;
-      var newOpen = action === 'collapse' ? '0' : '1';
-      document.querySelectorAll('#possibleWrap .sm-grp').forEach(function (g) { g.dataset.open = newOpen; });
-      toggle.dataset.action = action === 'collapse' ? 'expand' : 'collapse';
-      toggle.textContent = action === 'collapse' ? '모두 펼치기' : '모두 접기';
-      return;
-    }
-  });
+  // 상품 그룹 토글 (인수 가능 · 예외질환 공통)
+  function bindGrpToggle(root) {
+    root.addEventListener('click', function (e) {
+      var head = e.target.closest('.sm-grp-head');
+      if (head) {
+        var grp = head.closest('.sm-grp');
+        grp.dataset.open = grp.dataset.open === '1' ? '0' : '1';
+        return;
+      }
+      var toggle = e.target.closest('.sm-grp-toggle-all');
+      if (toggle) {
+        var action = toggle.dataset.action;
+        var newOpen = action === 'collapse' ? '0' : '1';
+        var actions = toggle.closest('.sm-grp-actions');
+        var grpList = actions && actions.nextElementSibling;
+        if (grpList) {
+          grpList.querySelectorAll('.sm-grp').forEach(function (g) { g.dataset.open = newOpen; });
+        }
+        toggle.dataset.action = action === 'collapse' ? 'expand' : 'collapse';
+        toggle.textContent = action === 'collapse' ? '모두 펼치기' : '모두 접기';
+        return;
+      }
+    });
+  }
+  bindGrpToggle($('#pResults'));
+  bindGrpToggle($('#historyModal'));
 
   // 조회 내역 병력 검색
   $('#histSearch').addEventListener('input', function (e) {

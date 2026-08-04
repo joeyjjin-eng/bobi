@@ -784,7 +784,7 @@
           : '입원한 적이 없다면 0으로 두세요.';
         return '<div class="jm-opts jm-opts-form">' +
                  '<div class="jm-hosp">' +
-                   '<div class="jm-hosp-lbl">입원 일수' + (max > 0 ? ' <span class="jm-hosp-max">/ 최대 ' + max + '일</span>' : '') + '</div>' +
+                   '<div class="jm-hosp-lbl">입원 일수' + (max > 0 ? ' <span class="jm-hosp-max">/ 치료기간 내 최대 ' + max + '일</span>' : '') + '</div>' +
                    '<div class="jm-hosp-stepper">' +
                      '<button type="button" class="jm-hosp-btn" id="jmHospMinus" aria-label="1일 감소">' +
                        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>' +

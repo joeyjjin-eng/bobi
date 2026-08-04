@@ -19,7 +19,7 @@
      <script>injectShell('report');</script>
    </body>
 
-   active 키: 'home' | 'customer' | 'report' | 'claim' | 'jjaepity' | 'notice'
+   active 키: 'home' | 'customer' | 'report' | 'claim' | 'jjaepity' | 'notice' | 'planner' | 'mypage'
    ============================================================ */
 (function () {
   // 스크립트가 로드된 경로에서 프로젝트 루트의 상대경로 추출
@@ -114,6 +114,7 @@
       +     navItem('claim',    BASE + 'pages/unclaimed/history.html',  'i-search-check', '미청구보험금', '<span class="beta-tag">BETA</span>')
       +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
+      +     navItem('planner',  BASE + 'pages/admin/planner/list.html', 'i-user-2',       '설계사관리')
       +   '</nav>'
       +   '<div class="logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
       + '</aside>';
@@ -146,6 +147,7 @@
       +       drawerItem('claim',    BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="m-drawer-beta">BETA</span>')
       +       drawerItem('jjaepity', BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
+      +       drawerItem('planner',  BASE + 'pages/admin/planner/list.html','i-user-2',       '설계사관리')
       +     '</div>'
       +     '<div class="m-drawer-logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
       +   '</div>'

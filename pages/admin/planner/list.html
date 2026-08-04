@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi 관리자 · 설계사관리</title>
+<link rel="stylesheet" href="../../../styles/tokens.css" />
+<link rel="stylesheet" href="../../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; min-width: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 ===== */
+  .cE .hist-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px 28px; padding: 0 0 22px; border-bottom: 1px solid var(--line); }
+  .cE .hist-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .cE .ht-l { display: flex; align-items: center; gap: 14px; }
+  .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: #0E1A24; color: #66E1FF; display: grid; place-items: center; flex: none; }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .ht-sub b { color: var(--ink); font-weight: 800; }
+  .cE .ht-sub .ok { color: #15967F; font-weight: 800; }
+  .cE .ht-sub .warn { color: #B07816; font-weight: 800; }
+  .cE .ht-actions { display: inline-flex; align-items: center; gap: 10px; flex: none; }
+  .cE .export-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 12px 20px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; text-decoration: none; letter-spacing: -0.01em; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .export-btn:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
+
+  /* ===== 검색바 ===== */
+  .cE .search-bar { background: #fff; border-radius: var(--r-md); border: 1px solid var(--line); padding: 14px 22px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .cE .search-bar > .si-ic { color: var(--ink-4); flex: none; display: flex; }
+  .cE .search-bar input { flex: 1; border: none; outline: none; font-size: var(--fs-body); color: var(--ink); background: transparent; font-family: inherit; }
+  .cE .search-bar input::placeholder { color: var(--ink-4); }
+  .cE .sb-divider { width: 1px; height: 20px; background: var(--line-strong); }
+  .cE .sort-select { position: relative; display: inline-flex; align-items: center; }
+  .cE .sort-select svg.ic-svg { position: absolute; right: 4px; color: var(--ink-3); pointer-events: none; }
+  .cE .sort-select select { appearance: none; -webkit-appearance: none; background: transparent; border: none; outline: none; padding: 0 24px 0 4px; font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); cursor: pointer; }
+
+  /* ===== 필터바 ===== */
+  .cE .filter-bar { background: #fff; border-radius: var(--r-md); border: 1px solid var(--line); padding: 14px 22px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+  .cE .filter-group { display: flex; align-items: center; gap: 10px; }
+  .cE .fg-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+  .cE .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cE .pill { border: 1px solid var(--line-strong); background: #fff; color: var(--ink-3); border-radius: var(--r-pill); padding: 7px 14px; font-size: var(--fs-option); font-weight: 600; font-family: inherit; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .pill:hover { color: var(--ink-2); border-color: var(--ink-4); }
+  .cE .pill.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .cE .fb-divider { width: 1px; height: 20px; background: var(--line-strong); }
+  .cE .fb-count { margin-left: auto; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .fb-count b { color: var(--ink); font-weight: 800; }
+
+  /* ===== 리스트 패널 ===== */
+  /* 컬럼: [chk] [가입일] [이름] [성별] [연락처] [소속] [직급] [고유번호] [상태] [▶] */
+  .cE .list-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
+  .cE .table-head,
+  .cE .table-row { display: grid; grid-template-columns: 100px 200px 60px 130px 130px 70px 90px 110px 22px; column-gap: 14px; justify-content: space-between; align-items: center; justify-items: center; }
+  .cE .table-head { padding: 16px 24px; border-bottom: 1px solid var(--line); background: var(--bg-soft); flex-shrink: 0; }
+  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; text-align: center; }
+  .cE .table-body { flex: 1; }
+  .cE .table-row { padding: 20px 24px; cursor: pointer; transition: background-color 0.12s ease; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .cE .table-row:last-of-type { border-bottom: none; }
+  .cE .table-row:hover { background: var(--bg-warm); }
+  .cE .table-row:hover .tr-go { color: var(--brand); transform: translateX(2px); }
+
+  /* 좌우 여백은 justify-content: space-between 이 자동 처리 — 남는 공간이 컬럼 사이로 균등 분배됨 */
+
+  /* 이름 셀 — 아바타 + 이름 + 아이디 */
+  .cE .tr-name { display: flex; align-items: center; justify-content: flex-start; gap: 14px; min-width: 0; justify-self: stretch; }
+  .cE .tr-name .patient-avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 18px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
+  .cE .tr-name .nm-stack { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 2px; }
+  .cE .table-head > *:nth-child(2) { justify-self: stretch; text-align: left; padding-left: 4px; }
+  .cE .tr-name .nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; line-height: 1.2; white-space: nowrap; }
+  .cE .tr-name .nm-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.2; }
+
+  /* 성별 칩 */
+  .cE .tr-gender { text-align: center; }
+  .cE .gender-chip { font-size: var(--fs-option); font-weight: 700; padding: 3px 10px; border-radius: var(--r-pill); display: inline-block; }
+  .cE .gender-chip.f { background: #FEF0F0; color: #D96060; }
+  .cE .gender-chip.m { background: var(--brand-pale); color: var(--brand-deep); }
+
+  /* 텍스트 셀 */
+  .cE .tr-phone,
+  .cE .tr-org,
+  .cE .tr-role { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-weight: 500; letter-spacing: -0.01em; }
+  .cE .tr-phone { font-variant-numeric: tabular-nums; }
+  .cE .tr-date { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* 회원등급 칩 (계정상태 칩과 동일 무게감) */
+  .cE .tier-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .tier-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .cE .tier-chip.t-normal { background: var(--bg-soft);   color: var(--ink-2); }
+  .cE .tier-chip.t-normal::before { background: var(--ink-3); }
+  .cE .tier-chip.t-basic  { background: #EEF9FF;          color: #1C50A1; }
+  .cE .tier-chip.t-basic::before  { background: #42BAFF; }
+  .cE .tier-chip.t-pro    { background: #F3EDFF;          color: #6B39D9; }
+  .cE .tier-chip.t-pro::before    { background: #9360F7; }
+  .cE .tier-chip.t-admin  { background: #DED7E8;          color: #3E2E5C; }
+  .cE .tier-chip.t-admin::before  { background: #7A6797; }
+
+  /* 상태 칩 (계정 상태) */
+  .cE .status-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .status-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .cE .status-chip.approved  { background: #E7FAF6; color: #15967F; }
+  .cE .status-chip.approved::before  { background: #2ABBA7; }
+  .cE .status-chip.pending   { background: #FFF4E4; color: #B07816; }
+  .cE .status-chip.pending::before   { background: #E6A23F; }
+  .cE .status-chip.rejected  { background: var(--bg-soft); color: var(--ink-2); }
+  .cE .status-chip.rejected::before  { background: var(--ink-3); }
+  .cE .status-chip.suspended { background: #FEF0F0; color: #C92238; }
+  .cE .status-chip.suspended::before { background: #E85455; }
+  .cE .status-chip.withdrawn { background: #EEF0F3; color: #6B7885; }
+  .cE .status-chip.withdrawn::before { background: #6B7885; }
+
+  /* chevron */
+  .cE .tr-go { color: var(--ink-4); display: flex; align-items: center; justify-content: center; transition: color .12s ease, transform .12s ease; }
+
+  /* 모바일 전용 meta */
+  .cE .table-row .mobile-meta { display: none; }
+
+  /* 빈 상태 */
+  .cE .empty-list { padding: 60px 20px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
+
+  /* ===== 페이지네이션 ===== */
+  .cE .pagination { border-top: 1px solid var(--line); padding: 20px 28px; display: flex; justify-content: center; gap: 6px; flex-shrink: 0; }
+  .cE .pg-btn { min-width: 36px; height: 36px; padding: 0 11px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .pg-btn:hover:not(.on):not(.dots) { background: var(--bg-soft); border-color: var(--line-strong); color: var(--ink); }
+  .cE .pg-btn.on { background: var(--brand); color: #fff; border-color: var(--brand); cursor: default; }
+  .cE .pg-btn.dots { border: none; cursor: default; background: transparent; color: var(--ink-4); min-width: 24px; padding: 0; }
+
+  /* ===== 반응형 (모바일) ===== */
+  @media (max-width: 960px) {
+    .cE .emain { overflow-x: hidden; }
+    .cE .emain > * { max-width: 100%; }
+
+    .cE .hist-title-row { width: 100% !important; max-width: none !important; margin: 0 0 16px !important; padding: 0 0 14px !important; }
+    .cE .hist-title-inner { flex-direction: column; align-items: stretch; gap: 12px; padding: 0; }
+    .cE .ht-l { align-items: flex-start; gap: 12px; }
+    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
+    .cE .ht-l h1 { font-size: var(--fs-h1); }
+    .cE .ht-actions { align-self: flex-end; }
+    .cE .export-btn { padding: 10px 16px; font-size: var(--fs-option); }
+
+    .cE .search-bar { padding: 10px 14px; gap: 10px; }
+    .cE .search-bar input { min-width: 0; font-size: var(--fs-option); }
+    .cE .sb-divider { display: none; }
+    .cE .sort-select select { font-size: var(--fs-option); padding-right: 18px; }
+    .cE .sort-select svg.ic-svg { right: 2px; }
+
+    .cE .filter-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
+    .cE .filter-group { flex-wrap: wrap; gap: 8px; }
+    .cE .fb-divider { display: none; }
+    .cE .fb-count { margin-left: 0; text-align: right; font-size: var(--fs-option); }
+    .cE .pill { padding: 6px 12px; font-size: var(--fs-option); }
+
+    /* 리스트 — 카드형 */
+    .cE .table-head { display: none; }
+    .cE .list-panel { border-radius: var(--r-md); }
+    .cE .table-row {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) auto 16px;
+      grid-template-areas:
+        "name name go"
+        "meta meta go"
+        "org  stat go"
+        "date date .";
+      column-gap: 8px;
+      row-gap: 8px;
+      padding: 12px 14px;
+      align-items: center;
+      justify-items: start;
+    }
+    .cE .table-head > *:first-child,
+    .cE .table-row > *:first-child { justify-self: initial; }
+    .cE .table-row .tr-name { grid-area: name; justify-self: stretch; min-width: 0; gap: 10px; }
+    .cE .table-row .tr-name .patient-avatar { width: 38px; height: 38px; font-size: 17px; }
+    .cE .table-row .tr-name .nm { font-size: var(--fs-body); }
+    .cE .table-row .tr-gender,
+    .cE .table-row .tr-phone,
+    .cE .table-row .tr-role { display: none; }
+    .cE .table-row .tr-tier-cell { display: none; }
+    .cE .table-row .mobile-meta { grid-area: meta; justify-self: stretch; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-3); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+    .cE .table-row .mobile-meta .gender-chip { padding: 2px 7px; font-size: 12px; }
+    .cE .table-row .mobile-meta .mm-sep { color: var(--ink-4); }
+    .cE .table-row .tr-org { grid-area: org; justify-self: start; font-size: var(--fs-option); }
+    .cE .table-row .tr-status-cell { grid-area: stat; justify-self: end; }
+    .cE .table-row .tr-date { grid-area: date; font-size: 12px; color: var(--ink-4); justify-self: end; }
+    .cE .table-row .tr-go { grid-area: go; align-self: center; justify-self: center; }
+    .cE .status-chip,
+    .cE .tier-chip { padding: 0 10px; font-size: 12px; height: 24px; }
+
+    .cE .pagination { padding: 14px 12px; gap: 4px; }
+    .cE .pg-btn { min-width: 32px; height: 32px; padding: 0 8px; font-size: var(--fs-option); }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <div class="hist-title-row">
+      <div class="hist-title-inner">
+        <div class="ht-l">
+          <div class="ht-ic">
+            <svg class="ic-svg" width="22" height="22"><use href="#i-user-2"/></svg>
+          </div>
+          <div>
+            <h1>설계사관리</h1>
+            <div class="ht-sub">총 <b id="ht-total">0</b>명 · 가입승인 <span class="ok" id="ht-approved">0</span>명 · 승인대기 <span class="warn" id="ht-pending">0</span>명</div>
+          </div>
+        </div>
+        <div class="ht-actions">
+          <button class="export-btn" type="button" onclick="alert('CSV 내보내기가 시작됩니다.')">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
+            내보내기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <span class="si-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg></span>
+      <input type="text" id="search-input" placeholder="이름 · 아이디 · 연락처로 검색" />
+      <div class="sb-divider"></div>
+      <div class="sort-select">
+        <select id="sort-select">
+          <option value="reg">최근 가입순</option>
+          <option value="name">이름순</option>
+          <option value="org">소속순</option>
+        </select>
+        <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-down"/></svg>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="fg-l">소속</span>
+        <div class="pills" id="org-pills">
+          <button class="pill on" data-org="전체" type="button">전체</button>
+          <button class="pill" data-org="메가미래라이프" type="button">메가미래라이프</button>
+          <button class="pill" data-org="삼성생명" type="button">삼성생명</button>
+          <button class="pill" data-org="한화생명" type="button">한화생명</button>
+          <button class="pill" data-org="교보생명" type="button">교보생명</button>
+          <button class="pill" data-org="현대해상" type="button">현대해상</button>
+          <button class="pill" data-org="DB손해보험" type="button">DB손해보험</button>
+          <button class="pill" data-org="메리츠화재" type="button">메리츠화재</button>
+          <button class="pill" data-org="GA(대리점)" type="button">GA</button>
+        </div>
+      </div>
+      <div class="fb-divider"></div>
+      <div class="filter-group">
+        <span class="fg-l">계정 상태</span>
+        <div class="pills" id="status-pills">
+          <button class="pill on" data-status="전체" type="button">전체</button>
+          <button class="pill" data-status="pending" type="button">승인대기</button>
+          <button class="pill" data-status="approved" type="button">가입승인</button>
+          <button class="pill" data-status="rejected" type="button">가입반려</button>
+          <button class="pill" data-status="suspended" type="button">정지</button>
+          <button class="pill" data-status="withdrawn" type="button">탈퇴</button>
+        </div>
+      </div>
+      <span class="fb-count" id="count">총 <b>0명</b> 표시 중</span>
+    </div>
+
+    <div class="list-panel">
+      <div class="table-head">
+        <span>가입일</span>
+        <span>이름</span>
+        <span>성별</span>
+        <span>연락처</span>
+        <span>소속</span>
+        <span>직급</span>
+        <span>회원등급</span>
+        <span>계정 상태</span>
+        <span></span>
+      </div>
+      <div class="table-body" id="tbl-body"></div>
+      <div class="pagination">
+        <button class="pg-btn" type="button">‹</button>
+        <button class="pg-btn on" type="button">1</button>
+        <button class="pg-btn" type="button">2</button>
+        <button class="pg-btn" type="button">3</button>
+        <button class="pg-btn dots" type="button">…</button>
+        <button class="pg-btn" type="button">7</button>
+        <button class="pg-btn" type="button">›</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script>
+(function () {
+  // ===== 데이터 =====
+  // 회원가입 항목 기반: 이름 / 생년월일 / 성별 / 연락처 / 아이디 / 소속 / 직급 / 고유번호
+  var ALL = [
+    { name:'배태우', id:'bt_bae',    birth:'1985.03.12', g:'남', phone:'010-4471-9920', org:'메가미래라이프', role:'사원',   tier:'일반',   reg:'2026.08.04', status:'pending'   },
+    { name:'이지윤', id:'jiyoon_2',  birth:'1993.07.24', g:'여', phone:'010-8830-2245', org:'삼성생명',        role:'사원',   tier:'일반',   reg:'2026.08.04', status:'pending'   },
+    { name:'김진주', id:'jinjookim', birth:'1983.02.15', g:'여', phone:'010-1234-5678', org:'한화생명',        role:'팀장',   tier:'베이직', reg:'2026.08.03', status:'approved'  },
+    { name:'송민재', id:'mjsong',    birth:'1963.11.02', g:'남', phone:'010-3392-7741', org:'교보생명',        role:'지점장', tier:'프로',   reg:'2026.08.03', status:'approved'  },
+    { name:'장숙영', id:'sychang',   birth:'1983.03.28', g:'여', phone:'010-7715-2230', org:'현대해상',        role:'사원',   tier:'베이직', reg:'2026.08.02', status:'approved'  },
+    { name:'황정연', id:'jyhwang',   birth:'1972.09.19', g:'여', phone:'010-4408-9912', org:'DB손해보험',     role:'팀장',   tier:'관리자', reg:'2026.08.02', status:'approved'  },
+    { name:'오미자', id:'mzoh',      birth:'1979.12.05', g:'여', phone:'010-2256-6834', org:'메리츠화재',     role:'사원',   tier:'일반',   reg:'2026.08.01', status:'approved'  },
+    { name:'최부명', id:'bmchoi',    birth:'1981.05.23', g:'남', phone:'010-9981-4470', org:'GA(대리점)',    role:'본부장', tier:'프로',   reg:'2026.07.31', status:'approved'  },
+    { name:'김정운', id:'jwkim',     birth:'1981.08.11', g:'여', phone:'010-3320-1185', org:'메가미래라이프', role:'팀장',   tier:'베이직', reg:'2026.07.31', status:'suspended' },
+    { name:'한재현', id:'jhhan',     birth:'1970.02.17', g:'남', phone:'010-6627-3398', org:'삼성생명',        role:'지점장', tier:'프로',   reg:'2026.07.30', status:'approved'  },
+    { name:'이성환', id:'shlee',     birth:'1987.10.30', g:'남', phone:'010-1142-8806', org:'한화생명',        role:'사원',   tier:'일반',   reg:'2026.07.29', status:'rejected'  },
+    { name:'조미라', id:'mrjo',      birth:'1958.06.09', g:'여', phone:'010-5570-2214', org:'교보생명',        role:'본부장', tier:'관리자', reg:'2026.07.29', status:'approved'  },
+    { name:'정하윤', id:'hyjeong',   birth:'1994.04.21', g:'여', phone:'010-8839-5562', org:'현대해상',        role:'사원',   tier:'베이직', reg:'2026.07.28', status:'approved'  },
+    { name:'강태우', id:'twkang',    birth:'1976.01.08', g:'남', phone:'010-2204-7793', org:'DB손해보험',     role:'팀장',   tier:'프로',   reg:'2026.07.27', status:'withdrawn' },
+    { name:'유지원', id:'jwyoo',     birth:'1998.11.26', g:'여', phone:'010-7781-3340', org:'메리츠화재',     role:'사원',   tier:'일반',   reg:'2026.07.26', status:'suspended' },
+    { name:'안소비', id:'sbahn',     birth:'1991.09.03', g:'여', phone:'010-3398-1027', org:'메가미래라이프', role:'사원',   tier:'베이직', reg:'2026.07.25', status:'approved'  }
+  ];
+
+  var state = { org: '전체', status: '전체', query: '', sort: 'reg' };
+
+  var STATUS_LABEL = {
+    pending:   '승인대기',
+    approved:  '가입승인',
+    rejected:  '가입반려',
+    suspended: '정지',
+    withdrawn: '탈퇴'
+  };
+  var TIER_CLASS = {
+    '일반':   't-normal',
+    '베이직': 't-basic',
+    '프로':   't-pro',
+    '관리자': 't-admin'
+  };
+
+  var SORTERS = {
+    reg:  function (a, b) { return a.reg < b.reg ? 1 : a.reg > b.reg ? -1 : 0; },
+    name: function (a, b) { return a.name.localeCompare(b.name, 'ko'); },
+    org:  function (a, b) { return a.org.localeCompare(b.org, 'ko'); }
+  };
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  function filterList() {
+    var q = state.query.trim();
+    return ALL.filter(function (p) {
+      if (state.org !== '전체'    && p.org    !== state.org)    return false;
+      if (state.status !== '전체' && p.status !== state.status) return false;
+      if (q) {
+        if (p.name.indexOf(q) === -1 && p.id.indexOf(q) === -1 && p.phone.indexOf(q) === -1) return false;
+      }
+      return true;
+    }).sort(SORTERS[state.sort]);
+  }
+
+  function render() {
+    var list = filterList();
+    var apprN = ALL.filter(function (p) { return p.status === 'approved'; }).length;
+    var pdN   = ALL.filter(function (p) { return p.status === 'pending';  }).length;
+
+    document.getElementById('ht-total').textContent    = ALL.length;
+    document.getElementById('ht-approved').textContent = apprN;
+    document.getElementById('ht-pending').textContent  = pdN;
+    document.getElementById('count').innerHTML = '총 <b>' + list.length + '명</b> 표시 중';
+
+    var body = document.getElementById('tbl-body');
+    if (list.length === 0) {
+      body.innerHTML = '<div class="empty-list">조건에 맞는 설계사가 없어요</div>';
+      return;
+    }
+
+    body.innerHTML = list.map(function (p) {
+      var gCell = '<span class="gender-chip ' + (p.g === '남' ? 'm' : 'f') + '">' + p.g + '</span>';
+      var tierClass = TIER_CLASS[p.tier] || 't-normal';
+      var mobileMeta = ''
+        + '<span class="mobile-meta">'
+        +   gCell
+        +   '<span class="mm-sep">·</span>'
+        +   '<span>' + p.role + '</span>'
+        +   '<span class="mm-sep">·</span>'
+        +   '<span>' + p.phone + '</span>'
+        + '</span>';
+
+      return ''
+        + '<a class="table-row" href="detail.html">'
+        +   '<span class="tr-date">' + p.reg + '</span>'
+        +   '<span class="tr-name">'
+        +     '<span class="patient-avatar" data-name="' + escapeHTML(p.name) + '"></span>'
+        +     '<span class="nm-stack"><span class="nm">' + escapeHTML(p.name) + '</span><span class="nm-sub">@' + escapeHTML(p.id) + '</span></span>'
+        +   '</span>'
+        +   '<span class="tr-gender">' + gCell + '</span>'
+        +   '<span class="tr-phone">' + p.phone + '</span>'
+        +   '<span class="tr-org">' + p.org + '</span>'
+        +   '<span class="tr-role">' + p.role + '</span>'
+        +   '<span class="tr-tier-cell"><span class="tier-chip ' + tierClass + '">' + p.tier + '</span></span>'
+        +   '<span class="tr-status-cell"><span class="status-chip ' + p.status + '">' + STATUS_LABEL[p.status] + '</span></span>'
+        +   mobileMeta
+        +   '<span class="tr-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>'
+        + '</a>';
+    }).join('');
+
+    if (window.paintPatientAvatars) window.paintPatientAvatars();
+  }
+
+  document.querySelectorAll('#org-pills .pill').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.org = btn.dataset.org;
+      document.querySelectorAll('#org-pills .pill').forEach(function (b) {
+        b.classList.toggle('on', b.dataset.org === state.org);
+      });
+      render();
+    });
+  });
+  document.querySelectorAll('#status-pills .pill').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.status = btn.dataset.status;
+      document.querySelectorAll('#status-pills .pill').forEach(function (b) {
+        b.classList.toggle('on', b.dataset.status === state.status);
+      });
+      render();
+    });
+  });
+  document.getElementById('search-input').addEventListener('input', function (e) {
+    state.query = e.target.value;
+    render();
+  });
+  document.getElementById('sort-select').addEventListener('change', function (e) {
+    state.sort = e.target.value;
+    render();
+  });
+
+  render();
+})();
+</script>
+
+<script src="../../../components/layout.js"></script>
+<script>injectShell('planner');</script>
+</body>
+</html>
