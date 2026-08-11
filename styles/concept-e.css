@@ -22,7 +22,7 @@
 .cE .eprofile .plan .v { font-weight: 800; color: var(--brand-deep); }
 .cE .eprofile .mybtn { display: block; text-align: center; margin-top: 14px; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-size: var(--fs-body); font-weight: 700; padding: 9px; border-radius: var(--r-pill); width: 100%; cursor: pointer; text-decoration: none; box-sizing: border-box; }
 .cE .eprofile .mybtn:hover { background: var(--brand-pale); }
-.cE .eprofile .mybtn.on { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); box-shadow: inset 2px 0 0 var(--brand); }
+.cE .eprofile .mybtn.on { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
 .cE .enav { display: flex; flex-direction: column; gap: 3px; margin-top: 18px; }
 .cE .enav a { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; color: var(--ink-2); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
 .cE .enav a:hover { background: var(--bg-soft); color: var(--ink); }

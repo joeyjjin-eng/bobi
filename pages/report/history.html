@@ -369,10 +369,13 @@
             <div class="ht-sub">진료기록 리포트 보기 전 조회한 내역</div>
           </div>
         </div>
-        <a class="new-rep-btn" href="new.html">
-          <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
-          새 리포트 시작하기
-        </a>
+        <div style="display:inline-flex;align-items:center;gap:12px;">
+          <span data-quota-pill="report"></span>
+          <a class="new-rep-btn" href="new.html" data-quota="report">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
+            새 리포트 시작하기
+          </a>
+        </div>
       </div>
     </div>
 
@@ -847,6 +850,13 @@
 </script>
 
 <script src="../../components/layout.js"></script>
-<script>injectShell('report');</script>
+<script>
+  injectShell('report');
+  document.querySelectorAll('[data-quota]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      if (!window.checkQuota(el.getAttribute('data-quota'))) e.preventDefault();
+    });
+  });
+</script>
 </body>
 </html>

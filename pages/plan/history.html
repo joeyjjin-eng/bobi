@@ -1,0 +1,210 @@
+\<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 결제 내역</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; background: var(--bg-soft); }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; background: var(--bg-soft); }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 ===== */
+  .cE .ph-title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 22px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .cE .ph-title-l { display: flex; align-items: center; gap: 14px; }
+  .cE .ph-title-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
+  .cE .ph-title-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ph-title-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; }
+  .cE .ph-title-txt { display: flex; flex-direction: column; }
+  .cE .ph-back { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 9px 16px; font-family: inherit; font-size: var(--fs-option); font-weight: 700; text-decoration: none; letter-spacing: -0.01em; transition: background-color .15s ease; }
+  .cE .ph-back:hover { background: var(--bg-soft); color: var(--ink); }
+
+  /* ===== 요약 카드 ===== */
+  .cE .ph-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .cE .ph-sum-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+  .cE .ph-sum-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; letter-spacing: -0.01em; }
+  .cE .ph-sum-v { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; }
+  .cE .ph-sum-v small { font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); margin-left: 3px; }
+
+  /* ===== 내역 테이블 ===== */
+  .cE .ph-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 40px; box-shadow: var(--sh-1); }
+  .cE .ph-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px solid var(--line); }
+  .cE .ph-panel-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .cE .ph-panel-cnt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+  .cE .ph-panel-cnt b { color: var(--ink); font-weight: 800; }
+
+  .cE .ph-thead { display: grid; grid-template-columns: 130px 1fr 160px 140px 100px; column-gap: 12px; padding: 14px 24px; background: var(--bg-soft); border-bottom: 1px solid var(--line); }
+  .cE .ph-thead span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; }
+  .cE .ph-thead .th-amt { text-align: right; }
+  .cE .ph-thead .th-act { text-align: right; }
+
+  .cE .ph-row { display: grid; grid-template-columns: 130px 1fr 160px 140px 100px; column-gap: 12px; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--line); }
+  .cE .ph-row:last-child { border-bottom: none; }
+  .cE .ph-row:hover { background: var(--bg-warm); }
+  .cE .ph-date { font-size: var(--fs-body); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  .cE .ph-desc { font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; }
+  .cE .ph-desc b { color: var(--ink); font-weight: 700; }
+  .cE .ph-method { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+  .cE .ph-amt { font-size: var(--fs-body); font-weight: 800; color: var(--ink); text-align: right; letter-spacing: -0.01em; }
+  .cE .ph-status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-option); font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill); justify-self: end; letter-spacing: -0.01em; }
+  .cE .ph-status.paid { background: #E6F7EE; color: #1E9552; }
+  .cE .ph-status.refund { background: #FEF0E6; color: #C15A18; }
+  .cE .ph-status.fail { background: #FEF0F1; color: #C92238; }
+
+  /* ===== 빈 상태 ===== */
+  .cE .ph-empty { padding: 80px 20px; text-align: center; }
+  .cE .ph-empty-ic { width: 68px; height: 68px; border-radius: 50%; background: var(--bg-soft); color: var(--ink-4); display: grid; place-items: center; margin: 0 auto 16px; }
+  .cE .ph-empty-t { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 8px; }
+  .cE .ph-empty-d { font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; line-height: 1.6; margin-bottom: 20px; }
+  .cE .ph-empty-cta { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; text-decoration: none; letter-spacing: -0.01em; box-shadow: var(--sh-brand); }
+  .cE .ph-empty-cta:hover { filter: brightness(1.05); }
+
+  /* ===== 반응형 (모바일) ===== */
+  @media (max-width: 960px) {
+    .cE .ph-title-row { padding-bottom: 16px; margin-bottom: 16px; }
+    .cE .ph-title-ic { width: 38px; height: 38px; }
+    .cE .ph-title-l h1 { font-size: var(--fs-h2); }
+    .cE .ph-summary { grid-template-columns: 1fr; }
+    .cE .ph-thead { display: none; }
+    .cE .ph-row { grid-template-columns: 1fr; gap: 6px; padding: 16px 20px; }
+    .cE .ph-status { justify-self: start; }
+    .cE .ph-amt { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- 타이틀 -->
+    <div class="ph-title-row">
+      <div class="ph-title-l">
+        <div class="ph-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
+        <div class="ph-title-txt">
+          <h1>결제 내역</h1>
+          <div class="ph-title-sub">최근 결제 · 환불 내역을 한 곳에서 확인할 수 있어요.</div>
+        </div>
+      </div>
+      <a class="ph-back" href="../mypage/index.html">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg>
+        마이페이지로
+      </a>
+    </div>
+
+    <!-- 요약 -->
+    <section class="ph-summary" id="ph-summary"></section>
+
+    <!-- 내역 -->
+    <section class="ph-panel">
+      <div class="ph-panel-head">
+        <h2 class="ph-panel-title">전체 결제 내역</h2>
+        <span class="ph-panel-cnt" id="ph-cnt"></span>
+      </div>
+      <div class="ph-thead">
+        <span>결제일</span>
+        <span>내역</span>
+        <span>결제 수단</span>
+        <span class="th-amt">금액</span>
+        <span class="th-act">상태</span>
+      </div>
+      <div id="ph-tbody"></div>
+    </section>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>
+  injectShell('mypage');
+
+  (function () {
+    var agent = window.getCurrentAgent();
+    var plan = window.getEffectivePlan();
+    var isFree = (plan.price === 0);
+
+    var body = document.getElementById('ph-tbody');
+    var summary = document.getElementById('ph-summary');
+    var cntEl = document.getElementById('ph-cnt');
+
+    if (isFree) {
+      summary.innerHTML = ''
+        + '<div class="ph-sum-card"><span class="ph-sum-l">누적 결제 금액</span><span class="ph-sum-v">0<small>원</small></span></div>'
+        + '<div class="ph-sum-card"><span class="ph-sum-l">결제 횟수</span><span class="ph-sum-v">0<small>회</small></span></div>'
+        + '<div class="ph-sum-card"><span class="ph-sum-l">최근 결제일</span><span class="ph-sum-v" style="color:var(--ink-3);font-size:var(--fs-body);">—</span></div>';
+      cntEl.innerHTML = '총 <b>0</b>건';
+      body.innerHTML = ''
+        + '<div class="ph-empty">'
+        +   '<div class="ph-empty-ic"><svg class="ic-svg" width="30" height="30"><use href="#i-file-text"/></svg></div>'
+        +   '<div class="ph-empty-t">아직 결제 내역이 없어요</div>'
+        +   '<div class="ph-empty-d">현재 무료 플랜을 이용중입니다.<br/>유료 플랜을 시작하면 결제 내역이 여기에 표시돼요.</div>'
+        +   '<a class="ph-empty-cta" href="index.html"><svg class="ic-svg" width="14" height="14"><use href="#i-sparkles"/></svg> 요금제 보러가기</a>'
+        + '</div>';
+      return;
+    }
+
+    // BASIC / PRO — 6개월치 데모 데이터 생성
+    var today = new Date('2026-08-11');
+    var payments = [];
+    for (var i = 0; i < 6; i++) {
+      var d = new Date(today.getFullYear(), today.getMonth() - i, 5);
+      payments.push({
+        date: d,
+        plan: plan.label,
+        amount: plan.price,
+        method: '카카오페이',
+        status: 'paid'
+      });
+    }
+    // 한 건 환불 예시 (2번째 오래된 것)
+    if (payments.length >= 3) {
+      payments[2].status = 'refund';
+    }
+
+    var fmt = function (d) { return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0'); };
+    var totalPaid = payments.filter(function (p) { return p.status === 'paid'; }).reduce(function (s, p) { return s + p.amount; }, 0);
+    var paidCount = payments.filter(function (p) { return p.status === 'paid'; }).length;
+    var latest = payments[0];
+
+    summary.innerHTML = ''
+      + '<div class="ph-sum-card"><span class="ph-sum-l">누적 결제 금액</span><span class="ph-sum-v">' + totalPaid.toLocaleString() + '<small>원</small></span></div>'
+      + '<div class="ph-sum-card"><span class="ph-sum-l">결제 횟수</span><span class="ph-sum-v">' + paidCount + '<small>회</small></span></div>'
+      + '<div class="ph-sum-card"><span class="ph-sum-l">최근 결제일</span><span class="ph-sum-v">' + fmt(latest.date) + '</span></div>';
+
+    cntEl.innerHTML = '총 <b>' + payments.length + '</b>건';
+
+    var statusLabel = { paid: '결제완료', refund: '환불', fail: '실패' };
+    body.innerHTML = payments.map(function (p) {
+      var isRefund = p.status === 'refund';
+      var amtPrefix = isRefund ? '- ' : '';
+      return ''
+        + '<div class="ph-row">'
+        +   '<div class="ph-date">' + fmt(p.date) + '</div>'
+        +   '<div class="ph-desc"><b>' + p.plan + '</b> 플랜 월 정액</div>'
+        +   '<div class="ph-method">' + p.method + '</div>'
+        +   '<div class="ph-amt">' + amtPrefix + p.amount.toLocaleString() + '원</div>'
+        +   '<span class="ph-status ' + p.status + '">' + statusLabel[p.status] + '</span>'
+        + '</div>';
+    }).join('');
+  })();
+</script>
+
+</body>
+</html>

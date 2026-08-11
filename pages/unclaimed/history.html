@@ -310,10 +310,13 @@
             <div class="ht-sub">계산 금액은 <b>참고용</b>이며 실제 지급 금액과 차이가 있을 수 있어요</div>
           </div>
         </div>
-        <a class="new-uc-btn" href="new.html">
-          <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
-          새롭게 조회하기
-        </a>
+        <div style="display:inline-flex;align-items:center;gap:12px;">
+          <span data-quota-pill="unclaimed"></span>
+          <a class="new-uc-btn" href="new.html" data-quota="unclaimed">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
+            새롭게 조회하기
+          </a>
+        </div>
       </div>
     </div>
 
@@ -660,6 +663,13 @@
 </script>
 
 <script src="../../components/layout.js"></script>
-<script>injectShell('claim');</script>
+<script>
+  injectShell('claim');
+  document.querySelectorAll('[data-quota]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      if (!window.checkQuota(el.getAttribute('data-quota'))) e.preventDefault();
+    });
+  });
+</script>
 </body>
 </html>

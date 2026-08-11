@@ -19,7 +19,33 @@
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
+  /* ===== 플랜 잔여 사용량 스트립 (컴팩트) ===== */
+  .cE .plan-strip { background: #EEF9FF; border: 1px solid var(--brand-soft); border-radius: var(--r-md); padding: 10px 14px; margin-top: 14px; display: flex; align-items: center; gap: 14px; }
+  .cE .plan-strip .ps-q { border-right-color: rgba(102, 178, 255, 0.25); }
+  .cE .ps-l { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-pale); color: var(--brand-deep); border-radius: var(--r-pill); padding: 4px 10px; font-size: var(--fs-option); font-weight: 800; letter-spacing: -0.01em; flex: none; }
+  .cE .ps-l svg { color: var(--brand); }
+  .cE .ps-quotas { display: flex; flex: 1; min-width: 0; gap: 0; }
+  .cE .ps-q { flex: 1; padding: 4px 14px; min-width: 0; display: flex; align-items: baseline; gap: 6px; border-right: 1px solid var(--line); }
+  .cE .ps-q:last-child { border-right: none; }
+  .cE .ps-q .psq-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .ps-q .psq-v { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; line-height: 1.4; margin-left: auto; }
+  .cE .ps-q .psq-v small { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; margin-left: 2px; }
+  .cE .ps-q.warn .psq-v,
+  .cE .ps-q.warn .psq-v small { color: #C92238; }
+  .cE .ps-q.gone .psq-l,
+  .cE .ps-q.gone .psq-v { color: var(--ink-4); }
+  .cE .ps-cta { display: inline-flex; align-items: center; gap: 4px; color: var(--brand-deep); text-decoration: none; font-size: var(--fs-option); font-weight: 700; letter-spacing: -0.01em; padding: 6px 10px; border-radius: var(--r-pill); flex: none; white-space: nowrap; transition: background-color .15s ease; }
+  .cE .ps-cta:hover { background: var(--brand-pale); }
+
   /* ===== 반응형 (모바일) ===== */
+  @media (max-width: 960px) {
+    .cE .plan-strip { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
+    .cE .ps-l { align-self: flex-start; }
+    .cE .ps-quotas { flex-direction: column; gap: 4px; }
+    .cE .ps-q { border-right: none; border-bottom: 1px solid var(--line); padding: 8px 4px; }
+    .cE .ps-q:last-child { border-bottom: none; }
+    .cE .ps-cta { align-self: flex-end; }
+  }
   @media (max-width: 960px) {
     /* 상단 인사말 + 스마트보비 CTA 세로 스택 */
     .cE .etop { flex-direction: column; align-items: stretch; gap: 14px; margin-bottom: 16px; }
@@ -69,7 +95,7 @@
   <main class="emain">
     <div class="etop">
       <div>
-        <h1>안녕하세요, 홍길동님</h1>
+        <h1 id="etop-hello">안녕하세요, 님</h1>
       </div>
       <a class="smart-cta" href="pages/jjaepity/index.html"><svg class="ic-svg" width="16" height="16"><use href="#i-sparkles"/></svg> 째피티를 만나보세요</a>
     </div>
@@ -117,22 +143,35 @@
         </div>
       </div>
       <div class="kpi">
-        <div class="l"><span class="dot" style="background:var(--c-surg)"></span>남은 무료 횟수</div>
-        <div class="v">1 / 10</div>
-        <div class="trend" style="color:var(--ink-3)">FREE 플랜</div>
+        <div class="l"><span class="dot" style="background:var(--c-surg)"></span>스마트보비 사용</div>
+        <div class="v">18<small> 회</small></div>
+        <div class="trend"><svg class="ic-svg" width="13" height="13"><use href="#i-trending-up"/></svg> +5 이번 주</div>
         <div class="spark">
-          <i style="height:22px;background:#D8C8FB"></i>
+          <i style="height:8px;background:#D8C8FB"></i>
+          <i style="height:12px;background:#D8C8FB"></i>
+          <i style="height:14px;background:#D8C8FB"></i>
           <i style="height:20px;background:#D8C8FB"></i>
-          <i style="height:18px;background:#D8C8FB"></i>
-          <i style="height:16px;background:#D8C8FB"></i>
-          <i style="height:6px;background:#D8C8FB"></i>
+          <i style="height:22px;background:#D8C8FB"></i>
         </div>
       </div>
     </div>
 
+    <!-- ===== 플랜 잔여 사용량 스트립 (컴팩트) ===== -->
+    <section class="plan-strip" id="plan-strip">
+      <span class="ps-l">
+        <svg class="ic-svg" width="13" height="13"><use href="#i-sparkles"/></svg>
+        <span id="ps-plan-label">FREE</span>
+      </span>
+      <div class="ps-quotas" id="ps-quotas"></div>
+      <a class="ps-cta" href="pages/plan/index.html">
+        요금제 보기
+        <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg>
+      </a>
+    </section>
+
     <div class="grid2">
       <div class="col">
-        <a href="pages/report/new.html" class="tile feature" style="text-decoration:none">
+        <a href="pages/report/new.html" class="tile feature" data-quota="report" style="text-decoration:none">
           <div class="ic"><svg class="ic-svg" width="24" height="24"><use href="#i-file-text"/></svg></div>
           <h3>진료기록 리포트
 새로 만들기</h3>
@@ -147,12 +186,12 @@
             <p>최근 12건</p>
             <svg class="ic-svg go" width="20" height="20"><use href="#i-chevron-right"/></svg>
           </a>
-          <div class="tile">
+          <a class="tile" href="pages/unclaimed/new.html" data-quota="unclaimed" style="text-decoration:none;color:inherit">
             <div class="ic in"><svg class="ic-svg" width="22" height="22"><use href="#i-search-check"/></svg></div>
             <h3>미청구보험금 찾기</h3>
             <p>놓친 청구 탐색</p>
             <svg class="ic-svg go" width="20" height="20"><use href="#i-chevron-right"/></svg>
-          </div>
+          </a>
           <div class="tile">
             <div class="ic surg"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
             <h3>청구한 내역</h3>
@@ -194,6 +233,42 @@
 </div>
 
 <script src="components/layout.js"></script>
-<script>injectShell('home');</script>
+<script>
+  injectShell('home');
+
+  // 현재 로그인한 설계사 이름 반영
+  (function () {
+    var agent = window.getCurrentAgent();
+    var plan = window.getEffectivePlan();
+    document.getElementById('etop-hello').textContent = '안녕하세요, ' + agent.name + '님';
+    document.getElementById('ps-plan-label').textContent = plan.label + ' 플랜';
+
+    var features = ['report', 'unclaimed', 'jjaepity'];
+    var host = document.getElementById('ps-quotas');
+    host.innerHTML = features.map(function (f) {
+      var info = window.getRemaining(f);
+      var cls = '';
+      if (info.limit === 0) cls = ' gone';
+      else if (info.remaining === 0) cls = ' warn';
+      else if (info.remaining <= Math.max(1, Math.floor(info.limit * 0.2))) cls = ' warn';
+      var valHtml = (info.limit === 0)
+        ? '<span class="psq-v">미포함</span>'
+        : '<span class="psq-v">' + info.remaining + '<small>/' + info.limit + '</small></span>';
+      return ''
+        + '<div class="ps-q' + cls + '">'
+        +   '<span class="psq-l">' + window.getFeatureLabel(f) + '</span>'
+        +   valHtml
+        + '</div>';
+    }).join('');
+  })();
+
+  // 잔여 체크 — data-quota 붙은 링크는 잔여 없을 때 모달 열고 이동 차단
+  document.querySelectorAll('[data-quota]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var feat = el.getAttribute('data-quota');
+      if (!window.checkQuota(feat)) { e.preventDefault(); }
+    });
+  });
+</script>
 </body>
 </html>

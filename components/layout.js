@@ -34,6 +34,109 @@
   }
   var BASE = getBasePath();
 
+  // ===== 플랜 정의 =====
+  // 4개 기능: report(진료기록리포트) · unclaimed(미청구보험금) · jjaepity(째피티) · claim(보험금청구)
+  // 월 정액 · 잔여는 각 에이전트별로 서로 다른 상황을 보여주기 위해 하드코딩(데모).
+  var PLANS = {
+    free:  { key: 'free',  label: 'FREE',   price: 0,      limits: { report: 10,  unclaimed: 10,  jjaepity: 0,  claim: 0  } },
+    basic: { key: 'basic', label: 'BASIC',  price: 5900,   limits: { report: 50,  unclaimed: 50,  jjaepity: 20, claim: 10 } },
+    pro:   { key: 'pro',   label: 'PRO',    price: 14900,  limits: { report: 100, unclaimed: 100, jjaepity: 60, claim: 30 } }
+  };
+  // 보험금청구만 잔여 소진 후 건당 500원 추가결제 가능
+  var CLAIM_EXTRA_PRICE = 500;
+
+  // ===== 데모 에이전트 (플랜 스위처용) =====
+  var AGENTS = [
+    // FREE — 진료기록리포트 잔여 소진(0), 미청구는 여유 있음 (모달 트리거 시연용)
+    { id: 'hong',  name: '홍길동', initial: '홍', org: '메가미래라이프', role: 'FC',   plan: 'free',
+      remaining: { report: 0,  unclaimed: 6,  jjaepity: 0,  claim: 0  },
+      // 최근 30일 사용량 — 무료 플랜 한도까지 다 사용
+      usage30: { report: 10, unclaimed: 4,  jjaepity: 0 } },
+    // BASIC — 진료기록리포트 16%, 째피티 15% 경고
+    { id: 'kim',   name: '김미래', initial: '김', org: '삼성생명',       role: '팀장', plan: 'basic',
+      remaining: { report: 8,  unclaimed: 35, jjaepity: 3,  claim: 5  },
+      // 최근 30일 — 리포트/째피티 사용이 BASIC 한도에 근접
+      usage30: { report: 42, unclaimed: 15, jjaepity: 17 } },
+    // PRO — 진료기록리포트 12% 경고, 나머지는 여유
+    { id: 'lee',   name: '이보험', initial: '이', org: '한화생명',       role: '지점장', plan: 'pro',
+      remaining: { report: 12, unclaimed: 60, jjaepity: 40, claim: 15 },
+      // 최근 30일 — 리포트 다수 사용, PRO에 잘 맞음
+      usage30: { report: 88, unclaimed: 40, jjaepity: 20 } }
+  ];
+
+  var FEATURE_LABEL = {
+    report:    '진료기록리포트',
+    unclaimed: '미청구보험금',
+    jjaepity:  '째피티',
+    claim:     '보험금청구'
+  };
+
+  function getCurrentAgent() {
+    var id = 'hong';
+    try { id = localStorage.getItem('bobi-agent-id') || 'hong'; } catch (e) {}
+    for (var i = 0; i < AGENTS.length; i++) if (AGENTS[i].id === id) return AGENTS[i];
+    return AGENTS[0];
+  }
+  window.getCurrentAgent = getCurrentAgent;
+  window.getPlans = function () { return PLANS; };
+  window.getAgents = function () { return AGENTS; };
+  window.getFeatureLabel = function (f) { return FEATURE_LABEL[f] || f; };
+  window.getClaimExtraPrice = function () { return CLAIM_EXTRA_PRICE; };
+  window.setCurrentAgent = function (id) {
+    try { localStorage.setItem('bobi-agent-id', id); } catch (e) {}
+    location.reload();
+  };
+  window.setCurrentPlan = function (planKey) {
+    // 현재 에이전트의 플랜을 강제 변경 (데모용, 잔여를 새 플랜 한도로 리셋)
+    try {
+      localStorage.setItem('bobi-plan-override-' + getCurrentAgent().id, planKey);
+    } catch (e) {}
+    location.reload();
+  };
+  function getEffectivePlan(agent) {
+    var override = null;
+    try { override = localStorage.getItem('bobi-plan-override-' + agent.id); } catch (e) {}
+    var key = (override && PLANS[override]) ? override : agent.plan;
+    return PLANS[key];
+  }
+  window.getEffectivePlan = function () { return getEffectivePlan(getCurrentAgent()); };
+  // 최근 30일 사용량 (feature별)
+  window.getMonthlyUsage = function (feature) {
+    var agent = getCurrentAgent();
+    return (agent.usage30 && typeof agent.usage30[feature] === 'number') ? agent.usage30[feature] : 0;
+  };
+
+  // 추천 플랜: 사용량이 각 플랜 한도의 80% 이하로 들어가는 가장 저렴한 플랜
+  window.getRecommendedPlan = function () {
+    var features = ['report', 'unclaimed', 'jjaepity'];
+    var order = ['free', 'basic', 'pro'];
+    for (var i = 0; i < order.length; i++) {
+      var p = PLANS[order[i]];
+      var fits = features.every(function (f) {
+        var usage = window.getMonthlyUsage(f);
+        if (usage === 0) return true; // 사용 안 하는 기능은 통과
+        var limit = p.limits[f] || 0;
+        if (limit === 0) return false; // 사용중인 기능이 미포함이면 부적합
+        return usage <= Math.floor(limit * 0.8); // 20% 이상 여유
+      });
+      if (fits) return PLANS[order[i]];
+    }
+    return PLANS.pro; // 사용량이 PRO도 넘으면 일단 PRO 추천
+  };
+
+  window.getRemaining = function (feature) {
+    var agent = getCurrentAgent();
+    var plan = getEffectivePlan(agent);
+    var limit = plan.limits[feature] || 0;
+    // 플랜 오버라이드가 있으면 오버라이드 플랜 한도까지 사용 가능
+    // (데모 단순화 — 원래 잔여 vs 한도 중 작은 값)
+    var raw = (agent.remaining && typeof agent.remaining[feature] === 'number') ? agent.remaining[feature] : 0;
+    var override = null;
+    try { override = localStorage.getItem('bobi-plan-override-' + agent.id); } catch (e) {}
+    if (override) raw = limit; // 오버라이드 시 새 플랜 만한도로 리셋
+    return { remaining: Math.min(raw, limit), limit: limit, plan: plan };
+  };
+
   // ===== SVG Symbols (전 페이지 공통) =====
   var ICONS_SVG = ''
     // GNB / 페이지 nav
@@ -94,17 +197,20 @@
       var cls = (active === key) ? ' class="on"' : '';
       return '<a' + cls + ' href="' + href + '"><svg class="ic-svg" width="19" height="19"><use href="#' + icon + '"/></svg>' + label + (extra || '') + '</a>';
     }
+    var agent = getCurrentAgent();
+    var plan = getEffectivePlan(agent);
     return ''
       + '<aside class="eside">'
       +   '<div class="brand"><a href="' + BASE + 'home.html" aria-label="홈으로"><img src="' + BASE + 'assets/bobi-logo.png" alt="BoBi" /></a></div>'
       +   '<div class="eprofile">'
       +     '<div class="pa">'
-      +       '<div class="eav">홍</div>'
+      +       '<div class="eav">' + agent.initial + '</div>'
       +       '<div>'
-      +         '<div class="nm">홍길동님</div>'
-      +         '<div class="rl">메가미래라이프 · FC</div>'
+      +         '<div class="nm">' + agent.name + '님</div>'
+      +         '<div class="rl">' + agent.org + ' · ' + agent.role + '</div>'
       +       '</div>'
       +     '</div>'
+      +     '<div class="plan"><span class="k">현재 플랜</span><a class="v" href="' + BASE + 'pages/plan/index.html" style="text-decoration:none;">' + plan.label + ' ›</a></div>'
       +     '<a class="mybtn' + (active === 'mypage' ? ' on' : '') + '" href="' + BASE + 'pages/mypage/index.html">마이페이지</a>'
       +   '</div>'
       +   '<nav class="enav">'
@@ -116,8 +222,33 @@
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +     navItem('planner',  BASE + 'pages/admin/planner/list.html', 'i-user-2',       '설계사관리')
       +   '</nav>'
+      +   devSwitcherHTML(agent, plan)
       +   '<div class="logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
       + '</aside>';
+  }
+
+  // ===== [DEV] 로그인 설계사 + 플랜 스위처 =====
+  function devSwitcherHTML(agent, plan) {
+    var opts = AGENTS.map(function (a) {
+      var sel = (a.id === agent.id) ? ' selected' : '';
+      return '<option value="' + a.id + '"' + sel + '>' + a.name + ' (' + PLANS[a.plan].label + ')</option>';
+    }).join('');
+    var planOpts = Object.keys(PLANS).map(function (k) {
+      var sel = (plan.key === k) ? ' selected' : '';
+      return '<option value="' + k + '"' + sel + '>' + PLANS[k].label + '</option>';
+    }).join('');
+    return ''
+      + '<div class="dev-switch" aria-label="개발자 도구">'
+      +   '<div class="dev-switch-title">🛠 임시 스위처</div>'
+      +   '<label class="dev-switch-row">'
+      +     '<span>설계사</span>'
+      +     '<select class="dev-switch-sel" data-role="agent">' + opts + '</select>'
+      +   '</label>'
+      +   '<label class="dev-switch-row">'
+      +     '<span>플랜</span>'
+      +     '<select class="dev-switch-sel" data-role="plan">' + planOpts + '</select>'
+      +   '</label>'
+      + '</div>';
   }
 
   // ===== 모바일 상단 헤더 + 드로어 (하단 탭바 제거) =====
@@ -126,6 +257,8 @@
       var cls = (active === key) ? ' class="on"' : '';
       return '<a' + cls + ' href="' + href + '"><svg class="ic-svg" width="19" height="19"><use href="#' + icon + '"/></svg>' + label + (extra || '') + '</a>';
     }
+    var agent = getCurrentAgent();
+    var plan = getEffectivePlan(agent);
     return ''
       + '<header class="m-topbar">'
       +   '<button class="m-ham" type="button" aria-label="메뉴 열기"><svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg></button>'
@@ -136,7 +269,7 @@
       +   '<div class="m-drawer-bg"></div>'
       +   '<div class="m-drawer-panel">'
       +     '<div class="m-drawer-head">'
-      +       '<div class="m-drawer-pa"><div class="m-drawer-av">홍</div><div><div class="m-drawer-nm">홍길동님</div><div class="m-drawer-rl">메가미래라이프 · FC</div></div></div>'
+      +       '<div class="m-drawer-pa"><div class="m-drawer-av">' + agent.initial + '</div><div><div class="m-drawer-nm">' + agent.name + '님</div><div class="m-drawer-rl">' + agent.org + ' · ' + agent.role + '</div></div></div>'
       +       '<button class="m-drawer-close" type="button" aria-label="닫기"><svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg></button>'
       +     '</div>'
       +     '<a class="m-drawer-mybtn' + (active === 'mypage' ? ' on' : '') + '" href="' + BASE + 'pages/mypage/index.html">마이페이지</a>'
@@ -149,6 +282,7 @@
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +       drawerItem('planner',  BASE + 'pages/admin/planner/list.html','i-user-2',       '설계사관리')
       +     '</div>'
+      +     devSwitcherHTML(agent, plan)
       +     '<div class="m-drawer-logout"><svg class="ic-svg" width="17" height="17"><use href="#i-log-out"/></svg> 로그아웃</div>'
       +   '</div>'
       + '</div>';
@@ -199,6 +333,163 @@
       +     '<button class="sm-modal-cta" type="button" id="sm-modal-ok">기대할게요</button>'
       +   '</div>'
       + '</div>';
+  }
+
+  // ===== 잔여 부족 모달 =====
+  var QUOTA_MODAL_CSS = ''
+    + '.qm-modal { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: "Pretendard", system-ui, sans-serif; }'
+    + '.qm-modal[hidden] { display: none; }'
+    + '.qm-card { position: relative; background: #fff; border-radius: 20px; padding: 32px 32px 24px; max-width: 460px; width: 100%; box-shadow: 0 24px 60px rgba(0,0,0,0.25); box-sizing: border-box; animation: qmPop .24s cubic-bezier(0.16,1,0.3,1) both; }'
+    + '@keyframes qmPop { from { opacity: 0; transform: scale(0.94) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }'
+    + '.qm-close { position: absolute; top: 14px; right: 14px; background: none; border: none; padding: 8px; cursor: pointer; color: var(--ink-3); display: inline-flex; border-radius: 8px; }'
+    + '.qm-close:hover { color: var(--ink); background: var(--bg-soft); }'
+    + '.qm-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
+    + '.qm-ic { width: 56px; height: 56px; border-radius: 50%; background: #FFF0F1; color: #C92238; display: grid; place-items: center; margin-bottom: 16px; }'
+    + '.qm-ic svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
+    + '.qm-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 8px; line-height: 1.4; }'
+    + '.qm-desc { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.6; margin: 0 0 18px; }'
+    + '.qm-desc b { color: var(--ink); font-weight: 700; }'
+    + '.qm-status { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--bg-soft); border-radius: var(--r-md); padding: 12px 16px; margin-bottom: 18px; }'
+    + '.qm-status-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }'
+    + '.qm-status-v { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }'
+    + '.qm-status-v b { color: #C92238; }'
+    + '.qm-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }'
+    + '.qm-plan { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; text-align: left; }'
+    + '.qm-plan .qp-l { font-size: 11px; color: var(--ink-3); font-weight: 800; letter-spacing: 0.04em; }'
+    + '.qm-plan .qp-v { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-top: 4px; }'
+    + '.qm-plan .qp-v small { font-size: 11px; font-weight: 600; color: var(--ink-3); margin-left: 2px; }'
+    + '.qm-actions { display: flex; flex-direction: column; gap: 8px; }'
+    + '.qm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; border: 1px solid transparent; text-decoration: none; transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }'
+    + '.qm-btn.primary { background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }'
+    + '.qm-btn.primary:hover { filter: brightness(1.05); }'
+    + '.qm-btn.extra { background: #fff; color: var(--brand-deep); border-color: var(--brand-soft); }'
+    + '.qm-btn.extra:hover { background: var(--brand-pale); }'
+    + '.qm-btn.ghost { background: #fff; color: var(--ink-2); border-color: var(--line-strong); }'
+    + '.qm-btn.ghost:hover { background: var(--bg-soft); color: var(--ink); }';
+
+  function quotaModalHTML() {
+    return ''
+      + '<div class="qm-modal" id="qm-modal" hidden role="dialog" aria-modal="true" aria-labelledby="qm-title">'
+      +   '<div class="qm-card">'
+      +     '<button class="qm-close" type="button" id="qm-close" aria-label="닫기"><svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg></button>'
+      +     '<div class="qm-ic"><svg class="ic-svg" width="26" height="26"><use href="#i-alert"/></svg></div>'
+      +     '<h3 class="qm-title" id="qm-title">잔여 사용량이 부족해요</h3>'
+      +     '<p class="qm-desc" id="qm-desc"></p>'
+      +     '<div class="qm-status">'
+      +       '<span class="qm-status-l" id="qm-status-l">현재 플랜</span>'
+      +       '<span class="qm-status-v" id="qm-status-v"></span>'
+      +     '</div>'
+      +     '<div class="qm-actions" id="qm-actions"></div>'
+      +   '</div>'
+      + '</div>';
+  }
+
+  function bindQuotaModal() {
+    var modal = document.getElementById('qm-modal');
+    if (!modal) return;
+    var close = document.getElementById('qm-close');
+    function shut() { modal.hidden = true; document.body.style.overflow = ''; }
+    if (close) close.addEventListener('click', shut);
+    modal.addEventListener('click', function (e) { if (e.target === modal) shut(); });
+    document.addEventListener('keydown', function (e) { if (!modal.hidden && e.key === 'Escape') shut(); });
+    window.closeQuotaModal = shut;
+  }
+
+  // 잔여 부족 시 안내 모달을 열고 false 반환. 여유가 있으면 true 반환.
+  window.checkQuota = function (feature) {
+    var info = window.getRemaining(feature);
+    if (info.remaining > 0) return true;
+    var modal = document.getElementById('qm-modal');
+    if (!modal) return true;
+    var featLabel = FEATURE_LABEL[feature] || feature;
+    document.getElementById('qm-title').textContent = '이번 달 ' + featLabel + ' 사용량을 모두 소진했어요';
+    document.getElementById('qm-desc').innerHTML =
+      '현재 플랜에서 사용할 수 있는 <b>' + featLabel + '</b> 횟수를 모두 사용했어요.<br/>'
+      + '더 많이 이용하려면 요금제를 업그레이드해 주세요.';
+    document.getElementById('qm-status-l').textContent = '현재 플랜';
+    document.getElementById('qm-status-v').innerHTML =
+      info.plan.label + ' <b>· 잔여 0 / ' + info.limit + ' 건</b>';
+    var actions = document.getElementById('qm-actions');
+    var buttons = ''
+      + '<a class="qm-btn primary" href="' + BASE + 'pages/plan/index.html">요금제 업그레이드 하기</a>';
+    if (feature === 'claim') {
+      buttons += '<button type="button" class="qm-btn extra" id="qm-btn-extra">'
+        + '이번 건만 <b style="margin:0 4px;">500원</b> 추가결제하고 계속</button>';
+    }
+    buttons += '<button type="button" class="qm-btn ghost" onclick="closeQuotaModal()">닫기</button>';
+    actions.innerHTML = buttons;
+    if (feature === 'claim') {
+      var extra = document.getElementById('qm-btn-extra');
+      if (extra) extra.addEventListener('click', function () {
+        window.closeQuotaModal();
+        alert('500원 추가결제가 요청되었습니다. (데모)');
+      });
+    }
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    return false;
+  };
+
+  // ===== 공통 잔여 뱃지 (pill) =====
+  // 사용법: <span class="quota-pill" data-quota-pill="report"></span>
+  // 또는 window.renderQuotaPill('report') 로 HTML 문자열 얻어 삽입.
+  var QUOTA_PILL_CSS = ''
+    + '.quota-pill { display: inline-flex; align-items: baseline; gap: 4px; color: var(--ink-3); font-family: "Pretendard", system-ui, sans-serif; font-size: var(--fs-option); font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; white-space: nowrap; }'
+    + '.quota-pill b { color: var(--ink); font-weight: 800; }'
+    + '.quota-pill.warn { color: #C92238; }'
+    + '.quota-pill.warn b { color: #C92238; }'
+    + '.quota-pill.gone { color: var(--brand-deep); text-decoration: none; cursor: pointer; }'
+    + '.quota-pill.gone:hover { text-decoration: underline; }';
+
+  window.renderQuotaPill = function (feature) {
+    var info = window.getRemaining(feature);
+    var cls = 'quota-pill';
+    if (info.limit === 0) {
+      return '<a class="' + cls + ' gone" href="' + BASE + 'pages/plan/index.html">플랜 업그레이드 하기 ›</a>';
+    }
+    if (info.remaining === 0) cls += ' warn';
+    else if (info.remaining <= Math.max(1, Math.floor(info.limit * 0.2))) cls += ' warn';
+    var body = '이번 달 잔여 <b>' + info.remaining + '</b> / ' + info.limit + '건';
+    return '<span class="' + cls + '">' + body + '</span>';
+  };
+
+  // data-quota-pill 속성이 있는 노드를 자동으로 잔여 뱃지로 렌더
+  // (기존 노드의 className과 style을 렌더된 pill로 넘겨주어 배치 정보 유지)
+  function paintQuotaPills() {
+    document.querySelectorAll('[data-quota-pill]').forEach(function (el) {
+      var f = el.getAttribute('data-quota-pill');
+      var extraCls = el.className || '';
+      var extraStyle = el.getAttribute('style') || '';
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = window.renderQuotaPill(f);
+      var pill = wrapper.firstChild;
+      if (extraCls) pill.className += ' ' + extraCls;
+      if (extraStyle) pill.setAttribute('style', (pill.getAttribute('style') || '') + ';' + extraStyle);
+      el.parentNode.replaceChild(pill, el);
+    });
+  }
+
+  // ===== [DEV] 스위처 CSS =====
+  var DEV_SWITCH_CSS = ''
+    + '.dev-switch { margin: 12px 12px 0; padding: 10px 12px; background: #F3F5F7; border: 1px dashed #C7CFD6; border-radius: 10px; font-family: "Pretendard", system-ui, sans-serif; }'
+    + '.dev-switch-title { font-size: 11px; color: #6B7681; font-weight: 800; letter-spacing: 0.03em; margin-bottom: 6px; }'
+    + '.dev-switch-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }'
+    + '.dev-switch-row > span { font-size: 11px; color: #6B7681; font-weight: 700; flex: none; width: 34px; }'
+    + '.dev-switch-sel { flex: 1; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: 12px; color: #2A343B; padding: 0 6px; outline: none; }'
+    + '.dev-switch-sel:focus { border-color: var(--brand); }';
+
+  function bindDevSwitcher() {
+    document.querySelectorAll('.dev-switch-sel').forEach(function (sel) {
+      sel.addEventListener('change', function () {
+        var role = sel.getAttribute('data-role');
+        if (role === 'agent') {
+          try { localStorage.removeItem('bobi-plan-override-' + getCurrentAgent().id); } catch (e) {}
+          window.setCurrentAgent(sel.value);
+        } else if (role === 'plan') {
+          window.setCurrentPlan(sel.value);
+        }
+      });
+    });
   }
 
   function bindSmartModal() {
@@ -282,9 +573,21 @@
       holder.innerHTML = smartModalHTML();
       document.body.appendChild(holder.firstChild);
     }
+    // 잔여 부족 모달 + 스위처 + 잔여 뱃지 스타일
+    if (!document.getElementById('qm-modal')) {
+      var qStyle = document.createElement('style');
+      qStyle.textContent = QUOTA_MODAL_CSS + DEV_SWITCH_CSS + QUOTA_PILL_CSS;
+      document.head.appendChild(qStyle);
+      var qHolder = document.createElement('div');
+      qHolder.innerHTML = quotaModalHTML();
+      document.body.appendChild(qHolder.firstChild);
+    }
     window.paintPatientAvatars();
     bindMobileShell();
     bindSmartModal();
+    bindQuotaModal();
+    bindDevSwitcher();
+    paintQuotaPills();
   };
 
   // 햄버거 → 드로어 토글
