@@ -50,18 +50,24 @@
     // FREE — 진료기록리포트 잔여 소진(0), 미청구는 여유 있음 (모달 트리거 시연용)
     { id: 'hong',  name: '홍길동', initial: '홍', org: '메가미래라이프', role: 'FC',   plan: 'free',
       remaining: { report: 0,  unclaimed: 6,  jjaepity: 0,  claim: 0  },
-      // 최근 30일 사용량 — 무료 플랜 한도까지 다 사용
-      usage30: { report: 10, unclaimed: 4,  jjaepity: 0 } },
+      usage30: { report: 10, unclaimed: 4,  jjaepity: 0 },
+      payment: null }, // 무료 → 등록된 결제수단 없음
     // BASIC — 진료기록리포트 16%, 째피티 15% 경고
     { id: 'kim',   name: '김미래', initial: '김', org: '삼성생명',       role: '팀장', plan: 'basic',
       remaining: { report: 8,  unclaimed: 35, jjaepity: 3,  claim: 5  },
-      // 최근 30일 — 리포트/째피티 사용이 BASIC 한도에 근접
-      usage30: { report: 42, unclaimed: 15, jjaepity: 17 } },
+      usage30: { report: 42, unclaimed: 15, jjaepity: 17 },
+      payment: { brand: '신한카드', last4: '1234' } },
     // PRO — 진료기록리포트 12% 경고, 나머지는 여유
     { id: 'lee',   name: '이보험', initial: '이', org: '한화생명',       role: '지점장', plan: 'pro',
       remaining: { report: 12, unclaimed: 60, jjaepity: 40, claim: 15 },
-      // 최근 30일 — 리포트 다수 사용, PRO에 잘 맞음
-      usage30: { report: 88, unclaimed: 40, jjaepity: 20 } }
+      usage30: { report: 88, unclaimed: 40, jjaepity: 20 },
+      payment: { brand: '삼성카드', last4: '5678' } },
+    // BASIC · 만료됨 (재구독 유도 시연용)
+    { id: 'park',  name: '박만료', initial: '박', org: 'DB손해보험',     role: 'FC',   plan: 'basic', expired: true,
+      remaining: { report: 0,  unclaimed: 0,  jjaepity: 0,  claim: 0  },
+      usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
+      payment: { brand: '국민카드', last4: '9012' },
+      expiredAt: '2026-06-05' }
   ];
 
   var FEATURE_LABEL = {
@@ -128,13 +134,19 @@
     var agent = getCurrentAgent();
     var plan = getEffectivePlan(agent);
     var limit = plan.limits[feature] || 0;
-    // 플랜 오버라이드가 있으면 오버라이드 플랜 한도까지 사용 가능
-    // (데모 단순화 — 원래 잔여 vs 한도 중 작은 값)
+    // 만료된 플랜은 잔여 0으로 처리
+    if (agent.expired) return { remaining: 0, limit: limit, plan: plan };
     var raw = (agent.remaining && typeof agent.remaining[feature] === 'number') ? agent.remaining[feature] : 0;
     var override = null;
     try { override = localStorage.getItem('bobi-plan-override-' + agent.id); } catch (e) {}
     if (override) raw = limit; // 오버라이드 시 새 플랜 만한도로 리셋
     return { remaining: Math.min(raw, limit), limit: limit, plan: plan };
+  };
+  window.isExpired = function () { return !!getCurrentAgent().expired; };
+  window.getPaymentMethod = function () { return getCurrentAgent().payment || null; };
+  window.getExpiredAt = function () {
+    var a = getCurrentAgent();
+    return a.expiredAt ? new Date(a.expiredAt) : null;
   };
 
   // ===== SVG Symbols (전 페이지 공통) =====
