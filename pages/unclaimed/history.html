@@ -664,7 +664,7 @@
 
 <script src="../../components/layout.js"></script>
 <script>
-  injectShell('claim');
+  injectShell('unclaimed');
   document.querySelectorAll('[data-quota]').forEach(function (el) {
     el.addEventListener('click', function (e) {
       if (!window.checkQuota(el.getAttribute('data-quota'))) e.preventDefault();

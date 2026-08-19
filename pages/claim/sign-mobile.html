@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>보비 · 보험금청구 서명</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<style>
+  html, body { margin: 0; background: var(--bg-soft); }
+  body { font-family: 'Pretendard', system-ui, sans-serif; color: var(--ink); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 컨테이너 ===== */
+  .page { max-width: 520px; margin: 0 auto; min-height: 100vh; background: var(--bg-soft); display: flex; flex-direction: column; }
+  .topbar { position: sticky; top: 0; z-index: 10; background: #fff; padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .topbar .brand { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .topbar .brand svg { color: var(--brand); }
+  .topbar .step { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+
+  /* ===== 헤더 ===== */
+  .hero { padding: 24px 20px 20px; background: #fff; border-bottom: 1px solid var(--line); }
+  .hero .greet { font-size: var(--fs-option); color: var(--ink-3); margin-bottom: 6px; }
+  .hero h1 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 8px 0; line-height: 1.3; }
+  .hero .sub { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.5; }
+  .hero .sub b { color: var(--ink); font-weight: 800; }
+
+  /* ===== 안내 알림 ===== */
+  .notice { margin: 16px 20px 0; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-md); padding: 14px 16px; display: flex; align-items: flex-start; gap: 10px; font-size: var(--fs-option); color: var(--brand-deep); line-height: 1.5; }
+  .notice svg { color: var(--brand-deep); flex: none; margin-top: 2px; }
+  .notice b { font-weight: 800; }
+
+  /* ===== 카드 공통 ===== */
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; margin: 16px 20px 0; }
+  .card h2 { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 14px 0; display: flex; align-items: center; gap: 8px; }
+  .card h2 .ic { color: var(--ink-4); }
+
+  .kv { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-body); }
+  .kv:last-child { border-bottom: none; }
+  .kv .k { color: var(--ink-3); flex: none; }
+  .kv .v { color: var(--ink); font-weight: 700; text-align: right; word-break: break-all; }
+
+  /* ===== 서명 캔버스 ===== */
+  .sign-note { font-size: var(--fs-option); color: var(--ink-3); margin-bottom: 10px; }
+  .sign-wrap { border: 1.5px dashed var(--line-strong); border-radius: 12px; background: #fff; height: 200px; position: relative; overflow: hidden; }
+  .sign-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .sign-wrap .ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--ink-4); font-size: var(--fs-body); font-weight: 600; pointer-events: none; }
+  .sign-wrap.filled { border-style: solid; border-color: var(--brand); }
+  .sign-wrap.filled .ph { display: none; }
+  .sign-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .sign-actions .badge { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-option); font-weight: 800; color: var(--ink-3); }
+  .sign-actions .badge.ok { color: var(--brand-deep); }
+  .sign-actions .badge svg { flex: none; }
+  .clear-btn { background: none; border: none; padding: 6px 10px; font-family: inherit; font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .clear-btn:hover { color: var(--ink); }
+
+  /* ===== 동의 체크 ===== */
+  .consent { margin: 16px 20px 0; }
+  .consent-row { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-sm); cursor: pointer; user-select: none; margin-bottom: 6px; }
+  .consent-row input { appearance: none; -webkit-appearance: none; width: 20px; height: 20px; border: 1.5px solid var(--line-strong); border-radius: 5px; background: #fff; margin: 0; flex: none; cursor: pointer; position: relative; }
+  .consent-row input:checked { background: var(--brand); border-color: var(--brand); }
+  .consent-row input:checked::after { content: ''; position: absolute; left: 6px; top: 2px; width: 4px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .consent-row .txt { font-size: var(--fs-body); color: var(--ink); line-height: 1.4; }
+  .consent-row .txt b { font-weight: 800; }
+  .consent-row .more { display: block; margin-top: 4px; font-size: var(--fs-option); color: var(--ink-3); }
+
+  /* ===== CTA ===== */
+  .cta-wrap { padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); position: sticky; bottom: 0; background: linear-gradient(180deg, rgba(244,247,250,0) 0%, var(--bg-soft) 40%); margin-top: 20px; }
+  .cta-btn { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 16px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 800; cursor: pointer; box-shadow: var(--sh-brand); letter-spacing: -0.01em; transition: filter .2s ease; }
+  .cta-btn:hover:not(:disabled) { filter: brightness(1.05); }
+  .cta-btn:disabled { background: var(--line); color: var(--ink-4); box-shadow: none; cursor: not-allowed; }
+
+  /* ===== 완료 화면 ===== */
+  .done { display: none; padding: 60px 24px 40px; text-align: center; flex: 1; flex-direction: column; align-items: center; justify-content: center; }
+  .done.show { display: flex; }
+  .done-ic { width: 96px; height: 96px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; margin-bottom: 22px; }
+  .done h2 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); margin: 0 0 10px 0; letter-spacing: -0.02em; }
+  .done p { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.6; margin: 0 0 26px 0; }
+  .done p b { color: var(--ink); font-weight: 800; }
+  .done .info-card { width: 100%; max-width: 320px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px 16px; text-align: left; }
+  .done .info-card .l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; margin-bottom: 6px; }
+  .done .info-card .v { font-size: var(--fs-body); color: var(--ink); font-weight: 700; }
+
+  /* ===== 푸터 (회사 정보) ===== */
+  .foot { padding: 20px; font-size: 12px; color: var(--ink-4); text-align: center; line-height: 1.5; margin-top: auto; }
+  .foot p { margin: 0; }
+  .foot p + p { margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- SVG symbols (필요한 것만) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 17.5h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 11h8M8 15h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.5" r=".9" fill="currentColor"/></symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="page" id="page">
+
+  <!-- 상단 바 -->
+  <div class="topbar">
+    <span class="brand">
+      <svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>
+      보비 청구서명
+    </span>
+    <span class="step">피보험자 · 수익자</span>
+  </div>
+
+  <!-- 인사 -->
+  <div class="hero">
+    <div class="greet">홍길동님, 안녕하세요</div>
+    <h1>보험금청구서에<br/>서명해 주세요</h1>
+    <p class="sub">담당 설계사가 작성한 청구서 내용을 확인하고 <b>아래에 서명</b>하면 보험사에 접수됩니다.</p>
+  </div>
+
+  <div class="notice">
+    <svg class="ic-svg" width="16" height="16"><use href="#i-info"/></svg>
+    <span>서명은 <b>피보험자 · 수익자 자격 2회</b>가 필요해요. 이 링크는 <b>7일간</b> 유효합니다.</span>
+  </div>
+
+  <!-- 요약 카드 -->
+  <div class="card">
+    <h2><svg class="ic-svg ic" width="16" height="16"><use href="#i-user"/></svg>청구 요약</h2>
+    <div class="kv"><span class="k">피보험자</span><span class="v">홍길동</span></div>
+    <div class="kv"><span class="k">보험사</span><span class="v">메리츠화재 외 1건</span></div>
+    <div class="kv"><span class="k">사고 유형</span><span class="v">질병 · 오른쪽 무릎 통증</span></div>
+    <div class="kv"><span class="k">발병일</span><span class="v">2026.07.28</span></div>
+    <div class="kv"><span class="k">보험금 받을 계좌</span><span class="v">카카오뱅크<br/>3333-01-1234567</span></div>
+  </div>
+
+  <!-- 동의 사항 -->
+  <div class="card">
+    <h2><svg class="ic-svg ic" width="16" height="16"><use href="#i-note"/></svg>필수 동의</h2>
+    <div class="consent" style="margin:0;padding:0;">
+      <label class="consent-row">
+        <input type="checkbox" data-req="1" />
+        <span class="txt">
+          <b>개인정보 수집 · 이용</b>에 동의합니다
+          <span class="more">이름 · 주민번호 · 연락처 · 진료내역이 보험사에 제공됩니다</span>
+        </span>
+      </label>
+      <label class="consent-row">
+        <input type="checkbox" data-req="1" />
+        <span class="txt">
+          <b>보험금 청구 위임</b>에 동의합니다
+          <span class="more">설계사가 작성한 청구서로 보험사에 접수하는 것을 위임합니다</span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <!-- 서명 캔버스 -->
+  <div class="card">
+    <h2><svg class="ic-svg ic" width="16" height="16"><use href="#i-file-text"/></svg>여기에 서명해 주세요</h2>
+    <div class="sign-note">손가락 또는 스타일러스로 아래 영역에 서명하세요</div>
+    <div class="sign-wrap" id="sign-wrap">
+      <canvas id="sign-canvas"></canvas>
+      <div class="ph" id="sign-ph">여기에 서명</div>
+    </div>
+    <div class="sign-actions">
+      <span class="badge" id="sign-badge">
+        <svg class="ic-svg" width="13" height="13"><use href="#i-check"/></svg>
+        <span id="sign-badge-txt">서명 대기</span>
+      </span>
+      <button class="clear-btn" type="button" id="btn-clear">다시 서명</button>
+    </div>
+  </div>
+
+  <!-- 하단 CTA -->
+  <div class="cta-wrap">
+    <button class="cta-btn" type="button" id="btn-submit" disabled>서명 제출하기</button>
+  </div>
+
+  <!-- 완료 화면 -->
+  <div class="done" id="done">
+    <div class="done-ic">
+      <svg class="ic-svg" width="44" height="44" stroke-width="2.4"><use href="#i-check"/></svg>
+    </div>
+    <h2>서명이 완료되었어요</h2>
+    <p><b>홍길동</b>님의 보험금 청구서가<br/>보험사에 정상 접수되었습니다.</p>
+    <div class="info-card">
+      <div class="l">접수 번호</div>
+      <div class="v">CLM-20260802-1015</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p>주식회사 천호인터내셔널 · 대표 이승엽 · 사업자등록번호 342-81-00261</p>
+    <p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // ===== 서명 캔버스 =====================================================
+  var canvas = document.getElementById('sign-canvas');
+  var wrap = document.getElementById('sign-wrap');
+  var ph = document.getElementById('sign-ph');
+  var badge = document.getElementById('sign-badge');
+  var badgeTxt = document.getElementById('sign-badge-txt');
+  var ctx = canvas.getContext('2d');
+  var drawing = false;
+  var hasStrokes = false;
+
+  function resize() {
+    var dpr = window.devicePixelRatio || 1;
+    var r = canvas.getBoundingClientRect();
+    canvas.width = r.width * dpr;
+    canvas.height = r.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.strokeStyle = '#0E1A24';
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function pos(e) {
+    var r = canvas.getBoundingClientRect();
+    var t = e.touches && e.touches[0];
+    var x = (t ? t.clientX : e.clientX) - r.left;
+    var y = (t ? t.clientY : e.clientY) - r.top;
+    return { x: x, y: y };
+  }
+
+  function start(e) {
+    e.preventDefault();
+    drawing = true;
+    var p = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  }
+  function move(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    var p = pos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    if (!hasStrokes) {
+      hasStrokes = true;
+      wrap.classList.add('filled');
+      badge.classList.add('ok');
+      badgeTxt.textContent = '서명 완료';
+      updateSubmit();
+    }
+  }
+  function end(e) {
+    if (!drawing) return;
+    if (e) e.preventDefault();
+    drawing = false;
+  }
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, { passive: false });
+  canvas.addEventListener('touchmove', move, { passive: false });
+  canvas.addEventListener('touchend', end);
+
+  document.getElementById('btn-clear').addEventListener('click', function () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasStrokes = false;
+    wrap.classList.remove('filled');
+    badge.classList.remove('ok');
+    badgeTxt.textContent = '서명 대기';
+    updateSubmit();
+  });
+
+  // ===== 동의 · 제출 =====================================================
+  var checks = document.querySelectorAll('.consent-row input[data-req]');
+  var submitBtn = document.getElementById('btn-submit');
+  function updateSubmit() {
+    var allChecked = Array.prototype.every.call(checks, function (c) { return c.checked; });
+    submitBtn.disabled = !(hasStrokes && allChecked);
+  }
+  checks.forEach(function (c) { c.addEventListener('change', updateSubmit); });
+
+  submitBtn.addEventListener('click', function () {
+    // 완료 화면으로 전환
+    document.getElementById('page').style.background = 'var(--bg-soft)';
+    // 페이지의 카드/CTA는 숨기고 done 카드 표시
+    var toHide = document.querySelectorAll('.hero, .notice, .card, .cta-wrap');
+    toHide.forEach(function (el) { el.style.display = 'none'; });
+    document.getElementById('done').classList.add('show');
+    document.querySelector('.topbar .step').textContent = '완료';
+    window.scrollTo({ top: 0 });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 청구 상세</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 타이틀 ===== */
+  .cE .dt-head { width: calc(100% + 72px) !important; max-width: none !important; margin: -28px -36px 22px; padding: 20px 0; background: #fff; border-bottom: 1px solid var(--line); }
+  .cE .dt-head-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 20px; }
+  .cE .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); text-decoration: none; font-weight: 600; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .back-btn:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
+  .cE .dt-head-title { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+
+  /* ===== 상단 요약 배너 ===== */
+  .cE .dt-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+  .cE .dt-hero-l h1 { font-size: 24px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 6px 0; }
+  .cE .dt-hero-l .meta { font-size: var(--fs-body); color: var(--ink-3); }
+  .cE .dt-hero-l .meta b { color: var(--ink-2); font-weight: 700; }
+  .cE .status-pill { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--r-pill); font-size: var(--fs-body); font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .status-pill::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .cE .status-pill.sent { background: var(--bg-soft); color: var(--ink-2); }
+  .cE .status-pill.sent::before { background: var(--ink-4); }
+  .cE .status-pill.done { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .status-pill.done::before { background: var(--brand); }
+  .cE .status-pill.hold { background: #FDEDEC; color: #C92238; }
+  .cE .status-pill.hold::before { background: #C92238; }
+
+  /* ===== 보류 알림 ===== */
+  .cE .hold-alert { display: flex; gap: 10px; align-items: flex-start; background: #FDEDEC; border: 1px solid #F6C9C7; border-radius: var(--r-md); padding: 14px 18px; margin-bottom: 24px; }
+  .cE .hold-alert[hidden] { display: none; }
+  .cE .hold-alert svg { color: #C92238; flex: none; margin-top: 2px; }
+  .cE .hold-alert .l { font-size: var(--fs-body); font-weight: 800; color: #C92238; margin-bottom: 2px; }
+  .cE .hold-alert .t { font-size: var(--fs-body); color: var(--ink-2); }
+
+  /* ===== 본문 2열 ===== */
+  .cE .dt-body { display: grid; grid-template-columns: 288px minmax(0, 1fr); gap: 40px; align-items: start; padding-bottom: 40px; }
+
+  /* ===== 사이드바 ===== */
+  .cE .side { position: sticky; top: 24px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 20px; }
+  .cE .side-title { font-size: var(--fs-option); font-weight: 800; color: var(--ink-3); letter-spacing: 0.02em; margin-bottom: 16px; }
+
+  .cE .tl-item { display: flex; gap: 12px; }
+  .cE .tl-track { display: flex; flex-direction: column; align-items: center; width: 16px; flex: none; }
+  .cE .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line-strong); flex: none; margin-top: 4px; }
+  .cE .tl-dot.on { background: var(--brand); }
+  .cE .tl-line { flex: 1; width: 2px; background: var(--line-strong); margin: 4px 0; min-height: 20px; }
+  .cE .tl-line.on { background: var(--brand); }
+  .cE .tl-info { padding-bottom: 20px; }
+  .cE .tl-lbl { font-size: var(--fs-body); font-weight: 800; color: var(--ink-3); line-height: 1.3; }
+  .cE .tl-lbl.on { color: var(--ink); }
+  .cE .tl-t { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+  .cE .side-sep { height: 1px; background: var(--line); margin: 6px 0 16px; }
+  .cE .sign-summary { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-bottom: 12px; }
+  .cE .sign-card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .cE .sign-roles { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .cE .sign-role { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; color: #fff; white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .sign-role.insured { background: var(--ink); }
+  .cE .sign-role.beneficiary { background: var(--ink-2); }
+  .cE .sign-role.guardian { background: var(--ink-3); }
+  .cE .sign-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .cE .sign-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
+  .cE .sign-status { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-option); font-weight: 800; white-space: nowrap; }
+  .cE .sign-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .cE .sign-status.done { color: var(--brand-deep); }
+  .cE .sign-status.done::before { background: var(--brand); }
+  .cE .sign-status.sent { color: var(--ink-3); }
+  .cE .sign-status.sent::before { background: var(--ink-4); }
+  .cE .sign-t { font-size: var(--fs-option); color: var(--ink-3); margin-top: 6px; font-variant-numeric: tabular-nums; }
+
+  /* ===== 메인 콘텐츠 ===== */
+  .cE .main { min-width: 0; }
+  .cE .main-title { display: flex; align-items: baseline; gap: 10px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); margin-bottom: 28px; }
+  .cE .main-title h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0; letter-spacing: -0.02em; }
+  .cE .main-title .sub { font-size: var(--fs-option); color: var(--ink-3); }
+
+  .cE .sec-lbl { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin: 0 0 10px 0; }
+  .cE .info-panel { border: 1px solid var(--line); border-radius: var(--r-md); padding: 2px 20px; margin-bottom: 40px; }
+  .cE .info-row { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .cE .info-row:last-child { border-bottom: none; }
+  .cE .info-row .ik { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; margin-bottom: 8px; }
+  .cE .info-row .iv-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.3; }
+  .cE .info-row .iv-sub { font-size: var(--fs-body); color: var(--ink-2); margin-top: 4px; }
+  .cE .info-row .iv-txt { font-size: var(--fs-body); color: var(--ink); line-height: 1.5; }
+
+  .cE .insurer-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px; }
+  .cE .insurer-chip { font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 9px 16px; }
+
+  .cE .account-box { border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; margin-bottom: 40px; }
+  .cE .account-box .l { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
+  .cE .account-box .s { font-size: var(--fs-body); color: var(--ink-2); margin-top: 6px; }
+
+  .cE .photos-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .cE .photos-head .sub { font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .photos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cE .photos-grid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-soft); }
+
+  /* ===== 반응형 ===== */
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+    .cE .dt-head { display: none !important; }
+    .cE .emain { padding: 12px 16px 32px !important; }
+    .ft { padding-left: 16px; padding-right: 16px; }
+
+    .cE .dt-hero { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+    .cE .dt-hero-l h1 { font-size: var(--fs-h1); }
+    .cE .hold-alert { padding: 12px 14px; margin-bottom: 18px; }
+
+    .cE .dt-body { grid-template-columns: 1fr; gap: 24px; padding-bottom: 24px; }
+    .cE .side { position: static; padding: 18px 16px; }
+    .cE .main-title { margin-bottom: 20px; }
+
+    .cE .insurer-chips { margin-bottom: 28px; }
+    .cE .account-box { padding: 14px 16px; margin-bottom: 28px; }
+    .cE .info-panel { margin-bottom: 28px; }
+    .cE .photos-grid img { aspect-ratio: 4 / 3; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- 타이틀 (뒤로) -->
+    <div class="dt-head">
+      <div class="dt-head-inner">
+        <a class="back-btn" href="list.html">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>
+          목록으로
+        </a>
+        <span class="dt-head-title">청구 상세</span>
+      </div>
+    </div>
+
+    <!-- 상단 요약 -->
+    <div class="dt-hero">
+      <div class="dt-hero-l">
+        <h1 id="dt-insurer">보험사</h1>
+        <div class="meta">피보험자 <b id="dt-customer">-</b><span id="dt-benef-wrap" hidden> · 수익자 <b id="dt-benef">-</b></span> · <span id="dt-type">-</span> · <span id="dt-date">-</span></div>
+      </div>
+      <span class="status-pill" id="dt-status">-</span>
+    </div>
+
+    <!-- 보류 알림 (해당 시) -->
+    <div class="hold-alert" id="hold-alert" hidden>
+      <svg class="ic-svg" width="20" height="20"><use href="#i-alert"/></svg>
+      <div>
+        <div class="l">보류 사유</div>
+        <div class="t" id="hold-reason">-</div>
+      </div>
+    </div>
+
+    <!-- 본문 -->
+    <div class="dt-body">
+
+      <!-- 사이드바: 처리 현황 + 서명 현황 -->
+      <aside class="side">
+        <div class="side-title">처리 현황</div>
+        <div id="timeline"></div>
+
+        <div class="side-sep"></div>
+
+        <div class="side-title">서명 현황</div>
+        <div class="sign-summary" id="sign-summary">-</div>
+        <div id="sign-list"></div>
+      </aside>
+
+      <!-- 메인: 청구서 본문 -->
+      <div class="main">
+        <div class="main-title">
+          <h2>청구서</h2>
+        </div>
+
+        <div class="sec-lbl">인적사항</div>
+        <div class="info-panel" id="persons-panel"></div>
+
+        <div class="sec-lbl">사고 내용</div>
+        <div class="info-panel" id="incident-panel"></div>
+
+        <div class="sec-lbl">청구 보험사</div>
+        <div class="insurer-chips" id="insurer-chips"></div>
+
+        <div class="sec-lbl">보험금 수령 계좌</div>
+        <div class="account-box">
+          <div class="l" id="acct-line">-</div>
+          <div class="s" id="acct-holder">-</div>
+        </div>
+
+        <div class="photos-head">
+          <span class="sec-lbl" style="margin:0;">첨부 서류</span>
+          <span class="sub" id="photo-count">-</span>
+        </div>
+        <div class="photos-grid">
+          <img src="../../assets/receipt-1.png" alt="첨부 서류 1" onerror="this.style.background='linear-gradient(135deg,#F4F7FA,#E6EBF0)';this.removeAttribute('src');">
+          <img src="../../assets/receipt-2.png" alt="첨부 서류 2" onerror="this.style.background='linear-gradient(135deg,#F4F7FA,#E6EBF0)';this.removeAttribute('src');">
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script src="_data.js"></script>
+<script>
+(function () {
+  function escapeHTML(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  // URL의 ?id=... 파라미터로 청구 선택. 없으면 첫 번째. (_data.js의 getClaimById)
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id');
+  var claim = window.getClaimById(id);
+
+  // ===== 헤더 ============================================================
+  document.getElementById('dt-insurer').textContent = claim.insurerLabel;
+  document.getElementById('dt-customer').textContent = claim.customer;
+  document.getElementById('dt-type').textContent = claim.typeLabel;
+  document.getElementById('dt-date').textContent = claim.date;
+  // 수익자가 피보험자와 다르면 상단 요약에도 표시
+  var beneRow = (claim.persons || []).filter(function (p) { return p.label === '수익자'; })[0];
+  if (beneRow && beneRow.name.indexOf('(피보험자와 동일)') === -1) {
+    var beneName = beneRow.name.replace(/\s*\(.*\)$/, '');
+    document.getElementById('dt-benef').textContent = beneName;
+    document.getElementById('dt-benef-wrap').hidden = false;
+  }
+  var status = document.getElementById('dt-status');
+  status.textContent = claim.status;
+  status.classList.add(claim.tone);
+  document.title = 'BoBi · ' + claim.customer + ' 청구 상세';
+
+  // ===== 보류 알림 =======================================================
+  if (claim.tone === 'hold' && claim.holdReason) {
+    document.getElementById('hold-alert').hidden = false;
+    document.getElementById('hold-reason').textContent = claim.holdReason;
+  }
+
+  // ===== 처리 현황 =======================================================
+  var tl = document.getElementById('timeline');
+  tl.innerHTML = (claim.timeline || []).map(function (t, i, arr) {
+    var last = i === arr.length - 1;
+    return '<div class="tl-item">'
+      + '<div class="tl-track">'
+      +   '<div class="tl-dot ' + (t.on ? 'on' : '') + '"></div>'
+      +   (last ? '' : '<div class="tl-line ' + (t.on && arr[i + 1] && arr[i + 1].on ? 'on' : '') + '"></div>')
+      + '</div>'
+      + '<div class="tl-info">'
+      +   '<div class="tl-lbl ' + (t.on ? 'on' : '') + '">' + escapeHTML(t.label) + '</div>'
+      +   '<div class="tl-t">' + escapeHTML(t.time) + '</div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  // ===== 서명 현황 =======================================================
+  var signers = claim.signers || [];
+  var doneCount = signers.filter(function (s) { return s.status === 'done'; }).length;
+  document.getElementById('sign-summary').textContent = signers.length
+    ? (doneCount === signers.length ? '전원 서명 완료' : doneCount + '/' + signers.length + '명 서명 완료')
+    : '-';
+  var roleToClass = { '피보험자':'insured', '수익자':'beneficiary', '법정대리인':'guardian' };
+  var roleToBg = { '피보험자':'insured', '수익자':'beneficiary', '계약자':'guardian', '법정대리인':'guardian' };
+  document.getElementById('sign-list').innerHTML = signers.map(function (s) {
+    var roleHtml = s.roles.map(function (r) {
+      var cls = roleToBg[r] || 'guardian';
+      return '<span class="sign-role ' + cls + '">' + escapeHTML(r) + '</span>';
+    }).join('');
+    return '<div class="sign-card">'
+      + '<div class="sign-roles">' + roleHtml + '</div>'
+      + '<div class="sign-head">'
+      +   '<span class="sign-name">' + escapeHTML(s.name) + '</span>'
+      +   '<span class="sign-status ' + s.status + '">' + escapeHTML(s.statusLbl) + '</span>'
+      + '</div>'
+      + '<div class="sign-t">' + escapeHTML(s.time || '-') + '</div>'
+      + '</div>';
+  }).join('');
+
+  // ===== 인적사항 ========================================================
+  document.getElementById('persons-panel').innerHTML = (claim.persons || []).map(function (p) {
+    return '<div class="info-row">'
+      + '<div class="ik">' + escapeHTML(p.label) + '</div>'
+      + '<div class="iv-name">' + escapeHTML(p.name) + '</div>'
+      + '<div class="iv-sub">' + escapeHTML(p.rrn) + ' · ' + escapeHTML(p.phone) + '</div>'
+      + '</div>';
+  }).join('');
+
+  // ===== 사고 내용 ========================================================
+  document.getElementById('incident-panel').innerHTML = (claim.incident || []).map(function (r) {
+    return '<div class="info-row">'
+      + '<div class="ik">' + escapeHTML(r.label) + '</div>'
+      + '<div class="iv-txt">' + escapeHTML(r.value) + '</div>'
+      + '</div>';
+  }).join('');
+
+  // ===== 보험사 칩 ========================================================
+  document.getElementById('insurer-chips').innerHTML = (claim.insurers || []).map(function (n) {
+    return '<span class="insurer-chip">' + escapeHTML(n) + '</span>';
+  }).join('');
+
+  // ===== 계좌 ===========================================================
+  document.getElementById('acct-line').textContent = claim.account.bank + ' ' + claim.account.no;
+  document.getElementById('acct-holder').textContent = '예금주 ' + claim.account.holder;
+
+  // ===== 서류 =============================================================
+  document.getElementById('photo-count').textContent = (claim.photoCount || 0) + '장';
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('claim');</script>
+<script>
+  // 모바일 topbar 재구성
+  (function () {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<a class="m-back" href="list.html" aria-label="목록으로">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</a>'
+      + '<span class="m-title">청구 상세</span>'
+      + '<span class="m-spacer" aria-hidden="true"></span>';
+  })();
+</script>
+</body>
+</html>

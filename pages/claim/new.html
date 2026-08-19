@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 새 보험금청구</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  /* 컨텐츠가 짧아도 CTA 바를 뷰포트 하단에 붙이려면 emain 이 뷰포트 높이 이상 + 하단 padding 제거 */
+  .cE .emain { display: flex; flex-direction: column; align-items: center; background: #fff; min-height: 100vh; padding-bottom: 0 !important; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 타이틀 (뒤로 + 제목) ===== */
+  /* 헤더 하단 여백 = 0 · 스텝 박스가 상하 18px 을 담당 */
+  .cE .nr-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: -28px -36px 0; padding: 22px 0; background: #fff; border-bottom: 1px solid var(--line); }
+  .cE .nr-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 22px; }
+  .cE .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); text-decoration: none; font-weight: 600; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .back-btn:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
+  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; }
+  .cE .nr-title-info { display: flex; flex-direction: column; }
+  .cE .nr-title-row .sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
+  .cE .nr-title-row .sub b { color: var(--ink-2); font-weight: 700; }
+
+  /* ===== 스텝 인디케이터 ===== */
+  /* 프로그레스 박스: 위 18px · 아래 24px · 콘텐츠 폭(760)에 맞춤 */
+  .cE .emain > .step-dots { max-width: 760px; }
+  .cE .step-dots { display: flex; align-items: center; gap: 10px; margin: 18px auto 24px; padding: 14px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); }
+  .cE .step { display: inline-flex; align-items: center; gap: 8px; }
+  .cE .step .num { width: 24px; height: 24px; border-radius: 50%; background: var(--line); color: var(--ink-3); display: grid; place-items: center; font-size: var(--fs-option); font-weight: 700; }
+  .cE .step .lbl { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .step.on .num { background: var(--brand); color: #fff; }
+  .cE .step.on .lbl { color: var(--ink); font-weight: 700; }
+  .cE .step.done .num { background: var(--brand); color: #fff; }
+  .cE .step.done .lbl { color: var(--ink-2); font-weight: 700; }
+  .cE .step-line { flex: 1 1 24px; height: 1px; background: var(--line); }
+  .cE .step.done + .step-line { background: var(--brand); }
+
+  /* ===== 콘텐츠 컬럼 (단일 컬럼, 사이드 미리보기 없음) ===== */
+  .cE .pane-wrap { max-width: 760px; margin: 0 auto; }
+  .cE .pane-main { min-width: 0; }
+
+  /* pane 타이틀 블록: h1 하단 18px 통일 (모든 스텝에서 h1 → 다음요소 간격 일정) */
+  .cE .pane-h1 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.6; margin: 0 0 18px; }
+  .cE .pane-desc { font-size: var(--fs-option); color: var(--ink-3); line-height: 1.6; margin: 0 0 18px; }
+
+  .step-pane[hidden] { display: none; }
+
+  /* ===== 카드 공통 ===== */
+  .cE .p-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 20px 22px; margin-bottom: 12px; box-shadow: var(--sh-1); }
+  .cE .p-card.hi { border-color: var(--ink-4); }
+  .cE .p-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .cE .p-card-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .p-card-hint { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; flex: 1; }
+  .cE .p-card-tools { display: inline-flex; gap: 6px; align-items: center; flex: none; }
+  .cE .icon-btn { width: 28px; height: 28px; border-radius: 8px; border: none; background: none; color: var(--ink-4); cursor: pointer; display: grid; place-items: center; transition: background-color .12s ease, color .12s ease; }
+  .cE .icon-btn:hover { background: var(--bg-soft); color: var(--ink-2); }
+  .cE .load-btn { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line-strong); background: #fff; border-radius: 8px; padding: 6px 10px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); cursor: pointer; font-family: inherit; }
+  .cE .load-btn:hover { background: var(--bg-soft); color: var(--ink); }
+
+  /* ===== 인적사항 카드 ===== */
+  .cE .same-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .cE .same-chip { padding: 7px 12px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); font-size: var(--fs-option); font-weight: 700; cursor: pointer; font-family: inherit; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .same-chip:hover { border-color: var(--ink-4); color: var(--ink); }
+  .cE .same-chip.on { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
+
+  .cE .mirror-note { display: flex; align-items: center; gap: 8px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 8px; padding: 12px 14px; font-size: var(--fs-body); font-weight: 700; color: var(--brand-deep); }
+  .cE .mirror-note svg { color: var(--brand-deep); flex: none; }
+
+  .cE .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cE .field-grid .field-full { grid-column: 1 / -1; }
+  .cE .field { display: flex; flex-direction: column; gap: 6px; }
+  .cE .field-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; padding-left: 2px; }
+  .cE .input-box { width: 100%; height: 44px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 0 14px; font-size: var(--fs-body); color: var(--ink); font-family: inherit; outline: none; background: #fff; box-sizing: border-box; transition: border-color .15s ease; }
+  .cE .input-box:hover { border-color: var(--ink-3); }
+  .cE .input-box:focus { border-color: var(--brand); }
+  .cE .input-box[readonly] { background: var(--bg-soft); color: var(--ink-3); cursor: default; }
+  .cE .rrn-row { display: flex; align-items: center; gap: 10px; }
+  .cE .rrn-row .input-box { flex: 1; text-align: center; }
+  .cE .rrn-row .rrn-front { letter-spacing: 0.12em; }
+  .cE .rrn-sep { color: var(--ink-4); font-weight: 700; font-size: var(--fs-body); }
+  /* 뒷자리: 실제 input 은 투명(캐럿만 보임), 오버레이 span 이 채워진 부분 + 남은 슬롯을 보여줌 */
+  .cE .rrn-back-slot { position: relative; flex: 1; }
+  .cE .rrn-back-slot .rrn-back { color: transparent; caret-color: var(--ink); letter-spacing: 0.25em; background: transparent; position: relative; z-index: 1; }
+  .cE .rrn-back-ghost { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-size: var(--fs-body); font-family: inherit; letter-spacing: 0.25em; z-index: 0; }
+  .cE .rrn-back-ghost .on { color: var(--ink); font-weight: 500; }
+  .cE .rrn-back-ghost .off { color: var(--ink-4); font-weight: 400; }
+  .cE textarea.input-box { height: auto; min-height: 100px; padding: 14px; line-height: 1.5; resize: none; font-family: inherit; }
+
+  /* 미성년 체크 */
+  .cE .minor-row { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: var(--r-md); border: 1px solid var(--line-strong); background: #fff; cursor: pointer; text-align: left; font-family: inherit; margin-top: 4px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+  .cE .minor-row:hover { border-color: var(--ink-4); }
+  .cE .minor-row.on { border-color: var(--brand); background: var(--brand-pale); }
+  .cE .minor-box { width: 20px; height: 20px; border-radius: 6px; flex: none; display: grid; place-items: center; background: #fff; border: 1.5px solid var(--line-strong); color: transparent; transition: all .12s ease; }
+  .cE .minor-row.on .minor-box { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .cE .minor-label { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .minor-hint { font-size: var(--fs-option); color: var(--ink-3); }
+
+  /* ===== Step 1: 보험사 선택 ===== */
+  /* 섹션 헤더 → 그리드: 14px (같은 그룹, 살짝 붙임) */
+  .cE .ins-section-h { display: flex; align-items: baseline; gap: 8px; margin: 0 0 14px 4px; }
+  .cE .ins-section-t { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .ins-section-c { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .ins-section-c b { color: var(--brand-deep); font-weight: 800; }
+  .cE .insurer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .cE .insurer-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; box-sizing: border-box; box-shadow: var(--sh-1); font-family: inherit; text-align: left; transition: border-color .12s ease, background-color .12s ease; min-height: 56px; }
+  .cE .insurer-btn:hover { border-color: var(--ink-4); }
+  .cE .insurer-btn.on { border-color: var(--brand); background: var(--brand-pale); box-shadow: none; }
+  .cE .insurer-logo { width: 34px; height: 34px; border-radius: 8px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; flex: none; overflow: hidden; }
+  .cE .insurer-logo img { max-width: 26px; max-height: 26px; object-fit: contain; }
+  .cE .insurer-logo .insurer-fallback { font-size: 11px; font-weight: 800; color: var(--ink-3); }
+  .cE .insurer-btn.on .insurer-logo { border-color: var(--brand-soft); }
+  .cE .insurer-name { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.01em; }
+  .cE .insurer-btn .ic-check { color: var(--brand-deep); flex: none; opacity: 0; width: 16px; height: 16px; }
+  .cE .insurer-btn.on .ic-check { opacity: 1; }
+
+  /* ===== Step 4: 사고 유형 ===== */
+  .cE .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .cE .type-btn { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; text-align: left; box-shadow: var(--sh-1); font-family: inherit; transition: border-color .12s ease, background-color .12s ease; }
+  .cE .type-btn:hover { border-color: var(--ink-4); }
+  .cE .type-btn.on { border-color: var(--brand); background: var(--brand-pale); box-shadow: none; }
+  .cE .type-icwrap { width: 44px; height: 44px; border-radius: 10px; background: var(--bg-soft); color: var(--ink-2); display: grid; place-items: center; flex: none; }
+  .cE .type-btn.on .type-icwrap { background: #fff; color: var(--brand-deep); }
+  .cE .type-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .type-desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .type-btn .ic-check { color: var(--brand-deep); flex: none; opacity: 0; }
+  .cE .type-btn.on .ic-check { opacity: 1; }
+
+  /* ===== Step 5: 서류 업로드 ===== */
+  .cE .photo-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .cE .photo-head .l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+  .cE .photo-head .r { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 8px; }
+  .cE .photo-tile { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; }
+  .cE .photo-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cE .photo-remove { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(15,23,42,.6); color: #fff; display: grid; place-items: center; cursor: pointer; }
+  .cE .photo-add { width: 100%; height: 100%; border: 1.5px dashed var(--line-strong); border-radius: 12px; background: var(--bg-soft); color: var(--ink-3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; font-family: inherit; font-size: var(--fs-option); font-weight: 600; transition: border-color .15s ease, color .15s ease, background-color .15s ease; }
+  .cE .photo-add:hover { border-color: var(--brand); color: var(--brand-deep); background: var(--brand-pale); }
+
+  /* 필요 서류 안내 (Step 4 카드 내부) */
+  .cE .doc-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .cE .doc-cat { padding: 7px 14px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-3); font-size: var(--fs-option); font-weight: 600; font-family: inherit; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .doc-cat:hover { border-color: var(--ink-4); color: var(--ink-2); }
+  .cE .doc-cat.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .cE .doc-list { display: flex; flex-direction: column; gap: 6px; }
+  .cE .doc-item { position: relative; padding-left: 14px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.6; }
+  .cE .doc-item::before { content: ''; position: absolute; left: 4px; top: 10px; width: 4px; height: 4px; border-radius: 50%; background: var(--brand); }
+
+  /* 계좌 입력 카드 (Step 3) */
+  .cE .acct-card { padding: 20px 22px; }
+  .cE .acct-fields { display: flex; flex-direction: column; gap: 14px; }
+
+  /* ===== Step 6: 검토 ===== */
+  .cE .review-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 24px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; }
+  .cE .review-row { display: flex; justify-content: space-between; gap: 16px; }
+  .cE .review-row .k { font-size: var(--fs-body); color: var(--ink-3); flex: none; }
+  .cE .review-row .v { font-size: var(--fs-body); font-weight: 700; color: var(--ink); text-align: right; }
+  .cE .review-note { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-sm); font-size: var(--fs-option); color: var(--brand-deep); line-height: 1.5; margin-bottom: 18px; }
+  .cE .review-note svg { flex: none; margin-top: 2px; }
+
+  /* 서명 링크 받을 분 */
+  .cE .signer-list { display: flex; flex-direction: column; gap: 8px; }
+  .cE .signer-row { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 16px; }
+  .cE .signer-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+  .cE .signer-roles { display: inline-flex; gap: 4px; flex: none; }
+  .cE .signer-role-tag { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--brand-pale); color: var(--brand-deep); letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .signer-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .signer-phone { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-body); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; flex: none; }
+  .cE .signer-phone svg { color: var(--ink-3); flex: none; }
+  .cE .signer-phone.empty { color: var(--ink-3); font-weight: 500; }
+  .cE .signer-phone.empty svg { color: var(--ink-4); }
+
+  /* ===== 하단 CTA 바 ===== */
+  /* 바는 emain 전폭(1192 max-width 무시) + emain 좌우 padding(36px) 까지 -margin 으로 뽑아내
+     → border-top 이 진짜 좌우 끝까지 이어짐 · 안쪽 버튼은 콘텐츠 폭(760) 우측에 정렬
+     margin-top:auto 로 컨텐츠 짧을 때도 뷰포트 하단에 붙임 */
+  .cE .emain > .wizard-cta { max-width: none; margin: auto -36px 0; width: calc(100% + 72px); }
+  .cE .wizard-cta { position: sticky; bottom: 0; padding: 0; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(6px); border-top: 1px solid var(--line); z-index: 10; }
+  .cE .wizard-cta-inner { max-width: 760px; margin: 0 auto; padding: 16px 0; display: flex; justify-content: flex-end; gap: 10px; box-sizing: border-box; }
+  .cE .btn-secondary { background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 12px 22px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .btn-secondary:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
+  .cE .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 26px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); letter-spacing: -0.01em; transition: filter .2s ease; min-width: 180px; }
+  .cE .btn-primary:hover:not(:disabled) { filter: brightness(1.05); }
+  .cE .btn-primary:disabled { background: var(--line); color: var(--ink-4); box-shadow: none; cursor: not-allowed; }
+
+  /* ===== 성공 화면 =====
+     간격은 넉넉하게. Gestalt 는 절대값이 아니라 상대 비율로:
+     · Group A (아이콘 → 제목) 20px
+     · Group A ↔ Group B 48px (약 2.4배)
+     · Group B (서명자 카드 → 액션) 20px */
+  .cE .success-wrap { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 72px 16px 48px; }
+  .cE .success-ic { width: 96px; height: 96px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; margin-bottom: 20px; }
+  .cE .success-title { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); margin: 0 0 48px; }
+  .cE .success-signers { width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .cE .success-actions { display: flex; gap: 10px; width: 100%; justify-content: center; }
+  .cE .success-actions .btn-primary { flex: 1; max-width: 220px; }
+  .cE .success-actions .btn-secondary { flex: 1; max-width: 160px; }
+
+  /* ===== 고객 불러오기 모달 ===== */
+  .load-modal { position: fixed; inset: 0; background: rgba(15,23,42,.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
+  .load-modal[hidden] { display: none; }
+  .load-card { background: #fff; border-radius: 18px; max-width: 460px; width: 100%; box-shadow: var(--sh-2); overflow: hidden; display: flex; flex-direction: column; max-height: 75vh; }
+  .load-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .load-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 4px 0; letter-spacing: -0.02em; }
+  .load-head .desc { font-size: var(--fs-option); color: var(--ink-3); }
+  .load-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
+  .load-close:hover { background: var(--line); color: var(--ink); }
+  .load-search { padding: 16px 22px 8px; }
+  .load-search .sw { background: var(--bg-soft); border-radius: var(--r-sm); padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .load-search svg { color: var(--ink-4); }
+  .load-search input { flex: 1; border: none; outline: none; background: none; font-family: inherit; font-size: var(--fs-body); color: var(--ink); }
+  .load-body { padding: 6px 12px 14px; overflow-y: auto; flex: 1; }
+  .load-row { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 10px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit; transition: background-color .12s ease; }
+  .load-row:hover { background: var(--bg-soft); }
+  .load-av { width: 32px; height: 32px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; font-size: 12px; font-weight: 800; flex: none; }
+  .load-nm-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .load-nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .load-sub { font-size: var(--fs-option); color: var(--ink-3); }
+  .load-ph { font-size: var(--fs-option); color: var(--ink-3); font-variant-numeric: tabular-nums; flex: none; }
+  .load-empty { padding: 40px 12px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
+
+  /* ============================================================
+     반응형
+     ============================================================ */
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+    html, body { background: #fff; }
+    .cE .emain { flex: 1; min-height: calc(100vh - 54px); padding: 12px 16px 32px !important; }
+    .m-topbar { background: #fff; }
+    .cE .nr-title-row { display: none !important; }
+    .ft { padding-left: 16px; padding-right: 16px; }
+
+    /* 모바일: 스텝 → 본문 24px · 콘텐츠 폭 제한 해제 (viewport - emain padding 이 이미 좁음) */
+    .cE .emain > .step-dots { max-width: 100%; }
+    .cE .step-dots { padding: 10px 12px; gap: 4px; margin-bottom: 24px; border-radius: var(--r-sm); overflow-x: auto; }
+    .cE .step .lbl { display: none; }
+    .cE .step.on .lbl { display: inline; }
+    .cE .step-line { flex: 0 1 24px; min-width: 12px; }
+
+    /* pane 헤더 */
+    .cE .pane-desc { margin-bottom: 20px; }
+    .cE .p-card { padding: 16px 18px; margin-bottom: 10px; }
+    .cE .field-grid { grid-template-columns: 1fr; gap: 12px; }
+    .cE .insurer-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .cE .insurer-btn { padding: 8px 10px; min-height: 52px; gap: 8px; }
+    .cE .insurer-logo { width: 30px; height: 30px; }
+    .cE .insurer-logo img { max-width: 22px; max-height: 22px; }
+    .cE .insurer-name { font-size: var(--fs-option); }
+    .cE .type-grid { grid-template-columns: 1fr; gap: 8px; }
+    .cE .photo-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .cE .review-card { padding: 18px 20px; }
+    /* 모바일 emain padding: 16px → 바 -16px 로 뽑아냄 · 안쪽 버튼은 뷰포트 폭 그대로 */
+    .cE .emain > .wizard-cta { margin: 16px -16px 0; width: calc(100% + 32px); }
+    .cE .wizard-cta-inner { max-width: 100%; padding: 12px 16px; }
+    .cE .wizard-cta .btn-primary { min-width: 0; flex: 1; }
+
+    .load-modal { padding: 12px; }
+    .load-card { max-height: 82vh; }
+    .load-head { padding: 18px 20px 14px; }
+    .load-search { padding: 14px 18px 6px; }
+    .load-body { padding: 4px 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- 타이틀 -->
+    <div class="nr-title-row">
+      <div class="nr-title-inner">
+        <a class="back-btn" href="list.html" id="back-link">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>
+          뒤로
+        </a>
+        <div class="nr-title-info">
+          <h1>새 보험금청구</h1>
+        </div>
+        <span data-quota-pill="claim" style="margin-left:auto;"></span>
+      </div>
+    </div>
+
+    <!-- 스텝 인디케이터 (검토는 progress 미표시) -->
+    <div class="step-dots" id="step-dots">
+      <div class="step on" data-step="1"><span class="num">1</span><span class="lbl">보험사 선택</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2"><span class="num">2</span><span class="lbl">인적사항</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="3"><span class="num">3</span><span class="lbl">받을 계좌</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="4"><span class="num">4</span><span class="lbl">사고 유형</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="5"><span class="num">5</span><span class="lbl">서류 첨부</span></div>
+    </div>
+
+    <!-- ============================================ Step 1: 보험사 선택 ============================================ -->
+    <div class="step-pane" id="pane-1">
+      <div class="pane-wrap">
+        <div class="pane-main">
+          <h2 class="pane-h1">어느 보험사에 청구할까요?</h2>
+
+          <!-- 검색 박스: 위 18px · 아래 24px -->
+          <div class="p-card" style="padding: 14px 16px; margin: 18px 0 24px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <svg class="ic-svg" width="18" height="18" style="color:var(--ink-4);"><use href="#i-search"/></svg>
+              <input type="text" id="insurer-query" placeholder="보험사 이름으로 검색" style="flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:var(--fs-body);color:var(--ink);">
+            </div>
+          </div>
+
+          <!-- 손해보험 섹션 -->
+          <div class="ins-section">
+            <div class="ins-section-h">
+              <span class="ins-section-t">손해보험</span>
+              <span class="ins-section-c" id="ins-count-damage">0</span>
+            </div>
+            <div class="insurer-grid" id="insurer-grid-damage"></div>
+          </div>
+
+          <!-- 생명보험 섹션 · 섹션 사이 40px (두 다른 카테고리 명확 분리) -->
+          <div class="ins-section" style="margin-top:40px;">
+            <div class="ins-section-h">
+              <span class="ins-section-t">생명보험</span>
+              <span class="ins-section-c" id="ins-count-life">0</span>
+            </div>
+            <div class="insurer-grid" id="insurer-grid-life"></div>
+          </div>
+
+          <!-- 검색 결과 없음 -->
+          <div id="ins-empty" style="display:none;padding:40px 20px;text-align:center;font-size:var(--fs-body);color:var(--ink-3);">검색 결과가 없어요</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ Step 2: 인적사항 ============================================ -->
+    <div class="step-pane" id="pane-2" hidden>
+      <div class="pane-wrap">
+        <div class="pane-main">
+          <h2 class="pane-h1">인적사항을 입력해 주세요</h2>
+          <div id="person-cards"></div>
+
+          <button class="minor-row" type="button" id="btn-minor">
+            <span class="minor-box"><svg class="ic-svg" width="12" height="12"><use href="#i-check"/></svg></span>
+            <span class="minor-label">피보험자가 미성년자예요</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ Step 3: 받을 계좌 ============================================ -->
+    <div class="step-pane" id="pane-3" hidden>
+      <div class="pane-wrap">
+        <div class="pane-main">
+          <h2 class="pane-h1">보험금 받을 계좌를 입력해 주세요</h2>
+
+          <div class="p-card acct-card">
+            <div class="acct-fields">
+              <div class="field">
+                <label class="field-l">은행명</label>
+                <input class="input-box" type="text" id="acct-bank" placeholder="예) 카카오뱅크">
+              </div>
+              <div class="field">
+                <label class="field-l">계좌번호</label>
+                <input class="input-box" type="text" id="acct-no" placeholder="숫자만 입력" inputmode="numeric">
+              </div>
+              <div class="field">
+                <label class="field-l">예금주명</label>
+                <input class="input-box" type="text" id="acct-holder" placeholder="예) 홍길동">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ Step 4: 사고 유형 ============================================ -->
+    <div class="step-pane" id="pane-4" hidden>
+      <div class="pane-wrap">
+        <div class="pane-main">
+          <h2 class="pane-h1">질병인가요, 상해인가요?</h2>
+
+          <div class="type-grid" id="type-grid"></div>
+
+          <div class="p-card" id="incident-card" hidden>
+            <div class="p-card-head"><span class="p-card-title">사고 내용</span></div>
+            <div class="field-grid" id="incident-fields"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ Step 5: 서류 업로드 ============================================ -->
+    <div class="step-pane" id="pane-5" hidden>
+      <div class="pane-wrap">
+        <div class="pane-main">
+          <h2 class="pane-h1">서류를 촬영해 주세요</h2>
+
+          <div class="photo-head">
+            <span class="l">첨부한 서류</span>
+            <span class="r" id="photo-count-lbl">0/10장</span>
+          </div>
+          <div class="photo-grid" id="photo-grid"></div>
+
+          <!-- 필요 서류 안내 (예전엔 사이드에 있던 것을 본문 하단에 배치) -->
+          <div class="p-card" style="margin-top:20px;">
+            <div class="p-card-head"><span class="p-card-title">필요 서류 안내</span></div>
+            <div class="doc-cats" id="doc-cats"></div>
+            <div class="doc-list" id="doc-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ Step 6: 검토 (progress 미표시) ============================================ -->
+    <div class="step-pane" id="pane-6" hidden>
+      <div style="max-width:760px;margin:0 auto;">
+        <h2 class="pane-h1">청구서 미리보기</h2>
+
+        <div class="review-card" id="review-persons"></div>
+        <div class="review-card" id="review-incident"></div>
+        <div class="review-card" id="review-account"></div>
+
+        <div class="p-card" style="padding: 18px 20px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <svg class="ic-svg" width="18" height="18" style="color:var(--ink-3);"><use href="#i-send"/></svg>
+            <span style="font-size:var(--fs-body);font-weight:800;color:var(--ink);">서명 링크 받을 분</span>
+          </div>
+          <div class="signer-list" id="signer-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ Step 6: 성공 ============================================ -->
+    <div class="step-pane" id="pane-done" hidden>
+      <div class="success-wrap">
+        <div class="success-ic">
+          <svg class="ic-svg" width="44" height="44" stroke-width="1.8" style="transform:translate(-1px,1px);"><use href="#i-send"/></svg>
+        </div>
+        <h2 class="success-title">서명 링크를 보냈어요</h2>
+        <div class="success-signers" id="success-signers"></div>
+        <div class="success-actions">
+          <button class="btn-secondary" type="button" id="btn-resend">링크 재전송</button>
+          <button class="btn-primary" type="button" id="btn-go-list">청구내역 확인</button>
+        </div>
+        <div id="resend-notice" style="font-size:var(--fs-option);color:var(--brand-deep);font-weight:700;margin-top:12px;" hidden>링크를 다시 보냈어요</div>
+      </div>
+    </div>
+
+    <!-- ===== 하단 CTA (스텝 1~5 공용) — 바는 emain 전폭, 안쪽 버튼은 1192 컬럼 폭에 정렬 ===== -->
+    <div class="wizard-cta" id="wizard-cta">
+      <div class="wizard-cta-inner">
+        <button class="btn-secondary" type="button" id="btn-prev">이전</button>
+        <button class="btn-primary" type="button" id="btn-next">다음</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<!-- 고객 불러오기 모달 -->
+<div class="load-modal" id="load-modal" hidden>
+  <div class="load-card">
+    <div class="load-head">
+      <div>
+        <h3>내 고객 목록</h3>
+      </div>
+      <button class="load-close" type="button" id="load-close" aria-label="닫기">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="load-search">
+      <div class="sw">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-search"/></svg>
+        <input type="text" id="load-query" placeholder="이름 또는 연락처로 검색" />
+      </div>
+    </div>
+    <div class="load-body" id="load-body"></div>
+  </div>
+</div>
+
+<script src="_data.js"></script>
+<script>
+(function () {
+  // ===== 데이터 ==========================================================
+  // 내 고객 정보는 이름/연락처/성별/생년월일까지만 저장.
+  // 주민번호는 생년월일·성별로 앞 7자리(6+1)만 자동 도출하고, 뒷 6자리는 매번 직접 입력받는다.
+  var CUSTOMERS = [
+    { id:'u1', name:'홍길동', phone:'010-1234-5678', gender:'남', birth:'1980.03.12' },
+    { id:'u2', name:'김민준', phone:'010-2222-3333', gender:'남', birth:'1992.07.04' },
+    { id:'u3', name:'이서연', phone:'010-4444-5555', gender:'여', birth:'1988.11.29' },
+    { id:'u4', name:'박지훈', phone:'010-6666-7777', gender:'남', birth:'2015.05.20' },
+    { id:'u5', name:'최수정', phone:'010-8888-9999', gender:'여', birth:'1975.01.08' }
+  ];
+
+  // 생년월일 '1980.03.12' → 주민번호 앞 6자리 '800312'
+  function birthToRrnFront(birth) {
+    var m = String(birth || '').match(/(\d{4})\.(\d{2})\.(\d{2})/);
+    return m ? m[1].slice(2) + m[2] + m[3] : '';
+  }
+  // 성별·생년월일 → 주민번호 뒷자리 첫 1자리 (남 1900s→1 / 2000s→3, 여 1900s→2 / 2000s→4)
+  function genderBirthToRrnFirst(gender, birth) {
+    var m = String(birth || '').match(/(\d{4})/);
+    if (!m) return '';
+    var is2000 = parseInt(m[1], 10) >= 2000;
+    if (gender === '남') return is2000 ? '3' : '1';
+    if (gender === '여') return is2000 ? '4' : '2';
+    return '';
+  }
+
+  var ROLES = [
+    { key:'insured',      label:'피보험자',    sameOptions: [] },
+    { key:'policyholder', label:'계약자',      sameOptions: ['insured'] },
+    { key:'beneficiary',  label:'수익자',      sameOptions: ['insured', 'policyholder'] },
+    { key:'guardian',     label:'법정대리인',  sameOptions: ['policyholder', 'beneficiary'] }
+  ];
+  var ROLE_LABEL = { insured:'피보험자', policyholder:'계약자', beneficiary:'수익자', guardian:'법정대리인' };
+
+  // 보험사 데이터 (손해 · 생명 카테고리 + 로고)는 _data.js에서 로드
+  var INSURERS_BY_CAT = window.INSURERS || { damage: [], life: [] };
+
+  var TYPES = [
+    { id:'disease', label:'질병', icon:'i-type-jil' },
+    { id:'injury',  label:'상해', icon:'i-type-sang' }
+  ];
+
+  var INC_FIELDS = {
+    disease: [
+      { key:'onsetDate',   label:'발병일',       placeholder:'2026.08.01',                         full:true },
+      { key:'symptom',     label:'증상',         placeholder:'예) 오른쪽 무릎 통증과 부기',        full:true,  area:true }
+    ],
+    injury: [
+      { key:'accidentDate',   label:'사고 날짜', placeholder:'2026.08.01',                          full:false },
+      { key:'accidentPlace',  label:'사고 장소', placeholder:'예) 회사 계단',                       full:false },
+      { key:'accidentDetail', label:'사고 경위', placeholder:'예) 계단을 내려가다 미끄러져 발목을 접질림', full:true, area:true }
+    ]
+  };
+
+  var DOC_CATS = [
+    { id:'outpatient', label:'통원' },
+    { id:'inpatient',  label:'입원' },
+    { id:'surgery',    label:'수술' },
+    { id:'diagnosis',  label:'진단금' },
+    { id:'emergency',  label:'응급' }
+  ];
+  var DOC_BY_CAT = {
+    outpatient: ['진료비 영수증 · 약제비 영수증', '통원확인서 · 진단서 · 처방전 중 1종'],
+    inpatient:  ['진단서', '입원확인서', '진료비 영수증 · 세부내역서'],
+    surgery:    ['진단서', '수술명 · 수술일자 포함된 서류', '진료비 영수증'],
+    diagnosis:  ['진단서', '진단 사실 확인 서류'],
+    emergency:  ['응급실 내원확인서 · 진료차트 중 1종', '약제비 영수증']
+  };
+
+  var MAX_PHOTOS = 10;
+  var SAMPLE_PHOTOS = ['../../assets/receipt-1.png', '../../assets/receipt-2.png']; // 데모 이미지가 없으면 대체 background로 렌더
+
+  // ===== 상태 ============================================================
+  function emptyPerson() { return { sameAs: null, name:'', rrnFront:'', rrnBack:'', phone:'' }; }
+  function initialPersons() {
+    // 임시 샘플: 피=수 동일인 (홍길동), 계약자·수익자 미러링
+    return {
+      insured:      { sameAs: null,      name:'홍길동', rrnFront:'800312', rrnBack:'1', phone:'010-1234-5678' },
+      policyholder: { sameAs: 'insured', name:'',        rrnFront:'',       rrnBack:'',  phone:'' },
+      beneficiary:  { sameAs: 'insured', name:'',        rrnFront:'',       rrnBack:'',  phone:'' },
+      guardian:     emptyPerson()
+    };
+  }
+
+  var state = {
+    step: 1,
+    persons: initialPersons(),
+    isMinor: false,
+    insurers: ['현대해상', '라이나생명'],
+    typeId: 'disease',
+    incident: { onsetDate:'2026.08.10', symptom:'오른쪽 무릎 통증과 부기로 통원 치료', accidentDate:'', accidentPlace:'', accidentDetail:'' },
+    photos: [ { id:'sp1', src: SAMPLE_PHOTOS[0] }, { id:'sp2', src: SAMPLE_PHOTOS[1] } ],
+    account: { bank:'카카오뱅크', no:'3333-01-1234567', holder:'홍길동' },
+    docCatId: 'inpatient',
+    loadRole: null,
+    insurerQuery: '',
+    loadQuery: '',
+    resent: false
+  };
+
+  function escapeHTML(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  function resolveRole(key) {
+    var cur = key, guard = 0;
+    while (state.persons[cur] && state.persons[cur].sameAs && guard++ < 5) cur = state.persons[cur].sameAs;
+    if (key === 'guardian' && cur === 'insured') return 'guardian';
+    return cur;
+  }
+
+  function visibleRoles() {
+    return ROLES.filter(function (r) { return r.key !== 'guardian' || state.isMinor; });
+  }
+
+  function maskRrnBackDisplay(v) {
+    if (!v) return '';
+    if (v.length === 1) return v;
+    return v[0] + '●'.repeat(v.length - 1);
+  }
+
+  // 주민번호 뒷자리 오버레이 — 채워진 부분(짙게) + 남은 슬롯(연하게 ●)
+  // 공란(len 0)일 때는 placeholder 가 표시되므로 오버레이 비움.
+  function rrnGhostHtml(p) {
+    var len = (p.rrnBack || '').length;
+    if (len === 0) return '';
+    var filled = maskRrnBackDisplay(p.rrnBack); // '1' or '1●' or '1●●' ...
+    var remain = 7 - len;
+    var html = '<span class="on">' + filled + '</span>';
+    if (remain > 0) html += '<span class="off">' + '●'.repeat(remain) + '</span>';
+    return html;
+  }
+
+  // ===== Step 인디케이터 ==================================================
+  function paintSteps() {
+    document.querySelectorAll('#step-dots .step').forEach(function (el) {
+      var s = parseInt(el.dataset.step, 10);
+      el.classList.remove('on', 'done');
+      if (s < state.step) el.classList.add('done');
+      else if (s === state.step) el.classList.add('on');
+    });
+  }
+
+  // ===== Step 1: 인적사항 =================================================
+  function renderPersons() {
+    var host = document.getElementById('person-cards');
+    var roles = visibleRoles();
+    host.innerHTML = roles.map(function (r, i) {
+      var p = state.persons[r.key];
+      var mirrored = !!p.sameAs && resolveRole(r.key) !== r.key;
+      var src = mirrored ? state.persons[resolveRole(r.key)] : p;
+      var canClear = !mirrored && !!(p.name || p.rrnFront || p.rrnBack || p.phone);
+      var opts = r.sameOptions.filter(function (o) { return r.key !== 'guardian' || resolveRole(o) !== 'insured'; });
+      var chipsHtml = opts.length ? '<div class="same-row">'
+        + opts.map(function (o) {
+            var on = p.sameAs === o;
+            return '<button type="button" class="same-chip ' + (on ? 'on' : '') + '" data-role="' + r.key + '" data-same="' + o + '">' + ROLE_LABEL[o] + '과 같음</button>';
+          }).join('')
+        + '<button type="button" class="same-chip ' + (!p.sameAs ? 'on' : '') + '" data-role="' + r.key + '" data-same="">직접 입력</button>'
+        + '</div>' : '';
+
+      var body;
+      if (mirrored) {
+        body = '<div class="mirror-note">'
+          + '<svg class="ic-svg" width="16" height="16"><use href="#i-check"/></svg>'
+          + '<span>' + ROLE_LABEL[resolveRole(r.key)] + '과 동일' + (src.name ? ' · ' + escapeHTML(src.name) : '') + '</span>'
+          + '</div>';
+      } else {
+        body = '<div class="field-grid">'
+          + '<div class="field">'
+          +   '<label class="field-l">이름</label>'
+          +   '<input class="input-box" type="text" placeholder="홍길동" maxlength="20" data-role="' + r.key + '" data-field="name" value="' + escapeHTML(p.name) + '">'
+          + '</div>'
+          + '<div class="field">'
+          +   '<label class="field-l">연락처</label>'
+          +   '<input class="input-box" type="text" placeholder="010-0000-0000" maxlength="13" data-role="' + r.key + '" data-field="phone" value="' + escapeHTML(p.phone) + '">'
+          + '</div>'
+          + '<div class="field field-full">'
+          +   '<label class="field-l">주민등록번호</label>'
+          +   '<div class="rrn-row">'
+          +     '<input class="input-box rrn-front" type="text" placeholder="900101" maxlength="6" inputmode="numeric" data-role="' + r.key + '" data-field="rrnFront" value="' + escapeHTML(p.rrnFront) + '">'
+          +     '<span class="rrn-sep">—</span>'
+          +     '<div class="rrn-back-slot">'
+          +       '<input class="input-box rrn-back" type="text" placeholder="●●●●●●●" maxlength="7" inputmode="numeric" data-role="' + r.key + '" data-field="rrnBack" value="' + maskRrnBackDisplay(p.rrnBack) + '">'
+          +       '<span class="rrn-back-ghost" data-ghost-role="' + r.key + '">' + rrnGhostHtml(p) + '</span>'
+          +     '</div>'
+          +   '</div>'
+          + '</div>'
+          + '</div>';
+      }
+
+      var tools = '';
+      if (canClear) tools += '<button class="icon-btn" type="button" title="입력 초기화" data-clear="' + r.key + '"><svg class="ic-svg" width="14" height="14"><use href="#i-rotate-ccw"/></svg></button>';
+      if (!mirrored) tools += '<button class="load-btn" type="button" data-load="' + r.key + '"><svg class="ic-svg" width="12" height="12"><use href="#i-download"/></svg>불러오기</button>';
+
+      return '<div class="p-card ' + (r.key === 'insured' ? 'hi' : '') + '">'
+        +   '<div class="p-card-head">'
+        +     '<span class="p-card-title">' + r.label + '</span>'
+        +     '<span class="p-card-tools" style="margin-left:auto;">' + tools + '</span>'
+        +   '</div>'
+        +   chipsHtml
+        +   body
+        + '</div>';
+    }).join('');
+
+    bindPersonHandlers();
+  }
+
+  function bindPersonHandlers() {
+    document.querySelectorAll('#person-cards .same-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var role = btn.dataset.role;
+        var same = btn.dataset.same || null;
+        state.persons[role].sameAs = same;
+        renderPersons();
+      });
+    });
+    document.querySelectorAll('#person-cards [data-load]').forEach(function (btn) {
+      btn.addEventListener('click', function () { openLoadModal(btn.dataset.load); });
+    });
+    document.querySelectorAll('#person-cards [data-clear]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var role = btn.dataset.clear;
+        state.persons[role] = emptyPerson();
+        renderPersons();
+      });
+    });
+    document.querySelectorAll('#person-cards input[data-role]').forEach(function (inp) {
+      inp.addEventListener('input', function () {
+        var role = inp.dataset.role;
+        var field = inp.dataset.field;
+        var val = inp.value;
+        if (field === 'rrnBack') {
+          var old = state.persons[role].rrnBack || '';
+          if (val.length > old.length) {
+            var added = val.slice(old.length).replace(/\D/g, '');
+            state.persons[role].rrnBack = (old + added).slice(0, 7);
+          } else {
+            state.persons[role].rrnBack = old.slice(0, val.length);
+          }
+          var disp = maskRrnBackDisplay(state.persons[role].rrnBack);
+          inp.value = disp;
+          inp.setSelectionRange(disp.length, disp.length);
+          // 오버레이 갱신 (채운 부분 + 남은 슬롯 ●)
+          var ghost = document.querySelector('[data-ghost-role="' + role + '"]');
+          if (ghost) ghost.innerHTML = rrnGhostHtml(state.persons[role]);
+        } else if (field === 'rrnFront') {
+          state.persons[role].rrnFront = val.replace(/\D/g, '').slice(0, 6);
+          if (inp.value !== state.persons[role].rrnFront) inp.value = state.persons[role].rrnFront;
+        } else {
+          state.persons[role][field] = val;
+        }
+      });
+    });
+  }
+
+  // ===== 미성년 토글 ======================================================
+  document.getElementById('btn-minor').addEventListener('click', function () {
+    state.isMinor = !state.isMinor;
+    document.getElementById('btn-minor').classList.toggle('on', state.isMinor);
+    renderPersons();
+  });
+
+  // ===== Step 3: 받을 계좌 =================================================
+  function renderAccountStep() {
+    var bankEl = document.getElementById('acct-bank');
+    var noEl = document.getElementById('acct-no');
+    var holderEl = document.getElementById('acct-holder');
+    bankEl.value = state.account.bank || '';
+    noEl.value = state.account.no || '';
+    holderEl.value = state.account.holder || '';
+    bankEl.oninput = function () { state.account.bank = bankEl.value; paintCta(); };
+    noEl.oninput = function () { state.account.no = noEl.value; paintCta(); };
+    holderEl.oninput = function () { state.account.holder = holderEl.value; paintCta(); };
+  }
+
+  // ===== Step 1: 보험사 선택 (손해 · 생명 카테고리) =======================
+  function renderInsurerCategory(catKey, hostId, countId) {
+    var host = document.getElementById(hostId);
+    var q = (state.insurerQuery || '').trim();
+    var list = (INSURERS_BY_CAT[catKey] || []).filter(function (i) {
+      return !q || i.name.indexOf(q) !== -1;
+    });
+    document.getElementById(countId).textContent = list.length + '개사';
+    // 섹션 자체 숨김/노출 (검색 결과가 카테고리에 없으면 섹션 숨김)
+    host.parentElement.style.display = list.length ? '' : 'none';
+    host.innerHTML = list.map(function (i) {
+      var on = state.insurers.indexOf(i.name) >= 0;
+      return '<button class="insurer-btn ' + (on ? 'on' : '') + '" type="button" data-ins="' + escapeHTML(i.name) + '">'
+        +   '<span class="insurer-logo">'
+        +     '<img src="' + escapeHTML(i.logo) + '" alt="' + escapeHTML(i.name) + '" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<span class=\\\'insurer-fallback\\\'>\' + this.alt.slice(0,2) + \'</span>\';">'
+        +   '</span>'
+        +   '<span class="insurer-name">' + escapeHTML(i.name) + '</span>'
+        +   '<svg class="ic-svg ic-check" width="16" height="16"><use href="#i-check"/></svg>'
+        + '</button>';
+    }).join('');
+    host.querySelectorAll('.insurer-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var name = btn.dataset.ins;
+        var i = state.insurers.indexOf(name);
+        if (i >= 0) state.insurers.splice(i, 1);
+        else state.insurers.push(name);
+        renderInsurers();
+        paintCta();
+      });
+    });
+  }
+
+  function renderInsurers() {
+    renderInsurerCategory('damage', 'insurer-grid-damage', 'ins-count-damage');
+    renderInsurerCategory('life',   'insurer-grid-life',   'ins-count-life');
+    // 두 섹션 다 결과가 없으면 empty 노출
+    var dmg = document.getElementById('insurer-grid-damage').children.length;
+    var life = document.getElementById('insurer-grid-life').children.length;
+    document.getElementById('ins-empty').style.display = (dmg + life === 0) ? 'block' : 'none';
+  }
+
+  document.getElementById('insurer-query').addEventListener('input', function (e) {
+    state.insurerQuery = e.target.value;
+    renderInsurers();
+  });
+
+  // ===== Step 3: 사고 유형 ================================================
+  function renderTypes() {
+    var host = document.getElementById('type-grid');
+    host.innerHTML = TYPES.map(function (t) {
+      var on = state.typeId === t.id;
+      return '<button class="type-btn ' + (on ? 'on' : '') + '" type="button" data-type="' + t.id + '">'
+        +   '<span class="type-icwrap"><svg class="ic-svg" width="22" height="22"><use href="#' + t.icon + '"/></svg></span>'
+        +   '<span class="type-name" style="flex:1;">' + t.label + '</span>'
+        +   '<svg class="ic-svg ic-check" width="20" height="20"><use href="#i-check"/></svg>'
+        + '</button>';
+    }).join('');
+    host.querySelectorAll('.type-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state.typeId = btn.dataset.type;
+        renderTypes();
+        renderIncident();
+        paintCta();
+      });
+    });
+  }
+
+  function renderIncident() {
+    var card = document.getElementById('incident-card');
+    var host = document.getElementById('incident-fields');
+    var defs = INC_FIELDS[state.typeId] || [];
+    if (!defs.length) { card.hidden = true; return; }
+    card.hidden = false;
+    host.innerHTML = defs.map(function (f) {
+      var val = state.incident[f.key] || '';
+      var cls = f.full ? 'field field-full' : 'field';
+      var input;
+      if (f.area) {
+        input = '<textarea class="input-box" rows="3" data-inc="' + f.key + '" placeholder="' + escapeHTML(f.placeholder) + '">' + escapeHTML(val) + '</textarea>';
+      } else {
+        input = '<input class="input-box" type="text" data-inc="' + f.key + '" placeholder="' + escapeHTML(f.placeholder) + '" value="' + escapeHTML(val) + '">';
+      }
+      return '<div class="' + cls + '">'
+        + '<label class="field-l">' + f.label + '</label>'
+        + input
+        + '</div>';
+    }).join('');
+    host.querySelectorAll('[data-inc]').forEach(function (el) {
+      el.addEventListener('input', function () {
+        state.incident[el.dataset.inc] = el.value;
+      });
+    });
+  }
+
+  // ===== Step 4: 서류 업로드 ==============================================
+  function renderPhotos() {
+    var host = document.getElementById('photo-grid');
+    var tiles = [];
+    state.photos.forEach(function (p) {
+      tiles.push('<div class="photo-tile">'
+        + '<img src="' + escapeHTML(p.src) + '" alt="첨부 서류" onerror="this.style.background=\'linear-gradient(135deg,#F4F7FA,#E6EBF0)\';this.removeAttribute(\'src\');">'
+        + '<button class="photo-remove" type="button" data-remove="' + p.id + '"><svg class="ic-svg" width="12" height="12"><use href="#i-x"/></svg></button>'
+        + '</div>');
+    });
+    if (state.photos.length < MAX_PHOTOS) {
+      tiles.push('<div class="photo-tile"><button class="photo-add" type="button" id="btn-add-photo">'
+        + '<svg class="ic-svg" width="22" height="22"><use href="#i-plus"/></svg>추가'
+        + '</button></div>');
+    }
+    host.innerHTML = tiles.join('');
+    document.getElementById('photo-count-lbl').textContent = state.photos.length + '/' + MAX_PHOTOS + '장';
+
+    host.querySelectorAll('[data-remove]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.dataset.remove;
+        state.photos = state.photos.filter(function (p) { return p.id !== id; });
+        renderPhotos();
+        paintCta();
+      });
+    });
+    var addBtn = document.getElementById('btn-add-photo');
+    if (addBtn) addBtn.addEventListener('click', function () {
+      var src = SAMPLE_PHOTOS[state.photos.length % SAMPLE_PHOTOS.length];
+      state.photos.push({ id: 'p' + Date.now() + Math.random(), src: src });
+      renderPhotos();
+      paintCta();
+    });
+  }
+
+  function renderDocGuide() {
+    var host = document.getElementById('doc-cats');
+    host.innerHTML = DOC_CATS.map(function (c) {
+      var on = state.docCatId === c.id;
+      return '<button type="button" class="doc-cat ' + (on ? 'on' : '') + '" data-cat="' + c.id + '">' + c.label + '</button>';
+    }).join('');
+    host.querySelectorAll('[data-cat]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state.docCatId = btn.dataset.cat;
+        renderDocGuide();
+      });
+    });
+    var list = document.getElementById('doc-list');
+    list.innerHTML = (DOC_BY_CAT[state.docCatId] || []).map(function (t) {
+      return '<div class="doc-item">' + escapeHTML(t) + '</div>';
+    }).join('');
+  }
+
+  // ===== Step 5: 검토 ====================================================
+  function renderReview() {
+    var roles = visibleRoles();
+    var personsHtml = roles.map(function (r) {
+      var base = resolveRole(r.key);
+      var src = state.persons[base];
+      var mirrored = base !== r.key;
+      var name = src.name ? (mirrored ? src.name + ' (' + ROLE_LABEL[base] + '과 동일)' : src.name) : '미입력';
+      return '<div class="review-row"><span class="k">' + r.label + '</span><span class="v">' + escapeHTML(name) + '</span></div>';
+    }).join('');
+    document.getElementById('review-persons').innerHTML = personsHtml;
+
+    var t = TYPES.filter(function (x) { return x.id === state.typeId; })[0];
+    var incHtml = '<div class="review-row"><span class="k">청구 보험사</span><span class="v">'
+      + escapeHTML(state.insurers.length > 1 ? state.insurers[0] + ' 외 ' + (state.insurers.length - 1) + '건' : (state.insurers[0] || '-'))
+      + '</span></div>'
+      + '<div class="review-row"><span class="k">사고 유형</span><span class="v">' + escapeHTML(t ? t.label : '-') + '</span></div>'
+      + (INC_FIELDS[state.typeId] || []).map(function (f) {
+          var v = (state.incident[f.key] || '').trim() || '미입력';
+          return '<div class="review-row"><span class="k">' + f.label + '</span><span class="v">' + escapeHTML(v) + '</span></div>';
+        }).join('')
+      + '<div class="review-row"><span class="k">첨부 서류</span><span class="v">' + state.photos.length + '장</span></div>';
+    document.getElementById('review-incident').innerHTML = incHtml;
+
+    // 검토에는 계좌 read-only 로 표시
+    var acctBank = state.account.bank || '-';
+    var acctNo = state.account.no || '-';
+    var acctHolder = state.account.holder || '-';
+    document.getElementById('review-account').innerHTML = ''
+      + '<div class="review-row">'
+      +   '<span class="k">보험금 받을 계좌</span>'
+      +   '<div style="text-align:right;">'
+      +     '<div style="font-size:var(--fs-body);font-weight:700;color:var(--ink);line-height:1.6;">' + escapeHTML(acctBank) + ' ' + escapeHTML(acctNo) + '</div>'
+      +     '<div style="font-size:var(--fs-option);color:var(--ink-3);line-height:1.6;">예금주 ' + escapeHTML(acctHolder) + '</div>'
+      +   '</div>'
+      + '</div>';
+
+    // 서명 링크 받을 분 · 미성년이면 법정대리인이 피 자격 대리서명 · 수와 같은 사람이면 자격 태그 병합
+    var insuredRoleLabel = state.isMinor ? '법정대리인' : '피보험자';
+    var insuredP = state.isMinor ? state.persons.guardian : state.persons.insured;
+    var beneP = state.persons[resolveRole('beneficiary')];
+    var sameSigner = insuredP.name === beneP.name && insuredP.phone === beneP.phone;
+    var signerGroups = sameSigner
+      ? [{ p: insuredP, roles: [insuredRoleLabel, '수익자'] }]
+      : [{ p: insuredP, roles: [insuredRoleLabel] }, { p: beneP, roles: ['수익자'] }];
+    document.getElementById('signer-list').innerHTML = signerGroups.map(function (g) {
+      var p = g.p;
+      var hasPhone = !!(p.phone || '').trim();
+      var roleTags = g.roles.map(function (r) {
+        return '<span class="signer-role-tag">' + escapeHTML(r) + '</span>';
+      }).join('');
+      return '<div class="signer-row">'
+        +   '<div class="signer-main">'
+        +     '<span class="signer-roles">' + roleTags + '</span>'
+        +     '<span class="signer-name">' + escapeHTML(p.name || '-') + '</span>'
+        +   '</div>'
+        +   '<span class="signer-phone' + (hasPhone ? '' : ' empty') + '">'
+        +     '<svg class="ic-svg" width="14" height="14"><use href="#i-phone"/></svg>'
+        +     escapeHTML(hasPhone ? p.phone : '연락처 미입력')
+        +   '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ===== 새 청구 저장 (localStorage → 다음 페이지에서 목록에 노출) =======
+  function persistNewClaim() {
+    var beneBase = resolveRole('beneficiary');
+    var beneP = state.persons[beneBase];
+    var custP = state.persons.insured;
+    var beneDiffers = beneBase !== 'insured';
+    var polBase = resolveRole('policyholder');
+    var polP = state.persons[polBase];
+    var polDiffers = polBase !== 'insured';
+    var typeObj = TYPES.filter(function (t) { return t.id === state.typeId; })[0] || {};
+    var insurerLabel = state.insurers.length > 1
+      ? state.insurers[0] + ' 외 ' + (state.insurers.length - 1) + '건'
+      : (state.insurers[0] || '');
+    var incidentRows = (INC_FIELDS[state.typeId] || []).map(function (f) {
+      return { label: f.label, value: (state.incident[f.key] || '').trim() || '-' };
+    });
+    var d = new Date();
+    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    var today = d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate());
+    var now = today + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    var newClaim = {
+      id: 'nc' + Date.now(),
+      date: today,
+      customer: custP.name,
+      beneficiary: beneP.name,
+      insurer: insurerLabel,
+      insurers: state.insurers.slice(),
+      typeId: state.typeId,
+      typeLabel: typeObj.label || '',
+      incident: (incidentRows.filter(function (r) { return r.label === '증상' || r.label === '사고 경위'; })[0] || {}).value || (incidentRows[0] && incidentRows[0].value) || '',
+      photoCount: state.photos.length,
+      status: '청구서전송',
+      tone: 'sent',
+      signedCount: 0,
+      signSummary: '', // _data.js 의 후처리로 자동 계산
+      customerInfo: {
+        rrn: custP.rrnFront + '-' + (custP.rrnBack ? custP.rrnBack[0] + '******' : '*******'),
+        phone: custP.phone
+      },
+      incidentRows: incidentRows,
+      account: {
+        bank: state.account.bank || '-',
+        no: state.account.no || '-',
+        holder: state.account.holder || '-'
+      },
+      times: { sent: now }
+    };
+    if (beneDiffers) {
+      newClaim.beneficiaryInfo = {
+        name: beneP.name,
+        rrn: beneP.rrnFront + '-' + (beneP.rrnBack ? beneP.rrnBack[0] + '******' : '*******'),
+        phone: beneP.phone
+      };
+    }
+    if (polDiffers) {
+      newClaim.policyholderInfo = {
+        name: polP.name,
+        rrn: polP.rrnFront + '-' + (polP.rrnBack ? polP.rrnBack[0] + '******' : '*******'),
+        phone: polP.phone
+      };
+    }
+    if (state.isMinor) {
+      var g = state.persons.guardian;
+      newClaim.guardianInfo = {
+        name: g.name,
+        rrn: g.rrnFront + '-' + (g.rrnBack ? g.rrnBack[0] + '******' : '*******'),
+        phone: g.phone
+      };
+    }
+    // localStorage 에 append (기존 저장분 + 이번 새 청구)
+    try {
+      var raw = localStorage.getItem('bobi-claims-extra');
+      var extra = raw ? JSON.parse(raw) : [];
+      extra.unshift(newClaim); // 최신이 위로
+      localStorage.setItem('bobi-claims-extra', JSON.stringify(extra));
+    } catch (e) {}
+  }
+
+  // ===== 성공 화면 =======================================================
+  function renderSuccess() {
+    var insuredRoleLabel = state.isMinor ? '법정대리인' : '피보험자';
+    var insuredP = state.isMinor ? state.persons.guardian : state.persons.insured;
+    var beneP = state.persons[resolveRole('beneficiary')];
+    var sameSigner = insuredP.name === beneP.name && insuredP.phone === beneP.phone;
+    var groups = sameSigner
+      ? [{ p: insuredP, roles: [insuredRoleLabel, '수익자'] }]
+      : [{ p: insuredP, roles: [insuredRoleLabel] }, { p: beneP, roles: ['수익자'] }];
+    document.getElementById('success-signers').innerHTML = groups.map(function (g) {
+      var p = g.p;
+      return '<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;">'
+        + '<div style="line-height:1.6;">'
+        +   '<div style="font-size:var(--fs-body);font-weight:800;color:var(--ink);">' + escapeHTML(p.name || '-') + '</div>'
+        +   '<div style="font-size:var(--fs-option);color:var(--ink-3);">' + g.roles.join(' · ') + '</div>'
+        + '</div>'
+        + '<span style="font-size:var(--fs-body);font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;">' + escapeHTML(p.phone || '-') + '</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  document.getElementById('btn-go-list').addEventListener('click', function () { window.location.href = 'list.html'; });
+  document.getElementById('btn-resend').addEventListener('click', function () {
+    state.resent = true;
+    document.getElementById('resend-notice').hidden = false;
+  });
+
+  // ===== 스텝 이동 =======================================================
+  function showStep(n) {
+    state.step = n;
+    ['pane-1','pane-2','pane-3','pane-4','pane-5','pane-6','pane-done'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = true;
+    });
+    var cta = document.getElementById('wizard-cta');
+    var stepDots = document.getElementById('step-dots');
+    if (n === 'done') {
+      document.getElementById('pane-done').hidden = false;
+      cta.style.display = 'none';
+      if (stepDots) stepDots.style.display = 'none';
+    } else {
+      document.getElementById('pane-' + n).hidden = false;
+      cta.style.display = '';
+      if (stepDots) stepDots.style.display = '';
+    }
+
+    if (n === 1) { renderInsurers(); }
+    else if (n === 2) { renderPersons(); }
+    else if (n === 3) { renderAccountStep(); }
+    else if (n === 4) { renderTypes(); renderIncident(); }
+    else if (n === 5) { renderPhotos(); renderDocGuide(); }
+    else if (n === 6) { renderReview(); }
+    else if (n === 'done') { renderSuccess(); }
+
+    paintSteps();
+    paintCta();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 유효성 (완화된 데모: 필수 최소만)
+  function canProceed(step) {
+    if (step === 1) return state.insurers.length > 0;
+    if (step === 2) {
+      return visibleRoles().every(function (r) {
+        var b = state.persons[resolveRole(r.key)];
+        return !!(b.name || '').trim() && (b.rrnFront || '').length === 6 && (b.rrnBack || '').length >= 1;
+      });
+    }
+    if (step === 3) return !!(state.account.bank || '').trim() && !!(state.account.no || '').trim() && !!(state.account.holder || '').trim();
+    if (step === 4) {
+      if (!state.typeId) return false;
+      return (INC_FIELDS[state.typeId] || []).every(function (f) { return (state.incident[f.key] || '').trim(); });
+    }
+    if (step === 5) return state.photos.length > 0;
+    if (step === 6) {
+      var roles = visibleRoles();
+      return roles.filter(function (r) { return r.key !== 'policyholder'; }).every(function (r) {
+        var p = state.persons[resolveRole(r.key)];
+        return !!(p.phone || '').trim();
+      });
+    }
+    return true;
+  }
+
+  function paintCta() {
+    var btnNext = document.getElementById('btn-next');
+    var btnPrev = document.getElementById('btn-prev');
+    if (state.step === 1) {
+      btnPrev.textContent = '취소';
+      btnPrev.onclick = function () { window.location.href = 'list.html'; };
+    } else {
+      btnPrev.textContent = '이전';
+      btnPrev.onclick = function () { showStep(state.step - 1); };
+    }
+    if (state.step === 6) {
+      btnNext.innerHTML = '<svg class="ic-svg" width="15" height="15"><use href="#i-send"/></svg>서명 링크 전송';
+      btnNext.onclick = function () {
+        persistNewClaim();
+        showStep('done');
+      };
+    } else {
+      btnNext.innerHTML = '다음<svg class="ic-svg" width="15" height="15"><use href="#i-chevron-right"/></svg>';
+      btnNext.onclick = function () { showStep(state.step + 1); };
+    }
+    // 데모: 검증 실패해도 진행 가능하도록 소프트 경고만 (버튼 항상 활성)
+    var ok = canProceed(state.step);
+    btnNext.style.opacity = ok ? '1' : '0.72';
+  }
+
+  // 뒤로가기(타이틀 링크) — 스텝 이동 프록시
+  document.getElementById('back-link').addEventListener('click', function (e) {
+    if (state.step === 1 || state.step === 'done') return;
+    e.preventDefault();
+    showStep(state.step - 1);
+  });
+
+  // ===== 고객 불러오기 모달 ================================================
+  var loadModal = document.getElementById('load-modal');
+  function openLoadModal(role) {
+    state.loadRole = role;
+    state.loadQuery = '';
+    document.getElementById('load-query').value = '';
+    renderLoadBody();
+    loadModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLoadModal() {
+    loadModal.hidden = true;
+    document.body.style.overflow = '';
+    state.loadRole = null;
+  }
+  function renderLoadBody() {
+    var q = state.loadQuery.replace(/-/g, '');
+    var list = CUSTOMERS.filter(function (c) {
+      if (!q) return true;
+      return c.name.indexOf(state.loadQuery) !== -1 || c.phone.replace(/-/g, '').indexOf(q) !== -1;
+    });
+    var body = document.getElementById('load-body');
+    if (!list.length) {
+      body.innerHTML = '<div class="load-empty">검색 결과가 없어요</div>';
+      return;
+    }
+    body.innerHTML = list.map(function (c) {
+      return '<button class="load-row" type="button" data-uid="' + c.id + '">'
+        + '<span class="load-av">' + escapeHTML(c.name.slice(0, 1)) + '</span>'
+        + '<span class="load-nm-wrap">'
+        +   '<span class="load-nm">' + escapeHTML(c.name) + '</span>'
+        +   '<span class="load-sub">' + escapeHTML(c.gender) + ' · ' + escapeHTML(c.birth) + '</span>'
+        + '</span>'
+        + '<span class="load-ph">' + escapeHTML(c.phone) + '</span>'
+        + '</button>';
+    }).join('');
+    body.querySelectorAll('[data-uid]').forEach(function (row) {
+      row.addEventListener('click', function () {
+        var c = CUSTOMERS.filter(function (x) { return x.id === row.dataset.uid; })[0];
+        if (!c || !state.loadRole) return;
+        // 이름/연락처는 그대로, 앞 7자리는 생년월일·성별로 자동 도출, 뒷 6자리는 공란 → 직접 입력 유도
+        state.persons[state.loadRole] = {
+          sameAs: null,
+          name: c.name,
+          phone: c.phone,
+          rrnFront: birthToRrnFront(c.birth),
+          rrnBack: genderBirthToRrnFirst(c.gender, c.birth)  // 1자리(성별 digit)만 채워짐
+        };
+        closeLoadModal();
+        renderPersons();
+      });
+    });
+  }
+  document.getElementById('load-close').addEventListener('click', closeLoadModal);
+  loadModal.addEventListener('click', function (e) { if (e.target === loadModal) closeLoadModal(); });
+  document.getElementById('load-query').addEventListener('input', function (e) {
+    state.loadQuery = e.target.value;
+    renderLoadBody();
+  });
+
+  // ===== 초기화 ===========================================================
+  showStep(1);
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('claim');</script>
+<script>
+  // 모바일 topbar 재구성 — 뒤로가기 · 화면 제목
+  (function () {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<button class="m-back" type="button" aria-label="뒤로가기" id="m-back-proxy">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</button>'
+      + '<span class="m-title">새 보험금청구</span>'
+      + '<span class="m-spacer" aria-hidden="true"></span>';
+
+    document.getElementById('m-back-proxy').addEventListener('click', function () {
+      var backLink = document.getElementById('back-link');
+      if (backLink) backLink.click();
+    });
+  })();
+</script>
+</body>
+</html>
