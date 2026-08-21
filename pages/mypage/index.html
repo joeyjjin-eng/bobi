@@ -152,6 +152,18 @@
   .cE .btn-danger { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 22px; background: #fff; color: #C92238; border: 1px solid #F0B4BC; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
   .cE .btn-danger:hover { background: #C92238; color: #fff; border-color: #C92238; }
 
+  /* ===== 통합 저장 바 (변경 감지 sticky) ===== */
+  .cE .mp-savebar-slot { position: sticky; bottom: 20px; z-index: 40; margin-top: 4px; display: flex; justify-content: center; pointer-events: none; }
+  .cE .mp-savebar { width: 100%; max-width: 720px; background: rgba(255,255,255,0.96); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line-strong); border-radius: 999px; padding: 10px 12px 10px 22px; box-shadow: 0 14px 36px rgba(15,23,42,0.16); display: flex; align-items: center; justify-content: space-between; gap: 16px; opacity: 0; transform: translateY(14px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+  .cE .mp-savebar.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .cE .sb-l { display: flex; align-items: center; gap: 10px; font-size: var(--fs-body); color: var(--ink); font-weight: 700; letter-spacing: -0.01em; min-width: 0; }
+  .cE .sb-l .sb-dot { width: 9px; height: 9px; border-radius: 50%; background: #F59E0B; box-shadow: 0 0 0 4px rgba(245,158,11,0.18); flex: none; animation: sb-pulse 1.6s ease-in-out infinite; }
+  .cE .sb-l .sb-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin-left: 2px; }
+  .cE .sb-r { display: flex; gap: 8px; flex: none; }
+  .cE .sb-r .btn-ghost { height: 40px; padding: 0 16px; }
+  .cE .sb-r .btn-primary { height: 40px; padding: 0 20px; }
+  @keyframes sb-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(0.85); } }
+
   /* ===== 저장 완료 토스트 ===== */
   .mp-toast { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: #fff; padding: 12px 20px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; box-shadow: 0 12px 30px rgba(0,0,0,0.25); display: inline-flex; align-items: center; gap: 8px; opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; z-index: 500; letter-spacing: -0.01em; font-family: 'Pretendard', system-ui, sans-serif; }
   .mp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -207,6 +219,11 @@
 
     .cE .sec-row { flex-direction: column; align-items: stretch; gap: 12px; }
     .cE .sec-row .btn-ghost { align-self: stretch; }
+
+    .cE .mp-savebar-slot { bottom: 12px; }
+    .cE .mp-savebar { border-radius: var(--r-lg); padding: 12px 14px; flex-wrap: wrap; }
+    .cE .sb-l { width: 100%; }
+    .cE .sb-r { width: 100%; justify-content: flex-end; }
   }
 </style>
 </head>
@@ -287,13 +304,6 @@
             </div>
           </div>
         </div>
-        <div class="mp-card-actions">
-          <button type="button" class="btn-ghost" onclick="resetCard('card-personal')">되돌리기</button>
-          <button type="button" class="btn-primary" onclick="saveCard('개인정보')">
-            <svg class="ic-svg" width="15" height="15"><use href="#i-check"/></svg>
-            변경사항 저장
-          </button>
-        </div>
       </section>
 
       <!-- ===== 계정정보 ===== -->
@@ -350,13 +360,6 @@
               <input id="a-ref-phone" class="f-input" type="tel" value="010-8765-4321" maxlength="13" inputmode="numeric" />
             </div>
           </div>
-        </div>
-        <div class="mp-card-actions">
-          <button type="button" class="btn-ghost" onclick="resetCard('card-account')">되돌리기</button>
-          <button type="button" class="btn-primary" onclick="saveCard('계정정보')">
-            <svg class="ic-svg" width="15" height="15"><use href="#i-check"/></svg>
-            변경사항 저장
-          </button>
         </div>
       </section>
 
@@ -419,6 +422,24 @@
           </div>
         </div>
       </section>
+
+      <!-- ===== 통합 저장 바 (개인정보 + 계정정보 변경 감지 시 노출) ===== -->
+      <div class="mp-savebar-slot">
+        <div class="mp-savebar" id="mp-savebar" role="status" aria-live="polite">
+          <div class="sb-l">
+            <span class="sb-dot" aria-hidden="true"></span>
+            <span>저장하지 않은 변경사항이 있어요</span>
+            <span class="sb-sub" id="sb-sub">· 항목 <b id="sb-count">0</b>개</span>
+          </div>
+          <div class="sb-r">
+            <button type="button" class="btn-ghost" onclick="resetAll()">되돌리기</button>
+            <button type="button" class="btn-primary" onclick="saveAll()">
+              <svg class="ic-svg" width="15" height="15"><use href="#i-check"/></svg>
+              변경사항 저장
+            </button>
+          </div>
+        </div>
+      </div>
 
     </div>
 
@@ -660,14 +681,65 @@
     e.target.value = out;
   });
 
-  // 저장/되돌리기 (UI 데모)
-  window.saveCard = function (label) {
-    showToast(label + ' 변경사항이 저장되었습니다.');
-  };
-  window.resetCard = function (id) {
-    // 실제 초기화는 페이지 재로드로 대체 (데모)
-    showToast('변경사항이 취소되었습니다.');
-  };
+  // 통합 저장 바 — 개인정보 + 계정정보 변경 감지
+  (function () {
+    var scopeSel = '#card-personal, #card-account';
+    var cards = document.querySelectorAll(scopeSel);
+    var fields = [];
+    cards.forEach(function (card) {
+      card.querySelectorAll('input, select').forEach(function (el) {
+        if (el.classList.contains('readonly') || el.readOnly) return;
+        fields.push({ el: el, initial: el.value });
+      });
+    });
+    var genderBtns = document.querySelectorAll('#p-gender .seg-btn');
+    var genderInitial = (document.querySelector('#p-gender .seg-btn.on') || {}).dataset;
+    genderInitial = genderInitial ? genderInitial.v : null;
+
+    var bar = document.getElementById('mp-savebar');
+    var countEl = document.getElementById('sb-count');
+
+    function currentGender() {
+      var on = document.querySelector('#p-gender .seg-btn.on');
+      return on ? on.dataset.v : null;
+    }
+    function computeDirty() {
+      var n = 0;
+      fields.forEach(function (f) { if (f.el.value !== f.initial) n++; });
+      if (currentGender() !== genderInitial) n++;
+      return n;
+    }
+    function sync() {
+      var n = computeDirty();
+      countEl.textContent = n;
+      bar.classList.toggle('show', n > 0);
+    }
+
+    fields.forEach(function (f) {
+      f.el.addEventListener('input', sync);
+      f.el.addEventListener('change', sync);
+    });
+    genderBtns.forEach(function (b) {
+      b.addEventListener('click', function () { setTimeout(sync, 0); });
+    });
+
+    window.saveAll = function () {
+      fields.forEach(function (f) { f.initial = f.el.value; });
+      genderInitial = currentGender();
+      sync();
+      showToast('변경사항이 저장되었습니다.');
+    };
+    window.resetAll = function () {
+      fields.forEach(function (f) { f.el.value = f.initial; });
+      genderBtns.forEach(function (b) {
+        var on = b.dataset.v === genderInitial;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
+      sync();
+      showToast('변경사항을 되돌렸습니다.');
+    };
+  })();
 
   // 토스트
   var toast = document.getElementById('mp-toast');
