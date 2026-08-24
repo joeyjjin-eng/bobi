@@ -93,13 +93,11 @@
   .cE .tr-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; text-align: center; }
   .cE .tr-insurer { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-weight: 500; }
 
-  .cE .tr-inc { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-left: 4px; }
-  .cE .tr-inc-line { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .cE .tr-inc { display: flex; align-items: center; gap: 8px; min-width: 0; padding-left: 4px; }
   .cE .type-chip { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex: none; letter-spacing: -0.01em; }
   .cE .type-chip.disease { background: var(--brand-pale); color: var(--brand-deep); }
   .cE .type-chip.injury { background: var(--c-surg-bg); color: var(--c-surg); }
   .cE .tr-inc-txt { font-size: var(--fs-body); color: var(--ink); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .cE .tr-inc-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
 
   /* ===== 상태 배지 ===== */
   .cE .tr-status { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding-right: 4px; }
@@ -111,7 +109,6 @@
   .cE .status-pill.done::before { background: var(--brand); }
   .cE .status-pill.hold { background: #FDEDEC; color: #C92238; }
   .cE .status-pill.hold::before { background: #C92238; }
-  .cE .tr-sign { font-size: 12px; color: var(--ink-3); font-weight: 500; font-variant-numeric: tabular-nums; }
 
   .cE .tr-go { color: var(--ink-4); display: flex; align-items: center; justify-content: center; transition: color .12s ease, transform .12s ease; }
   .cE .empty-list { padding: 60px 20px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
@@ -196,7 +193,7 @@
       grid-template-areas:
         "date   status"
         "inc    status"
-        "meta   sign";
+        "meta   status";
       column-gap: 12px;
       row-gap: 6px;
       padding: 14px 16px;
@@ -205,12 +202,11 @@
     .cE .table-row .tr-date { grid-area: date; text-align: left; font-size: 12px; }
     .cE .table-row .tr-name,
     .cE .table-row .tr-insurer { display: none; }
-    .cE .table-row .tr-inc { grid-area: inc; padding-left: 0; gap: 4px; }
+    .cE .table-row .tr-inc { grid-area: inc; padding-left: 0; }
     .cE .table-row .mobile-meta { grid-area: meta; display: flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-3); }
     .cE .table-row .mobile-meta b { color: var(--ink); font-weight: 700; }
     .cE .table-row .mobile-meta .mm-sep { color: var(--ink-4); }
     .cE .table-row .tr-status { grid-area: status; padding-right: 0; }
-    .cE .table-row .tr-status .tr-sign { grid-area: sign; }
     .cE .table-row .tr-go { display: none; }
 
     .cE .pagination { padding: 14px 12px; gap: 4px; }
@@ -473,15 +469,11 @@
         +   '<span class="tr-name tr-insurer">' + escapeHTML(c.beneficiary) + '</span>'
         +   '<span class="tr-insurer">' + escapeHTML(c.insurer) + '</span>'
         +   '<div class="tr-inc">'
-        +     '<div class="tr-inc-line">'
-        +       '<span class="type-chip ' + typeCls + '">' + c.typeLabel + '</span>'
-        +       '<span class="tr-inc-txt">' + escapeHTML(c.incident) + '</span>'
-        +     '</div>'
-        +     '<span class="tr-inc-meta">서류 ' + c.photoCount + '장</span>'
+        +     '<span class="type-chip ' + typeCls + '">' + c.typeLabel + '</span>'
+        +     '<span class="tr-inc-txt">' + escapeHTML(c.incident) + '</span>'
         +   '</div>'
         +   '<div class="tr-status">'
         +     '<span class="status-pill ' + statusCls + '">' + c.status + '</span>'
-        +     '<span class="tr-sign">' + c.signSummary + '</span>'
         +   '</div>'
         +   '<span class="mobile-meta">'
         +     '<b>' + escapeHTML(c.customer) + '</b>'

@@ -4,7 +4,7 @@
    각 claim의 필드:
    - 리스트 요약용: id, date, customer, beneficiary, insurer, insurers[],
                     typeId, typeLabel, incident(짧은 요약), photoCount,
-                    status, tone, signSummary, holdReason(hold일 때만)
+                    status, tone, holdReason(hold일 때만)
    - 상세 확장용: customerInfo{rrn,phone}, beneficiaryInfo?(피≠수일 때만),
                   policyholderInfo?(계약자 다를 때만), guardianInfo?(미성년),
                   incidentRows[], account, times{sent,signed?}
@@ -25,6 +25,20 @@
       ],
       account:{ bank:'카카오뱅크', no:'3333-01-1234567', holder:'정하윤' },
       times:{ sent:'2026.08.15 09:20' } },
+
+    // ---------- 피 ≠ 수 (배우자 수령) · 서명 대기 중 → 재전송 데모 ----------
+    { id:'c24', date:'2026.08.14', customer:'이재훈', beneficiary:'김민서',
+      insurer:'한화생명', insurers:['한화생명'],
+      typeId:'disease', typeLabel:'질병', incident:'폐렴 입원 5일 (배우자 수령)', photoCount:5,
+      status:'청구서전송', tone:'sent',
+      customerInfo:{ rrn:'830715-1******', phone:'010-3345-8811' },
+      beneficiaryInfo:{ name:'김민서', rrn:'860412-2******', phone:'010-2278-5590' },
+      incidentRows:[
+        { label:'발병일', value:'2026.08.08' },
+        { label:'증상',   value:'급성 폐렴으로 5일 입원 · 항생제 정맥 투여' }
+      ],
+      account:{ bank:'신한은행', no:'110-555-667788', holder:'김민서' },
+      times:{ sent:'2026.08.14 10:22' } },
 
     { id:'c2', date:'2026.08.12', customer:'강태우', beneficiary:'강태우',
       insurer:'현대해상 외 1건', insurers:['현대해상', 'KB손해보험'],
@@ -305,7 +319,7 @@
     { id:'c23', date:'2026.06.15', customer:'김하늘', beneficiary:'김미래',
       insurer:'DB손해보험', insurers:['DB손해보험'],
       typeId:'injury', typeLabel:'상해', incident:'놀이터에서 넘어져 이마 열상 (미성년 자녀)', photoCount:3,
-      status:'청구서전송', tone:'sent', signedCount: 1,
+      status:'청구서전송', tone:'sent',
       customerInfo:{ rrn:'180825-3******', phone:'-' },
       beneficiaryInfo:{ name:'김미래', rrn:'840612-2******', phone:'010-3345-2211' },
       policyholderInfo:{ name:'김미래', rrn:'840612-2******', phone:'010-3345-2211' },
@@ -435,16 +449,6 @@
       }
     }
   } catch (e) {}
-
-  // ===== signSummary 자동 계산 (피=수는 /1, 피≠수는 /2) ==================
-  // 보류(hold)의 안내 문구("서류 재요청" 등)는 그대로 유지.
-  // 부분 서명(피≠수인데 1명만 서명함) 케이스는 c.signedCount 로 명시.
-  CLAIMS.forEach(function (c) {
-    if (c.tone === 'hold') return;
-    var total = c.beneficiaryInfo ? 2 : 1;
-    var signed = (c.tone === 'done') ? total : (typeof c.signedCount === 'number' ? c.signedCount : 0);
-    c.signSummary = signed + '/' + total + ' 서명';
-  });
 
   window.CLAIMS = CLAIMS;
   window.getClaimById = function (id) {

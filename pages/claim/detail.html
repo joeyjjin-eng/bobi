@@ -82,6 +82,10 @@
   .cE .sign-status.sent { color: var(--ink-3); }
   .cE .sign-status.sent::before { background: var(--ink-4); }
   .cE .sign-t { font-size: var(--fs-option); color: var(--ink-3); margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .cE .sign-resend { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 10px; padding: 8px 12px; background: #fff; border: 1px solid var(--line-strong); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .sign-resend:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
+  .cE .sign-resend:disabled { background: var(--brand-pale); color: var(--brand-deep); border-color: var(--brand-soft); cursor: default; }
+  .cE .sign-resend svg { flex: none; }
 
   /* ===== 메인 콘텐츠 ===== */
   .cE .main { min-width: 0; }
@@ -285,11 +289,17 @@
     : '-';
   var roleToClass = { '피보험자':'insured', '수익자':'beneficiary', '법정대리인':'guardian' };
   var roleToBg = { '피보험자':'insured', '수익자':'beneficiary', '계약자':'guardian', '법정대리인':'guardian' };
-  document.getElementById('sign-list').innerHTML = signers.map(function (s) {
+  document.getElementById('sign-list').innerHTML = signers.map(function (s, i) {
     var roleHtml = s.roles.map(function (r) {
       var cls = roleToBg[r] || 'guardian';
       return '<span class="sign-role ' + cls + '">' + escapeHTML(r) + '</span>';
     }).join('');
+    var resendBtn = s.status === 'sent'
+      ? '<button class="sign-resend" type="button" data-idx="' + i + '">'
+        + '<svg class="ic-svg" width="12" height="12"><use href="#i-send"/></svg>'
+        + '서명 링크 재전송'
+        + '</button>'
+      : '';
     return '<div class="sign-card">'
       + '<div class="sign-roles">' + roleHtml + '</div>'
       + '<div class="sign-head">'
@@ -297,8 +307,15 @@
       +   '<span class="sign-status ' + s.status + '">' + escapeHTML(s.statusLbl) + '</span>'
       + '</div>'
       + '<div class="sign-t">' + escapeHTML(s.time || '-') + '</div>'
+      + resendBtn
       + '</div>';
   }).join('');
+  document.querySelectorAll('.sign-resend').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.disabled = true;
+      btn.innerHTML = '<svg class="ic-svg" width="12" height="12"><use href="#i-check"/></svg>링크를 다시 보냈어요';
+    });
+  });
 
   // ===== 인적사항 ========================================================
   document.getElementById('persons-panel').innerHTML = (claim.persons || []).map(function (p) {

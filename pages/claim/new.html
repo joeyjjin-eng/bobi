@@ -48,7 +48,7 @@
 
   /* ===== 콘텐츠 컬럼 (단일 컬럼, 사이드 미리보기 없음) ===== */
   .cE .pane-wrap { max-width: 760px; margin: 0 auto; }
-  .cE .pane-main { min-width: 0; }
+  .cE .pane-main { min-width: 0; padding-bottom: 48px; }
 
   /* pane 타이틀 블록: h1 하단 18px 통일 (모든 스텝에서 h1 → 다음요소 간격 일정) */
   .cE .pane-h1 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.6; margin: 0 0 18px; }
@@ -1021,8 +1021,6 @@
       photoCount: state.photos.length,
       status: '청구서전송',
       tone: 'sent',
-      signedCount: 0,
-      signSummary: '', // _data.js 의 후처리로 자동 계산
       customerInfo: {
         rrn: custP.rrnFront + '-' + (custP.rrnBack ? custP.rrnBack[0] + '******' : '*******'),
         phone: custP.phone
