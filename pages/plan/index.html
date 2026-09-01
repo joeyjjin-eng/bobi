@@ -135,6 +135,15 @@
       </table>
     </section>
 
+    <!-- 추가결제 안내 -->
+    <div class="pl-extra">
+      <svg class="ic-svg" width="20" height="20"><use href="#i-alert"/></svg>
+      <div>
+        <div class="pex-t">보험금청구 추가결제 안내</div>
+        <div class="pex-d">월 한도를 초과해 사용하는 경우 <b>1건당 <span id="pex-price"></span>원</b>이 추가로 청구됩니다.</div>
+      </div>
+    </div>
+
   </main>
 </div>
 <div id="footer-host"></div>
@@ -217,7 +226,7 @@
 
     // 비교표
     var featLabels = { report: '진료기록리포트', unclaimed: '미청구보험금', jjaepity: '째피티', claim: '보험금청구' };
-    var cmpFeatures = ['report', 'unclaimed', 'jjaepity'];
+    var cmpFeatures = ['report', 'unclaimed', 'jjaepity', 'claim'];
     var rows = cmpFeatures.map(function (f) {
       return { label: featLabels[f], values: order.map(function (k) { return plans[k].limits[f]; }) };
     });
@@ -244,6 +253,10 @@
       var th = document.getElementById('cmp-th-' + k);
       if (th && k === cur.key) th.classList.add('cur');
     });
+
+    // 추가결제 안내 금액
+    var pexPrice = document.getElementById('pex-price');
+    if (pexPrice) pexPrice.textContent = CLAIM_EXTRA.toLocaleString();
 
     // 플랜 선택 → 결제 페이지 이동 (FREE는 다운그레이드용 데모 스위처 유지)
     document.querySelectorAll('[data-plan]').forEach(function (btn) {

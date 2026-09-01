@@ -541,7 +541,7 @@
       +     '</div>'
       +     '<div class="ft-info">'
       +       '<p>주식회사 천호인터내셔널<span class="ft-sep-dot">·</span>대표 이승엽<span class="ft-sep-dot">·</span>사업자등록번호 342-81-00261</p>'
-      +       '<p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)</p>'
+      +       '<p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)<span class="ft-sep-dot">·</span>대표번호 1644-0161</p>'
       +     '</div>'
       +   '</div>'
       + '</footer>';

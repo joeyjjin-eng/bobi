@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E9EEF3"/>
+      <stop offset="100%" stop-color="#D8DFE7"/>
+    </linearGradient>
+    <filter id="sh1" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bg1)"/>
+
+  <g transform="translate(30 26) rotate(-2 170 175)" filter="url(#sh1)">
+    <rect x="0" y="0" width="340" height="360" rx="6" fill="#FDFDFB"/>
+
+    <!-- 상단 병원 헤더 -->
+    <text x="24" y="34" font-family="'Malgun Gothic','Noto Sans KR',sans-serif" font-size="11" fill="#6B7280" font-weight="500">서울성모병원 · 정형외과</text>
+    <line x1="24" y1="44" x2="316" y2="44" stroke="#E5E7EB" stroke-width="1"/>
+
+    <!-- 문서명 -->
+    <text x="170" y="76" text-anchor="middle" font-family="'Malgun Gothic','Noto Sans KR',sans-serif" font-size="17" font-weight="700" fill="#111827">진료비 계산서 · 영수증</text>
+    <text x="170" y="94" text-anchor="middle" font-family="'Malgun Gothic','Noto Sans KR',sans-serif" font-size="9" fill="#9CA3AF">MEDICAL EXPENSES RECEIPT</text>
+
+    <!-- 환자 정보 박스 -->
+    <rect x="24" y="110" width="292" height="52" rx="4" fill="#F5F7FA"/>
+    <text x="34" y="128" font-family="'Malgun Gothic',sans-serif" font-size="9" fill="#9CA3AF">환자명</text>
+    <text x="34" y="145" font-family="'Malgun Gothic',sans-serif" font-size="12" font-weight="600" fill="#111827">홍길동</text>
+    <text x="140" y="128" font-family="'Malgun Gothic',sans-serif" font-size="9" fill="#9CA3AF">진료일</text>
+    <text x="140" y="145" font-family="'Malgun Gothic',sans-serif" font-size="12" font-weight="600" fill="#111827">2026.08.10</text>
+    <text x="230" y="128" font-family="'Malgun Gothic',sans-serif" font-size="9" fill="#9CA3AF">차트번호</text>
+    <text x="230" y="145" font-family="'Malgun Gothic',sans-serif" font-size="12" font-weight="600" fill="#111827">00184532</text>
+
+    <!-- 항목 헤더 -->
+    <line x1="24" y1="180" x2="316" y2="180" stroke="#111827" stroke-width="1.2"/>
+    <text x="30" y="197" font-family="'Malgun Gothic',sans-serif" font-size="10" font-weight="600" fill="#374151">항목</text>
+    <text x="200" y="197" text-anchor="end" font-family="'Malgun Gothic',sans-serif" font-size="10" font-weight="600" fill="#374151">급여</text>
+    <text x="310" y="197" text-anchor="end" font-family="'Malgun Gothic',sans-serif" font-size="10" font-weight="600" fill="#374151">본인부담금</text>
+    <line x1="24" y1="204" x2="316" y2="204" stroke="#E5E7EB" stroke-width="1"/>
+
+    <!-- 항목 -->
+    <g font-family="'Malgun Gothic',sans-serif" font-size="10" fill="#4B5563">
+      <text x="30" y="222">진찰료</text>
+      <text x="200" y="222" text-anchor="end">18,600</text>
+      <text x="310" y="222" text-anchor="end">5,580</text>
+
+      <text x="30" y="240">검사료 (X-ray)</text>
+      <text x="200" y="240" text-anchor="end">42,300</text>
+      <text x="310" y="240" text-anchor="end">12,690</text>
+
+      <text x="30" y="258">처치 및 수술료</text>
+      <text x="200" y="258" text-anchor="end">86,400</text>
+      <text x="310" y="258" text-anchor="end">25,920</text>
+
+      <text x="30" y="276">주사료</text>
+      <text x="200" y="276" text-anchor="end">14,200</text>
+      <text x="310" y="276" text-anchor="end">4,260</text>
+
+      <text x="30" y="294">약제료</text>
+      <text x="200" y="294" text-anchor="end">9,800</text>
+      <text x="310" y="294" text-anchor="end">2,940</text>
+    </g>
+
+    <line x1="24" y1="310" x2="316" y2="310" stroke="#111827" stroke-width="1"/>
+
+    <!-- 합계 -->
+    <text x="30" y="332" font-family="'Malgun Gothic',sans-serif" font-size="12" font-weight="700" fill="#111827">납부하실 금액</text>
+    <text x="310" y="332" text-anchor="end" font-family="'Malgun Gothic',sans-serif" font-size="14" font-weight="700" fill="#111827">51,390원</text>
+
+    <!-- 하단 -->
+    <text x="24" y="352" font-family="'Malgun Gothic',sans-serif" font-size="8" fill="#9CA3AF">발행일 2026.08.10  |  결제 카드승인 00284</text>
+  </g>
+</svg>
