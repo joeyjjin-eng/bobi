@@ -333,6 +333,38 @@
     btn.disabled = state.entries.length >= MAX_ENTRIES;
   }
 
+  function summaryCardHTML(idx) {
+    var no = idx + 1;
+    var noStr = no < 10 ? '0' + no : String(no);
+    var entry = state.entries[idx];
+    var disease = (entry.disease || '').trim() || '(질병명 미입력)';
+    var start = entry.dateStart || '';
+    var endTxt = entry.treating ? '진행 중' : (entry.dateEnd || '');
+    var period = (start && (entry.treating || entry.dateEnd))
+      ? (start + ' ~ ' + endTxt)
+      : (start || '입력 안 함');
+    var hosp = (entry.hospDays > 0) ? (entry.hospDays + '일') : '0일';
+    return '<div class="sm-summary-card">' +
+      '<div class="sm-summary-head">' +
+        '<span class="sm-summary-no">NO. ' + noStr + '</span>' +
+        '<span class="sm-summary-disease">' + esc(disease) + '</span>' +
+      '</div>' +
+      '<div class="sm-summary-meta">' +
+        '<div class="sm-summary-row"><span class="k">치료 기간</span><span class="v">' + esc(period) + '</span></div>' +
+        '<div class="sm-summary-row"><span class="k">입원 일수</span><span class="v">' + esc(hosp) + '</span></div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderSummary() {
+    var box = $('#summaryContainer');
+    if (!box) return;
+    var h = '<div class="sm-summary-list">';
+    for (var i = 0; i < state.entries.length; i++) h += summaryCardHTML(i);
+    h += '</div>';
+    box.innerHTML = h;
+  }
+
   function exceptGroupsHTML() {
     var list = DATA.except;
     if (!list.length) return '';
@@ -631,6 +663,17 @@
     if (state.phase === 'results') { btn.disabled = false; btn.textContent = '병력 다시 입력하기'; }
     else { btn.disabled = !state.disease.trim() || state.phase === 'loading'; btn.textContent = '결과 확인하기 →'; }
     $('#loadDisease').textContent = label();
+    // 좌측 폼: results 단계에서는 서머리로 잠금, 그 외 단계에서는 입력 폼 유지
+    var isResults = state.phase === 'results';
+    var entriesBoxEl = $('#entriesContainer');
+    var summaryBoxEl = $('#summaryContainer');
+    var addBtnEl = $('#addEntryBtn');
+    var titleEl = $('#formTitle');
+    if (entriesBoxEl) entriesBoxEl.hidden = isResults;
+    if (summaryBoxEl) summaryBoxEl.hidden = !isResults;
+    if (addBtnEl) addBtnEl.hidden = isResults;
+    if (titleEl) titleEl.textContent = isResults ? ('조회한 병력 · ' + state.entries.length + '건') : '병력 입력';
+    if (isResults) renderSummary();
     if (state.phase === 'results') renderResults();
     else $('#resDisease').textContent = label();
   }

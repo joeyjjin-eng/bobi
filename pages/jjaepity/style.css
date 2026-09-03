@@ -129,6 +129,7 @@ html, body { margin: 0; background: #fff; }
 }
 .cE .sm-form-add:hover:not(:disabled) { background: #E3F5FF; border-color: var(--brand); border-style: solid; box-shadow: 0 6px 16px rgba(66,186,255,.20); }
 .cE .sm-form-add:disabled { background: var(--bg-soft); color: var(--ink-3); border-color: var(--line); cursor: not-allowed; box-shadow: none; }
+.cE .sm-form-add[hidden] { display: none; }
 .cE .sm-form-add:disabled .sm-add-ic { background: var(--ink-4); }
 .cE .sm-form-add:disabled .sm-add-count { color: var(--ink-3); border-left-color: var(--line); }
 .cE .sm-form-add .sm-add-ic { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; background: var(--brand); color: #fff; }
@@ -258,6 +259,35 @@ html, body { margin: 0; background: #fff; }
 .cE .sm-btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
 .cE .sm-btn-primary:disabled { background: var(--line-strong); color: var(--ink-4); cursor: not-allowed; box-shadow: none; }
 .cE .sm-btn-primary:disabled::after { display: none; }
+
+/* ===== 좌측 — 조회 완료 후 서머리 (읽기 전용) ===== */
+.cE #summaryContainer[hidden] { display: none; }
+.cE .sm-summary-list { display: flex; flex-direction: column; gap: 10px; }
+.cE .sm-summary-card {
+  border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg-soft); overflow: hidden;
+}
+.cE .sm-summary-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--line);
+}
+.cE .sm-summary-no {
+  font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep);
+  letter-spacing: 0.04em;
+}
+.cE .sm-summary-disease {
+  font-size: var(--fs-body); font-weight: 700; color: var(--ink);
+  letter-spacing: -0.01em; line-height: 1.4;
+}
+.cE .sm-summary-meta {
+  padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;
+}
+.cE .sm-summary-row {
+  display: grid; grid-template-columns: 80px 1fr; gap: 12px;
+  font-size: var(--fs-option); line-height: 1.4;
+}
+.cE .sm-summary-row .k { color: var(--ink-3); font-weight: 700; }
+.cE .sm-summary-row .v { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
 
 /* ===== 우측 — 결과 패널 ===== */
 .cE .sm-result { border: 1px solid var(--line); border-radius: var(--r-md); background: #fff; padding: 20px 24px 28px; min-height: 640px; box-shadow: var(--sh-1); }
