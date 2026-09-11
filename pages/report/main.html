@@ -23,6 +23,41 @@
   .cE .rep-head { padding: 12px 0 22px; border: none; border-radius: 0; margin-top: 0; }
   .cE .rep-head-right { display: flex; align-items: center; gap: 16px; }
 
+  /* 오늘 기준 재조회 버튼 */
+  .cE .rep-refetch-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 16px;
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+    font-family: inherit; font-size: var(--fs-option); font-weight: 700;
+    line-height: 1; letter-spacing: -0.01em;
+    cursor: pointer; white-space: nowrap;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .cE .rep-refetch-btn:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
+  .cE .rep-refetch-btn svg { color: currentColor; flex: none; }
+
+  /* 조회일자 — N일 전 기준 서브라벨 */
+  .cE .rep-asof { text-align: right; }
+  .cE .rep-asof-ago { display: block; margin-top: 2px; font-size: var(--fs-option); color: #C92238; font-weight: 600; }
+  .cE .rep-asof-ago.is-fresh { color: var(--ink-3); font-weight: 500; }
+
+  /* 재조회 확인 모달 — 안내 리스트 */
+  .refetch-modal-card .refetch-info {
+    list-style: none; margin: 0 0 20px; padding: 14px 18px;
+    background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .refetch-modal-card .refetch-info li {
+    position: relative; padding-left: 18px;
+    font-size: var(--fs-option); color: var(--ink-2); line-height: 1.4;
+  }
+  .refetch-modal-card .refetch-info .refetch-info-dot {
+    position: absolute; left: 4px; top: 7px;
+    width: 4px; height: 4px; border-radius: 50%; background: var(--ink-4);
+  }
+  .refetch-modal-card .refetch-info b { color: var(--ink); font-weight: 700; }
+
   /* 환자 이름 → 고객 상세로 이동 링크 */
   .cE .rep-id .cust-link { color: inherit; text-decoration: none; border-bottom: 2px dashed var(--ink-4); padding-bottom: 1px; transition: color .2s ease, border-bottom-color .2s ease; }
   .cE .rep-id .cust-link:hover { color: var(--brand-deep); border-bottom-color: var(--brand); }
@@ -155,6 +190,7 @@
       color: var(--ink-3);
       margin-top: 6px;
       align-self: flex-start;
+      text-align: left;
     }
     .cE .rep-asof br { display: none; }
     .cE .rep-asof b {
@@ -162,7 +198,14 @@
       color: var(--ink) !important;
       margin-left: 4px;
     }
+    .cE .rep-asof-ago { display: inline; margin-left: 8px; }
     .cE .rep-head.is-expanded .rep-asof { display: block; }
+    /* 재조회 버튼 — 절대 우상단 (메뉴 왼쪽) */
+    .cE .rep-head .rep-refetch-btn {
+      align-self: flex-start;
+      padding: 8px 12px;
+      font-size: var(--fs-option);
+    }
     /* 메뉴 버튼 — 절대 우상단 */
     .cE .rep-head .menu-popover {
       position: absolute;
@@ -457,7 +500,14 @@
         </div>
       </div>
       <div class="rep-head-right">
-        <div class="rep-asof">조회일자<br /><b style="color:var(--ink);font-size:var(--fs-body)">2025.08.27</b></div>
+        <button class="rep-refetch-btn" type="button" id="rep-refetch-btn">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-rotate-ccw"/></svg>
+          오늘 기준 재조회
+        </button>
+        <div class="rep-asof">
+          조회일자<br /><b style="color:var(--ink);font-size:var(--fs-body)">2025.08.27</b>
+          <span class="rep-asof-ago">18일 전 기준</span>
+        </div>
         <div class="menu-popover">
           <button class="menu-trigger" type="button" id="report-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
             <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
@@ -1021,6 +1071,32 @@
       <button class="modal-btn primary" type="button" id="print-confirm">
         <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
         인쇄
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 오늘 기준 재조회 확인 모달 -->
+<div class="print-modal" id="refetch-modal" hidden>
+  <div class="print-modal-card refetch-modal-card" role="dialog" aria-labelledby="refetch-modal-title">
+    <div class="print-modal-head">
+      <div>
+        <h3 id="refetch-modal-title">오늘 기준 재조회</h3>
+        <p>진료기록을 <b>오늘 날짜</b>로 다시 조회할까요?</p>
+      </div>
+      <button class="info-close" type="button" id="refetch-close" aria-label="닫기">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg> 닫기
+      </button>
+    </div>
+    <ul class="refetch-info">
+      <li><span class="refetch-info-dot"></span>고객에게 <b>본인인증 링크</b>가 다시 발송돼요.</li>
+      <li><span class="refetch-info-dot"></span>인증이 완료되면 조회기간이 <b>오늘 기준</b>으로 갱신돼요.</li>
+    </ul>
+    <div class="print-modal-actions">
+      <button class="modal-btn" type="button" id="refetch-cancel">취소</button>
+      <button class="modal-btn primary" type="button" id="refetch-confirm">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-rotate-ccw"/></svg>
+        재조회 요청
       </button>
     </div>
   </div>
@@ -1776,6 +1852,29 @@
       var open = head.classList.toggle('is-expanded');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       btn.querySelector('span').textContent = open ? '고객 정보 접기' : '고객 정보';
+    });
+  })();
+
+  // 오늘 기준 재조회 모달
+  (function () {
+    var btn = document.getElementById('rep-refetch-btn');
+    var modal = document.getElementById('refetch-modal');
+    if (!btn || !modal) return;
+    var closeX = document.getElementById('refetch-close');
+    var cancel = document.getElementById('refetch-cancel');
+    var confirm = document.getElementById('refetch-confirm');
+
+    function open() { modal.hidden = false; document.body.style.overflow = 'hidden'; }
+    function close() { modal.hidden = true; document.body.style.overflow = ''; }
+
+    btn.addEventListener('click', open);
+    closeX.addEventListener('click', close);
+    cancel.addEventListener('click', close);
+    modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) close(); });
+    confirm.addEventListener('click', function () {
+      close();
+      alert('본인인증 요청이 발송되었습니다. 인증이 완료되면 오늘 기준으로 재조회됩니다.');
     });
   })();
 </script>
