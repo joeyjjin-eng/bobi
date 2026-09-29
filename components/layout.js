@@ -236,6 +236,7 @@
       +     navItem('unclaimed', BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="beta-tag">BETA</span>')
       +     navItem('claim',    BASE + 'pages/claim/list.html',         'i-won',          '보험금청구')
       +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
+      +     navItem('consult',  BASE + 'pages/consult/index.html',      'i-trending-up',  '재무상담')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +     navItem('planner',  BASE + 'pages/admin/planner/list.html', 'i-user-2',       '설계사관리')
       +   '</nav>'
@@ -297,6 +298,7 @@
       +       drawerItem('unclaimed', BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="m-drawer-beta">BETA</span>')
       +       drawerItem('claim',     BASE + 'pages/claim/list.html',        'i-won',          '보험금청구')
       +       drawerItem('jjaepity',  BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
+      +       drawerItem('consult',   BASE + 'pages/consult/index.html',     'i-trending-up',  '재무상담')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +       drawerItem('planner',  BASE + 'pages/admin/planner/list.html','i-user-2',       '설계사관리')
       +     '</div>'

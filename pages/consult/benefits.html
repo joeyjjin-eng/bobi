@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 혜택·보조금</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/consult.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .cE .bf-body { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 960px) { .cE .bf-body { grid-template-columns: 1fr; gap: 20px; } }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain ct">
+
+    <!-- 어디서 열었든 그 화면으로 돌아간다 (기본: 상담결과) -->
+    <a class="back-btn" id="back-step" href="result.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> <span id="back-label">상담결과로 돌아가기</span>
+    </a>
+
+    <!-- ===== 타이틀 ===== -->
+    <div class="ct-title-row">
+      <div class="ct-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-shield"/></svg></div>
+      <div class="ct-title-txt">
+        <h1>혜택·보조금</h1>
+        <div class="ct-title-sub">고객 조건에 맞는 정부·지자체 지원을 찾아봐요</div>
+      </div>
+      <div class="ct-title-act">
+        <span class="ct-note">사는 곳 · 시·군·구</span>
+        <div class="ct-pill on" style="height:42px;font-size:var(--fs-body);">대구광역시 달서구</div>
+      </div>
+    </div>
+
+    <!-- ===== 하위 탭 ===== -->
+    <div class="ct-subtabs">
+      <div class="on">혜택 · 보조금24</div>
+      <div>공공임대</div>
+      <div>실거래가 · 국토부</div>
+    </div>
+
+    <div class="bf-body">
+
+      <!-- 왼쪽: 조건 -->
+      <div class="ct-stack">
+        <div class="ct-card pad">
+          <div class="ct-card-t" style="margin-bottom:14px;">가구 조건 <span class="ct-note">· 상담 내용에서 자동으로</span></div>
+          <div class="ct-cond">
+            <div class="k">가족 수</div><div class="v">4명</div>
+            <div class="k">본인 나이</div><div class="v">41세</div>
+            <div class="k">자녀</div><div class="v">2명 (12세, 7세)</div>
+            <div class="k">소득 참고</div><div class="v">중위 100–120%</div>
+            <div class="k">직업</div><div class="v">회사원 · 배우자 자영업</div>
+          </div>
+        </div>
+
+        <!-- 설계사에게만 보임 -->
+        <div data-advisor-only>
+          <div class="ct-only" style="display:flex;flex-direction:column;gap:14px;padding:20px;">
+            <div class="ct-card-h">
+              <div class="ct-card-t">더 확인할 조건</div>
+              <div class="ct-only-b">상담 결과에는 안 나와요</div>
+            </div>
+            <div class="ct-note">고객에게 물어보고 해당하면 골라요.</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <div class="ct-chip on">본인 여성</div>
+              <div class="ct-chip on">다자녀</div>
+              <div class="ct-chip">한부모</div>
+              <div class="ct-chip">장애</div>
+              <div class="ct-chip">임신·출산</div>
+              <div class="ct-chip on">무주택</div>
+              <div class="ct-chip">소상공인</div>
+              <div class="ct-chip">신용이 좋아짐</div>
+              <div class="ct-chip" style="color:var(--ink-3);">+ 14개 더 보기</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 오른쪽: 결과 -->
+      <div class="ct-stack">
+        <div class="ct-card-h">
+          <h2 style="font-size:var(--fs-h1);font-weight:800;letter-spacing:-0.02em;margin:0;color:var(--ink);">확인해 볼 혜택 <span style="color:var(--brand-deep);">7</span></h2>
+          <div class="ct-note">신청 기한이 가까운 순</div>
+        </div>
+
+        <div class="ct-bsum">
+          <span class="v">한 해 최대 224만 원</span>
+          <span class="ct-lead">을 더 받을 수 있어요. 1개는 <b style="color:#C92238;">17일 안에</b> 신청해야 해요.</span>
+        </div>
+
+        <div class="ct-hint">받을 수 있다고 정해진 건 아니에요. 대상인지 확인하고 신청은 고객이 정부24에서 해요.</div>
+
+        <div class="ct-card pad ct-benefit ct-bcard soon">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">현금</span>대구광역시 달서구청 교육지원과</div>
+            <div class="bt clamp">달서구 다자녀 가정 초·중·고 자녀 방과후 교육비 및 교재비 지원 사업 (2026년 하반기 추가 모집)</div>
+            <div class="bamt">자녀 1인당 연 30만 원<span class="u"> · 2명이면 연 60만 원</span></div>
+            <div class="bd">셋째 이후가 아니어도 자녀 2명 이상이면 받아요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">달서구 거주</span></div>
+          </div>
+          <div class="bside">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="ct-dday soon">D-17</span>
+              <div class="k">신청 기한</div>
+              <div class="v">10월 15일까지</div>
+            </div>
+            <a href="#">정부24에서 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-card pad ct-benefit ct-bcard">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">이용권</span>산업통상자원부</div>
+            <div class="bt">에너지바우처</div>
+            <div class="bamt">연 44만 원<span class="u"> · 여름·겨울 전기·가스 요금</span></div>
+            <div class="bd">요금에서 자동으로 빠져요. 한 번 신청하면 그 해 내내 적용돼요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">소득 구간</span></div>
+          </div>
+          <div class="bside">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="ct-dday">D-94</span>
+              <div class="k">신청 기한</div>
+              <div class="v">12월 31일까지</div>
+            </div>
+            <a href="#">정부24에서 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-card pad ct-benefit ct-bcard">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">현금</span>보건복지부</div>
+            <div class="bt">아동수당</div>
+            <div class="bamt">매달 10만 원<span class="u"> · 둘째 김도하(7세)</span></div>
+            <div class="bd">만 8세가 되는 달까지 계좌로 들어와요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">자녀 7세</span></div>
+          </div>
+          <div class="bside">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="ct-dday always">상시</span>
+              <div class="k">신청 기한</div>
+              <div class="v">언제든지</div>
+            </div>
+            <a href="#">정부24에서 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-more">4개 더 보기</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<div id="footer-host"></div>
+
+<script src="../../components/layout.js"></script>
+<script>
+injectShell('consult');
+
+// 상담 중 도구로 열렸으면 해당 단계로 돌아가는 링크를 띄운다
+(function () {
+  var STEP = {
+    basic:     ['basic.html',     '01 기본정보로 돌아가기'],
+    cashflow:  ['cashflow.html',  '02 수입지출로 돌아가기'],
+    assets:    ['assets.html',    '03 자산·부채로 돌아가기'],
+    statement: ['statement.html', '04 재무재표로 돌아가기'],
+    result:    ['result.html',    '상담결과로 돌아가기']
+  };
+  var from = new URLSearchParams(location.search).get('from');
+  if (from && STEP[from]) {
+    document.getElementById('back-step').href = STEP[from][0];
+    document.getElementById('back-label').textContent = STEP[from][1];
+  }
+})();
+
+if (new URLSearchParams(location.search).get('customer') === '1') {
+  document.querySelectorAll('[data-advisor-only]').forEach(el => el.hidden = true);
+}
+</script>
+
+</body>
+</html>

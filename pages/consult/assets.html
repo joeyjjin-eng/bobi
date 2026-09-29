@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 재무상담 · 자산·부채</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/consult.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .cE .as-body { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 32px; align-items: start; }
+  @media (max-width: 960px) { .cE .as-body { grid-template-columns: 1fr; gap: 20px; } }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain ct">
+
+    <a class="back-btn" href="index.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록으로
+    </a>
+
+    <div class="ct-head">
+      <div class="ct-id">
+        <div class="patient-avatar" data-name="새 상담" data-only="empty"></div>
+        <div class="patient-avatar" data-name="김민준" data-only="demo" hidden></div>
+        <div>
+          <div class="h-eyebrow" data-only="empty">새로운 상담</div>
+          <div class="h-eyebrow" data-only="demo" hidden>상담 진행 중</div>
+          <h1 data-hint="고객을 고르거나 새로 적어요" data-demo="김민준님"></h1>
+          <div class="ct-meta">
+            <span data-only="empty">1회차</span>
+            <span data-only="demo" hidden>3회차</span>
+            <span>상담일 <b>2026.09.28 (월)</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="ct-act">
+        <a class="ct-tool key" href="benefits.html?from=assets">
+          <svg class="ic-svg" width="17" height="17"><use href="#i-shield"/></svg>
+          공공 혜택
+          <span class="ct-badge" data-only="demo" hidden>7</span>
+        </a>
+        <span class="ct-vr"></span>
+        <span class="ct-saved">자동 저장됨</span>
+      </div>
+    </div>
+
+    <div class="ct-steps">
+      <a class="ct-step done" href="basic.html"><span class="n">01</span>기본정보</a>
+      <div class="bar"></div>
+      <a class="ct-step done" href="cashflow.html"><span class="n">02</span>수입지출</a>
+      <div class="bar"></div>
+      <a class="ct-step on" href="assets.html"><span class="n">03</span>자산·부채</a>
+      <div class="bar"></div>
+      <a class="ct-step" href="statement.html"><span class="n">04</span>재무재표</a>
+      <div class="split"></div>
+      <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
+    </div>
+
+    <div class="ct-sum" style="margin-bottom:20px;">
+      <div class="box"><span class="k">가진 것</span><span class="v"><span data-demo="28,400" data-empty="0"></span><span class="u"> 만 원</span></span></div>
+      <div class="op">−</div>
+      <div class="box"><span class="k">갚을 것</span><span class="v"><span data-demo="12,300" data-empty="0"></span><span class="u"> 만 원</span></span></div>
+      <div class="op">=</div>
+      <div class="box hi"><span class="k">순자산</span><span class="v"><span data-demo="16,100" data-empty="0"></span><span class="u"> 만 원</span></span></div>
+    </div>
+
+    <div class="ct-hint" style="margin-bottom:20px;">
+      <b>금액은 모두 만 원</b>이에요. 빈칸은 '모름', 0은 '없음'이에요. 해당 없는 칸은 0으로 두세요.
+    </div>
+
+    <div class="as-body">
+
+      <!-- 가진 것 -->
+      <div class="ct-panel" style="margin-bottom:0;">
+        <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 4px;color:var(--ink);">가진 것</h2>
+        <div class="ct-ag">
+          <div class="gh">바로 쓸 수 있는 돈<span data-demo="850" data-empty="0"></span></div>
+          <div class="gr"><span class="k">통장·현금</span><div class="ct-in num" data-hint="0" data-demo="850"></div></div>
+        </div>
+        <div class="ct-ag">
+          <div class="gh">모아 둔 돈<span data-demo="1,650" data-empty="0"></span></div>
+          <div class="gr"><span class="k">예금·적금</span><div class="ct-in num" data-hint="0" data-demo="900"></div></div>
+          <div class="gr"><span class="k">주택청약</span><div class="ct-in num" data-hint="0" data-demo="450"></div></div>
+          <div class="gr"><span class="k">주식·펀드·ISA</span><div class="ct-in num" data-hint="0" data-demo="300"></div></div>
+        </div>
+        <div class="ct-ag">
+          <div class="gh">노후 돈<span data-demo="1,900" data-empty="0"></span></div>
+          <div class="gr"><span class="k">연금저축·IRP·퇴직연금</span><div class="ct-in num" data-hint="0" data-demo="1,200"></div></div>
+          <div class="gr"><span class="k">보험 적립금</span><div class="ct-in num" data-hint="0" data-demo="700"></div></div>
+        </div>
+        <div class="ct-ag">
+          <div class="gh">집·차<span data-demo="24,000" data-empty="0"></span></div>
+          <div class="gr"><span class="k">사는 집(자가)</span><div class="ct-in num" data-hint="0" data-demo="0"></div></div>
+          <div class="gr"><span class="k">전·월세 보증금</span><div class="ct-in num" data-hint="0" data-demo="22,000"></div></div>
+          <div class="gr"><span class="k">자동차</span><div class="ct-in num" data-hint="0" data-demo="2,000"></div></div>
+          <div class="gr"><span class="k">그 밖의 부동산</span><div class="ct-in num" data-hint="0" data-demo="0"></div></div>
+        </div>
+        <div class="ct-ag">
+          <div class="gh">기타<span data-demo="0" data-empty="0"></span></div>
+          <div class="gr"><span class="k">빌려준 돈·기타</span><div class="ct-in num" data-hint="0" data-demo="0"></div></div>
+        </div>
+      </div>
+
+      <!-- 빚 -->
+      <div class="ct-panel" style="margin-bottom:0;">
+        <div class="ct-card-h" style="margin-bottom:14px;">
+          <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">빚</h2>
+          <span class="ct-note">02 수입지출에서 적은 빚이 먼저 들어와요</span>
+        </div>
+
+        <!-- 빈 상태 -->
+        <div data-only="empty">
+          <div class="ct-blank">
+            <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-won"/></svg></div>
+            <div class="bt">아직 적은 빚이 없어요</div>
+            <div class="bd">대출·할부가 있으면 한 줄씩 더해요. 없으면 비워 두세요.</div>
+            <div class="ba"><span class="ct-add">+ 빚 추가</span></div>
+          </div>
+        </div>
+
+        <!-- 예시 -->
+        <div data-only="demo" hidden>
+          <div class="ct-tbl-wrap">
+            <table class="ct-tbl">
+              <thead>
+                <tr><th>빚</th><th class="amt" style="width:96px;">남은 돈</th><th class="amt" style="width:86px;">월 납입금</th><th class="amt" style="width:66px;">금리</th><th class="amt" style="width:86px;">만기</th><th style="width:34px;"></th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nm">전세 대출<div class="sub-l">국민은행</div></td>
+                  <td class="amt">10,000</td><td class="amt">32</td><td class="amt">4.1%</td><td class="amt">2028.03</td>
+                  <td class="ctr"><i class="ct-chev up"></i></td>
+                </tr>
+                <tr class="exp">
+                  <td colspan="6">
+                    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;">
+                      <div class="ct-f"><span class="lb">남은 돈</span><div class="ct-in num">10,000</div></div>
+                      <div class="ct-f"><span class="lb">금리 %</span><div class="ct-in num">4.1</div></div>
+                      <div class="ct-f"><span class="lb">만기</span><div class="ct-in num">2028-03</div></div>
+                      <div class="ct-f"><span class="lb">이번 달 원금·이자</span><div class="ct-in num">0 · 32</div></div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="nm">차량 할부<div class="sub-l">현대캐피탈</div></td>
+                  <td class="amt">1,600</td><td class="amt">28</td><td class="amt">5.9%</td><td class="amt">2028.11</td>
+                  <td class="ctr"><i class="ct-chev"></i></td>
+                </tr>
+                <tr>
+                  <td class="nm">신용대출<div class="sub-l">신한은행</div></td>
+                  <td class="amt">700</td><td class="amt">6</td><td class="amt">6.2%</td><td class="amt">2029.12</td>
+                  <td class="ctr"><i class="ct-chev"></i></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr><td>합계</td><td class="amt">12,300</td><td class="amt">66</td><td></td><td></td><td></td></tr>
+              </tfoot>
+            </table>
+            <div class="ct-add">+ 매달 갚지 않는 빚 추가</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ct-navrow" style="margin-top:20px;">
+      <a class="ct-btn ghost" href="cashflow.html">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg> 이전
+      </a>
+      <a class="ct-btn primary" href="statement.html">다음 · 04 재무재표
+        <svg class="ic-svg" width="16" height="16"><use href="#i-arrow-right"/></svg>
+      </a>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<div id="footer-host"></div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('consult');</script>
+<script src="_state.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 재무상담 · 기본정보</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/consult.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain ct">
+
+    <a class="back-btn" href="index.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록으로
+    </a>
+
+    <!-- ===== 고객 헤더 ===== -->
+    <div class="ct-head">
+      <div class="ct-id">
+        <div class="patient-avatar" data-name="새 상담" data-only="empty"></div>
+        <div class="patient-avatar" data-name="김민준" data-only="demo" hidden></div>
+        <div>
+          <div class="h-eyebrow" data-only="empty">새로운 상담</div>
+          <div class="h-eyebrow" data-only="demo" hidden>상담 진행 중</div>
+          <h1 data-hint="고객을 고르거나 새로 적어요" data-demo="김민준님"></h1>
+          <div class="ct-meta">
+            <span data-only="empty">1회차</span>
+            <span data-only="demo" hidden>3회차</span>
+            <span>상담일 <b>2026.09.28 (월)</b></span>
+            <span data-only="demo" hidden><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> 대구광역시 달서구</span>
+          </div>
+        </div>
+      </div>
+      <div class="ct-act">
+        <a class="ct-tool key" href="benefits.html?from=basic">
+          <svg class="ic-svg" width="17" height="17"><use href="#i-shield"/></svg>
+          공공 혜택
+          <span class="ct-badge" data-only="demo" hidden>7</span>
+        </a>
+        <span class="ct-vr"></span>
+        <span class="ct-saved">자동 저장됨</span>
+      </div>
+    </div>
+
+    <!-- ===== 단계 ===== -->
+    <div class="ct-steps">
+      <a class="ct-step on" href="basic.html"><span class="n">01</span>기본정보</a>
+      <div class="bar"></div>
+      <a class="ct-step" href="cashflow.html"><span class="n">02</span>수입지출</a>
+      <div class="bar"></div>
+      <a class="ct-step" href="assets.html"><span class="n">03</span>자산·부채</a>
+      <div class="bar"></div>
+      <a class="ct-step" href="statement.html"><span class="n">04</span>재무재표</a>
+      <div class="split"></div>
+      <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
+    </div>
+
+    <!-- ===== 인적정보 ===== -->
+    <div class="ct-panel">
+      <div class="ct-sec">
+        <h2>인적정보<span class="sh">고객과 가족을 적어요</span></h2>
+        <div class="in">
+          <div class="ct-g3">
+            <div class="ct-f"><span class="lb">부를 이름<span class="req"> *</span></span>
+              <div class="ct-in" data-hint="예) 김민준" data-demo="김민준"></div></div>
+            <div class="ct-f"><span class="lb">상담일<span class="req"> *</span></span>
+              <div class="ct-in" data-hint="2026.09.28 (월)" data-demo="2026.09.28 (월)"></div></div>
+            <div class="ct-f"><span class="lb">사는 곳 · 시·군·구</span>
+              <div class="ct-in" data-hint="예) 대구광역시 달서구" data-demo="대구광역시 달서구"></div></div>
+            <div class="ct-f"><span class="lb">직업</span>
+              <div class="ct-in" data-hint="예) 회사원" data-demo="회사원"></div></div>
+            <div class="ct-f"><span class="lb">배우자 직업</span>
+              <div class="ct-in" data-hint="없으면 비워 두세요" data-demo="자영업"></div></div>
+            <div class="ct-f"><span class="lb">주거 형태</span>
+              <div class="ct-seg" style="grid-template-columns:repeat(4,minmax(0,1fr));"><div>자가</div><div class="on">전세</div><div>월세</div><div>기타</div></div>
+            </div>
+            <div class="ct-f"><span class="lb">수입이 매달 비슷한가요</span>
+              <div class="ct-seg" style="grid-template-columns:repeat(2,minmax(0,1fr));"><div>비슷해요</div><div class="on">달마다 달라요</div></div>
+            </div>
+          </div>
+
+          <!-- 가족: 빈 상태 -->
+          <div data-only="empty">
+            <div class="ct-tbl-wrap">
+              <table class="ct-tbl">
+                <thead>
+                  <tr><th style="width:100px;">관계</th><th style="width:140px;">이름</th><th class="ctr" style="width:80px;">나이</th><th>직업·학교</th><th>비고</th><th style="width:70px;"></th></tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="6" style="padding:0;">
+                    <div class="ct-blank" style="border:none;border-radius:0;background:#fff;padding:32px;">
+                      <div class="bd">아직 가족을 적지 않았어요. 본인부터 한 줄씩 더해요.</div>
+                      <div class="ba"><span class="ct-add">+ 가족 추가</span></div>
+                    </div>
+                  </td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 가족: 예시 -->
+          <div data-only="demo" hidden>
+            <div class="ct-tbl-wrap">
+              <table class="ct-tbl">
+                <thead>
+                  <tr><th style="width:100px;">관계</th><th style="width:140px;">이름</th><th class="ctr" style="width:80px;">나이</th><th>직업·학교</th><th>비고</th><th style="width:70px;"></th></tr>
+                </thead>
+                <tbody>
+                  <tr><td class="nm">본인</td><td>김민준</td><td class="ctr">41</td><td>회사원</td><td></td><td class="del">지우기</td></tr>
+                  <tr><td class="nm">배우자</td><td>이지현</td><td class="ctr">39</td><td>자영업 · 카페</td><td>수입이 달마다 달라요</td><td class="del">지우기</td></tr>
+                  <tr><td class="nm">자녀</td><td>김하윤</td><td class="ctr">12</td><td>초등학교 6학년</td><td></td><td class="del">지우기</td></tr>
+                  <tr><td class="nm">자녀</td><td>김도하</td><td class="ctr">7</td><td>유치원</td><td></td><td class="del">지우기</td></tr>
+                </tbody>
+              </table>
+              <div class="ct-add">+ 가족 추가</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 상담목표 ===== -->
+    <div class="ct-panel">
+      <div class="ct-sec">
+        <h2>상담목표<span class="sh">오늘 무엇을 풀지 정해요</span></h2>
+        <div class="in">
+          <div class="ct-f">
+            <span class="lb st">오늘 가장 궁금하거나 걱정되는 것<span class="req"> *</span></span>
+            <div class="ct-in tall" data-hint="고객이 한 말을 그대로 적어요. 예) 아이 학원비가 늘어나는데 지금처럼 모을 수 있을지 걱정돼요." data-demo="아이 학원비가 늘어나는데 지금처럼 모을 수 있을지 걱정돼요."></div>
+          </div>
+          <div class="ct-g2">
+            <div class="ct-f"><span class="lb">줄이고 싶지 않은 지출</span>
+              <div class="ct-in" data-hint="예) 아이 간식" data-demo="아이 간식"></div></div>
+            <div class="ct-f"><span class="lb">앞으로 달라질 일</span>
+              <div class="ct-in" data-hint="예) 내년 3월부터 학원비가 늘어요" data-demo="내년 3월부터 첫째 학원비가 한 달 15만 원 늘어요."></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 특이사항 (설계사 전용) ===== -->
+    <div class="ct-panel" data-advisor-only>
+      <div class="ct-sec">
+        <h2>특이사항<span class="sh">설계사만 보는 칸</span></h2>
+        <div class="in">
+          <div class="ct-only" style="display:flex;flex-direction:column;gap:12px;">
+            <div class="ct-card-h">
+              <div class="ct-card-t">상담하며 알게 된 것</div>
+              <div class="ct-only-b">상담 결과에는 안 나와요</div>
+            </div>
+            <div class="ct-in tall" style="background:#fff;" data-hint="고객에게 보여 주지 않을 메모를 적어요. 예) 배우자 카페 매출이 겨울에 줄어요." data-demo="배우자 카페 매출이 겨울에 줄어요. 12–2월은 수입을 낮게 잡고 봐야 해요."></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 이전 상담 ===== -->
+    <div class="ct-panel">
+      <div class="ct-sec">
+        <h2>이전 상담<span class="sh">지난 회차 결론</span></h2>
+        <div class="in">
+          <div data-only="empty">
+            <div class="ct-blank">
+              <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-clock"/></svg></div>
+              <div class="bt">첫 상담이에요</div>
+              <div class="bd">이전 상담 기록이 없어요. 다음 회차부터 여기에 지난 결론이 쌓여요.</div>
+            </div>
+          </div>
+          <div data-only="demo" hidden>
+            <div class="ct-tbl-wrap">
+              <table class="ct-tbl">
+                <thead><tr><th style="width:90px;">회차</th><th style="width:130px;">상담일</th><th>결론</th><th style="width:100px;"></th></tr></thead>
+                <tbody>
+                  <tr><td class="nm">2회차</td><td>2026.08.25</td><td>겹치는 보험 특약 2개를 정리하면 한 달 6만 원 줄어요.</td><td class="del"><a href="result.html?demo=1" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">결과 보기</a></td></tr>
+                  <tr><td class="nm">1회차</td><td>2026.07.21</td><td>매달 4만 원이 모자라요. 처음으로 현금흐름표를 만들었어요.</td><td class="del"><a href="result.html?demo=1" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">결과 보기</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ct-navrow end">
+      <a class="ct-btn primary" href="cashflow.html">다음 · 02 수입지출
+        <svg class="ic-svg" width="16" height="16"><use href="#i-arrow-right"/></svg>
+      </a>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<div id="footer-host"></div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('consult');</script>
+<script src="_state.js"></script>
+
+</body>
+</html>

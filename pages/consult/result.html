@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 재무상담 · 상담결과</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/consult.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .cE .rs-nav { position: sticky; top: 0; z-index: 5; background: #fff; padding-top: 4px; }
+  .cE .rs-hero { display: grid; grid-template-columns: minmax(0,1fr) 560px; gap: 48px; align-items: center; }
+  .cE .rs-blk { scroll-margin-top: 70px; }
+  @media (max-width: 960px) { .cE .rs-hero { grid-template-columns: 1fr; gap: 20px; } }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain ct">
+
+    <a class="back-btn" href="index.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록으로
+    </a>
+
+    <div class="ct-head">
+      <div class="ct-id">
+        <div class="patient-avatar" data-name="새 상담" data-only="empty"></div>
+        <div class="patient-avatar" data-name="김민준" data-only="demo" hidden></div>
+        <div>
+          <div class="h-eyebrow">상담결과</div>
+          <h1 data-hint="고객을 고르거나 새로 적어요" data-demo="김민준님"></h1>
+          <div class="ct-meta">
+            <span data-only="empty">1회차</span>
+            <span data-only="demo" hidden>3회차</span>
+            <span>상담일 <b>2026.09.28 (월)</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="ct-act">
+        <span class="ct-tool"><svg class="ic-svg" width="14" height="14"><use href="#i-printer"/></svg> 인쇄</span>
+        <span class="ct-tool"><svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg> 고객에게 보내기</span>
+        <span class="ct-vr"></span>
+        <span class="ct-saved">자동 저장됨</span>
+      </div>
+    </div>
+
+    <div class="ct-steps">
+      <a class="ct-step done" href="basic.html"><span class="n">01</span>기본정보</a>
+      <div class="bar"></div>
+      <a class="ct-step done" href="cashflow.html"><span class="n">02</span>수입지출</a>
+      <div class="bar"></div>
+      <a class="ct-step done" href="assets.html"><span class="n">03</span>자산·부채</a>
+      <div class="bar"></div>
+      <a class="ct-step done" href="statement.html"><span class="n">04</span>재무재표</a>
+      <div class="split"></div>
+      <a class="ct-step fin on" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
+    </div>
+
+    <!-- ===== 결과 블록 탐색 ===== -->
+    <div class="rs-nav">
+      <div class="ct-subtabs">
+        <div class="on" data-go="b-sum">요약</div>
+        <div data-go="b-spend">지출에 대한 결과</div>
+        <div data-go="b-save">저축에 대한 결과</div>
+        <div data-go="b-goal">목표별</div>
+        <div data-go="b-benefit">혜택·보조금</div>
+        <div data-go="b-next">다음 상담</div>
+      </div>
+    </div>
+
+    <!-- ===================== ① 요약 ===================== -->
+    <div class="ct-panel rs-blk" id="b-sum">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">1</span><h3>요약</h3></div>
+
+      <!-- 빈 상태 -->
+      <div data-only="empty" style="margin-bottom:48px;">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-sparkles"/></svg></div>
+          <div class="bt">상담 내용을 적으면 요약이 만들어져요</div>
+          <div class="bd">01–04를 채우면 한 달 돈의 흐름이 문장과 원그래프로 여기에 나와요.</div>
+          <div class="ba"><a class="ct-btn ghost" href="basic.html">01 기본정보부터 적기</a></div>
+        </div>
+      </div>
+
+      <!-- 흐름 문장 + 원그래프 -->
+      <div class="rs-hero" style="margin-bottom:48px;" data-only="demo" hidden>
+        <div class="ct-stack">
+          <div class="ct-lead">지난 한 달, 우리 집 돈은 이렇게 움직였어요</div>
+          <div class="ct-hero">520만 원이 들어와서 514만 원이 나가고, <span class="hl">6만 원이 남았어요.</span></div>
+          <div class="ct-lead">들어온 돈 100원 중 1원이 남는 셈이에요.</div>
+        </div>
+        <div class="ct-card pad ct-donut">
+          <div class="ring">
+            <svg width="200" height="200" viewBox="0 0 340 340">
+              <circle cx="170" cy="170" r="140" fill="none" stroke="#44545F" stroke-width="52" stroke-dasharray="384.5 495.1" stroke-dashoffset="0"></circle>
+              <circle cx="170" cy="170" r="140" fill="none" stroke="#42BAFF" stroke-width="64" stroke-dasharray="302.5 577.1" stroke-dashoffset="-386.5"></circle>
+              <circle cx="170" cy="170" r="140" fill="none" stroke="#7C8B97" stroke-width="52" stroke-dasharray="109.6 770" stroke-dashoffset="-691"></circle>
+              <circle cx="170" cy="170" r="140" fill="none" stroke="#1FA463" stroke-width="52" stroke-dasharray="64.8 814.8" stroke-dashoffset="-802.6"></circle>
+              <circle cx="170" cy="170" r="140" fill="none" stroke="#1C50A1" stroke-width="52" stroke-dasharray="8.1 871.5" stroke-dashoffset="-869.4"></circle>
+            </svg>
+            <div class="ctr"><span class="k">들어오는 돈</span><span class="v">520</span></div>
+          </div>
+          <div class="ct-legend">
+            <div class="lr"><div class="sw" style="background:#44545F;"></div><span>매달 거의 같은 돈</span><strong>228.5</strong><span class="pc">44%</span></div>
+            <div class="lr hi"><div class="sw" style="background:#42BAFF;"></div><span>달마다 다른 돈</span><strong>180</strong><span class="pc">35%</span></div>
+            <div class="lr"><div class="sw" style="background:#7C8B97;"></div><span>빚 갚는 돈</span><strong>66</strong><span class="pc">13%</span></div>
+            <div class="lr"><div class="sw" style="background:#1FA463;"></div><span>모으는 돈</span><strong>39.5</strong><span class="pc">8%</span></div>
+            <div class="lr hi"><div class="sw" style="background:#1C50A1;"></div><span>남는 돈</span><strong>6</strong><span class="pc">1%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 정리: 왼쪽 고민·순자산·목표 / 오른쪽 설계사가 적는 칸 -->
+      <div class="ct-split">
+        <div class="ct-stack">
+          <div class="ct-quote" data-only="demo" hidden>
+            <span class="k">고민</span>
+            <span class="v">“아이 학원비가 늘어나는데 지금처럼 모을 수 있을지 걱정돼요.”</span>
+          </div>
+          <div class="ct-card pad" data-only="demo" hidden>
+            <div class="ct-card-h num" style="margin-bottom:12px;">
+              <span class="ct-note" style="font-size:var(--fs-body);">가진 것 2억 8,400만 원</span>
+              <span class="ct-card-t" style="font-size:var(--fs-h2);">순자산 <span style="color:var(--brand-deep);">1억 6,100만 원</span></span>
+            </div>
+            <div class="ct-bar2"><div class="a" style="width:56.7%;">순자산 57%</div><div class="b" style="width:43.3%;">갚을 것 43%</div></div>
+          </div>
+          <div class="ct-card pad ct-card-h num" data-only="demo" hidden>
+            <span class="ct-note" style="font-size:var(--fs-body);">목표 3개 · 매달 모을 돈</span>
+            <span class="ct-card-t" style="font-size:var(--fs-h2);">130.6만 원 <span class="ct-note">지금 39.5만 원</span></span>
+          </div>
+        </div>
+
+        <div class="ct-stack">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <span class="ct-card-t" style="font-size:var(--fs-h2);">솔루션</span>
+            <span class="ct-note">적은 그대로 고객에게 보여요.</span>
+          </div>
+          <div class="ct-f"><span class="lb st">오늘의 결론</span>
+            <div class="ct-in tall" data-hint="오늘 상담에서 고객이 가져갈 한 가지를 적어요." data-demo="지금은 매달 6만 원이 남아요. 외식·배달을 10만 원 줄이면 학원비가 늘어도 적금을 그대로 이어 갈 수 있어요."></div></div>
+          <div class="ct-f"><span class="lb st">고민에 대한 오늘의 답</span>
+            <div class="ct-in tall" data-hint="01에서 적은 고민에 답하는 문장을 적어요." data-demo="학원비가 늘면 한 달에 9만 원이 모자라요. 식비부터 조정해 보고, 다음 상담 때 다시 확인해요."></div></div>
+          <div class="ct-f"><span class="lb st">AI 평가</span>
+            <div class="ct-only" style="font-size:var(--fs-body);color:var(--ink-3);">API를 연결하면 여기에 나와요</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== ② 지출에 대한 결과 ===================== -->
+    <div class="ct-panel rs-blk" id="b-spend">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">2</span><h3>지출에 대한 결과</h3></div>
+
+      <div data-only="empty">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
+          <div class="bt">지출을 적으면 결과가 나와요</div>
+          <div class="bd">02 수입지출에 '지금'과 '목표' 금액을 적으면, 줄였을 때 한 달에 얼마가 남는지 막대로 보여 줘요.</div>
+          <div class="ba"><a class="ct-btn ghost" href="cashflow.html">02 수입지출 적기</a></div>
+        </div>
+      </div>
+
+      <div class="ct-split" data-only="demo" hidden>
+        <div class="ct-stack">
+          <div class="ct-hero">학원비가 늘면 한 달에 9만 원이 모자라요</div>
+          <div style="font-size:var(--fs-body);color:var(--ink-2);text-wrap:pretty;">학원비가 늘면 남는 돈이 모자라 모으는 돈에서 먼저 빠지게 돼요. 식비부터 조정해 보고, 다음 상담 때 다시 확인해요.</div>
+          <div class="ct-kv" style="max-width:420px;">
+            <span class="k">나가는 돈 · 매달 거의 같은 돈</span><span class="v">228.5만 원</span>
+            <span class="k">나가는 돈 · 달마다 다른 돈</span><span class="v">180만 원</span>
+            <span class="k">그중 식비</span><span class="v">110만 원</span>
+            <span class="k tp">줄이기로 한 금액 · 외식·배달</span><span class="v tp hl">10만 원</span>
+          </div>
+          <div class="ct-quote"><span class="k">AI 평가</span><span class="v" style="color:var(--ink-3);">API를 연결하면 여기에 나와요</span></div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-card-t" style="margin-bottom:14px;">한 달 남는 돈 <span class="ct-note">· 단위 만 원</span></div>
+          <div class="ct-zero">
+            <div class="zr"><span class="k">지금</span><div class="tr"><div class="lf"></div><div><div class="bar pos" style="width:40%;"></div></div></div><span class="vv">+6</span></div>
+            <div class="zr"><span class="k">학원비 15만 원 늘면</span><div class="tr"><div class="lf"><div class="bar neg" style="width:60%;"></div></div><div></div></div><span class="vv">−9</span></div>
+            <div class="zr hi"><span class="k">외식·배달 10만 원 줄이면</span><div class="tr"><div class="lf"></div><div><div class="bar pos on" style="width:7%;min-width:6px;"></div></div></div><span class="vv">+1</span></div>
+          </div>
+          <div class="ct-note" style="margin-top:14px;">가운데 선이 0이에요. 02 수입지출에 적은 목표 금액으로 계산했어요.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== ③ 저축에 대한 결과 ===================== -->
+    <div class="ct-panel rs-blk" id="b-save">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">3</span><h3>저축에 대한 결과</h3></div>
+
+      <div data-only="empty">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-layers"/></svg></div>
+          <div class="bt">자산·부채를 적으면 순자산이 나와요</div>
+          <div class="bd">03 자산·부채를 채우면 가진 것과 갚을 것의 비율, 매달 모으는 돈을 함께 보여 줘요.</div>
+          <div class="ba"><a class="ct-btn ghost" href="assets.html">03 자산·부채 적기</a></div>
+        </div>
+      </div>
+
+      <div data-only="demo" hidden>
+        <div class="ct-split" style="margin-bottom:48px;">
+          <div class="ct-stack">
+            <div class="ct-hero">가진 것 중 절반 조금 넘게가 온전히 우리 집 몫이에요</div>
+            <div class="ct-kv" style="max-width:420px;">
+              <span class="k">현금흐름 잔액 (한 달)</span><span class="v">6만 원</span>
+              <span class="k">가진 것</span><span class="v">2억 8,400만 원</span>
+              <span class="k">갚을 것</span><span class="v">1억 2,300만 원</span>
+              <span class="k tp">순자산</span><span class="v tp hl">1억 6,100만 원</span>
+            </div>
+          </div>
+          <div class="ct-card pad" style="display:flex;flex-direction:column;gap:14px;justify-content:center;">
+            <div class="ct-sub-t">가진 것 2억 8,400만 원</div>
+            <div class="ct-bar2" style="height:48px;">
+              <div class="a" style="width:56.7%;">순자산 57%</div>
+              <div class="b" style="width:43.3%;">갚을 것 43%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ct-split">
+          <div class="ct-stack">
+            <div class="ct-hero">목표를 모두 지키려면 매달 <span class="hl">130.6만 원</span>이 필요해요</div>
+            <div style="font-size:var(--fs-body);color:var(--ink-2);text-wrap:pretty;">지금은 매달 39.5만 원을 모으고 있어요. 91.1만 원이 모자라요. 어떤 목표부터 챙길지 함께 정해 봐요.</div>
+          </div>
+          <div class="ct-card pad">
+            <div class="ct-card-t" style="margin-bottom:14px;">매달 모으는 돈 <span class="ct-note">· 단위 만 원</span></div>
+            <div class="ct-stack">
+              <div>
+                <div class="ct-card-h" style="margin-bottom:6px;"><span class="ct-note">지금 모으는 돈</span><span class="num" style="font-weight:700;color:var(--ink);">39.5</span></div>
+                <div class="ct-track"><i style="width:30.2%;background:var(--ink-2);"></i></div>
+              </div>
+              <div>
+                <div class="ct-card-h" style="margin-bottom:6px;"><span class="ct-note" style="color:var(--brand-deep);font-weight:700;">목표를 지키려면</span><span class="num" style="font-weight:800;color:var(--brand-deep);">130.6</span></div>
+                <div class="ct-track"><i style="width:100%;background:var(--brand-grad);"></i></div>
+              </div>
+              <div class="ct-hint">모자란 돈은 매달 <b>91.1만 원</b>이에요. 목표 시기를 미루거나 금액을 낮추면 줄어들어요.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== ④ 목표별 ===================== -->
+    <div class="ct-panel rs-blk" id="b-goal">
+      <div class="ct-card-h" style="margin-bottom:20px;">
+        <div class="ct-numh"><span class="n">4</span><h3>목표별</h3></div>
+        <div class="ct-note">종류 · 비상금 / 주택구매 / 결혼자금 / 자녀학비 / 노후 / 기타</div>
+      </div>
+
+      <div data-only="empty" style="margin-bottom:20px;">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-check-circle"/></svg></div>
+          <div class="bt">아직 목표가 없어요</div>
+          <div class="bd">아래 '목표 적기'에서 목표를 만들면 얼마나 모았는지와 돈이 몰리는 때를 보여 줘요.</div>
+        </div>
+      </div>
+
+      <!-- 목표마다 얼마나 모았나 -->
+      <div class="ct-card pad" style="margin-bottom:48px;" data-only="demo" hidden>
+        <div class="ct-card-h" style="margin-bottom:20px;">
+          <div class="ct-card-t">목표마다 얼마나 모았나</div>
+          <div class="ct-note">막대 한 줄이 그 목표의 필요금액이에요 · 단위 만 원</div>
+        </div>
+        <div class="ct-goals">
+          <div class="ct-goal flat">
+            <div class="gk"><span class="cat">기타</span><span class="dt">2027년 7월</span></div>
+            <div class="gn">가족 여행</div>
+            <div class="gv"><span class="v">100</span><span class="of">/ 400</span><span class="pc">25%</span></div>
+            <div class="ct-track"><i style="width:25%;"></i></div>
+            <div class="gm">앞으로 300 더 · <b>매달 33.3</b></div>
+          </div>
+          <div class="ct-goal flat">
+            <div class="gk"><span class="cat">기타</span><span class="dt">2028년 6월</span></div>
+            <div class="gn">차 바꾸기</div>
+            <div class="gv"><span class="v">200</span><span class="of">/ 1,500</span><span class="pc">13%</span></div>
+            <div class="ct-track"><i style="width:13.3%;"></i></div>
+            <div class="gm">앞으로 1,300 더 · <b>매달 65</b></div>
+          </div>
+          <div class="ct-goal flat">
+            <div class="gk"><span class="cat">자녀학비</span><span class="dt">2032년 3월</span></div>
+            <div class="gn">첫째 대학 등록금</div>
+            <div class="gv"><span class="v">300</span><span class="of">/ 2,400</span><span class="pc">13%</span></div>
+            <div class="ct-track"><i style="width:12.5%;"></i></div>
+            <div class="gm">앞으로 2,100 더 · <b>매달 32.3</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 돈이 몰리는 때 -->
+      <div class="ct-card pad" style="margin-bottom:48px;" data-only="demo" hidden>
+        <div class="ct-card-h" style="margin-bottom:14px;">
+          <div class="ct-card-t">돈이 몰리는 때 <span class="ct-note">· 기간별로 매달 모아야 하는 돈</span></div>
+          <div class="ct-note">지금 모으는 돈 39.5</div>
+        </div>
+        <div class="ct-tl">
+          <div></div>
+          <div class="band">
+            <div class="pk" style="left:0;width:12%;">3개 · 월 130.6</div>
+            <div class="pk2" style="left:12%;width:14.7%;">2개 · 월 97.3</div>
+            <div class="pk3" style="left:26.7%;width:60%;">1개 · 월 32.3</div>
+          </div>
+          <div class="rl">가족 여행</div>
+          <div class="lane"><div class="z1" style="width:12%;"></div><div class="z2" style="left:12%;width:14.7%;"></div><div class="seg" style="width:12%;background:var(--ink-2);"></div><span class="cap" style="left:calc(12% + 8px);">2027.7 · 월 33.3</span></div>
+          <div class="rl">차 바꾸기</div>
+          <div class="lane"><div class="z1" style="width:12%;"></div><div class="z2" style="left:12%;width:14.7%;"></div><div class="seg" style="width:26.7%;background:var(--brand-deep);"></div><span class="cap" style="left:calc(26.7% + 8px);">2028.6 · 월 65</span></div>
+          <div class="rl">대학 등록금</div>
+          <div class="lane"><div class="z1" style="width:12%;"></div><div class="z2" style="left:12%;width:14.7%;"></div><div class="seg" style="width:86.7%;background:var(--brand);"></div><span class="cap" style="left:calc(86.7% + 8px);">2032.3 · 월 32.3</span></div>
+          <div></div>
+          <div class="axis">
+            <span style="left:0;">지금</span><span style="left:20%;">2028</span><span style="left:36%;">2029</span><span style="left:52%;">2030</span><span style="left:68%;">2031</span><span style="left:84%;">2032</span><span style="right:0;">2033</span>
+          </div>
+        </div>
+        <div class="ct-lead" style="margin-top:14px;">내년 7월까지는 목표 3개가 겹쳐 매달 130.6만 원이 필요해요. 여행이 끝나면 97.3, 차를 바꾸고 나면 32.3으로 줄어요.</div>
+      </div>
+
+      <!-- 목표 적기 -->
+      <div class="ct-card-h" style="margin-bottom:12px;">
+        <div class="ct-card-t">목표 적기</div>
+        <div class="ct-add">+ 목표 추가</div>
+      </div>
+      <div class="ct-tbl-wrap">
+        <table class="ct-tbl">
+          <thead>
+            <tr>
+              <th>목표 이름</th>
+              <th style="width:150px;">종류</th>
+              <th style="width:130px;">언제쯤</th>
+              <th style="width:120px;">언제 필요한가</th>
+              <th class="amt" style="width:110px;">필요금액</th>
+              <th class="amt" style="width:110px;">모아 둔 돈</th>
+              <th class="amt" style="width:120px;">매달 모을 돈</th>
+              <th style="width:70px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-only="demo" hidden>
+              <td class="nm">가족 여행</td><td>기타</td><td>단기</td><td>2027-07</td>
+              <td class="amt">400</td><td class="amt">100</td><td class="amt" style="font-weight:700;">33.3</td><td class="del">지우기</td>
+            </tr>
+            <tr data-only="demo" hidden>
+              <td class="nm">차 바꾸기</td><td>기타</td><td>중기</td><td>2028-06</td>
+              <td class="amt">1,500</td><td class="amt">200</td><td class="amt" style="font-weight:700;">65</td><td class="del">지우기</td>
+            </tr>
+            <tr>
+              <td><div class="ct-in" data-hint="예) 첫째 대학 등록금" data-demo="첫째 대학 등록금"></div></td>
+              <td>
+                <select class="ct-select" data-demo-sel style="width:100%;height:42px;">
+                  <option>종류 고르기</option>
+                  <option>비상금</option><option>주택구매</option><option>결혼자금</option>
+                  <option selected>자녀학비</option><option>노후</option><option>기타</option>
+                </select>
+              </td>
+              <td><div class="ct-seg" style="height:42px;grid-template-columns:repeat(3,minmax(0,1fr));font-size:var(--fs-option);"><div>단기</div><div>중기</div><div class="on">장기</div></div></td>
+              <td><div class="ct-in" data-hint="YYYY-MM" data-demo="2032-03"></div></td>
+              <td class="amt"><div class="ct-in num focus" data-hint="0" data-demo="2,400"></div></td>
+              <td class="amt"><div class="ct-in num" data-hint="0" data-demo="300"></div></td>
+              <td class="amt" style="font-weight:800;color:var(--brand-deep);"><span data-demo="32.3" data-empty="—"></span></td>
+              <td class="del">지우기</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4"><span data-demo="목표 3개 합계" data-empty="목표 합계"></span></td>
+              <td class="amt"><span data-demo="4,300" data-empty="0"></span></td>
+              <td class="amt"><span data-demo="600" data-empty="0"></span></td>
+              <td class="amt" style="color:var(--brand-deep);"><span data-demo="130.6" data-empty="0"></span></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===================== ⑤ 혜택·보조금 ===================== -->
+    <div class="ct-panel rs-blk" id="b-benefit">
+      <div class="ct-card-h" style="margin-bottom:20px;">
+        <div class="ct-numh"><span class="n">5</span><h3 data-hint="확인해 볼 공공 혜택" data-demo="확인해 볼 공공 혜택이 3개 있어요"></h3></div>
+        <a class="ct-note" href="benefits.html?from=result" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">혜택·보조금 전체 보기 ›</a>
+      </div>
+
+      <div data-only="empty">
+        <div class="ct-lead" style="margin-bottom:14px;">01 기본정보의 사는 곳·가족·직업을 적으면 대상이 될 만한 지원을 모아서 보여 줘요.</div>
+        <a class="ct-btn ghost" href="benefits.html?from=result">혜택·보조금 열어 보기</a>
+      </div>
+
+      <div class="ct-stack" data-only="demo" hidden>
+        <div class="ct-bsum">
+          <span class="v">한 해 최대 224만 원</span>
+          <span class="ct-lead">을 더 받을 수 있어요. 3개 중 1개는 <b style="color:#C92238;">17일 안에</b> 신청해야 해요.</span>
+        </div>
+
+        <div class="ct-card pad ct-benefit ct-bcard soon">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">현금</span>대구광역시 달서구청 교육지원과</div>
+            <div class="bt clamp">달서구 다자녀 가정 초·중·고 자녀 방과후 교육비 및 교재비 지원</div>
+            <div class="bamt">자녀 1인당 연 30만 원<span class="u"> · 2명이면 연 60만 원</span></div>
+            <div class="bd">셋째 이후가 아니어도 자녀 2명 이상이면 받아요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">달서구 거주</span></div>
+          </div>
+          <div class="bside">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="ct-dday soon">D-17</span>
+              <div class="k">신청 기한</div>
+              <div class="v">10월 15일까지</div>
+            </div>
+            <a href="#">정부24에서 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-card pad ct-benefit ct-bcard">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">이용권</span>산업통상자원부</div>
+            <div class="bt">에너지바우처</div>
+            <div class="bamt">연 44만 원<span class="u"> · 여름·겨울 전기·가스 요금</span></div>
+            <div class="bd">요금에서 자동으로 빠져요. 한 번 신청하면 그 해 내내 적용돼요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">소득 구간</span></div>
+          </div>
+          <div class="bside">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="ct-dday">D-94</span>
+              <div class="k">신청 기한</div>
+              <div class="v">12월 31일까지</div>
+            </div>
+            <a href="#">정부24에서 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-card pad ct-benefit ct-bcard">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">현금</span>보건복지부</div>
+            <div class="bt">아동수당</div>
+            <div class="bamt">매달 10만 원<span class="u"> · 둘째 김도하(7세)</span></div>
+            <div class="bd">만 8세가 되는 달까지 계좌로 들어와요.</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">자녀 7세</span></div>
+          </div>
+          <div class="bside">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <span class="ct-dday always">상시</span>
+              <div class="k">신청 기한</div>
+              <div class="v">언제든지</div>
+            </div>
+            <a href="#">정부24에서 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-card-h">
+          <span class="ct-note">받을 수 있다고 정해진 건 아니에요. 대상인지 확인하고 신청은 고객이 정부24에서 해요.</span>
+          <a class="ct-note" href="benefits.html?from=result" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">4개 더 보기 ›</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== ⑥ 다음 상담 ===================== -->
+    <div class="ct-panel rs-blk" id="b-next">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">6</span><h3>다음 상담</h3></div>
+      <div class="ct-split">
+        <div class="ct-stack">
+          <div class="ct-hero" data-hint="아직 정하지 않았어요" data-demo="2026년 10월 26일 (월)"></div>
+          <div class="ct-lead" data-hint="상담 마지막에 고객과 함께 정해요." data-demo="4주 뒤에 식비부터 다시 봐요."></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <div class="ct-in focus" style="flex:1;min-width:220px;font-weight:700;" data-hint="날짜 고르기" data-demo="2026년 10월 26일 (월)"></div>
+            <div class="ct-pill">2주 뒤</div><div class="ct-pill on">4주 뒤</div><div class="ct-pill">8주 뒤</div>
+          </div>
+        </div>
+        <div class="ct-cal">
+          <div class="ch">
+            <div class="nav"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg></div>
+            <span class="m">2026년 10월</span>
+            <div class="nav"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></div>
+          </div>
+          <div class="dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+          <div class="days">
+            <div></div><div></div><div></div><div></div><div>1</div><div>2</div><div>3</div>
+            <div class="sun">4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
+            <div class="sun">11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div>
+            <div class="sun">18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div><div>24</div>
+            <div class="sun">25</div><div id="cal-26">26</div><div>27</div><div>28</div><div>29</div><div>30</div><div>31</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ct-navrow" style="margin-top:20px;">
+      <a class="ct-btn ghost" href="statement.html">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg> 이전
+      </a>
+      <a class="ct-btn primary" href="index.html">
+        <svg class="ic-svg" width="16" height="16"><use href="#i-check"/></svg> 상담 마치기
+      </a>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<div id="footer-host"></div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('consult');</script>
+<script src="_state.js"></script>
+<script>
+// 예시일 때만 달력에서 다음 상담일을 표시
+if (new URLSearchParams(location.search).get('demo') === '1') {
+  document.getElementById('cal-26').classList.add('on');
+}
+
+// 결과 블록 탐색 — 클릭 시 해당 블록으로, 스크롤에 따라 현재 블록 표시
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.ct-subtabs [data-go]'));
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      var el = document.getElementById(t.dataset.go);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  var blocks = tabs.map(function (t) { return document.getElementById(t.dataset.go); });
+  window.addEventListener('scroll', function () {
+    var i = 0;
+    blocks.forEach(function (b, n) { if (b && b.getBoundingClientRect().top <= 120) i = n; });
+    tabs.forEach(function (t, n) { t.classList.toggle('on', n === i); });
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>
