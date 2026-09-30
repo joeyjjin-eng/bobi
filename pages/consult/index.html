@@ -87,7 +87,7 @@
         <span></span>
       </div>
       <div id="rows"></div>
-      <div class="ct-empty" id="empty" hidden>조건에 맞는 고객이 없어요</div>
+      <div class="ct-empty" id="empty" hidden>조건에 맞는 고객이 없습니다</div>
     </div>
 
   </main>
@@ -102,21 +102,21 @@ injectShell('consult');
 
 const DATA = [
   { name:'김민준', first:'2026.07.21', last:'2026.09.28', next:'2026.10.26', st:'next', s:['07.21','08.25','09.28'] },
-  { name:'이서연', first:'2026.07.30', last:'2026.09.29', next:'이어서 하기', st:'live', s:['07.30','08.28','09.29'] },
-  { name:'박지훈', first:'2026.09.26', last:'2026.09.26', next:'일정 잡기', st:'none', s:['09.26'] },
+  { name:'이서연', first:'2026.07.30', last:'2026.09.29', next:'', st:'live', s:['07.30','08.28','09.29'] },
+  { name:'박지훈', first:'2026.09.26', last:'2026.09.26', next:'', st:'none', s:['09.26'] },
   { name:'최수아', first:'2026.05.16', last:'2026.09.19', next:'2026.10.17', st:'next', s:['05.16','06.20','07.18','08.22','09.19'] },
   { name:'정도윤', first:'2026.07.26', last:'2026.08.30', next:'2026.10.02', st:'next', s:['07.26','08.30'] },
   { name:'한예린', first:'2025.11.08', last:'2026.09.06', next:'2026.10.05', st:'next', s:['11.08','12.13','2026.01.24','03.21','05.09','07.11','09.06'] },
   { name:'강태오', first:'2026.03.14', last:'2026.08.16', next:'2026.10.11', st:'next', s:['03.14','04.25','06.13','08.16'] },
-  { name:'서하은', first:'2026.06.20', last:'2026.07.25', next:'일정 잡기', st:'none', s:['06.20','07.25'] },
-  { name:'윤지아', first:'2026.07.12', last:'2026.07.12', next:'08.09 지남', st:'late', s:['07.12'] },
+  { name:'서하은', first:'2026.06.20', last:'2026.07.25', next:'', st:'none', s:['06.20','07.25'] },
+  { name:'윤지아', first:'2026.07.12', last:'2026.07.12', next:'2026.08.09', st:'late', s:['07.12'] },
 ];
 
 const STATUS = [['all','전체'],['live','진행 중'],['next','다음 상담 있음'],['none','다음 상담 없음'],['late','상담일 지남']];
 const COUNT  = [['all','전체'],['1','1회차'],['2-4','2–4회차'],['5','5회차 이상']];
 const FIRST  = [['all','전체'],['2026','2026년'],['2025','2025년']];
 
-const S = { q:'', status:'all', count:'all', first:'all', sort:'last', open:'김민준' };
+const S = { q:'', status:'all', count:'all', first:'all', sort:'last', open:null };
 const $ = (id) => document.getElementById(id);
 
 // 회차 날짜 — 연도가 생략된 항목은 최초/마지막 상담 연도로 채운다
@@ -172,20 +172,21 @@ function render() {
 
   $('rows').innerHTML = list.map(d => {
     const n = d.s.length, multi = n > 1, open = multi && S.open === d.name;
-    const nxCls = d.st === 'late' ? ' late' : (d.st === 'live' || d.st === 'none') ? ' hi' : '';
-    const row = '<div class="table-row' + (multi ? ' clickable' : '') + (open ? ' open' : '') + '" data-name="' + d.name + '">'
+    const nxCls = d.st === 'late' ? ' late' : '';
+    const row = '<div class="table-row clickable' + (open ? ' open' : '') + '" data-name="' + d.name + '">'
       + '<div class="tr-name"><div class="patient-avatar" data-name="' + d.name + '"></div><span class="nm">' + d.name + '</span></div>'
       + '<span class="tr-cnt">' + n + '회차</span>'
       + '<span></span>'
       + '<span class="tr-date">' + d.first + '</span>'
       + '<span class="tr-date">' + d.last + '</span>'
       + '<span class="tr-next' + nxCls + '">' + d.next + '</span>'
-      + '<span class="tr-go">' + (multi ? '<i class="ct-chev' + (open ? ' up' : '') + '"></i>' : '') + '</span>'
+      // 2회차 이상이면 펼치기(∨/∧), 1회차면 바로 결과로(›)
+      + '<span class="tr-go">' + (multi ? '<i class="ct-chev' + (open ? ' up' : '') + '"></i>' : '<i class="ct-chev right"></i>') + '</span>'
       + '</div>';
     const sub = open
       ? '<div class="row-sub">' + sessionsOf(d).map(s =>
           '<div class="ct-srow"><span class="n">' + s.n + '</span><span class="d">' + s.date + '</span>'
-          + '<span></span><a href="result.html?demo=1">결과 보기</a></div>').join('') + '</div>'
+          + '<span></span><a href="result.html">결과 보기</a></div>').join('') + '</div>'
       : '';
     return row + sub;
   }).join('');
@@ -205,7 +206,9 @@ $('rows').addEventListener('click', e => {
   if (e.target.closest('a')) return;
   const el = e.target.closest('[data-name]'); if (!el) return;
   const d = DATA.find(x => x.name === el.dataset.name);
-  if (d && d.s.length > 1) { S.open = S.open === d.name ? null : d.name; render(); }
+  if (!d) return;
+  if (d.s.length === 1) { location.href = 'result.html'; return; }
+  if (d.s.length > 1) { S.open = S.open === d.name ? null : d.name; render(); }
 });
 $('q').addEventListener('input', e => { S.q = e.target.value; render(); });
 $('f-sort').addEventListener('change', e => { S.sort = e.target.value; render(); });

@@ -10,8 +10,9 @@
 <link rel="stylesheet" href="../../styles/consult.css" />
 <style>
   html, body { margin: 0; background: #fff; }
-  .cE .cf-body { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 28px; align-items: start; }
-  @media (max-width: 960px) { .cE .cf-body { grid-template-columns: 1fr; } }
+  .cE .cf-body { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
+  .cE .cf-index { position: sticky; top: 16px; }
+  @media (max-width: 960px) { .cE .cf-body { grid-template-columns: 1fr; } .cE .cf-index { position: static; } }
 </style>
 </head>
 <body>
@@ -25,31 +26,22 @@
   <main class="emain ct">
 
     <a class="back-btn" href="index.html">
-      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록으로
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록
     </a>
 
     <div class="ct-head">
       <div class="ct-id">
-        <div class="patient-avatar" data-name="새 상담" data-only="empty"></div>
-        <div class="patient-avatar" data-name="김민준" data-only="demo" hidden></div>
+        <div class="patient-avatar" data-name="김민준"></div>
         <div>
-          <div class="h-eyebrow" data-only="empty">새로운 상담</div>
-          <div class="h-eyebrow" data-only="demo" hidden>상담 진행 중</div>
-          <h1 data-hint="고객을 고르거나 새로 적어요" data-demo="김민준님"></h1>
+          <div class="h-eyebrow">상담 진행 중</div>
+          <h1>김민준</h1>
           <div class="ct-meta">
-            <span data-only="empty">1회차</span>
-            <span data-only="demo" hidden>3회차</span>
-            <span>상담일 <b>2026.09.28 (월)</b></span>
+            <span>3회차</span>
+            <span>상담일 <b>2026.09.28</b></span>
           </div>
         </div>
       </div>
       <div class="ct-act">
-        <a class="ct-tool key" href="benefits.html?from=cashflow">
-          <svg class="ic-svg" width="17" height="17"><use href="#i-shield"/></svg>
-          공공 혜택
-          <span class="ct-badge" data-only="demo" hidden>7</span>
-        </a>
-        <span class="ct-vr"></span>
         <span class="ct-saved">자동 저장됨</span>
       </div>
     </div>
@@ -64,99 +56,30 @@
       <a class="ct-step" href="statement.html"><span class="n">04</span>재무재표</a>
       <div class="split"></div>
       <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
+      <a class="ct-keylink" href="benefits.html?from=cashflow"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="n">7</span><span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
     </div>
 
-    <!-- ===== 3칸 요약 ===== -->
+    <!-- ===== 3칸 요약 (입력에 따라 즉시 갱신) ===== -->
     <div class="ct-sum" style="margin-bottom:20px;">
-      <div class="box"><span class="k">들어오는 돈</span><span class="v"><span data-demo="520" data-empty="0"></span><span class="u"> 만 원</span></span></div>
+      <div class="box"><span class="k">월 수입</span><span class="v"><span id="sum-income">0</span><span class="u"> 만원</span></span></div>
       <div class="op">−</div>
-      <div class="box"><span class="k">나가는 돈</span><span class="v"><span data-demo="514" data-empty="0"></span><span class="u"> 만 원</span></span></div>
+      <div class="box"><span class="k">월 지출</span><span class="v"><span id="sum-expense">0</span><span class="u"> 만원</span></span></div>
       <div class="op">=</div>
-      <div class="box hi"><span class="k">남는 돈</span><span class="v"><span data-demo="6" data-empty="0"></span><span class="u"> 만 원</span></span></div>
+      <div class="box hi"><span class="k">월 잔액</span><span class="v"><span id="sum-balance">0</span><span class="u"> 만원</span></span></div>
     </div>
 
-    <!-- 만 원 단위 경고 -->
-    <div data-unit-warning hidden>
-      <div class="ct-warn" style="margin-bottom:20px;"><b>만 원 단위가 맞는지 확인해요:</b> 월급(세후) 3,050,000만 원 (약 305억 원)</div>
-    </div>
-
-    <div class="ct-hint" style="margin-bottom:20px;">
-      지난 한 달 카드·통장 내역을 보며 함께 적어요. <b>금액은 모두 만 원</b>이고, 모르면 비워 두세요. 0은 '없음'이에요.
+    <!-- 단위 확인 경고 -->
+    <div id="unit-warn" hidden>
+      <div class="ct-warn" style="margin-bottom:20px;"><b>단위 확인 필요</b> · <span id="unit-warn-txt"></span></div>
     </div>
 
     <div class="cf-body">
 
-      <!-- 왼쪽: 묶음 합계 -->
-      <div class="ct-tot">
-        <div class="hd">들어오는 돈<span><span data-demo="520" data-empty="0"></span><span class="wk" data-only="demo" hidden> · 모르는 1개 빼고</span></span></div>
-        <div class="gl tp">나가는 돈 · 매달 거의 같은 돈</div>
-        <div class="li">집<span data-demo="38" data-empty="—"></span></div>
-        <div class="li">통신<span data-demo="22" data-empty="—"></span></div>
-        <div class="li">보험<span data-demo="48" data-empty="—"></span></div>
-        <div class="li">구독<span data-demo="3.5" data-empty="—"></span></div>
-        <div class="li">가족<span data-demo="85" data-empty="—"></span></div>
-        <div class="li">교통<span data-demo="32" data-empty="—"></span></div>
-        <div class="li sum">합계<span data-demo="228.5" data-empty="0"></span></div>
-        <div class="gl">나가는 돈 · 달마다 다른 돈</div>
-        <div class="li on">식비<span data-demo="110" data-empty="—"></span></div>
-        <div class="li">생활<span data-demo="18" data-empty="—"></span></div>
-        <div class="li">건강<span data-demo="12" data-empty="—"></span></div>
-        <div class="li">꾸밈<span data-demo="15" data-empty="—"></span></div>
-        <div class="li">여가·경조사·기타<span data-demo="25" data-empty="—"></span></div>
-        <div class="li sum">합계<span data-demo="180" data-empty="0"></span></div>
-        <div class="hd tp">빚 갚는 돈<span data-demo="66" data-empty="0"></span></div>
-        <div class="hd">모으는 돈<span data-demo="39.5" data-empty="0"></span></div>
-        <div class="gl tp">이번 달만 있었던 큰돈</div>
-        <div class="li">목돈 들어온 돈<span data-demo="0" data-empty="—"></span></div>
-        <div class="li">목돈 나간 돈<span data-demo="모름" data-empty="—"></span></div>
-      </div>
+      <!-- 왼쪽: 묶음 색인 (누르면 해당 묶음으로 이동) -->
+      <div class="ct-tot cf-index" id="cf-index"></div>
 
-      <!-- 오른쪽: 선택한 묶음 입력 -->
-      <div class="ct-stack">
-        <div class="ct-card-h" style="align-items:flex-start;">
-          <div style="display:flex;flex-direction:column;gap:6px;">
-            <div class="ct-eyebrow">나가는 돈 · 달마다 다른 돈</div>
-            <h2 style="font-size:var(--fs-h1);font-weight:800;letter-spacing:-0.02em;margin:0;color:var(--ink);">식비</h2>
-            <div class="ct-lead">장보기 · 외식·배달 · 카페·간식으로 나눠 적어요.</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:var(--fs-option);color:var(--ink-2);flex:none;">
-            목표 금액도 함께 적기<div class="ct-sw"><i></i></div>
-          </div>
-        </div>
-
-        <div class="ct-tbl-wrap">
-          <table class="ct-tbl">
-            <thead><tr><th>항목</th><th class="amt" style="width:190px;">지금 (만 원)</th><th class="amt" style="width:190px;">목표 (만 원)</th></tr></thead>
-            <tbody>
-              <tr><td class="nm">장보기</td>
-                <td class="amt"><div class="ct-in num" data-hint="0" data-demo="62"></div></td>
-                <td class="amt"><div class="ct-in num soft" data-hint="비워 둠" data-demo="60"></div></td></tr>
-              <tr><td class="nm">외식·배달</td>
-                <td class="amt"><div class="ct-in num focus" data-hint="0" data-demo="38"></div></td>
-                <td class="amt"><div class="ct-in num soft" data-hint="비워 둠" data-demo="28"></div></td></tr>
-              <tr><td class="nm">카페·간식</td>
-                <td class="amt"><div class="ct-in num" data-hint="0" data-demo="10"></div></td>
-                <td class="amt"><div class="ct-in num soft" data-hint="비워 둠" data-demo="비워 둠"></div></td></tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>식비 합계</td>
-                <td class="amt" style="font-size:var(--fs-h1);font-weight:800;"><span data-demo="110" data-empty="0"></span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만 원</span></td>
-                <td class="amt"><span data-demo="88" data-empty="0"></span><span class="ct-note" style="font-weight:500;" data-only="demo" hidden> · 모르는 1개 빼고</span></td>
-              </tr>
-            </tfoot>
-          </table>
-          <div class="ct-add">+ 항목 추가</div>
-        </div>
-
-        <!-- 설계사에게만 보임 -->
-        <div data-advisor-only>
-          <div class="ct-only" style="display:flex;gap:16px;align-items:center;">
-            <div class="ct-only-b">상담 결과에는 안 나와요</div>
-            <div style="font-size:var(--fs-body);color:var(--ink-2);flex:1;" data-hint="메모 · 이 묶음에서 눈에 띈 점을 적어요." data-demo="메모 · 외식은 주말 배달이 대부분. 줄이기 싫은 지출로 '아이 간식'을 말씀하셨어요."></div>
-          </div>
-        </div>
-      </div>
+      <!-- 오른쪽: 모든 묶음을 한 번에 -->
+      <div class="ct-stack" id="cf-sections"></div>
     </div>
 
     <div class="ct-navrow" style="margin-top:20px;">
@@ -176,7 +99,172 @@
 
 <script src="../../components/layout.js"></script>
 <script>injectShell('consult');</script>
-<script src="_state.js"></script>
+<script src="_model.js"></script>
+<script src="_actions.js"></script>
+<script>
+/* ===== 02 수입지출 — 묶음 전체를 세로로 펼쳐 놓고 바로 입력 ===== */
+(function () {
+  var M = CT.load();
+  var idx = document.getElementById('cf-index');
+  var host = document.getElementById('cf-sections');
+
+  function secId(cat) { return 'cf-' + CT.ORDER.indexOf(cat); }
+
+  /* ---------- 오른쪽: 묶음별 입력표 ---------- */
+  function buildSections() {
+    host.innerHTML = CT.ORDER.map(function (cat) {
+      var c = M.cf[cat];
+      return '<div class="cf-sec" id="' + secId(cat) + '">'
+        + '<div class="ct-card-h" style="margin-bottom:12px;">'
+        +   '<div><div class="ct-eyebrow">' + c.grp + '</div>'
+        +   '<h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:4px 0 0;color:var(--ink);">' + cat + '</h3></div>'
+        + '</div>'
+        + '<div class="ct-tbl-wrap"><table class="ct-tbl"><thead><tr>'
+        +   '<th>항목</th><th class="amt" style="width:170px;">현재</th>'
+        +   '<th class="amt" style="width:170px;" data-toggle-target="goal" hidden>목표</th>'
+        +   '<th style="width:60px;"></th>'
+        + '</tr></thead><tbody data-cat="' + cat + '">' + rowsOf(cat) + '</tbody>'
+        + '<tfoot><tr><td>' + cat + ' 소계</td>'
+        +   '<td class="amt" data-tot="' + cat + '">0</td>'
+        +   '<td class="amt" data-toggle-target="goal" hidden data-totg="' + cat + '">0</td>'
+        +   '<td></td>'
+        + '</tr></tfoot></table></div></div>';
+    }).join('');
+    host.querySelectorAll('tbody[data-cat]').forEach(bindRows);
+  }
+
+  function rowsOf(cat) {
+    var c = M.cf[cat];
+    var sm = (CT.SAMPLE.cf[cat] || {}).items || [];
+    return c.items.map(function (r, i) {
+      // data-sample: 입력칸에 마우스를 올리면 채워 넣을 시뮬레이션 값
+      var s = sm[i] || [];
+      return '<tr>'
+        + '<td class="nm"><div class="ct-in" data-f="name" data-i="' + i + '">' + r[0] + '</div></td>'
+        + '<td class="amt"><div class="ct-in num' + (r[1] === null ? ' hint' : '') + '" data-hint="미입력" data-f="now" data-i="' + i + '"'
+        +   (s[1] === null || s[1] === undefined ? '' : ' data-sample="' + s[1] + '"') + '>'
+        +   (r[1] === null ? '미입력' : CT.comma(r[1])) + '</div></td>'
+        + '<td class="amt" data-toggle-target="goal" hidden><div class="ct-in num soft' + (r[2] === null ? ' hint' : '') + '" data-hint="미입력" data-f="goal" data-i="' + i + '"'
+        +   (s[2] === null || s[2] === undefined ? '' : ' data-sample="' + s[2] + '"') + '>'
+        +   (r[2] === null ? '미입력' : CT.comma(r[2])) + '</div></td>'
+        + '<td class="del" data-act="del" style="width:60px;">삭제</td>'
+        + '</tr>';
+    }).join('')
+      + '<tr class="addrow"><td colspan="4" class="ct-add" data-addcat="' + cat + '">+ 항목 추가</td></tr>';
+  }
+
+  // 입력 칸을 모델에 연결한다
+  function bindRows(tb) {
+    var cat = tb.dataset.cat;
+    tb.querySelectorAll('.ct-in[data-f]').forEach(function (el) {
+      el.setAttribute('contenteditable', 'true');
+      el.addEventListener('focus', function () {
+        if (el.classList.contains('hint')) { el.textContent = ''; el.classList.remove('hint'); }
+      });
+      el.addEventListener('blur', function () {
+        var i = Number(el.dataset.i), f = el.dataset.f, items = M.cf[cat].items;
+        if (!items[i]) return;
+        if (f === 'name') {
+          items[i][0] = el.textContent.trim() || '이름 없음';
+          el.textContent = items[i][0];
+        } else {
+          var v = CT.parse(el.textContent);
+          items[i][f === 'now' ? 1 : 2] = v;
+          if (v === null) { el.textContent = '미입력'; el.classList.add('hint'); }
+          else { el.textContent = CT.comma(v); el.classList.remove('hint'); }
+        }
+        commit();
+      });
+    });
+  }
+
+  /* ---------- 왼쪽: 묶음 색인 ---------- */
+  function buildIndex() {
+    var c = CT.calc(M);
+    var h = '';
+    h += line('수입', c.income, 'hd', c.incomeUnknown);
+    h += '<div class="gl tp">고정지출</div>';
+    CT.FIXED.forEach(function (k) { h += line(k, CT.catTotal(M, k), 'li'); });
+    h += '<div class="li sum">소계<span>' + CT.comma(c.fixed) + '</span></div>';
+    h += '<div class="gl">변동지출</div>';
+    CT.VARI.forEach(function (k) { h += line(k, CT.catTotal(M, k), 'li'); });
+    h += '<div class="li sum">소계<span>' + CT.comma(c.vari) + '</span></div>';
+    h += '<div class="hd tp" style="cursor:default;">부채상환<span>' + CT.comma(c.debtPay) + '</span></div>';
+    h += '<div class="ct-note" style="padding:0 12px 8px;">03 자산·부채에서 입력</div>';
+    h += line('저축', c.saving, 'hd');
+    h += '<div class="gl tp">일시 수입·지출</div>';
+    h += line('일시 수입', CT.catTotal(M, '일시 수입'), 'li');
+    h += line('일시 지출', CT.catTotal(M, '일시 지출'), 'li');
+    idx.innerHTML = h;
+  }
+  function line(cat, val, cls, unk) {
+    return '<div class="' + cls + '" data-go="' + secId(cat) + '">' + cat
+      + '<span>' + CT.comma(val)
+      + (unk ? '<span class="wk"> · 미입력 ' + unk + '건 제외</span>' : '')
+      + '</span></div>';
+  }
+
+  /* ---------- 합계 다시 계산 ---------- */
+  function commit() {
+    CT.save(M);
+    paint();
+  }
+  function paint() {
+    var c = CT.calc(M);
+    document.getElementById('sum-income').textContent  = CT.comma(c.income);
+    document.getElementById('sum-expense').textContent = CT.comma(c.expense);
+    document.getElementById('sum-balance').textContent = CT.comma(c.balance);
+    CT.ORDER.forEach(function (cat) {
+      var t = host.querySelector('[data-tot="' + cat + '"]');
+      var g = host.querySelector('[data-totg="' + cat + '"]');
+      if (t) t.textContent = CT.comma(CT.catTotal(M, cat, 1));
+      if (g) g.textContent = CT.comma(CT.catTotal(M, cat, 2));
+    });
+    buildIndex();
+    // 원 단위로 적은 것 같은 값 경고
+    var big = null;
+    Object.keys(M.cf).forEach(function (cat) {
+      M.cf[cat].items.forEach(function (r) { if (r[1] !== null && r[1] >= 100000 && !big) big = [r[0], r[1]]; });
+    });
+    var w = document.getElementById('unit-warn');
+    w.hidden = !big;
+    if (big) document.getElementById('unit-warn-txt').textContent =
+      big[0] + ' ' + CT.comma(big[1]) + '만원 (약 ' + Math.round(big[1] / 10000) + '억원)';
+  }
+
+  /* ---------- 클릭 ---------- */
+  document.addEventListener('click', function (e) {
+    var go = e.target.closest('#cf-index [data-go]');
+    if (go) {
+      var el = document.getElementById(go.dataset.go);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    var add = e.target.closest('.ct-add[data-addcat]');
+    if (add) {
+      var cat = add.dataset.addcat;
+      M.cf[cat].items.push(['새 항목', null, null]);
+      var tb = host.querySelector('tbody[data-cat="' + cat + '"]');
+      tb.innerHTML = rowsOf(cat);
+      bindRows(tb);
+      commit();
+      var last = tb.querySelectorAll('.ct-in[data-f="name"]');
+      if (last.length) last[last.length - 1].focus();
+      return;
+    }
+    var del = e.target.closest('#cf-sections td[data-act="del"]');
+    if (del) {
+      var tb2 = del.closest('tbody'), cat2 = tb2.dataset.cat;
+      var i = Number(del.previousElementSibling.querySelector('.ct-in') ? del.parentNode.querySelector('.ct-in[data-f="name"]').dataset.i : -1);
+      if (i >= 0) { M.cf[cat2].items.splice(i, 1); tb2.innerHTML = rowsOf(cat2); bindRows(tb2); commit(); }
+      return;
+    }
+  }, true);
+
+  buildSections();
+  paint();
+})();
+</script>
 
 </body>
 </html>
