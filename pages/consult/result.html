@@ -13,6 +13,15 @@
   .cE .rs-nav { position: sticky; top: 0; z-index: 5; background: #fff; padding-top: 4px; }
   .cE .rs-hero { display: grid; grid-template-columns: minmax(0,1fr) 520px; gap: 40px; align-items: center; }
   .cE .rs-blk { scroll-margin-top: 70px; }
+  /* 현금흐름표 — 구분(①②③) · 묶음 · 항목 세 단계를 들여쓰기로 구분한다 */
+  .cE .rs-cf tbody td { padding: 11px 16px; }
+  .cE .rs-cf tr.sec td { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); background: var(--bg-soft); border-top: 2px solid var(--ink); padding-top: 14px; padding-bottom: 14px; }
+  .cE .rs-cf tr.sec:first-child td { border-top: 0; }
+  .cE .rs-cf tr.grp td { font-weight: 700; color: var(--ink); }
+  .cE .rs-cf tr.grp td:first-child { padding-left: 32px; }
+  .cE .rs-cf tr.itm td { color: var(--ink-2); }
+  .cE .rs-cf tr.itm td:first-child { padding-left: 54px; }
+  .cE .rs-cf tr.itm.none td { color: var(--ink-4); }
   @media (max-width: 960px) { .cE .rs-hero { grid-template-columns: 1fr; gap: 20px; } }
 </style>
 </head>
@@ -30,23 +39,15 @@
       <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록
     </a>
 
-    <div class="ct-head">
-      <div class="ct-id">
-        <div class="patient-avatar" data-name="김민준" ></div>
-        <div>
-          <div class="h-eyebrow">상담결과</div>
-          <h1>김민준</h1>
-          <div class="ct-meta">
-            <span >3회차</span>
-            <span>상담일 <b>2026.09.28</b></span>
-          </div>
-        </div>
+    <div class="ct-title-row">
+      <div class="ct-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
+      <div class="ct-title-txt">
+        <h1>재무상담</h1>
+        <div class="ct-title-sub">새로운 상담하기</div>
       </div>
-      <div class="ct-act">
+      <div class="ct-title-act">
         <span class="ct-tool" data-print><svg class="ic-svg" width="14" height="14"><use href="#i-printer"/></svg> 인쇄</span>
         <span class="ct-tool" data-todo="고객 발송은 준비 중입니다"><svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg> 고객 발송</span>
-        <span class="ct-vr"></span>
-        <span class="ct-saved">자동 저장됨</span>
       </div>
     </div>
 
@@ -65,18 +66,50 @@
     <!-- ===== 결과 블록 탐색 ===== -->
     <div class="rs-nav">
       <div class="ct-subtabs">
-        <div class="on" data-go="b-sum">요약</div>
+        <div class="on" data-go="b-cf">현금흐름표</div>
+        <div data-go="b-sum">요약</div>
         <div data-go="b-spend">지출</div>
         <div data-go="b-save">저축</div>
         <div data-go="b-goal">목표별</div>
         <div data-go="b-next">다음 상담</div>
-        <a class="ct-keylink" href="benefits.html?from=result" ><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="n">7</span><span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+        <div class="ct-toolset">
+          <a class="ct-keylink" href="benefits.html?from=result" ><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="n">7</span><span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+          <a class="ct-keylink" href="emergency.html?from=result"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-won"/></svg></span>비상금<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+          <a class="ct-keylink" href="lastyear.html?from=result"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg></span>작년 기록<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+        </div>
       </div>
     </div>
 
-    <!-- ===================== ① 요약 ===================== -->
+    <!-- ===================== ① 현금흐름표 =====================
+         01–03에서 적은 내용을 그대로 한 장에 모은 표.
+         묶음 합계 아래에 항목까지 펼쳐, 상담 중 적은 값을 고객과 같이 확인한다. -->
+    <div class="ct-panel rs-blk" id="b-cf">
+      <div class="ct-numh" style="margin-bottom:6px;"><span class="n">1</span><h3>현금흐름표</h3></div>
+      <div class="ct-lead" style="margin-bottom:20px;">한 달 동안 들어온 돈이 어디로 갔는지
+        <span class="ct-note">· 2026.09 · 단위 만원 · 01–03에 적은 금액 그대로</span>
+      </div>
+
+      <table class="ct-tbl rs-cf">
+        <thead><tr>
+          <th>구분</th>
+          <th class="amt" style="width:170px;">금액</th>
+        </tr></thead>
+        <tbody id="cf-rows"></tbody>
+        <tfoot><tr>
+          <td>월 잔액 <span class="ct-note" style="font-weight:500;">① − ② − ③</span></td>
+          <td class="amt" id="cf-bal" style="color:var(--brand-deep);">0</td>
+        </tr></tfoot>
+      </table>
+
+      <div class="ct-note" style="margin-top:14px;">금액을 고칠 곳은 해당 단계로 돌아가 고칩니다.
+        <a href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 ›</a>
+        <a href="assets.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;margin-left:8px;">03 자산·부채 ›</a>
+      </div>
+    </div>
+
+    <!-- ===================== ② 요약 ===================== -->
     <div class="ct-panel rs-blk" id="b-sum">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">1</span><h3>요약</h3></div>
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">2</span><h3>요약</h3></div>
 
       <!-- 월 현금흐름 + 원그래프 -->
       <div class="rs-hero" style="margin-bottom:48px;" >
@@ -105,9 +138,9 @@
         <div class="ct-stack">
           <span class="ct-card-t" style="font-size:var(--fs-h2);">솔루션</span>
           <div class="ct-f"><span class="lb st">상담 결론</span>
-            <div class="ct-in tall" data-hint="상담하며 함께 정리한 문장을 적습니다." data-sample="지금은 매달 6만 원이 남아요. 외식·배달을 10만 원 줄이면 학원비가 늘어도 적금을 그대로 이어 갈 수 있어요."></div></div>
+            <div class="ct-in tall" data-hint="상담하며 함께 정리한 문장을 적습니다."></div></div>
           <div class="ct-f"><span class="lb st">요청 사항 답변</span>
-            <div class="ct-in tall" data-hint="상담하며 함께 정리한 문장을 적습니다." data-sample="학원비가 늘면 한 달에 9만 원이 모자라요. 식비부터 조정해 보고, 다음 상담 때 다시 확인해요."></div></div>
+            <div class="ct-in tall" data-hint="상담하며 함께 정리한 문장을 적습니다."></div></div>
           <div class="ct-f"><span class="lb st">AI 평가</span>
             <div class="ct-in" style="color:var(--ink-4);">API 연동 시 표시</div></div>
         </div>
@@ -134,7 +167,7 @@
 
     <!-- ===================== ② 지출 ===================== -->
     <div class="ct-panel rs-blk" id="b-spend">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">2</span><h3>지출</h3></div>
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">3</span><h3>지출</h3></div>
 
       <div class="ct-split" >
         <div class="ct-stack">
@@ -165,7 +198,7 @@
 
     <!-- ===================== ③ 저축 ===================== -->
         <div class="ct-panel rs-blk" id="b-save">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">3</span><h3>저축</h3></div>
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">4</span><h3>저축</h3></div>
 
       <div class="ct-split" style="margin-bottom:48px;">
         <div class="ct-stack">
@@ -215,7 +248,7 @@
 
     <!-- ===================== ④ 목표별 ===================== -->
     <div class="ct-panel rs-blk" id="b-goal">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">4</span><h3>목표별</h3></div>
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">5</span><h3>목표별</h3></div>
 
       <div class="ct-card pad" style="margin-bottom:48px;">
         <div class="ct-card-h" style="margin-bottom:20px;">
@@ -254,13 +287,13 @@
 
 <!-- ===================== ⑤ 다음 상담 ===================== -->
     <div class="ct-panel rs-blk" id="b-next">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">5</span><h3>다음 상담</h3></div>
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">6</span><h3>다음 상담</h3></div>
       <div class="ct-split">
         <div class="ct-stack">
-          <div class="ct-hero" id="next-date-hero" data-hint="미정" data-sample="2026.10.26 (월)"></div>
-          <div class="ct-lead" data-hint="" data-sample="4주 뒤에 식비부터 다시 봐요."></div>
+          <div class="ct-hero" id="next-date-hero" data-hint="미정"></div>
+          <div class="ct-lead" data-hint=""></div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <div class="ct-in focus" id="next-date-field" style="flex:1;min-width:220px;font-weight:700;" data-hint="날짜 선택" data-sample="2026.10.26 (월)"></div>
+            <div class="ct-in focus" id="next-date-field" style="flex:1;min-width:220px;font-weight:700;" data-hint="날짜 선택"></div>
             <div class="ct-pill" data-weeks="2">2주 후</div><div class="ct-pill on" data-weeks="4">4주 후</div><div class="ct-pill" data-weeks="8">8주 후</div>
           </div>
         </div>
@@ -446,6 +479,9 @@ document.getElementById('cal-26').classList.add('on');
     $('gl-monthly').textContent = CT.comma(g.monthly);
     $('gl-rows').querySelectorAll('.ct-in[data-gi]').forEach(function (el) {
       el.setAttribute('contenteditable', 'true');
+      el.addEventListener('focus', function () {
+        if (el.classList.contains('hint')) { el.textContent = ''; el.classList.remove('hint'); }
+      });
       el.addEventListener('blur', function () {
         var t = M.goals[Number(el.dataset.gi)], f = el.dataset.gf;
         if (!t) return;
@@ -457,11 +493,9 @@ document.getElementById('cal-26').classList.add('on');
   // 금액 칸 — 아직 안 적은 칸은 0을 흐리게 두고, 마우스를 올리면 예시값이 채워진다
   function amtCell(i, f) {
     var raw = M.goals[i] ? M.goals[i][f] : null;
-    var sv  = (CT.SAMPLE.goals[i] || {})[f];
     var empty = (raw == null || raw === '');
     return '<td class="amt"><div class="ct-in num' + (empty ? ' hint' : '') + '" data-hint="미입력"'
-      + ' data-gi="' + i + '" data-gf="' + f + '"'
-      + (sv == null ? '' : ' data-sample="' + sv + '"') + '>'
+      + ' data-gi="' + i + '" data-gf="' + f + '">'
       + (empty ? '미입력' : CT.comma(raw)) + '</div></td>';
   }
   function sel(f, i, cur, opts) {
@@ -483,6 +517,54 @@ document.getElementById('cal-26').classList.add('on');
     var d = e.target.closest('[data-gdel]');
     if (d) { M.goals.splice(Number(d.dataset.gdel), 1); CT.save(M); refresh(true); }
   }, true);
+})();
+
+/* ===== ① 현금흐름표 — 01–03에 적은 값을 구분·묶음·항목 세 단계로 펼친다 =====
+   ① 수입 − ② 생활비 − ③ 저축·부채상환 = 월 잔액 (기획 문서 '상담 결과 · 현금흐름표')
+   금액이 0인 항목 줄은 숨긴다. 다만 아직 아무것도 안 적은 화면에서는
+   표가 통째로 비어 보이므로, 그때는 항목 이름을 모두 회색으로 보여 준다. */
+(function () {
+  var M = CT.load(), c = CT.calc(M);
+  var rows = [];
+  var blank = !c.income && !c.expense;
+
+  function sec(name, v) {
+    rows.push('<tr class="sec"><td>' + name + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
+  }
+  function grp(name, v) {
+    rows.push('<tr class="grp"><td>' + name + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
+  }
+  function items(list) {   // [[이름, 금액], …]
+    list.forEach(function (r) {
+      var v = Number(r[1]) || 0;
+      if (!v && !blank) return;
+      rows.push('<tr class="itm' + (v ? '' : ' none') + '"><td>' + r[0] + '</td>'
+        + '<td class="amt">' + (v ? CT.comma(v) : '미입력') + '</td></tr>');
+    });
+  }
+  function cat(name) { return (M.cf[name] ? M.cf[name].items : []).map(function (r) { return [r[0], r[1]]; }); }
+
+  // ① 수입
+  sec('① 수입', c.income);
+  grp('소득', c.income);
+  items(cat('수입'));
+
+  // ② 생활비 — 고정지출 · 변동지출
+  sec('② 생활비', CT.round1(c.fixed + c.vari));
+  CT.FIXED.concat(CT.VARI).forEach(function (k) {
+    grp(k, CT.catTotal(M, k));
+    items(cat(k));
+  });
+
+  // ③ 저축 · 부채상환
+  sec('③ 저축·부채상환', CT.round1(c.saving + c.debtPay));
+  grp('저축', c.saving);
+  items(cat('저축'));
+  grp('부채상환', c.debtPay);
+  items((M.debt || []).map(function (d) { return [d.name + (d.at ? ' · ' + d.at : ''), d.pay]; }));
+
+  document.getElementById('cf-rows').innerHTML = rows.join('');
+  document.getElementById('cf-bal').textContent = CT.comma(c.balance);
 })();
 
 // 결과 블록 탐색 — 클릭 시 해당 블록으로, 스크롤에 따라 현재 블록 표시

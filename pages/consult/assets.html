@@ -10,8 +10,6 @@
 <link rel="stylesheet" href="../../styles/consult.css" />
 <style>
   html, body { margin: 0; background: #fff; }
-  .cE .as-body { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 32px; align-items: start; }
-  @media (max-width: 960px) { .cE .as-body { grid-template-columns: 1fr; gap: 20px; } }
 </style>
 </head>
 <body>
@@ -28,20 +26,11 @@
       <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 재무상담 목록
     </a>
 
-    <div class="ct-head">
-      <div class="ct-id">
-        <div class="patient-avatar" data-name="김민준"></div>
-        <div>
-          <div class="h-eyebrow">상담 진행 중</div>
-          <h1>김민준</h1>
-          <div class="ct-meta">
-            <span>3회차</span>
-            <span>상담일 <b>2026.09.28</b></span>
-          </div>
-        </div>
-      </div>
-      <div class="ct-act">
-        <span class="ct-saved">자동 저장됨</span>
+    <div class="ct-title-row">
+      <div class="ct-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
+      <div class="ct-title-txt">
+        <h1>재무상담</h1>
+        <div class="ct-title-sub">새로운 상담하기</div>
       </div>
     </div>
 
@@ -55,41 +44,36 @@
       <a class="ct-step" href="statement.html"><span class="n">04</span>재무재표</a>
       <div class="split"></div>
       <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
-      <a class="ct-keylink" href="benefits.html?from=assets"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="n">7</span><span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
-    </div>
-
-    <div class="ct-sum" style="margin-bottom:20px;">
-      <div class="box"><span class="k">총자산</span><span class="v"><span id="as-assets">0</span><span class="u"> 만원</span></span></div>
-      <div class="op">−</div>
-      <div class="box"><span class="k">총부채</span><span class="v"><span id="as-liab">0</span><span class="u"> 만원</span></span></div>
-      <div class="op">=</div>
-      <div class="box hi"><span class="k">순자산</span><span class="v"><span id="as-net">0</span><span class="u"> 만원</span></span></div>
+      <div class="ct-toolset">
+        <a class="ct-keylink" href="benefits.html?from=assets"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="n">7</span><span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+        <a class="ct-keylink" href="emergency.html?from=assets"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-won"/></svg></span>비상금<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+        <a class="ct-keylink" href="lastyear.html?from=assets"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg></span>작년 기록<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+      </div>
     </div>
 
     <div class="ct-hint" style="margin-bottom:20px;">단위: 만원 · 미해당 항목은 0으로 입력</div>
 
-    <div class="as-body">
+    <div class="finance-body">
+      <aside class="ct-tot finance-index" id="as-index" aria-label="자산·부채 입력 상태"></aside>
+
+      <div>
       <!-- 자산 -->
-      <div class="ct-panel" style="margin-bottom:0;">
+      <div class="ct-panel finance-section" id="assets-section" data-finance-section="자산">
         <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 4px;color:var(--ink);">자산</h2>
         <div id="as-groups"></div>
       </div>
 
       <!-- 부채 -->
-      <div class="ct-panel" style="margin-bottom:0;">
+      <div class="ct-panel finance-section" id="debt-section" data-finance-section="부채" style="margin-bottom:0;">
         <div class="ct-card-h" style="margin-bottom:14px;">
           <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">부채</h2>
           <span class="ct-note">월 상환액은 02 부채상환에 반영</span>
         </div>
-        <div class="ct-tbl-wrap">
-          <table class="ct-tbl">
-            <thead>
-              <tr><th>구분</th><th class="amt" style="width:96px;">잔액</th><th class="amt" style="width:86px;">월 상환</th><th class="amt" style="width:66px;">금리</th><th class="amt" style="width:86px;">만기</th><th style="width:56px;"></th></tr>
-            </thead>
-            <tbody id="debt-rows"></tbody>
-            <tfoot><tr><td>합계</td><td class="amt" id="debt-bal">0</td><td class="amt" id="debt-pay">0</td><td></td><td></td><td></td></tr></tfoot>
-          </table>
+        <div class="debt-list">
+          <div id="debt-rows"></div>
+          <div class="ct-add debt-add" id="debt-add">+ 부채 추가</div>
         </div>
+      </div>
       </div>
     </div>
 
@@ -118,28 +102,52 @@
   var M = CT.load();
   var gHost = document.getElementById('as-groups');
   var dHost = document.getElementById('debt-rows');
+  var idx = document.getElementById('as-index');
+  var activeSection = '자산';
 
+  function buildIndex() {
+    var c = CT.calc(M);
+    var h = '<div class="finance-index-section"><div class="index-group"><div class="index-parent" data-go="asset-0"><span>자산</span>' + money(c.assets) + '</div>';
+    Object.keys(M.as).forEach(function (g) {
+      h += '<div class="nav-row index-child' + (activeSection === g ? ' on' : '') + '" data-section="' + g + '" data-go="asset-' + Object.keys(M.as).indexOf(g) + '"><span>' + g + '</span>' + money(assetTotal(g)) + '</div>';
+    });
+    h += '</div><div class="index-group"><div class="nav-row index-parent' + (activeSection === '부채' ? ' on' : '') + '" data-section="부채" data-go="debt-section"><span>부채</span>' + money(c.liab) + '</div></div></div>';
+    idx.innerHTML = h;
+  }
+
+  function money(value) {
+    return '<span class="row-value">' + CT.comma(value) + '<span class="unit">만원</span></span>';
+  }
+  function assetTotal(group) {
+    return M.as[group].reduce(function (sum, row) { return sum + (Number(row[1]) || 0); }, 0);
+  }
   function buildAssets() {
     gHost.innerHTML = Object.keys(M.as).map(function (g) {
-      var sum = M.as[g].reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0);
-      return '<div class="ct-ag">'
-        + '<div class="gh">' + g + '<span data-gsum="' + g + '">' + CT.comma(sum) + '</span></div>'
+      return '<section class="cf-sec finance-section finance-flat-group" id="asset-' + Object.keys(M.as).indexOf(g) + '" data-asset-group="' + g + '">'
+        + '<div class="ct-card-h finance-flat-heading"><h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">' + g + '</h3></div>'
         + M.as[g].map(function (r, i) {
-            var sv = (CT.SAMPLE.as[g] && CT.SAMPLE.as[g][i]) ? CT.SAMPLE.as[g][i][1] : 0;
-            return '<div class="gr"><span class="k">' + r[0] + '</span>'
-              + '<div class="ct-in num' + (r[1] === null ? ' hint' : '') + '" data-hint="미입력"'
-              + ' data-g="' + g + '" data-i="' + i + '" data-sample="' + sv + '">'
+            return '<div class="finance-asset-row"><div class="finance-item-name"><div class="ct-in" data-g="' + g + '" data-i="' + i + '" data-af="name">' + r[0] + '</div></div>'
+              + '<div class="ct-in num' + (r[1] === null ? ' hint' : '') + '" data-hint="미입력" data-g="' + g + '" data-i="' + i + '" data-af="value">'
               + (r[1] === null ? '미입력' : CT.comma(r[1])) + '</div></div>';
           }).join('')
-        + '</div>';
+        + '</section>';
     }).join('');
     gHost.querySelectorAll('.ct-in[data-g]').forEach(function (el) {
       el.setAttribute('contenteditable', 'true');
+      el.addEventListener('focus', function () {
+        if (el.classList.contains('hint')) { el.textContent = ''; el.classList.remove('hint'); }
+      });
       el.addEventListener('blur', function () {
-        var v = CT.parse(el.textContent);
-        M.as[el.dataset.g][Number(el.dataset.i)][1] = v;
-        el.classList.toggle('hint', v === null);
-        el.textContent = v === null ? '미입력' : CT.comma(v);
+        var row = M.as[el.dataset.g][Number(el.dataset.i)];
+        if (el.dataset.af === 'name') {
+          row[0] = el.textContent.trim() || '이름 없음';
+          el.textContent = row[0];
+        } else {
+          var v = CT.parse(el.textContent);
+          row[1] = v;
+          el.classList.toggle('hint', v === null);
+          el.textContent = v === null ? '미입력' : CT.comma(v);
+        }
         commit();
       });
     });
@@ -147,32 +155,38 @@
 
   function buildDebt() {
     dHost.innerHTML = M.debt.map(function (d, i) {
-      var sd = CT.SAMPLE.debt[i] || {};
-      // f: bal·pay = 만원 / rate = % / due = YYYY.MM
+      // bal·pay = 만원 / rate = % / due = YYYY.MM
       function cell(f) {
-        var v = d[f], s = sd[f];
-        var isDue = (f === 'due'), empty = (v == null || v === '');
-        var ph = isDue ? 'YYYY.MM' : '미입력';
+        var v = d[f], isDue = (f === 'due'), empty = (v == null || v === '');
+        var ph  = isDue ? 'YYYY.MM' : '미입력';
         var mod = isDue ? ' num plain' : (f === 'rate' ? ' num pc' : ' num');
-        return '<td class="amt"><div class="ct-in' + mod + (empty ? ' hint' : '') + '"'
-          + ' data-hint="' + ph + '" data-d="' + i + '" data-f="' + f + '"'
-          + (s == null || s === '' ? '' : ' data-sample="' + s + '"') + '>'
-          + (empty ? ph : (isDue ? v : CT.comma(v))) + '</div></td>';
+        return '<div class="ct-in' + mod + (empty ? ' hint' : '') + '" data-hint="' + ph + '" data-d="' + i + '" data-f="' + f + '">'
+          + (empty ? ph : (isDue ? v : CT.comma(v))) + '</div>';
       }
-      return '<tr>'
-        + '<td class="nm"><div class="ct-in" data-d="' + i + '" data-f="name">' + d.name + '</div>'
-        +   '<div class="ct-in" data-d="' + i + '" data-f="at" style="min-height:30px;padding:2px 14px;border:none;font-size:var(--fs-option);color:var(--ink-3);">' + d.at + '</div></td>'
-        + cell('bal') + cell('pay') + cell('rate') + cell('due')
-        + '<td class="del" data-act="ddel" data-d="' + i + '">삭제</td>'
-        + '</tr>';
-    }).join('')
-      + '<tr class="addrow"><td colspan="6" class="ct-add" id="debt-add">+ 부채 추가</td></tr>';
+      return '<div class="debt-card">'
+        + '<div class="debt-identity">'
+        +   '<div class="ct-in" data-hint="부채 이름" data-d="' + i + '" data-f="name">' + d.name + '</div>'
+        +   '<div class="ct-in at' + (!d.at ? ' hint' : '') + '" data-hint="금융사" data-d="' + i + '" data-f="at">' + (d.at || '금융사') + '</div>'
+        +   '<button type="button" class="del finance-delete" data-act="ddel" data-d="' + i + '" aria-label="부채 삭제"><svg class="ic-svg" width="11" height="11"><use href="#i-x"/></svg></button>'
+        + '</div><div class="debt-fields">'
+        +   '<div class="debt-field"><span class="lb">잔액</span>' + cell('bal') + '</div>'
+        +   '<div class="debt-field"><span class="lb">월 상환</span>' + cell('pay') + '</div>'
+        +   '<div class="debt-field"><span class="lb">금리</span>' + cell('rate') + '</div>'
+        +   '<div class="debt-field"><span class="lb">만기</span>' + cell('due') + '</div>'
+        + '</div></div>';
+    }).join('');
     dHost.querySelectorAll('.ct-in[data-d]').forEach(function (el) {
       el.setAttribute('contenteditable', 'true');
+      el.addEventListener('focus', function () {
+        if (el.classList.contains('hint')) { el.textContent = ''; el.classList.remove('hint'); }
+      });
       el.addEventListener('blur', function () {
         var d = M.debt[Number(el.dataset.d)], f = el.dataset.f;
         if (!d) return;
-        if (f === 'name' || f === 'at') { d[f] = el.textContent.trim(); }
+        if (f === 'name' || f === 'at') {
+          d[f] = el.textContent.trim();
+          if (!d[f]) { el.textContent = el.dataset.hint || (f === 'name' ? '부채 이름' : '금융사'); el.classList.add('hint'); }
+        }
         else if (f === 'due') {
           var t = el.textContent.trim();
           d.due = (t === 'YYYY.MM') ? '' : t;
@@ -191,30 +205,40 @@
 
   function commit() { CT.save(M); paint(); }
   function paint() {
-    var c = CT.calc(M);
-    document.getElementById('as-assets').textContent = CT.comma(c.assets);
-    document.getElementById('as-liab').textContent   = CT.comma(c.liab);
-    document.getElementById('as-net').textContent    = CT.comma(c.net);
-    document.getElementById('debt-bal').textContent  = CT.comma(c.liab);
-    document.getElementById('debt-pay').textContent  = CT.comma(c.debtPay);
-    Object.keys(M.as).forEach(function (g) {
-      var el = gHost.querySelector('[data-gsum="' + g + '"]');
-      if (el) el.textContent = CT.comma(M.as[g].reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0));
-    });
+    buildIndex();
   }
 
   document.addEventListener('click', function (e) {
+    var go = e.target.closest('#as-index [data-go]');
+    if (go) {
+      var target = document.getElementById(go.dataset.go);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     if (e.target.closest('#debt-add')) {
-      M.debt.push({ name: '새 부채', at: '', bal: 0, pay: 0, rate: 0, due: '' });
+      M.debt.push({ name: '새 부채', at: '', bal: null, pay: null, rate: null, due: '' });
       buildDebt(); commit(); return;
     }
-    var del = e.target.closest('td[data-act="ddel"]');
+    var del = e.target.closest('[data-act="ddel"]');
     if (del) { M.debt.splice(Number(del.dataset.d), 1); buildDebt(); commit(); return; }
   }, true);
 
   buildAssets();
   buildDebt();
   paint();
+
+  if ('IntersectionObserver' in window) {
+    var sectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          activeSection = entry.target.dataset.assetGroup || entry.target.dataset.financeSection;
+          buildIndex();
+        }
+      });
+    }, { rootMargin: '-12% 0px -68% 0px', threshold: 0 });
+    gHost.querySelectorAll('[data-asset-group]').forEach(function (section) { sectionObserver.observe(section); });
+    sectionObserver.observe(document.getElementById('debt-section'));
+  }
 })();
 </script>
 

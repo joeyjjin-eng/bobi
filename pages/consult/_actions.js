@@ -1,6 +1,6 @@
 /* ============================================================
    재무상담 — 화면 안 동작
-   저장·계산은 없는 시안이지만, 눌러 보는 것은 전부 반응하게 한다.
+   눌러 보는 것은 전부 반응하게 한다. 값은 직접 적어 넣는다(자동 입력 없음).
    마크업에 아래 속성만 달면 이 파일이 동작을 붙인다.
 
      .ct-seg > div              한 칸 선택 (주거 형태 · 수입 형태 · 목표 기간)
@@ -59,29 +59,6 @@
   }
   $$('.ct-in').forEach(bindEditable);
 
-  /* ---------- 시뮬레이션 — 입력칸에 마우스를 올리면 샘플값을 채운다 ----------
-     data-sample 이 붙은 빈 칸 위를 지나가면 그 값이 들어가고 합계가 다시 계산된다.
-     쓸어 내리듯 지나가면 한 묶음이 통째로 채워진다. 이미 적은 칸은 건드리지 않는다. */
-  document.addEventListener('mouseover', function (e) {
-    var el = e.target.closest ? e.target.closest('.ct-in[data-sample]') : null;
-    if (!el || el.dataset.filled) return;
-    var cur = el.textContent.trim();
-    if (cur && !el.classList.contains('hint')) return;   // 이미 적힌 칸은 그대로
-    el.dataset.filled = '1';
-    el.classList.remove('hint');
-    el.textContent = el.dataset.sample;
-    el.dispatchEvent(new Event('blur'));                 // 모델에 반영
-  });
-  // 세그먼트도 같은 방식 — data-sample 과 글자가 같은 칸이 선택된다
-  document.addEventListener('mouseover', function (e) {
-    var sg = e.target.closest ? e.target.closest('.ct-seg[data-sample]') : null;
-    if (!sg || sg.dataset.filled || sg.querySelector('.on')) return;
-    sg.dataset.filled = '1';
-    $$(':scope > div', sg).forEach(function (o) {
-      o.classList.toggle('on', o.textContent.trim() === sg.dataset.sample);
-    });
-  });
-
   /* ---------- 클릭 동작 ---------- */
   document.addEventListener('click', function (e) {
     var t = e.target;
@@ -98,6 +75,7 @@
     var sw = t.closest('.ct-sw');
     if (sw) {
       var off = sw.classList.toggle('off');
+      if (sw.hasAttribute('role')) sw.setAttribute('aria-checked', String(!off));
       var key = sw.dataset.toggle;
       if (key) $$('[data-toggle-target="' + key + '"]').forEach(function (el) { el.hidden = off; });
       return;

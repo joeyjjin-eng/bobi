@@ -65,13 +65,26 @@
 .cE .ct-keylink:hover { color: var(--brand-hover); }
 .cE .ct-keylink:hover .go { color: var(--brand-hover); }
 .cE .ct-subtabs .ct-keylink { margin-bottom: -1px; }
+/* 도구 링크 묶음 — 공공 혜택 · 비상금 · 작년 기록.
+   링크마다 margin-left:auto 가 걸려 있어 그냥 늘어놓으면 서로 밀어낸다.
+   한 번만 오른쪽으로 붙이고, 안에서는 20px 간격으로 둔다. */
+.cE .ct-toolset { margin-left: auto; padding-left: 20px; display: flex; align-items: center; gap: 16px; flex: none; }
+.cE .ct-toolset .ct-keylink { margin-left: 0; }
+/* 결과 화면에서는 탭 줄 안에 들어가므로 탭 칸의 여백·밑줄·커서를 되돌린다.
+   줄 밑선에 맞추는 -1px 는 묶음에서 한 번만 준다(링크마다 또 주면 2px 올라간다). */
+.cE .ct-subtabs > .ct-toolset { padding: 0; border-bottom: 0; cursor: default; margin-bottom: -1px; }
+.cE .ct-subtabs > .ct-toolset .ct-keylink { margin-bottom: 0; }
 .cE .ct-vr { width: 1px; height: 22px; background: var(--line); flex: none; margin: 0 4px; }
 .cE .ct-saved { font-size: var(--fs-option); color: var(--ink-3); display: inline-flex; align-items: center; gap: 5px; }
 .cE .ct-saved::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
 
 /* ===== 단계 표시 (기본정보 › 수입지출 › 자산·부채 › 재무재표 ‖ 상담결과) ===== */
-.cE .ct-steps { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-1); padding: 12px 20px; margin-bottom: 28px; }
-.cE .ct-step { display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-body); color: var(--ink-3); text-decoration: none; }
+.cE .ct-steps { position: sticky; top: 12px; z-index: 30; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,.96); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-2); padding: 12px 20px; margin-bottom: 28px; overflow-x: auto; scrollbar-width: none; }
+.cE .ct-steps::-webkit-scrollbar { display: none; }
+/* 단계 이름은 줄바꿈하지 않는다. 도구 링크가 붙어 줄이 좁아지면
+   '기본/정보'처럼 두 줄로 쪼개지는데, 그러면 단계 줄 자체가 두 줄 높이가 된다.
+   좁은 화면에서는 줄을 두 줄로 만들지 말고 가로로 밀어서 본다(.ct-steps overflow-x). */
+.cE .ct-step { display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-body); color: var(--ink-3); text-decoration: none; white-space: nowrap; flex: none; }
 .cE .ct-step .n { width: 26px; height: 26px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: #fff; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); display: grid; place-items: center; flex: none; }
 .cE .ct-step:hover { color: var(--ink-2); }
 .cE .ct-step.done { color: var(--ink-2); }
@@ -211,6 +224,87 @@
 .cE .ct-tot .li .dim { color: var(--ink-4); }
 .cE .ct-tot .wk { font-weight: 500; color: var(--ink-3); font-size: var(--fs-option); }
 
+/* ===== 재무 입력 좌측 요약 내비게이션 ===== */
+.cE .finance-body { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
+.cE .finance-index { position: sticky; top: 92px; }
+.cE .finance-index-section { padding: 12px 8px 4px; }
+.cE .finance-index-section + .finance-index-section { margin-top: 6px; border-top: 1px solid var(--line); }
+.cE .finance-index-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 0 4px 8px; font-size: var(--fs-option); font-weight: 800; color: var(--ink-3); }
+.cE .finance-index-label strong { font-size: var(--fs-body); color: var(--ink); }
+.cE .finance-index-label .value { color: var(--ink); font-variant-numeric: tabular-nums; }
+.cE .finance-index .nav-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 38px; padding: 7px 10px; border-radius: var(--r-sm); color: var(--ink-2); font-size: var(--fs-body); line-height: 1.4; font-variant-numeric: tabular-nums; }
+.cE .finance-index .nav-row.on { color: var(--brand-deep); font-weight: 700; }
+.cE .finance-index .nav-row .row-value { margin-left: auto; white-space: nowrap; color: inherit; }
+.cE .finance-index .nav-row .row-value.done { color: var(--brand-deep); }
+.cE .finance-index .nav-row .row-value.todo { color: var(--ink-3); }
+.cE .finance-index .row-value .unit { margin-left: 4px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+.cE .finance-section { scroll-margin-top: 92px; }
+.cE .finance-index .index-parent { display: flex; justify-content: space-between; gap: 12px; padding: 10px; font-weight: 800; color: var(--ink); }
+.cE .finance-index .index-child { padding-left: 24px; font-size: var(--fs-body); }
+.cE .finance-index .index-group + .index-group { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
+.cE .finance-index [data-go] { cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.cE .finance-index [data-go]:hover { background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); }
+/* ===== 재무 입력 공통 행: 바깥 패널 하나, 안쪽은 선과 여백만 사용 ===== */
+.cE .finance-optionbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 18px; margin-bottom: 20px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft); }
+.cE .finance-optionbar .copy { display: flex; flex-direction: column; gap: 3px; }
+.cE .finance-optionbar .copy b { font-size: var(--fs-body); color: var(--ink); }
+.cE .finance-optionbar .copy span { font-size: var(--fs-option); color: var(--ink-3); }
+.cE .finance-domain-stack { display: flex; flex-direction: column; gap: 20px; }
+.cE .finance-domain-stack .finance-domain { margin-bottom: 0; }
+.cE .finance-domain-title { margin: 0 0 18px; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+.cE .finance-subgroup + .finance-subgroup { margin-top: 28px; padding-top: 26px; border-top: 1px solid var(--line); }
+.cE .finance-subgroup-title { margin: 0 0 8px; font-size: var(--fs-body); font-weight: 800; color: var(--ink-2); }
+.cE .finance-flat-group { padding: 16px 0; }
+.cE .finance-flat-group + .finance-flat-group { border-top: 1px solid var(--line); }
+.cE .finance-category-title { margin: 0; font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+.cE .finance-flat-heading { margin-bottom: 12px; }
+.cE .finance-grid-row { display: grid; grid-template-columns: minmax(220px, .9fr) minmax(240px, 1.1fr) 34px; gap: 16px; align-items: center; }
+.cE .finance-grid-row:has([data-toggle-target="goal"]:not([hidden])) { grid-template-columns: minmax(200px, .8fr) minmax(190px, 1fr) minmax(190px, 1fr) 34px; }
+.cE .finance-grid-head { padding: 8px 0 10px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); }
+.cE .finance-grid-head > span:not(:first-child) { text-align: right; }
+.cE .finance-input-row { min-height: 66px; padding: 10px 0; border-top: 1px solid var(--line); }
+.cE .finance-item-name .ct-in { border-color: transparent; padding-left: 0; font-weight: 650; }
+.cE .finance-item-name.is-custom .ct-in { padding-left: 14px; border-color: var(--line); background: var(--bg); }
+.cE .finance-item-name.is-custom .ct-in:hover,
+.cE .finance-item-name.is-custom .ct-in:focus { border-color: var(--brand-soft); }
+.cE .finance-delete { width: 18px; height: 18px; padding: 0; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--ink-3) 35%, transparent); color: #fff; display: inline-grid; place-items: center; cursor: pointer; transition: background-color .15s ease; }
+.cE .finance-delete:hover { color: #fff; background: color-mix(in srgb, var(--ink-3) 45%, transparent); }
+.cE .finance-delete:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.cE .finance-flat-add { padding: 8px 0 2px; border-top: 1px solid var(--line); }
+.cE .finance-flat-add button { min-height: 36px; padding: 0 14px; border: 1px solid var(--brand-soft); border-radius: var(--r-sm); background: var(--brand-pale); color: var(--brand-deep); font-family: inherit; font-size: var(--fs-body); font-weight: 650; cursor: pointer; }
+.cE .finance-flat-add button:hover { border-color: var(--brand); background: var(--brand-pale); color: var(--brand-deep); }
+.cE .finance-domain-stack .finance-flat-group + .finance-flat-group { border-top: 0; }
+.cE .finance-domain-stack .finance-subgroup + .finance-subgroup { border-top: 0; }
+.cE .finance-asset-row { display: grid; grid-template-columns: minmax(220px, .85fr) minmax(280px, 1.15fr); gap: 24px; align-items: center; min-height: 66px; padding: 10px 0; border-top: 1px solid var(--line); }
+
+/* 부채는 한 건의 기본정보와 세부 입력을 좌우로 나눈다. */
+.cE .debt-list { border-top: 1px solid var(--line); }
+.cE .debt-card { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(420px, 1.4fr); gap: 36px; padding: 24px 0; }
+.cE .debt-card + .debt-card { border-top: 1px solid var(--line); }
+.cE .debt-identity { display: flex; flex-direction: column; gap: 8px; align-self: start; }
+.cE .debt-identity .ct-in { width: 100%; }
+.cE .debt-identity .at { min-height: 34px; padding: 4px 14px; border-color: transparent; font-size: var(--fs-option); color: var(--ink-3); }
+.cE .debt-identity .finance-delete { align-self: flex-start; margin-top: 4px; }
+.cE .debt-fields { display: flex; flex-direction: column; gap: 10px; }
+.cE .debt-field { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; align-items: center; }
+.cE .debt-field .lb { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
+.cE .debt-add { display: block; padding: 16px 0 4px; border-top: 1px solid var(--line); }
+
+@media (max-width: 760px) {
+  .cE .debt-card { grid-template-columns: 1fr; gap: 18px; }
+  .cE .debt-field { grid-template-columns: 80px minmax(0, 1fr); }
+  .cE .finance-grid-row,
+  .cE .finance-grid-row:has([data-toggle-target="goal"]:not([hidden])),
+  .cE .finance-asset-row { grid-template-columns: 1fr; gap: 8px; }
+  .cE .finance-grid-head { display: none; }
+  .cE .finance-input-row .del { justify-self: start; }
+}
+
+@media (max-width: 960px) {
+  .cE .finance-body { grid-template-columns: 1fr; }
+  .cE .finance-index { position: static; max-height: none; }
+}
+
 /* ===== 가진 것 묶음 (자산·부채 왼쪽) ===== */
 .cE .ct-ag { display: flex; flex-direction: column; border-top: 1px solid var(--line); padding: 12px 0 4px; }
 .cE .ct-ag .gh { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0 10px; font-size: var(--fs-body); font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -302,8 +396,10 @@
 .cE .ct-blank .bt { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); }
 .cE .ct-blank .bd { font-size: var(--fs-body); color: var(--ink-2); }
 .cE .ct-blank .ba { margin-top: 8px; display: flex; gap: 8px; }
-/* 빈 상태에서의 큰 숫자 */
-.cE .ct-sum .v.none { color: var(--ink-4); }
+/* 빈 상태에서의 큰 숫자 — 28px 자리에 '미입력'이 들어오므로 제목2 크기로 낮춘다.
+   (숫자 대신 들어가는 글자라 28px·800 그대로 두면 값이 있는 것처럼 읽힌다.) */
+.cE .ct-sum .v.none { color: var(--ink-4); font-size: var(--fs-h2); font-weight: 700; }
+.cE .ct-sum .box:has(.v.none) .u { display: none; }
 .cE .ct-sum .box.hi.none { border-color: var(--line); background: #fff; }
 .cE .ct-sum .box.hi.none .v { color: var(--ink-4); }
 
@@ -454,7 +550,6 @@
 
 /* ===== 02 수입지출 — 묶음을 세로로 모두 펼친 입력 ===== */
 .cE .cf-sec { scroll-margin-top: 16px; }
-.cE .cf-sec + .cf-sec { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
 .cE .ct-tot .hd[data-go], .cE .ct-tot .li[data-go] { cursor: pointer; }
 .cE .ct-tot .hd[data-go] { margin: 0 4px; padding: 11px 8px; border-radius: var(--r-sm); }
 .cE .ct-tot .hd[data-go]:hover, .cE .ct-tot .li[data-go]:hover { background: var(--bg-soft); border-radius: var(--r-sm); }

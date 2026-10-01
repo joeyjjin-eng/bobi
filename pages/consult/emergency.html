@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 비상금</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/consult.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .cE .em-body { display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 28px; align-items: start; }
+  .cE .em-mon { display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; align-items: center; }
+  @media (max-width: 960px) { .cE .em-body { grid-template-columns: 1fr; gap: 20px; } }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain ct">
+
+    <!-- 어느 화면에서 열었든 그 화면으로 돌아간다 -->
+    <a class="back-btn" id="back-step" href="result.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> <span id="back-label">상담결과</span>
+    </a>
+
+    <!-- ===== 타이틀 ===== -->
+    <div class="ct-title-row">
+      <div class="ct-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-won"/></svg></div>
+      <div class="ct-title-txt">
+        <h1>비상금</h1>
+        <div class="ct-title-sub">준비할 개월 수 기준 목표 비상금 산출</div>
+      </div>
+      <div class="ct-title-act">
+        <span class="ct-tool" data-print><svg class="ic-svg" width="14" height="14"><use href="#i-printer"/></svg> 인쇄</span>
+      </div>
+    </div>
+
+    <!-- ===== 결과 3칸 ===== -->
+    <div class="ct-panel">
+      <div class="ct-stack">
+        <div class="ct-lead" id="em-lead">준비할 개월 수를 정하면 목표 비상금이 나와요</div>
+        <div class="ct-sum">
+          <div class="box" id="em-box-need">
+            <span class="k">목표 비상금</span>
+            <span><span class="v" id="em-need">—</span><span class="u"> 만원</span></span>
+          </div>
+          <div class="op">−</div>
+          <div class="box" id="em-box-have">
+            <span class="k">현재 비상금</span>
+            <span><span class="v" id="em-have">—</span><span class="u"> 만원</span></span>
+          </div>
+          <div class="op">=</div>
+          <div class="box hi" id="em-box-gap">
+            <span class="k">추가 적립 필요액</span>
+            <span><span class="v" id="em-gap">—</span><span class="u"> 만원</span></span>
+          </div>
+        </div>
+        <div class="ct-note">단위 만원 · 현재 비상금은 03 자산·부채의 유동자산 합계입니다</div>
+      </div>
+    </div>
+
+    <div class="em-body">
+
+      <!-- ===== 왼쪽: 기준 설정 ===== -->
+      <div class="ct-stack">
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">준비할 개월</div>
+            <div class="em-mon">
+              <div class="ct-seg" style="grid-template-columns:repeat(3,1fr);">
+                <div class="on" data-months="3">3개월</div>
+                <div data-months="6">6개월</div>
+                <div data-months="12">12개월</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div class="ct-in num plain" id="em-months" data-hint="3" style="flex:1;min-width:0;">3</div>
+                <span style="font-size:var(--fs-body);color:var(--ink-3);flex:none;">개월</span>
+              </div>
+            </div>
+            <div class="ct-note">직접 고쳐 적을 수 있습니다. 기본값은 3개월입니다.</div>
+          </div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">산출 기준</div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+              <div style="min-width:0;">
+                <div style="font-size:var(--fs-body);color:var(--ink);">부채 상환액 포함</div>
+                <div class="ct-note">매달 갚는 금액을 생활비에 더해 계산합니다</div>
+              </div>
+              <div class="ct-sw" id="em-sw-debt" role="switch" aria-checked="true"><i></i></div>
+            </div>
+
+            <div class="ct-hr"></div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+              <div style="min-width:0;">
+                <div style="font-size:var(--fs-body);color:var(--ink);">생활비에서 뺄 묶음</div>
+                <div class="ct-note">비상 상황에 줄일 수 있는 묶음을 고릅니다</div>
+              </div>
+              <div class="ct-sw off" id="em-sw-cut" data-toggle="cut" role="switch" aria-checked="false"><i></i></div>
+            </div>
+
+            <div data-toggle-target="cut" hidden style="display:flex;flex-wrap:wrap;gap:8px;">
+              <div class="ct-chip" data-chip data-cut="꾸밈">꾸밈</div>
+              <div class="ct-chip" data-chip data-cut="여가·경조사·기타">여가·경조사·기타</div>
+              <div class="ct-chip" data-chip data-cut="구독">구독</div>
+              <div class="ct-chip" data-chip data-cut="교통">교통</div>
+              <div class="ct-chip" data-chip data-cut="식비">식비</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ct-hint">
+          비상금은 소득이 끊겼을 때 생활을 유지하는 자금입니다. 일반적으로 3~6개월치 생활비를 기준으로 하며,
+          수입이 매달 다른 가구는 6개월 이상을 권장합니다.
+        </div>
+      </div>
+
+      <!-- ===== 오른쪽: 생활비 내역 · 버틸 수 있는 기간 ===== -->
+      <div class="ct-stack">
+
+        <div class="ct-card-h">
+          <h2 style="font-size:var(--fs-h1);font-weight:800;letter-spacing:-0.02em;margin:0;color:var(--ink);">기준 생활비</h2>
+          <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
+        </div>
+
+        <div class="ct-tbl-wrap">
+          <table class="ct-tbl">
+            <thead><tr><th>묶음</th><th class="amt" style="width:140px;">월 금액</th><th class="amt" style="width:110px;">비중</th></tr></thead>
+            <tbody id="em-rows"></tbody>
+            <tfoot><tr>
+              <td>월 기준 생활비</td>
+              <td class="amt" id="em-base" style="color:var(--brand-deep);">0</td>
+              <td class="amt" id="em-basep" style="color:var(--brand-deep);">100%</td>
+            </tr></tfoot>
+          </table>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-h">
+              <span class="ct-card-t">버틸 수 있는 기간</span>
+              <span class="num" style="font-size:28px;font-weight:800;letter-spacing:-0.02em;color:var(--brand-deep);"><span id="em-cover">0</span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 개월</span></span>
+            </div>
+            <div class="ct-track"><i id="em-track" style="width:0%;"></i></div>
+            <div class="ct-note" id="em-cover-note">목표 3개월 기준</div>
+          </div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">적립 계획</div>
+            <div class="ct-kv">
+              <div class="k">추가 적립 필요액</div><div class="v" id="em-plan-gap">—</div>
+              <div class="k">현재 월 저축</div><div class="v" id="em-plan-save">—</div>
+              <div class="k tp">모두 모으기까지</div><div class="v tp hl" id="em-plan-months">—</div>
+            </div>
+            <div class="ct-note">02 수입지출의 저축 합계를 전부 비상금에 넣는다고 보았을 때입니다.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<div id="footer-host"></div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('consult');</script>
+<script src="_model.js"></script>
+<script src="_actions.js"></script>
+<script>
+/* ===== 비상금 — 02 수입지출·03 자산·부채에 적은 값으로 계산 =====
+   목표 비상금 = 월 기준 생활비 × 준비할 개월
+   현재 비상금 = 유동자산 합계 (03에서 적은 값, 입력 칸이 아니다)
+   버틸 수 있는 기간 = 현재 비상금 ÷ 월 기준 생활비                   */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var M = CT.load(), c = CT.calc(M);
+
+  // 03 유동자산 합계
+  var have = (M.as['유동자산'] || []).reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0);
+
+  function months() {
+    var n = CT.parse($('em-months').textContent);
+    return n && n > 0 ? n : 3;
+  }
+  function cutSet() {
+    var sw = $('em-sw-cut');
+    if (sw.classList.contains('off')) return {};
+    var out = {};
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cut].on'), function (ch) {
+      out[ch.dataset.cut] = true;
+    });
+    return out;
+  }
+
+  function render() {
+    var cut = cutSet();
+    var withDebt = !$('em-sw-debt').classList.contains('off');
+    var m = months();
+
+    // 생활비 묶음 — 고정지출 · 변동지출 (+ 부채상환)
+    var rows = [];
+    CT.FIXED.forEach(function (k) { rows.push(['고정지출', k, CT.catTotal(M, k)]); });
+    CT.VARI.forEach(function (k) { rows.push(['변동지출', k, CT.catTotal(M, k)]); });
+    if (withDebt) rows.push(['부채상환', '부채상환', c.debtPay]);
+
+    var base = CT.round1(rows.reduce(function (s, r) {
+      return s + (cut[r[1]] ? 0 : r[2]);
+    }, 0));
+
+    $('em-rows').innerHTML = rows.map(function (r) {
+      var off = !!cut[r[1]];
+      var nm = r[1] === '부채상환' ? '부채상환' : r[0] + ' · ' + r[1];
+      return '<tr' + (off ? ' style="color:var(--ink-4);"' : '') + '>'
+        + '<td class="nm"' + (off ? ' style="color:var(--ink-4);font-weight:500;"' : '') + '>' + nm
+        + (off ? ' <span class="sub-l">제외</span>' : '') + '</td>'
+        + '<td class="amt"' + (off ? ' style="color:var(--ink-4);"' : '') + '>' + CT.comma(r[2]) + '</td>'
+        + '<td class="amt"' + (off ? ' style="color:var(--ink-4);"' : '') + '>'
+        + (off ? '—' : CT.pct(r[2], base) + '%') + '</td></tr>';
+    }).join('');
+    $('em-base').textContent  = CT.comma(base);
+    $('em-basep').textContent = base ? '100%' : '0%';
+
+    var need = CT.round1(base * m);
+    var gap  = CT.round1(Math.max(0, need - have));
+    var none = !base;
+
+    $('em-need').textContent = none ? '미입력' : CT.comma(need);
+    $('em-have').textContent = have ? CT.comma(have) : '미입력';
+    $('em-gap').textContent  = none ? '미입력' : CT.comma(gap);
+    ['em-need', 'em-have', 'em-gap'].forEach(function (id) {
+      $(id).classList.toggle('none', $(id).textContent === '미입력');
+    });
+    $('em-box-gap').classList.toggle('none', none);
+
+    // 버틸 수 있는 기간
+    var cover = base ? Math.round((have / base) * 10) / 10 : 0;
+    $('em-cover').textContent = base ? cover : '0';
+    $('em-track').style.width = Math.max(0, Math.min(100, base ? (cover / m) * 100 : 0)) + '%';
+    $('em-cover-note').textContent = '목표 ' + m + '개월 기준' + (base ? '' : ' · 02 수입지출을 적으면 계산됩니다');
+
+    // 문장
+    $('em-lead').innerHTML = none
+      ? '준비할 개월 수를 정하면 목표 비상금이 나와요'
+      : (gap
+          ? '<span class="hl">' + m + '개월</span>치를 두려면 <span class="hl">' + CT.comma(gap) + '만원</span>을 더 모으면 돼요.'
+          : '<span class="hl">' + m + '개월</span>치 비상금은 이미 마련돼 있어요.');
+    $('em-lead').className = none ? 'ct-lead' : 'ct-hero';
+
+    // 적립 계획
+    $('em-plan-gap').textContent  = none ? '미입력' : CT.comma(gap) + '만원';
+    $('em-plan-save').textContent = c.saving ? CT.comma(c.saving) + '만원' : '미입력';
+    $('em-plan-months').textContent = (none || !gap) ? (none ? '미입력' : '달성')
+      : (c.saving ? Math.ceil(gap / c.saving) + '개월' : '저축액 미입력');
+    ['em-plan-gap', 'em-plan-save', 'em-plan-months'].forEach(function (id) {
+      $(id).style.color = /미입력$/.test($(id).textContent) ? 'var(--ink-4)' : '';
+    });
+  }
+
+  // 개월 프리셋 → 직접 입력 칸에 그대로 적는다 (칸이 기준값이다)
+  document.addEventListener('click', function (e) {
+    var seg = e.target.closest('.ct-seg > div[data-months]');
+    if (seg) { $('em-months').textContent = seg.dataset.months; $('em-months').classList.remove('hint'); }
+    if (seg || e.target.closest('.ct-sw, .ct-chip[data-chip]')) render();
+  });
+  ['input', 'blur'].forEach(function (ev) {
+    $('em-months').addEventListener(ev, function () {
+      var n = CT.parse($('em-months').textContent);
+      Array.prototype.forEach.call(document.querySelectorAll('.ct-seg > div[data-months]'), function (d) {
+        d.classList.toggle('on', Number(d.dataset.months) === n);
+      });
+      render();
+    });
+  });
+
+  render();
+
+  // 상담 중 도구로 열렸으면 그 단계로 돌아가는 링크를 건다
+  var STEP = {
+    basic:     ['basic.html',     '01 기본정보'],
+    cashflow:  ['cashflow.html',  '02 수입지출'],
+    assets:    ['assets.html',    '03 자산·부채'],
+    statement: ['statement.html', '04 재무재표'],
+    result:    ['result.html',    '상담결과']
+  };
+  var from = new URLSearchParams(location.search).get('from');
+  if (from && STEP[from]) {
+    $('back-step').href = STEP[from][0];
+    $('back-label').textContent = STEP[from][1];
+  }
+})();
+</script>
+
+</body>
+</html>

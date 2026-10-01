@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 작년 기록</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/consult.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .cE .ly-body { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 960px) { .cE .ly-body { grid-template-columns: 1fr; gap: 20px; } }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain ct">
+
+    <!-- 어느 화면에서 열었든 그 화면으로 돌아간다 -->
+    <a class="back-btn" id="back-step" href="result.html">
+      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> <span id="back-label">상담결과</span>
+    </a>
+
+    <!-- ===== 타이틀 ===== -->
+    <div class="ct-title-row">
+      <div class="ct-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-calendar"/></svg></div>
+      <div class="ct-title-txt">
+        <h1>작년 기록</h1>
+        <div class="ct-title-sub">연말정산 자료로 보는 지난해 소득·지출</div>
+      </div>
+      <div class="ct-title-act">
+        <span class="ct-tool" data-print><svg class="ic-svg" width="14" height="14"><use href="#i-printer"/></svg> 인쇄</span>
+      </div>
+    </div>
+
+    <!-- ===== 자료 연결 전 고지 ===== -->
+    <div class="ct-warn" style="margin-bottom:20px;">
+      <b>국세청 연말정산 자료 연동 전입니다.</b>
+      아래 표는 화면 구성을 보기 위한 예시 자료이며, 실제 고객 자료가 아닙니다.
+      소득과 달라진 점은 상담 중에 직접 적어 주시기 바랍니다.
+    </div>
+
+    <div class="ly-body">
+
+      <!-- ===== 왼쪽: 연도 · 소득 ===== -->
+      <div class="ct-stack">
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">조회 연도</div>
+            <div class="ct-seg" style="grid-template-columns:repeat(2,1fr);">
+              <div class="on" data-year="2025">2025년</div>
+              <div data-year="2024">2024년</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">소득 <span class="ct-note">· 연간 금액</span></div>
+            <div class="ct-f">
+              <div class="lb">총급여</div>
+              <div class="ct-in num hint" id="ly-inc-1" data-inc data-hint="미입력">미입력</div>
+            </div>
+            <div class="ct-f">
+              <div class="lb">배우자 총급여</div>
+              <div class="ct-in num hint" id="ly-inc-2" data-inc data-hint="미입력">미입력</div>
+            </div>
+            <div class="ct-f">
+              <div class="lb">사업·기타 소득</div>
+              <div class="ct-in num hint" id="ly-inc-3" data-inc data-hint="미입력">미입력</div>
+            </div>
+            <div class="ct-kv" style="padding-top:4px;">
+              <div class="k tp" style="white-space:nowrap;">연간 소득 합계</div><div class="v tp" id="ly-inc-sum">미입력</div>
+              <div class="k" style="white-space:nowrap;">월평균</div><div class="v hl" id="ly-inc-avg">미입력</div>
+            </div>
+            <div class="ct-note" id="ly-inc-miss" hidden></div>
+            <div class="ct-note">단위 만원. 연간 합계로 적으면 월평균은 12로 나눠 계산합니다.</div>
+          </div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">달라진 점</div>
+            <div class="ct-in tall hint" data-hint="예) 2025년에 둘째가 초등학교에 입학해 교육비가 늘었습니다.">예) 2025년에 둘째가 초등학교에 입학해 교육비가 늘었습니다.</div>
+            <div class="ct-note">작년과 올해 사이에 바뀐 일을 적습니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 오른쪽: 연말정산 자료 ===== -->
+      <div class="ct-stack">
+
+        <div class="ct-card-h">
+          <h2 style="font-size:var(--fs-h1);font-weight:800;letter-spacing:-0.02em;margin:0;color:var(--ink);">
+            연말정산 자료 <span class="ct-note" id="ly-year-note">2025년</span>
+          </h2>
+          <span class="ct-tag">예시 자료</span>
+        </div>
+
+        <div class="ct-tbl-wrap">
+          <table class="ct-tbl">
+            <thead><tr>
+              <th>항목</th>
+              <th class="amt" style="width:130px;"><span id="ly-h-cur">2025년</span></th>
+              <th class="amt" style="width:130px;"><span id="ly-h-prv">2024년</span></th>
+              <th class="amt" style="width:120px;">증감</th>
+            </tr></thead>
+            <tbody id="ly-rows"></tbody>
+            <tfoot><tr>
+              <td>결정세액</td>
+              <td class="amt" id="ly-tax-cur">0</td>
+              <td class="amt" id="ly-tax-prv">0</td>
+              <td class="amt" id="ly-tax-dif" style="color:var(--brand-deep);">0</td>
+            </tr></tfoot>
+          </table>
+        </div>
+
+        <div class="ct-hint">
+          병원비나 교육비를 카드로 결제했다면 같은 금액이 두 항목에 모두 잡힐 수 있습니다.
+          그래서 항목을 모두 더한 합계는 두지 않았습니다. 사용 시점을 알 수 없는 금액도 월별로 나누지 않았습니다.
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">02 수입지출과 비교 <span class="ct-note">· 02에 적은 월 금액을 12배 한 연환산</span></div>
+            <div class="ct-kv">
+              <div class="k">소득 — 작년 연간</div><div class="v" id="ly-cmp-inc-y">미입력</div>
+              <div class="k">수입 — 02 연환산</div><div class="v" id="ly-cmp-inc-n">미입력</div>
+              <div class="k tp">보장성 보험료 — 작년 연간</div><div class="v tp" id="ly-cmp-ins-y">미입력</div>
+              <div class="k">보험 — 02 연환산</div><div class="v" id="ly-cmp-ins-n">미입력</div>
+              <div class="k tp">의료비 — 작년 연간</div><div class="v tp" id="ly-cmp-med-y">미입력</div>
+              <div class="k">건강 — 02 연환산</div><div class="v" id="ly-cmp-med-n">미입력</div>
+            </div>
+            <div class="ct-note">작년 금액은 연간 자료 그대로 두고, 02에 적은 월 금액만 12배 해 맞췄습니다.</div>
+          </div>
+        </div>
+
+        <div class="ct-hint">
+          연말정산 자료는 신용카드·의료비·교육비처럼 증빙이 남는 지출만 담고 있어
+          현금 지출과 생활비 전체를 보여 주지는 않습니다. 02 수입지출을 적을 때 참고 자료로 씁니다.
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<div id="footer-host"></div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('consult');</script>
+<script src="_model.js"></script>
+<script src="_actions.js"></script>
+<script>
+/* ===== 작년 기록 — 연말정산 자료 (연동 전 예시 자료) =====
+   항목은 국세청 연말정산 간소화 자료 항목을 따랐습니다. 단위 만원.
+   자료가 연결되면 YEARS 를 조회 결과로 바꿉니다.                     */
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* [항목, 한 줄 설명, 2025, 2024]
+     항목 이름·설명·금액은 기획 시안의 '작년 기록' 화면을 그대로 옮긴 것입니다.
+     한 줄 설명은 그 숫자가 무엇인지 알려 주는 내용이라 지우지 않습니다
+     (겹쳐 잡히는 금액 · 납입액인지 잔액인지 구분). */
+  var ITEMS = [
+    ['총급여',            '',                                      3840, 3660],
+    ['신용카드 등 사용액', '의료비·교육비와 겹칠 수 있음',            2180, 1960],
+    ['현금영수증·직불카드', '신용카드와 따로 집계',                    420,  380],
+    ['보장성 보험료',      '납입 확인 자료',                          270,  300],
+    ['의료비',            '카드 사용액과 겹칠 수 있음',               150,  280],
+    ['실손보험금 수령',    '받은 보험금 · 어떤 병원비를 돌려받았는지 확인', 40,  100],
+    ['교육비',            '연말정산 자료에서 확인한 금액',            500,  600],
+    ['연금저축 납입',      '그해 넣은 돈 · 통장에 쌓인 총액은 아님',    180,  240],
+    ['IRP 납입',          '그해 넣은 돈 · 통장에 쌓인 총액은 아님',    120,  120],
+    ['주택자금 이자',      '받은 자료에서 확인한 금액',                160,  180],
+    ['주택청약 납입',      '그해 넣은 돈 · 통장에 쌓인 총액은 아님',    120,  120],
+    ['기부금',            '카드 사용과 중복 여부 확인',                20,   30]
+  ];
+  var COL = { 2025: 2, 2024: 3 };   // ITEMS 안의 연도 열 번호
+  var TAX = { 2025: 42, 2024: 68 };
+
+  var M = CT.load();
+
+  // 항목 이름으로 그해 금액을 찾는다 (줄 순서를 바꿔도 비교 카드가 따라온다)
+  function amount(name, year) {
+    var r = ITEMS.filter(function (x) { return x[0] === name; })[0];
+    return r ? r[COL[year]] : 0;
+  }
+
+  function render(year) {
+    var cur = COL[year], prv = COL[year - 1];
+    var curY = year, prvY = year - 1;
+
+    $('ly-year-note').textContent = curY + '년';
+    $('ly-h-cur').textContent = curY + '년';
+    $('ly-h-prv').textContent = prvY + '년';
+
+    // 2023년 자료는 없다 — 2024년을 고르면 비교 열을 비워 둔다
+    var hasPrv = !!prv;
+
+    $('ly-rows').innerHTML = ITEMS.map(function (r) {
+      var a = r[cur], b = hasPrv ? r[prv] : null;
+      var dif = hasPrv ? a - b : null;
+      return '<tr><td class="nm">' + r[0]
+        + (r[1] ? '<div class="sub-l">' + r[1] + '</div>' : '') + '</td>'
+        + '<td class="amt">' + CT.comma(a) + '</td>'
+        + '<td class="amt">' + (hasPrv ? CT.comma(b) : '<span class="ct-none-v">자료 없음</span>') + '</td>'
+        + '<td class="amt">' + (dif === null ? '<span class="ct-none-v">—</span>'
+            : (dif > 0 ? '+' : '') + CT.comma(dif)) + '</td></tr>';
+    }).join('');
+
+    $('ly-tax-cur').textContent = CT.comma(TAX[curY]);
+    $('ly-tax-prv').textContent = hasPrv ? CT.comma(TAX[prvY]) : '—';
+    $('ly-tax-dif').textContent = hasPrv
+      ? ((TAX[curY] - TAX[prvY] > 0 ? '+' : '') + CT.comma(TAX[curY] - TAX[prvY]))
+      : '—';
+
+    /* 02 수입지출과 비교 — 둘 다 '연간'으로 맞춘다.
+       작년 자료를 12로 나누면 어느 달에 썼는지 모르는 금액을 임의로 쪼개는 셈이라,
+       반대로 02 의 월 금액을 12배 해서 맞춘다. */
+    var insN = CT.catTotal(M, '보험'), medN = CT.catTotal(M, '건강');
+    put('ly-cmp-ins-y', CT.comma(amount('보장성 보험료', year)) + '만원');
+    put('ly-cmp-ins-n', insN ? CT.comma(CT.round1(insN * 12)) + '만원' : '미입력');
+    put('ly-cmp-med-y', CT.comma(amount('의료비', year)) + '만원');
+    put('ly-cmp-med-n', medN ? CT.comma(CT.round1(medN * 12)) + '만원' : '미입력');
+
+    renderIncome();
+  }
+
+  function month(v) { return Math.round(v / 12 * 10) / 10; }
+  // 미입력은 회색으로 둔다 (금액이 들어온 칸과 구분)
+  function put(id, text) {
+    $(id).textContent = text;
+    $(id).style.color = text === '미입력' ? 'var(--ink-4)' : '';
+  }
+
+  /* 소득 — 세 칸을 더해 연간 합계와 월평균을 낸다.
+     적는 값이 연간 금액이므로 월평균은 12로 나눈다. 02 수입(월)과 같은 자리에서 비교된다. */
+  function renderIncome() {
+    var vals = Array.prototype.map.call(document.querySelectorAll('[data-inc]'), function (el) {
+      return el.classList.contains('hint') ? null : CT.parse(el.textContent);
+    });
+    var filled = vals.filter(function (v) { return v !== null; });
+    var sum = CT.round1(filled.reduce(function (s, v) { return s + v; }, 0));
+    var none = !filled.length;
+    var miss = vals.length - filled.length;
+
+    put('ly-inc-sum', none ? '미입력' : CT.comma(sum) + '만원');
+    put('ly-inc-avg', none ? '미입력' : CT.comma(month(sum)) + '만원');
+    $('ly-inc-miss').hidden = none || !miss;
+    $('ly-inc-miss').textContent = '미입력 ' + miss + '건 제외';
+
+    // 비교 카드는 연간 기준이라 합계를 그대로 쓰고, 02 수입만 12배 한다
+    var incN = CT.catTotal(M, '수입');
+    put('ly-cmp-inc-y', none ? '미입력' : CT.comma(sum) + '만원');
+    put('ly-cmp-inc-n', incN ? CT.comma(CT.round1(incN * 12)) + '만원' : '미입력');
+  }
+
+  document.addEventListener('click', function (e) {
+    var seg = e.target.closest('.ct-seg > div[data-year]');
+    if (seg) render(Number(seg.dataset.year));
+  });
+  // 소득 칸을 고치면 합계·월평균이 따라 바뀐다 (blur 는 _actions.js 가 콤마를 찍은 뒤)
+  ['input', 'blur'].forEach(function (ev) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-inc]'), function (el) {
+      el.addEventListener(ev, renderIncome);
+    });
+  });
+
+  render(2025);
+
+  // 상담 중 도구로 열렸으면 그 단계로 돌아가는 링크를 건다
+  var STEP = {
+    basic:     ['basic.html',     '01 기본정보'],
+    cashflow:  ['cashflow.html',  '02 수입지출'],
+    assets:    ['assets.html',    '03 자산·부채'],
+    statement: ['statement.html', '04 재무재표'],
+    result:    ['result.html',    '상담결과']
+  };
+  var from = new URLSearchParams(location.search).get('from');
+  if (from && STEP[from]) {
+    $('back-step').href = STEP[from][0];
+    $('back-label').textContent = STEP[from][1];
+  }
+})();
+</script>
+
+</body>
+</html>
