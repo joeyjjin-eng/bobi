@@ -160,15 +160,22 @@
 
 <script src="../../components/layout.js"></script>
 <script>injectShell('consult');</script>
+<script src="_model.js"></script>
 <script src="_actions.js"></script>
 <script>
+/* 새로 작성하기 — 01 기본정보가 상담의 입구다.
+   여기서 저장된 값을 비우지 않으면 localStorage 에 남은 지난 상담이 그대로 읽혀,
+   아무것도 안 적었는데 04·상담결과에 지난번 목표와 금액이 남는다. */
 (function () {
   if (new URLSearchParams(location.search).get('new') !== '1') return;
 
+  if (window.CT) CT.reset();
+
   var previous = document.getElementById('previous-consults');
-  var next = document.querySelector('.ct-navrow.end a');
   if (previous) previous.hidden = true;
-  if (next) next.href = 'cashflow.html?new=1';
+
+  // 새로고침 때 적던 값을 다시 지우지 않도록 주소에서 플래그를 뗀다
+  if (history.replaceState) history.replaceState(null, '', location.pathname);
 })();
 </script>
 

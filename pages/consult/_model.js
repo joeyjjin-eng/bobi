@@ -68,21 +68,37 @@
     Object.keys(m.cf).forEach(function (c) { m.cf[c].items.forEach(function (r) { r[1] = null; r[2] = null; }); });
     Object.keys(m.as).forEach(function (g) { m.as[g].forEach(function (r) { r[1] = null; }); });
     m.debt.forEach(function (d) { d.bal = null; d.pay = null; d.rate = null; d.due = ''; });
-    m.goals.forEach(function (g) { g.need = null; g.saved = null; });
+    // 목표는 금액만 비우는 게 아니라 줄째로 비운다.
+    // 아무것도 안 적었는데 '가족 여행 · 차량 교체 · 첫째 대학 등록금'이 들어 있으면
+    // 고객이 적은 목표처럼 읽힌다. SAMPLE 의 3건은 항목 구성을 보여 주는 예시일 뿐이다.
+    m.goals = [];
+    m.v = VERSION;
     return m;
   }
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
+  /* 저장 값에 찍는 버전.
+     뼈대(항목 구성·빈 값 규칙)를 바꾸면 이 숫자를 올린다. 그러면 예전 구조로 저장돼 있던
+     값은 읽을 때 버려지고 빈 화면으로 시작한다.
+     이게 없으면 화면 코드를 아무리 고쳐도 브라우저에 남은 옛 값이 그대로 읽힌다
+     (`blank()` 은 저장된 게 없을 때만 도는 함수라 손이 닿지 않는다).
+     v2 — 빈 상태에서 목표를 줄째 비우도록 바꿈 (2026-10-01) */
+  var VERSION = 2;
+
   function load() {
     try {
       var raw = localStorage.getItem(KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) { /* 저장이 막힌 브라우저면 그냥 예시값으로 */ }
+      if (raw) {
+        var m = JSON.parse(raw);
+        if (m && m.v === VERSION) return m;
+        localStorage.removeItem(KEY);   // 구조가 다른 옛 값은 버린다
+      }
+    } catch (e) { /* 저장이 막힌 브라우저면 그냥 빈 값으로 */ }
     return blank();
   }
   function save(m) {
-    try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {}
+    try { m.v = VERSION; localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {}
   }
   function reset() {
     try { localStorage.removeItem(KEY); } catch (e) {}

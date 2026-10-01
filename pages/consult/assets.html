@@ -167,7 +167,7 @@
         + '<div class="debt-identity">'
         +   '<div class="ct-in" data-hint="부채 이름" data-d="' + i + '" data-f="name">' + d.name + '</div>'
         +   '<div class="ct-in at' + (!d.at ? ' hint' : '') + '" data-hint="금융사" data-d="' + i + '" data-f="at">' + (d.at || '금융사') + '</div>'
-        +   '<button type="button" class="del finance-delete" data-act="ddel" data-d="' + i + '" aria-label="부채 삭제"><svg class="ic-svg" width="11" height="11"><use href="#i-x"/></svg></button>'
+        +   '<button type="button" class="del finance-delete with-label" data-act="ddel" data-d="' + i + '"><svg class="ic-svg" width="12" height="12"><use href="#i-trash"/></svg><span class="tx">삭제</span></button>'
         + '</div><div class="debt-fields">'
         +   '<div class="debt-field"><span class="lb">잔액</span>' + cell('bal') + '</div>'
         +   '<div class="debt-field"><span class="lb">월 상환</span>' + cell('pay') + '</div>'
