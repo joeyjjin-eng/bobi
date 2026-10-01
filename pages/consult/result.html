@@ -10,7 +10,10 @@
 <link rel="stylesheet" href="../../styles/consult.css" />
 <style>
   html, body { margin: 0; background: #fff; }
-  .cE .rs-nav { position: sticky; top: 0; z-index: 5; background: #fff; padding-top: 4px; }
+  /* 탭 줄도 스크롤에 붙여 둔다. 단, 단계 바(.ct-steps)가 sticky top:12px · z-index:30 으로
+     먼저 붙어 있어서 top:0 으로 두면 그 밑에 깔려 안 보인다.
+     그래서 단계 바 아래에 이어 붙인다(top 값은 아래 스크립트가 단계 바 높이로 채운다). */
+  .cE .rs-nav { position: sticky; top: 64px; z-index: 20; background: #fff; padding-top: 10px; }
   .cE .rs-hero { display: grid; grid-template-columns: minmax(0,1fr) 520px; gap: 40px; align-items: center; }
   .cE .rs-blk { scroll-margin-top: 70px; }
   /* 현금흐름표 — 구분(①②③) · 묶음 · 항목 세 단계를 들여쓰기로 구분한다 */
@@ -137,6 +140,7 @@
               <span class="ct-card-t" style="font-size:var(--fs-h2);">순자산 <span style="color:var(--brand-deep);" id="rs-net"></span></span>
             </div>
             <div class="ct-bar2"><div class="a" id="rs-bar-a"></div><div class="b" id="rs-bar-b"></div></div>
+            <div class="ct-bar2-cap" hidden></div>
           </div>
           <div class="ct-card pad ct-card-h num" >
             <span class="ct-note" style="font-size:var(--fs-body);"><span id="rs-gcnt"></span> 필요 저축</span>
@@ -200,6 +204,7 @@
           <div class="ct-bar2" style="height:48px;">
             <div class="a" id="rv-bar-a"></div><div class="b" id="rv-bar-b"></div>
           </div>
+          <div class="ct-bar2-cap" hidden></div>
         </div>
       </div>
 
@@ -401,6 +406,7 @@
           <div class="a" id="bs-bar-a" style="width:0%;">순자산 0%</div>
           <div class="b" id="bs-bar-b" style="width:100%;">부채 100%</div>
         </div>
+        <div class="ct-bar2-cap" hidden></div>
       </div>
     </div>
     </div>
@@ -457,10 +463,8 @@ document.getElementById('cal-26').classList.add('on');
 
   // 순자산 카드
   var np = c.assets ? Math.max(0, Math.min(100, Math.round(c.net / c.assets * 100))) : 0;
-  function bar(a, b) {
-    $(a).style.width = np + '%';        $(a).textContent = '순자산 ' + np + '%';
-    $(b).style.width = (100 - np) + '%'; $(b).textContent = '부채 ' + (100 - np) + '%';
-  }
+  // 비중이 작은 쪽 글자가 칸 안에서 세로로 쪼개지지 않게 CT.bar2 가 맡는다
+  function bar(a, b) { CT.bar2($(a), $(b), np, '순자산', '부채'); }
   $('rs-assets').textContent = CT.won(c.assets);
   $('rs-net').textContent    = CT.won(c.net);
   bar('rs-bar-a', 'rs-bar-b');
@@ -644,6 +648,18 @@ document.getElementById('cal-26').classList.add('on');
   }, true);
 })();
 
+/* 탭 줄을 단계 바 바로 밑에 붙여 둔다.
+   단계 바 높이는 창 폭에 따라 달라질 수 있어 CSS 에 숫자를 박지 않고 재서 넣는다. */
+(function () {
+  var steps = document.querySelector('.ct-steps'), nav = document.querySelector('.rs-nav');
+  if (!steps || !nav) return;
+  var STEPS_TOP = 12;                       // .ct-steps 의 sticky top
+  function place() { nav.style.top = (steps.offsetHeight + STEPS_TOP) + 'px'; }
+  place();
+  window.addEventListener('resize', place);
+  if (window.ResizeObserver) new ResizeObserver(place).observe(steps);
+})();
+
 /* ===== ① 현금흐름표 — 01–03에 적은 값을 구분·묶음·항목 세 단계로 펼친다 =====
    ① 수입 − ② 생활비 − ③ 저축·부채상환 = 월 잔액 (기획 문서 '상담 결과 · 현금흐름표')
    금액이 0인 항목 줄은 숨긴다. 다만 아직 아무것도 안 적은 화면에서는
@@ -759,10 +775,7 @@ document.getElementById('cal-26').classList.add('on');
   $('bs-net').textContent  = CT.comma(c.net);
 
   var np = c.assets ? Math.max(0, Math.min(100, Math.round(c.net / c.assets * 100))) : 0;
-  $('bs-bar-a').style.width = np + '%';
-  $('bs-bar-a').textContent = '순자산 ' + np + '%';
-  $('bs-bar-b').style.width = (100 - np) + '%';
-  $('bs-bar-b').textContent = '부채 ' + (100 - np) + '%';
+  CT.bar2($('bs-bar-a'), $('bs-bar-b'), np, '순자산', '부채');
 })();
 
 </script>

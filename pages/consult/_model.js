@@ -213,6 +213,46 @@
     if (!whole) return 0;
     return Math.round((part / whole) * 100);
   }
+  /* 순자산 ↔ 부채 막대(.ct-bar2) 채우기.
+     한쪽 비중이 작으면 그 칸이 글자보다 좁아져 '순자산 0%' 가 한 글자씩 세로로 쌓인다.
+     그래서 글자를 넣어 본 뒤 칸을 넘치면(scrollWidth > clientWidth) 그 칸은 비우고,
+     막대 바로 아래 .ct-bar2-cap 줄에 적는다. 비율에 상관없이 글자는 늘 읽힌다.
+     (칸 폭이 화면마다 달라 '몇 % 미만' 같은 고정 기준은 쓸 수 없다.) */
+  function bar2(aEl, bEl, percent, aName, bName) {
+    var p = Math.max(0, Math.min(100, Math.round(percent || 0)));
+    var aTxt = (aName || '순자산') + ' ' + p + '%';
+    var bTxt = (bName || '부채') + ' ' + (100 - p) + '%';
+    var host = aEl.parentNode;
+    aEl.style.width = p + '%';
+    bEl.style.width = (100 - p) + '%';
+
+    function fit(el, text) {
+      el.textContent = text;
+      if (el.scrollWidth > el.clientWidth) { el.textContent = ''; return false; }
+      return true;
+    }
+    function apply() {
+      var out = [];
+      if (!fit(aEl, aTxt)) out.push(aTxt);
+      if (!fit(bEl, bTxt)) out.push(bTxt);
+      var cap = host.nextElementSibling;
+      if (cap && cap.classList.contains('ct-bar2-cap')) {
+        cap.textContent = out.join(' · ');
+        cap.hidden = !out.length;
+      }
+    }
+    apply();
+
+    /* 숨겨진 탭 안에 있으면 폭이 0이라 글자가 넘치는지 잴 수 없다.
+       창 크기가 바뀔 때도 들어가던 글자가 안 들어갈 수 있다.
+       그래서 막대 폭이 달라질 때마다 다시 맞춘다. */
+    host._bar2apply = apply;   // 다시 그릴 때를 대비해 늘 최신 것을 둔다
+    if (window.ResizeObserver && !host.dataset.bar2ro) {
+      host.dataset.bar2ro = '1';
+      new ResizeObserver(function () { host._bar2apply(); }).observe(host);
+    }
+  }
+
   // 입력 문자열 → 숫자 (빈 값·'미입력'은 null)
   function parse(v) {
     var s = String(v == null ? '' : v).replace(/[^0-9-]/g, '');
@@ -224,6 +264,6 @@
     load: load, save: save, reset: reset, calc: calc,
     sumItems: sumItems, unknown: unknown, catTotal: catTotal, groupTotal: groupTotal,
     goals: goals, goalSum: goalSum, goalPhases: goalPhases, monthsTo: monthsTo,
-    comma: comma, won: won, pct: pct, parse: parse, round1: round1
+    comma: comma, won: won, pct: pct, parse: parse, round1: round1, bar2: bar2
   };
 })();

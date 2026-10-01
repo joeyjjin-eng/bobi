@@ -442,6 +442,12 @@
 .cE .ct-bar2 { --bar-red-grad: linear-gradient(135deg, #FFB3B8 0%, #FF7A85 45%, #9E2430 100%); }
 .cE .ct-bar2 .a { background: var(--brand-grad); color: #fff; display: flex; align-items: center; padding: 0 14px; }
 .cE .ct-bar2 .b { background: var(--bar-red-grad); color: #fff; display: flex; align-items: center; padding: 0 14px; }
+/* 비중이 작은 쪽은 칸이 글자보다 좁다. 줄바꿈을 막아 세로로 쌓이지 않게 하고,
+   글자를 지운 칸은 좌우 여백까지 걷어 비율이 그대로 보이게 한다.
+   넘쳐서 지운 글자는 막대 아래 .ct-bar2-cap 에 적는다(CT.bar2). */
+.cE .ct-bar2 .a, .cE .ct-bar2 .b { white-space: nowrap; overflow: hidden; box-sizing: border-box; }
+.cE .ct-bar2 .a:empty, .cE .ct-bar2 .b:empty { padding: 0; }
+.cE .ct-bar2-cap { margin-top: 8px; font-size: var(--fs-option); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .cE .ct-kv { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px 24px; font-size: var(--fs-body); font-variant-numeric: tabular-nums; }
 .cE .ct-kv .k { color: var(--ink-2); }
 .cE .ct-kv .v { text-align: right; font-weight: 700; color: var(--ink); }
