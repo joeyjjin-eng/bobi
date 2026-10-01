@@ -39,6 +39,8 @@
   /* ---------- 입력 칸 — 직접 고쳐 쓰기 ---------- */
   // 힌트가 떠 있는 칸은 첫 입력에 비우고, 비운 채로 나가면 힌트를 되돌린다.
   function bindEditable(el) {
+    // 네이티브 입력(input·select·textarea)은 그대로 둔다. contenteditable 을 걸면 망가진다.
+    if (/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
     if (el.classList.contains('dim') || el.dataset.bound) return;
     el.dataset.bound = '1';
     el.setAttribute('contenteditable', 'true');

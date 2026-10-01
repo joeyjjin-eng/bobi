@@ -41,9 +41,18 @@
       <div class="bar"></div>
       <a class="ct-step" href="assets.html"><span class="n">03</span>자산·부채</a>
       <div class="bar"></div>
-      <a class="ct-step" href="statement.html"><span class="n">04</span>재무재표</a>
+      <a class="ct-step" href="wrapup.html"><span class="n">04</span>상담정리</a>
       <div class="split"></div>
       <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
+    </div>
+
+    <!-- 어느 달을 적는지부터 정한다. 적는 금액이 전부 이 달 기준이다.
+         .emain 이 가운데 정렬이라 좁은 칸은 감싸는 줄을 하나 둬야 왼쪽에 붙는다. -->
+    <div style="margin-bottom:20px;">
+      <div class="ct-f" style="width:220px;">
+        <span class="lb">기준월<span class="req"> 필수</span></span>
+        <input type="month" class="ct-nat" id="cf-month" aria-label="기준월" />
+      </div>
     </div>
 
     <!-- 단위 확인 경고 -->
@@ -94,27 +103,42 @@
   function secId(cat) { return 'cf-' + CT.ORDER.indexOf(cat); }
 
   /* ---------- 오른쪽: 대분류 → 중분류 → 항목 위계 ---------- */
+  /* 묶음 이름은 시안(인수인계_20260927) 그대로 쓴다.
+     모델 키('수입'·'저축'·'일시 수입'…)는 다른 화면이 같이 읽으므로 바꾸지 않고,
+     화면에 보이는 이름만 여기서 갈아 끼운다. */
+  var NAME = {
+    '수입': '들어오는 돈',
+    '저축': '모으는 돈',
+    '일시 수입': '목돈 들어온 돈',
+    '일시 지출': '목돈 나간 돈'
+  };
+  function nameOf(cat) { return NAME[cat] || cat; }
+  // 들어오는 쪽인지 나가는 쪽인지에 따라 금액 칸 머리글이 다르다
+  function isIn(cat) { return cat === '수입' || cat === '일시 수입'; }
+
   function buildSections() {
-    host.innerHTML = domain('수입', category('수입', false))
-      + domain('지출', subgroup('고정지출', CT.FIXED) + subgroup('변동지출', CT.VARI))
-      + domain('저축·투자', category('저축', false))
-      + domain('일시자금', category('일시 수입', true) + category('일시 지출', true));
+    host.innerHTML = domain('들어오는 돈', '', category('수입', false))
+      + domain('나가는 돈', '매달 거의 같은 돈', CT.FIXED.map(function (c) { return category(c, true); }).join(''))
+      + domain('나가는 돈', '달마다 다른 돈', CT.VARI.map(function (c) { return category(c, true); }).join(''))
+      + domain('모으는 돈', '', category('저축', false))
+      + domain('이번 달만 있었던 큰돈', '', category('일시 수입', true) + category('일시 지출', true));
     host.querySelectorAll('[data-cat]').forEach(bindRows);
   }
 
-  function domain(title, content) {
-    return '<section class="ct-panel finance-domain"><h2 class="finance-domain-title">' + title + '</h2>' + content + '</section>';
-  }
-
-  function subgroup(title, cats) {
-    return '<section class="finance-subgroup"><h3 class="finance-subgroup-title">' + title + '</h3>'
-      + cats.map(function (cat) { return category(cat, true); }).join('') + '</section>';
+  // 묶음 이름 + 성격. 성격은 이름이 아니라 설명이라 얇고 연하게 붙인다.
+  function domain(title, sub, content) {
+    return '<section class="ct-panel finance-domain"><h2 class="finance-domain-title">' + title
+      + (sub ? '<span class="sub">' + sub + '</span>' : '') + '</h2>' + content + '</section>';
   }
 
   function category(cat, showTitle) {
+    // 금액 칸 머리글에 단위를 붙여 둔다. 칸마다 '만원'을 쓰면 숫자가 묻힌다.
+    var now  = isIn(cat) ? '수입액 · 만원' : '사용액 · 만원';
+    var goal = isIn(cat) ? '목표 수입' : '월 사용 목표';
     return '<section class="cf-sec finance-section finance-flat-group" id="' + secId(cat) + '" data-finance-section="' + cat + '">'
-        + (showTitle ? '<div class="ct-card-h finance-flat-heading"><h4 class="finance-category-title">' + cat + '</h4></div>' : '')
-        + '<div class="finance-grid-head finance-grid-row" data-cat-head="' + cat + '"><span>항목</span><span>현재</span><span data-toggle-target="goal" hidden>목표</span><span></span></div>'
+        + (showTitle ? '<div class="ct-card-h finance-flat-heading"><h4 class="finance-category-title">' + nameOf(cat) + '</h4></div>' : '')
+        + '<div class="finance-grid-head finance-grid-row" data-cat-head="' + cat + '"><span>항목</span><span>' + now
+        + '</span><span data-toggle-target="goal" hidden>' + goal + '</span><span></span></div>'
         + '<div class="finance-flat-rows" data-cat="' + cat + '">' + rowsOf(cat) + '</div>'
         + '</section>';
   }
@@ -137,7 +161,6 @@
   function bindRows(tb) {
     var cat = tb.dataset.cat;
     tb.querySelectorAll('.ct-in[data-f]').forEach(function (el) {
-      if (el.dataset.f === 'name' && el.dataset.custom !== 'true') return;
       el.setAttribute('contenteditable', 'true');
       el.addEventListener('focus', function () {
         if (el.classList.contains('hint')) { el.textContent = ''; el.classList.remove('hint'); }
@@ -161,15 +184,26 @@
   }
 
   /* ---------- 왼쪽: 묶음 색인 ---------- */
+  /* 좌측 목록도 시안과 같은 묶음으로 둔다.
+     '지출' 같은 중간 단계를 하나 더 두면 시안에 없는 층이 생겨, 묶음 제목 + 항목 + 합계 세 줄로만 간다. */
   function buildIndex() {
     var h = '<div class="finance-index-section">';
-    h += leaf('수입', '수입');
-    h += group('지출', CT.FIXED.concat(CT.VARI), [child('고정지출', '고정지출'), child('변동지출', '변동지출')], CT.FIXED[0]);
-    h += leaf('저축·투자', '저축');
-    h += group('일시자금', ['일시 수입', '일시 지출'], [child('일시수입', '일시수입'), child('일시지출', '일시지출')], '일시 수입');
+    h += leaf('들어오는 돈', '수입');
+    h += group('나가는 돈', '매달 거의 같은 돈', CT.FIXED, true);
+    h += group('나가는 돈', '달마다 다른 돈', CT.VARI, true);
+    h += leaf('모으는 돈', '저축');
+    h += group('이번 달만 있었던 큰돈', '', ['일시 수입', '일시 지출'], false);
     h += '</div>';
     idx.innerHTML = h;
     syncActiveIndex();
+  }
+  // 묶음 제목(누르는 곳 아님) + 그 안의 항목들 + 합계
+  function group(label, sub, cats, withSum) {
+    return '<div class="index-group"><div class="finance-index-label"><strong>' + label + '</strong>'
+      + (sub ? '<span class="sub">' + sub + '</span>' : '') + '</div>'
+      + cats.map(function (c) { return child(nameOf(c), c); }).join('')
+      + (withSum ? '<div class="nav-row index-sum"><span>합계</span>' + money(total(cats)) + '</div>' : '')
+      + '</div>';
   }
   function total(cats) {
     return cats.reduce(function (sum, cat) { return sum + CT.catTotal(M, cat); }, 0);
@@ -177,26 +211,16 @@
   function money(value) {
     return '<span class="row-value">' + CT.comma(value) + '<span class="unit">만원</span></span>';
   }
-  function group(label, cats, children, goCat) {
-    return '<div class="index-group"><div class="index-parent" data-go="' + secId(goCat) + '"><span>' + label + '</span>' + money(total(cats)) + '</div>' + children.join('') + '</div>';
-  }
   function leaf(label, key) {
     return '<div class="index-group"><div class="nav-row index-parent' + (activeGroup === key ? ' on' : '') + '" data-group="' + key + '" data-go="' + secId(key) + '"><span>' + label + '</span>' + money(total([key])) + '</div></div>';
   }
-  function child(label, key) {
-    var cats = key === '고정지출' ? CT.FIXED : key === '변동지출' ? CT.VARI : key === '일시수입' ? ['일시 수입'] : key === '일시지출' ? ['일시 지출'] : [key];
-    return '<div class="nav-row index-child" data-group="' + key + '" data-go="' + secId(cats[0]) + '"><span>' + label + '</span>' + money(total(cats)) + '</div>';
+  function child(label, cat) {
+    return '<div class="nav-row index-child" data-group="' + cat + '" data-go="' + secId(cat) + '"><span>' + label + '</span>' + money(total([cat])) + '</div>';
   }
 
   var activeGroup = '수입';
-  function groupOf(cat) {
-    if (cat === '수입') return '수입';
-    if (cat === '일시 수입') return '일시수입';
-    if (cat === '일시 지출') return '일시지출';
-    if (cat === '저축') return '저축';
-    if (CT.FIXED.indexOf(cat) >= 0) return '고정지출';
-    return '변동지출';
-  }
+  // 좌측 목록 줄이 항목 하나하나에 대응하므로 그대로 쓴다
+  function groupOf(cat) { return cat; }
   function syncActiveIndex() {
     idx.querySelectorAll('.nav-row[data-group]').forEach(function (row) {
       row.classList.toggle('on', row.dataset.group === activeGroup);

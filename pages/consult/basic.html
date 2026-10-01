@@ -42,59 +42,69 @@
       <div class="bar"></div>
       <a class="ct-step" href="assets.html"><span class="n">03</span>자산·부채</a>
       <div class="bar"></div>
-      <a class="ct-step" href="statement.html"><span class="n">04</span>재무재표</a>
+      <a class="ct-step" href="wrapup.html"><span class="n">04</span>상담정리</a>
       <div class="split"></div>
       <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
     </div>
 
-    <!-- ===== 인적정보 ===== -->
+    <!-- ===== 가구 정보 =====
+         항목 이름·순서·입력 성격은 시안(bovi-v1.html customerForm) 그대로입니다.
+         필수는 이름·상담일 둘뿐이고 나머지는 선택입니다. -->
     <div class="ct-panel">
-      <div class="ct-sec">
-        <h2>인적정보</h2>
-        <div class="in">
-          <div class="ct-g3">
-            <div class="ct-f"><span class="lb">고객명<span class="req"> *</span></span>
+      <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 20px;color:var(--ink);">가구 정보</h2>
+      <div>
+        <div class="in" style="display:flex;flex-direction:column;gap:20px;">
+          <div class="ct-g2">
+            <div class="ct-f"><span class="lb">이름<span class="req"> 필수</span></span>
               <div class="ct-in" data-hint="예) 김민준"></div></div>
-            <div class="ct-f"><span class="lb">상담일<span class="req"> *</span></span>
-              <div class="ct-in" data-hint="YYYY.MM.DD"></div></div>
-            <div class="ct-f"><span class="lb">거주지 (시·군·구)</span>
-              <div class="ct-in" data-hint="예) 대구광역시 달서구"></div></div>
-            <div class="ct-f"><span class="lb">직업</span>
+            <div class="ct-f"><span class="lb">상담일<span class="req"> 필수</span></span>
+              <input type="date" class="ct-nat" aria-label="상담일" /></div>
+            <div class="ct-f"><span class="lb">주 소득자 직업<span class="opt"> 선택</span></span>
               <div class="ct-in" data-hint="예) 회사원"></div></div>
-            <div class="ct-f"><span class="lb">배우자 직업</span>
+            <div class="ct-f"><span class="lb">배우자 직업<span class="opt"> 선택</span></span>
               <div class="ct-in" data-hint="미해당 시 공란"></div></div>
-            <div class="ct-f"><span class="lb">주거 형태</span>
-              <div class="ct-seg" style="grid-template-columns:repeat(4,minmax(0,1fr));"><div>자가</div><div>전세</div><div>월세</div><div>기타</div></div>
-            </div>
-            <div class="ct-f"><span class="lb">수입 형태</span>
-              <div class="ct-seg" style="grid-template-columns:repeat(2,minmax(0,1fr));"><div>일정</div><div>변동</div></div>
-            </div>
+            <div class="ct-f"><span class="lb">주거 형태<span class="opt"> 선택</span></span>
+              <select class="ct-nat" id="housing" aria-label="주거 형태">
+                <option value="">아직 확인하지 않았어요</option>
+                <option>자가</option><option>전세</option><option>월세</option><option>기타</option>
+              </select></div>
+            <!-- 주거 형태가 '기타'일 때만 나온다 -->
+            <div class="ct-f" id="housing-note" hidden><span class="lb">기타 주거 형태<span class="opt"> 선택</span></span>
+              <div class="ct-in" data-hint="예) 부모님 집, 사택"></div></div>
+            <div class="ct-f"><span class="lb">수입은 매달 비슷한가요?<span class="opt"> 선택</span></span>
+              <div class="ct-in" data-hint="예) 매월 비슷함"></div></div>
           </div>
 
-          <!-- 가족 -->
-          <div class="ct-tbl-wrap">
-            <table class="ct-tbl">
-              <thead>
-                <tr><th style="width:100px;">관계</th><th style="width:140px;">성명</th><th class="ctr" style="width:80px;">연령</th><th>직업·학교</th><th>비고</th><th style="width:70px;"></th></tr>
-              </thead>
-              <tbody id="fam-rows">
-                <tr>
-                  <td class="nm"><div class="ct-in hint" data-hint="관계">관계</div></td>
-                  <td><div class="ct-in hint" data-hint="성명">성명</div></td>
-                  <td class="ctr"><div class="ct-in hint" data-hint="나이">나이</div></td>
-                  <td><div class="ct-in hint" data-hint="직업·학교">직업·학교</div></td>
-                  <td><div class="ct-in hint" data-hint="비고">비고</div></td>
-                  <td class="del" data-act="del">삭제</td>
-                </tr>
-                <tr class="addrow" data-addrow><td colspan="6" class="ct-add" data-add="tpl-fam">+ 가족 추가</td></tr>
-              </tbody>
-            </table>
-          </div>
+
+          <!-- 가족 구성 — 시안처럼 접어 둔다 -->
+          <details class="ct-det">
+            <summary>가족 구성 <span class="opt">선택</span></summary>
+            <div class="in">
+              <div>
+                <table class="ct-tbl">
+                  <thead>
+                    <tr><th style="width:110px;">관계</th><th style="width:150px;">이름·호칭</th><th class="ctr" style="width:120px;">나이</th><th>직업·학교</th><th>비고</th><th style="width:70px;"></th></tr>
+                  </thead>
+                  <tbody id="fam-rows">
+                    <tr>
+                      <td class="nm"><div class="ct-in hint" data-hint="관계">관계</div></td>
+                      <td><div class="ct-in hint" data-hint="이름·호칭">이름·호칭</div></td>
+                      <td class="ctr"><input type="number" class="ct-nat sm" min="0" max="120" placeholder="나이" aria-label="나이" /></td>
+                      <td><div class="ct-in hint" data-hint="직업·학교">직업·학교</div></td>
+                      <td><div class="ct-in hint" data-hint="비고">비고</div></td>
+                      <td class="del" data-act="del">삭제</td>
+                    </tr>
+                    <tr class="addrow" data-addrow><td colspan="6" class="ct-add" data-add="tpl-fam">+ 가족 추가</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </details>
           <template id="tpl-fam" data-row-for="fam-rows">
             <tr>
               <td class="nm"><div class="ct-in hint" data-hint="관계">관계</div></td>
-              <td><div class="ct-in hint" data-hint="성명">성명</div></td>
-              <td class="ctr"><div class="ct-in hint" data-hint="나이">나이</div></td>
+              <td><div class="ct-in hint" data-hint="이름·호칭">이름·호칭</div></td>
+              <td class="ctr"><input type="number" class="ct-nat sm" min="0" max="120" placeholder="나이" aria-label="나이" /></td>
               <td><div class="ct-in hint" data-hint="직업·학교">직업·학교</div></td>
               <td><div class="ct-in hint" data-hint="비고">비고</div></td>
               <td class="del" data-act="del">삭제</td>
@@ -104,40 +114,16 @@
       </div>
     </div>
 
-    <!-- ===== 상담목표 ===== -->
+    <!-- ===== 상담목표 — 오늘 무엇을 풀러 왔는지 ===== -->
     <div class="ct-panel">
-      <div class="ct-sec">
-        <h2>상담목표</h2>
-        <div class="in">
-          <div class="ct-f">
-            <span class="lb st">상담 요청 사항<span class="req"> *</span></span>
-            <div class="ct-in tall" data-hint="고객이 말한 그대로 적습니다."></div>
-          </div>
-          <div class="ct-g2">
-            <div class="ct-f"><span class="lb">유지 희망 지출</span>
-              <div class="ct-in" data-hint="예) 자녀 간식비"></div></div>
-            <div class="ct-f"><span class="lb">예정된 변동사항</span>
-              <div class="ct-in" data-hint="예) 2027.03 학원비 월 15만원 증가"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== 이전 상담 ===== -->
-    <div class="ct-panel" id="previous-consults">
-      <div class="ct-sec">
-        <h2>이전 상담</h2>
-        <div class="in">
-          <div class="ct-tbl-wrap">
-            <table class="ct-tbl">
-              <thead><tr><th style="width:90px;">회차</th><th style="width:130px;">상담일</th><th>결론</th><th style="width:100px;"></th></tr></thead>
-              <tbody>
-                <tr><td class="nm">2회차</td><td>2026.08.25</td><td>중복 보험 특약 2건 정리 시 월 6만원 절감</td><td class="del"><a href="result.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">결과 보기</a></td></tr>
-                <tr><td class="nm">1회차</td><td>2026.07.21</td><td>월 4만원 적자 · 현금흐름표 최초 작성</td><td class="del"><a href="result.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">결과 보기</a></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 20px;color:var(--ink);">상담목표</h2>
+      <div class="in" style="display:flex;flex-direction:column;gap:20px;">
+          <div class="ct-f"><span class="lb">오늘 가장 궁금하거나 걱정되는 것은요?</span>
+            <textarea class="ct-nat" placeholder="고객이 말한 그대로 적습니다."></textarea></div>
+          <div class="ct-f"><span class="lb">유지해야 되는 지출이 있나요?</span>
+            <textarea class="ct-nat" placeholder="예) 아이 교육비는 유지하고 싶어요."></textarea></div>
+          <div class="ct-f"><span class="lb">앞으로 달라질 일</span>
+            <textarea class="ct-nat" placeholder="예) 내년 봄 이사를 검토 중이에요."></textarea></div>
       </div>
     </div>
 
@@ -166,11 +152,17 @@
 
   if (window.CT) CT.reset();
 
-  var previous = document.getElementById('previous-consults');
-  if (previous) previous.hidden = true;
-
   // 새로고침 때 적던 값을 다시 지우지 않도록 주소에서 플래그를 뗀다
   if (history.replaceState) history.replaceState(null, '', location.pathname);
+})();
+
+/* 주거 형태에서 '기타'를 고를 때만 '기타 주거 형태' 칸을 보여 준다(시안과 같음). */
+(function () {
+  var sel = document.getElementById('housing'), note = document.getElementById('housing-note');
+  if (!sel || !note) return;
+  function sync() { note.hidden = sel.value !== '기타'; }
+  sel.addEventListener('change', sync);
+  sync();
 })();
 </script>
 

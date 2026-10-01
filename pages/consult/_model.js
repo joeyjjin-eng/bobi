@@ -33,17 +33,17 @@
     },
     // 03 자산
     as: {
-      '유동자산':    [['예금·현금', 850]],
+      '유동자산':    [['통장·현금', 850]],
       '금융자산':    [['예·적금', 900], ['주택청약', 450], ['주식·펀드·ISA', 300]],
       '연금자산':    [['연금저축·IRP·퇴직연금', 1200], ['보험 적립금', 700]],
-      '부동산·차량': [['거주 주택 (자가)', 0], ['전·월세 보증금', 22000], ['차량', 2000], ['기타 부동산', 0]],
-      '기타자산':    [['대여금·기타', 0]]
+      '부동산·차량': [['사는 집 (자가)', 0], ['전·월세 보증금', 22000], ['자동차', 2000], ['그 밖의 부동산', 0]],
+      '기타자산':    [['빌려준 돈·기타', 0]]
     },
     // 03 부채 — 월 상환액은 02 '부채상환' 합계로도 쓰인다
     debt: [
-      { name: '전세자금대출', at: '국민은행',   bal: 10000, pay: 32, rate: 4, due: '2028.03' },
-      { name: '차량 할부',    at: '현대캐피탈', bal: 1600,  pay: 28, rate: 6, due: '2028.11' },
-      { name: '신용대출',     at: '신한은행',   bal: 700,   pay: 6,  rate: 6, due: '2029.12' }
+      { name: '전세자금대출', at: '국민은행',   bal: 10000, pay: 32, rate: 4, due: '2028.03', principal: 18, interest: 14 },
+      { name: '차량 할부',    at: '현대캐피탈', bal: 1600,  pay: 28, rate: 6, due: '2028.11', principal: 20, interest: 8 },
+      { name: '신용대출',     at: '신한은행',   bal: 700,   pay: 6,  rate: 6, due: '2029.12', principal: 3,  interest: 3 }
     ],
     // 목표 — 종류 6종(비상금·주택구매·결혼자금·자녀학비·노후·기타)
     goals: [
@@ -67,7 +67,9 @@
     var m = clone(SAMPLE);
     Object.keys(m.cf).forEach(function (c) { m.cf[c].items.forEach(function (r) { r[1] = null; r[2] = null; }); });
     Object.keys(m.as).forEach(function (g) { m.as[g].forEach(function (r) { r[1] = null; }); });
-    m.debt.forEach(function (d) { d.bal = null; d.pay = null; d.rate = null; d.due = ''; });
+    // 빚도 목표와 같다 — 금액만 비우면 '전세자금대출·차량 할부·신용대출'이 남아
+    // 고객이 적은 빚처럼 읽힌다. SAMPLE 의 3건은 입력 칸 모양을 보여 주는 예시일 뿐이다.
+    m.debt = [];
     // 목표는 금액만 비우는 게 아니라 줄째로 비운다.
     // 아무것도 안 적었는데 '가족 여행 · 차량 교체 · 첫째 대학 등록금'이 들어 있으면
     // 고객이 적은 목표처럼 읽힌다. SAMPLE 의 3건은 항목 구성을 보여 주는 예시일 뿐이다.
@@ -83,8 +85,11 @@
      값은 읽을 때 버려지고 빈 화면으로 시작한다.
      이게 없으면 화면 코드를 아무리 고쳐도 브라우저에 남은 옛 값이 그대로 읽힌다
      (`blank()` 은 저장된 게 없을 때만 도는 함수라 손이 닿지 않는다).
-     v2 — 빈 상태에서 목표를 줄째 비우도록 바꿈 (2026-10-01) */
-  var VERSION = 2;
+     v2 — 빈 상태에서 목표를 줄째 비우도록 바꿈 (2026-10-01)
+     v3 — 03 자산 항목 이름을 기획 문서 표에 맞춤 (2026-10-01)
+     v4 — 부채에 이번 달 원금·이자 추가 (2026-10-01)
+     v5 — 빈 상태에서 빚도 줄째 비움 (2026-10-01) */
+  var VERSION = 5;
 
   function load() {
     try {
@@ -132,6 +137,8 @@
     var fixed    = groupTotal(m, FIXED);
     var vari     = groupTotal(m, VARI);
     var debtPay  = round1(m.debt.reduce(function (s, d) { return s + (Number(d.pay) || 0); }, 0));
+    // 이자는 쓴 돈이라 비용이고, 원금은 빚이 줄어드는 것이라 비용이 아니다
+    var interest = round1(m.debt.reduce(function (s, d) { return s + (Number(d.interest) || 0); }, 0));
     var saving   = catTotal(m, '저축');
     var expense  = round1(fixed + vari + debtPay + saving);
     var balance  = round1(income - expense);
@@ -143,7 +150,7 @@
     var liab = m.debt.reduce(function (s, d) { return s + (Number(d.bal) || 0); }, 0);
 
     return {
-      income: income, fixed: fixed, vari: vari, debtPay: debtPay, saving: saving,
+      income: income, fixed: fixed, vari: vari, debtPay: debtPay, interest: interest, saving: saving,
       expense: expense, balance: balance,
       assets: assets, liab: liab, net: assets - liab,
       incomeUnknown: m.cf['수입'] ? unknown(m.cf['수입'].items, 1) : 0
