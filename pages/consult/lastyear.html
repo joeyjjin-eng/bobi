@@ -11,7 +11,17 @@
 <style>
   html, body { margin: 0; background: #fff; }
   .cE .ly-body { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 28px; align-items: start; }
-  @media (max-width: 960px) { .cE .ly-body { grid-template-columns: 1fr; gap: 20px; } }
+  /* 셸이 961px 위에서 1100px 로 고정돼(.layout min-width) 본문 폭이 780px 까지 줄어든다.
+     왼쪽 칸이 330px 그대로면 오른쪽 표가 칸 밖으로 밀려나므로 왼쪽을 좁혀 2단을 유지한다. */
+  .cE .ly-c-year { width: 130px; }
+  .cE .ly-c-dif  { width: 120px; }
+  @media (max-width: 1320px) {
+    .cE .ly-body { grid-template-columns: 250px minmax(0, 1fr); gap: 20px; }
+    /* 금액 칸을 줄여 '항목' 설명이 석 줄로 쪼개지지 않게 한다 */
+    .cE .ly-c-year { width: 96px; }
+    .cE .ly-c-dif  { width: 88px; }
+  }
+  @media (max-width: 960px)  { .cE .ly-body { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
 </style>
 </head>
 <body>
@@ -110,9 +120,9 @@
           <table class="ct-tbl">
             <thead><tr>
               <th>항목</th>
-              <th class="amt" style="width:130px;"><span id="ly-h-cur">2025년</span></th>
-              <th class="amt" style="width:130px;"><span id="ly-h-prv">2024년</span></th>
-              <th class="amt" style="width:120px;">증감</th>
+              <th class="amt ly-c-year"><span id="ly-h-cur">2025년</span></th>
+              <th class="amt ly-c-year"><span id="ly-h-prv">2024년</span></th>
+              <th class="amt ly-c-dif">증감</th>
             </tr></thead>
             <tbody id="ly-rows"></tbody>
             <tfoot><tr>

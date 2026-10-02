@@ -51,8 +51,6 @@
     <div class="ct-panel">
       <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 20px;color:var(--ink);">설계사가 적는 칸</h2>
 
-      <div class="ct-hint" style="margin-bottom:20px;">상담을 마치며 설계사가 적습니다. 상담결과 화면에 적은 그대로 고객에게 보입니다.</div>
-
       <!-- 02·03 금액을 고치면 결론을 다시 확인해야 한다 -->
       <div class="ct-warn" id="wu-stale" style="margin-bottom:20px;" hidden>
         <b>숫자가 바뀌었습니다.</b> 적어 둔 결론 문장을 다시 확인해 주세요.
@@ -67,18 +65,71 @@
 
         <div class="ct-f">
           <span class="lb st">고민에 대한 오늘의 답</span>
-          <span class="ct-note" id="wu-wish">고민 · 01 기본정보에 적은 상담목표가 여기 표시됩니다</span>
+          <span class="ct-note" id="wu-wish"></span>
           <textarea class="ct-nat" id="wu-answer" placeholder="고객이 물은 것에 대한 답을 적습니다."></textarea>
         </div>
 
         <div class="ct-f">
           <span class="lb st">AI 평가</span>
-          <div class="ct-in" style="color:var(--ink-4);">API 연동 시 표시</div>
+          <!-- API 연동 전이라 자리만 잡아 둔다. 연동되면 알약을 떼고 평가 문장을 넣는다. -->
+          <div class="ct-ai">
+            <span class="ai-ic"><svg class="ic-svg" width="15" height="15"><use href="#i-sparkles"/></svg></span>
+            <span class="ai-t">상담 내용을 바탕으로 AI가 평가를 적어 드립니다</span>
+            <span class="ai-tag">준비 중</span>
+          </div>
         </div>
 
-        <div class="ct-f" style="max-width:260px;">
-          <span class="lb st">다음 상담일</span>
-          <input type="date" class="ct-nat" id="wu-next" aria-label="다음 상담일" />
+        <!-- 고객과 같이 달을 넘겨 가며 고르는 자리라 달력을 펼쳐 둔다.
+             제목·고른 날짜·시간은 왼쪽에, 달력은 패널 오른쪽 끝에 붙인다. -->
+        <div class="ct-next">
+          <div class="ct-f side">
+            <span class="lb st">다음 상담일</span>
+            <div class="when hint" id="wu-next-when">아직 정하지 않았습니다</div>
+            <div class="tm">
+              <span class="lb">시간<span class="opt"> 선택</span></span>
+              <!-- 오전·오후는 둘 중 하나라 버튼으로, 시·분은 고르는 값이라 드롭다운으로.
+                   분은 상담 약속에 쓰는 단위만 둔다(10분). -->
+              <div class="tmrow">
+                <div class="ct-seg ampm" id="wu-ampm">
+                  <div data-ap="AM" class="on">오전</div>
+                  <div data-ap="PM">오후</div>
+                </div>
+                <select class="ct-nat" id="wu-hour" aria-label="시">
+                  <option value="">시</option>
+                  <option value="1">1시</option>
+                  <option value="2">2시</option>
+                  <option value="3">3시</option>
+                  <option value="4">4시</option>
+                  <option value="5">5시</option>
+                  <option value="6">6시</option>
+                  <option value="7">7시</option>
+                  <option value="8">8시</option>
+                  <option value="9">9시</option>
+                  <option value="10">10시</option>
+                  <option value="11">11시</option>
+                  <option value="12">12시</option>
+                </select>
+                <select class="ct-nat" id="wu-min" aria-label="분">
+                  <option value="00">00분</option>
+                  <option value="10">10분</option>
+                  <option value="20">20분</option>
+                  <option value="30">30분</option>
+                  <option value="40">40분</option>
+                  <option value="50">50분</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="ct-cal" id="wu-cal">
+            <div class="ch">
+              <button type="button" class="nav" data-mv="-1" aria-label="앞 달"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg></button>
+              <span class="m" id="wu-cal-m"></span>
+              <button type="button" class="nav" data-mv="1" aria-label="다음 달"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></button>
+            </div>
+            <div class="dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+            <div class="days" id="wu-cal-days"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -108,7 +159,17 @@
   var M = CT.load();
   M.wrap = M.wrap || { conclusion: '', answer: '', next: '' };
   var $ = function (id) { return document.getElementById(id); };
-  var map = { 'wu-conclusion': 'conclusion', 'wu-answer': 'answer', 'wu-next': 'next' };
+  var map = { 'wu-conclusion': 'conclusion', 'wu-answer': 'answer' };
+
+  /* 무엇에 답하는 칸인지 보이도록 01에 적은 고민을 그대로 얹는다.
+     아직 안 적었으면 어디서 오는 값인지 안내만 둔다. */
+  (function () {
+    var el = $('wu-wish');
+    var wish = (M.basic && M.basic.wish || '').trim();
+    el.textContent = wish ? '고민 · “' + wish + '”'
+                          : '고민 · 01 기본정보에 상담목표를 적으면 여기 표시됩니다';
+    el.classList.toggle('dim', !wish);
+  })();
 
   Object.keys(map).forEach(function (id) {
     var el = $(id), key = map[id];
@@ -116,6 +177,97 @@
     el.addEventListener('change', function () { M.wrap[key] = el.value; CT.save(M); });
     el.addEventListener('blur',   function () { M.wrap[key] = el.value; CT.save(M); });
   });
+
+  /* ===== 다음 상담일 — 달력 =====
+     고객과 함께 달을 넘겨 가며 고르는 자리다. 날짜 칸 하나로는 그 대화가 안 된다.
+     01 에 적은 상담일(없으면 상담 기준일)에는 옅은 테두리를 둘러 기준점을 보여 준다. */
+  (function () {
+    var cal = $('wu-cal'); if (!cal) return;
+    var daysEl = $('wu-cal-days'), monthEl = $('wu-cal-m');
+    var whenEl = $('wu-next-when'), timeEl = $('wu-next-time');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function iso(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+    function parse(v) {
+      return /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(String(v || ''))
+        ? new Date(Number(v.slice(0, 4)), Number(v.slice(5, 7)) - 1, Number(v.slice(8, 10))) : null;
+    }
+    // 상담일 — 01 에 적었으면 그 날, 아니면 모델의 상담 기준일
+    var baseDate = parse((M.basic || {}).date) || parse(CT.BASE_YM + '-28') || new Date();
+    var picked = parse(M.wrap.next);
+    var view = new Date(picked || baseDate); view.setDate(1);
+
+    function paint() {
+      monthEl.textContent = view.getFullYear() + '.' + pad(view.getMonth() + 1);
+
+      var first = new Date(view.getFullYear(), view.getMonth(), 1);
+      var last  = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+      var html = '';
+      for (var b = 0; b < first.getDay(); b++) html += '<div></div>';
+      for (var d = 1; d <= last; d++) {
+        var cur = new Date(view.getFullYear(), view.getMonth(), d);
+        var cls = [];
+        if (cur.getDay() === 0) cls.push('sun');
+        if (picked && iso(cur) === iso(picked)) cls.push('on');
+        if (iso(cur) === iso(baseDate)) cls.push('today');
+        html += '<div class="' + cls.join(' ') + '" data-day="' + iso(cur) + '">' + d + '</div>';
+      }
+      daysEl.innerHTML = html;
+
+      var text = picked ? iso(picked).replace(/-/g, '.') + ' (' + CT.DOW[picked.getDay()] + ')' : '';
+      whenEl.textContent = text || '아직 정하지 않았습니다';
+      whenEl.classList.toggle('hint', !text);
+
+    }
+    function pick(d) {
+      picked = d;
+      M.wrap.next = d ? iso(d) : '';
+      if (!d) { M.wrap.nextTime = ''; writeTime(''); }
+      CT.save(M);
+      if (d) { view = new Date(d); view.setDate(1); }
+      paint();
+    }
+
+    cal.addEventListener('click', function (e) {
+      var mv = e.target.closest('[data-mv]');
+      if (mv) { view.setMonth(view.getMonth() + Number(mv.dataset.mv)); paint(); return; }
+      var day = e.target.closest('[data-day]');
+      if (!day) return;
+      // 고른 날을 다시 누르면 '미정'으로 되돌린다
+      pick(picked && day.dataset.day === iso(picked) ? null : parse(day.dataset.day));
+    });
+
+    /* 시간 — 화면은 오전·오후 + 시 + 분, 저장은 24시간 'HH:MM' 한 가지다.
+       상담결과가 같은 값을 읽으므로 모양만 다르고 담는 값은 하나로 둔다. */
+    var apEl = $('wu-ampm'), hourEl = $('wu-hour'), minEl = $('wu-min');
+    function setAp(v) {
+      apEl.querySelectorAll('[data-ap]').forEach(function (b) { b.classList.toggle('on', b.dataset.ap === v); });
+    }
+    function readTime() {
+      var h = Number(hourEl.value);
+      if (!h) return '';
+      var pm = !!apEl.querySelector('[data-ap="PM"].on');
+      return pad((h % 12) + (pm ? 12 : 0)) + ':' + (minEl.value || '00');
+    }
+    function writeTime(v) {
+      if (!/^[0-9]{2}:[0-9]{2}$/.test(String(v || ''))) { hourEl.value = ''; minEl.value = '00'; setAp('AM'); return; }
+      var H = Number(v.slice(0, 2)), Mi = Number(v.slice(3, 5));
+      setAp(H >= 12 ? 'PM' : 'AM');
+      hourEl.value = String(H % 12 === 0 ? 12 : H % 12);
+      minEl.value = pad(Math.min(50, Math.round(Mi / 10) * 10));   // 10분 단위로 맞춘다
+    }
+    function putTime() { M.wrap.nextTime = readTime(); CT.save(M); paint(); }
+
+    apEl.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ap]'); if (!b) return;
+      setAp(b.dataset.ap); putTime();
+    });
+    hourEl.addEventListener('change', putTime);
+    minEl.addEventListener('change', putTime);
+    writeTime(M.wrap.nextTime);
+
+    paint();
+  })();
 })();
 </script>
 

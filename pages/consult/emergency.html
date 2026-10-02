@@ -12,7 +12,14 @@
   html, body { margin: 0; background: #fff; }
   .cE .em-body { display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 28px; align-items: start; }
   .cE .em-mon { display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; align-items: center; }
-  @media (max-width: 960px) { .cE .em-body { grid-template-columns: 1fr; gap: 20px; } }
+  /* 셸이 961px 위에서 1100px 로 고정돼(.layout min-width) 본문 폭이 780px 까지 줄어든다.
+     왼쪽 칸이 390px 그대로면 오른쪽 표가 칸 밖으로 밀려난다.
+     왼쪽을 300px 로 좁히고, 그 안의 '개월' 두 칸은 세로로 쌓아 2단을 유지한다. */
+  @media (max-width: 1320px) {
+    .cE .em-body { grid-template-columns: 300px minmax(0, 1fr); gap: 20px; }
+    .cE .em-mon { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 960px) { .cE .em-body { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
 </style>
 </head>
 <body>

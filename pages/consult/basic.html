@@ -56,23 +56,25 @@
         <div class="in" style="display:flex;flex-direction:column;gap:20px;">
           <div class="ct-g2">
             <div class="ct-f"><span class="lb">이름<span class="req"> 필수</span></span>
-              <div class="ct-in" data-hint="예) 김민준"></div></div>
+              <div class="ct-in" id="bs-name" data-hint="예) 김민준"></div></div>
             <div class="ct-f"><span class="lb">상담일<span class="req"> 필수</span></span>
-              <input type="date" class="ct-nat" aria-label="상담일" /></div>
+              <input type="date" class="ct-nat" id="bs-date" aria-label="상담일" /></div>
             <div class="ct-f"><span class="lb">주 소득자 직업<span class="opt"> 선택</span></span>
-              <div class="ct-in" data-hint="예) 회사원"></div></div>
+              <div class="ct-in" id="bs-job" data-hint="예) 회사원"></div></div>
             <div class="ct-f"><span class="lb">배우자 직업<span class="opt"> 선택</span></span>
-              <div class="ct-in" data-hint="미해당 시 공란"></div></div>
+              <div class="ct-in" id="bs-spouse-job" data-hint="미해당 시 공란"></div></div>
+            <!-- 주거 형태 — '기타'를 고르면 같은 칸을 둘로 갈라 직접 적는 칸을 연다.
+                 칸을 새로 만들면 옆자리 '수입은 매달 비슷한가요?'가 아래로 밀려 줄이 통째로 바뀐다. -->
             <div class="ct-f"><span class="lb">주거 형태<span class="opt"> 선택</span></span>
-              <select class="ct-nat" id="housing" aria-label="주거 형태">
-                <option value="">아직 확인하지 않았어요</option>
-                <option>자가</option><option>전세</option><option>월세</option><option>기타</option>
-              </select></div>
-            <!-- 주거 형태가 '기타'일 때만 나온다 -->
-            <div class="ct-f" id="housing-note" hidden><span class="lb">기타 주거 형태<span class="opt"> 선택</span></span>
-              <div class="ct-in" data-hint="예) 부모님 집, 사택"></div></div>
+              <div class="ct-pair" id="housing-pair">
+                <select class="ct-nat" id="housing" aria-label="주거 형태">
+                  <option value="">미입력</option>
+                  <option>자가</option><option>전세</option><option>월세</option><option>기타</option>
+                </select>
+                <div class="ct-in" id="bs-housing-etc" data-hint="예) 부모님 집, 사택" aria-label="기타 주거 형태" hidden></div>
+              </div></div>
             <div class="ct-f"><span class="lb">수입은 매달 비슷한가요?<span class="opt"> 선택</span></span>
-              <div class="ct-in" data-hint="예) 매월 비슷함"></div></div>
+              <div class="ct-in" id="bs-income-steady" data-hint="예) 매월 비슷함"></div></div>
           </div>
 
 
@@ -119,11 +121,11 @@
       <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 20px;color:var(--ink);">상담목표</h2>
       <div class="in" style="display:flex;flex-direction:column;gap:20px;">
           <div class="ct-f"><span class="lb">오늘 가장 궁금하거나 걱정되는 것은요?</span>
-            <textarea class="ct-nat" placeholder="고객이 말한 그대로 적습니다."></textarea></div>
+            <textarea class="ct-nat" id="bs-wish" placeholder="예) 매달 버는 만큼 모이지 않는 것 같아요."></textarea></div>
           <div class="ct-f"><span class="lb">유지해야 되는 지출이 있나요?</span>
-            <textarea class="ct-nat" placeholder="예) 아이 교육비는 유지하고 싶어요."></textarea></div>
+            <textarea class="ct-nat" id="bs-keep" placeholder="예) 아이 교육비는 유지하고 싶어요."></textarea></div>
           <div class="ct-f"><span class="lb">앞으로 달라질 일</span>
-            <textarea class="ct-nat" placeholder="예) 내년 봄 이사를 검토 중이에요."></textarea></div>
+            <textarea class="ct-nat" id="bs-change" placeholder="예) 내년 봄 이사를 검토 중이에요."></textarea></div>
       </div>
     </div>
 
@@ -156,11 +158,89 @@
   if (history.replaceState) history.replaceState(null, '', location.pathname);
 })();
 
-/* 주거 형태에서 '기타'를 고를 때만 '기타 주거 형태' 칸을 보여 준다(시안과 같음). */
+/* 01 에 적은 것은 전부 모델에 담는다.
+   담지 않으면 02 로 넘어갔다 돌아오는 순간 사라지고,
+   '01 기본정보 기준'이라고 적힌 혜택 화면의 가구 조건도 읽을 값이 없다.
+   CT.load() 를 두 번 부르면 각자 다른 M 을 들고 서로 덮어쓰므로 한 블록에서 다 한다. */
 (function () {
-  var sel = document.getElementById('housing'), note = document.getElementById('housing-note');
-  if (!sel || !note) return;
-  function sync() { note.hidden = sel.value !== '기타'; }
+  var M = CT.load();
+  var B = M.basic = M.basic || {};
+  if (!B.family) B.family = [];
+
+  /* 칸 종류가 섞여 있다(.ct-in 은 contenteditable, 나머지는 네이티브).
+     읽고 쓰는 방법만 다르고 나머지는 같으므로 여기서 한 번만 가른다. */
+  function read(el) {
+    if (el.tagName === 'DIV') return el.classList.contains('hint') ? '' : el.textContent.trim();
+    return (el.value || '').trim();
+  }
+  function write(el, v) {
+    if (el.tagName !== 'DIV') { el.value = v || ''; return; }
+    if (v) { el.textContent = v; el.classList.remove('hint'); }
+    else if (el.dataset.hint) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
+    else el.textContent = '';
+  }
+
+  var MAP = {
+    'bs-name': 'name', 'bs-date': 'date', 'bs-job': 'job', 'bs-spouse-job': 'spouseJob',
+    'housing': 'housing', 'bs-housing-etc': 'housingEtc', 'bs-income-steady': 'incomeSteady',
+    'bs-wish': 'wish', 'bs-keep': 'keep', 'bs-change': 'change'
+  };
+  Object.keys(MAP).forEach(function (id) {
+    var el = document.getElementById(id), key = MAP[id];
+    if (!el) return;
+    write(el, B[key]);
+    function put() { B[key] = read(el); CT.save(M); }
+    el.addEventListener('change', put);
+    el.addEventListener('blur', put);
+  });
+
+  /* ----- 가족 구성 ----- */
+  var host = document.getElementById('fam-rows');
+  var addCell = host && host.querySelector('[data-add="tpl-fam"]');
+  function famRows() {
+    return Array.prototype.slice.call(host.querySelectorAll('tr:not([data-addrow])'));
+  }
+  function cells(tr) {
+    var d = tr.querySelectorAll('.ct-in'), age = tr.querySelector('input[type="number"]');
+    return { rel: d[0], name: d[1], age: age, job: d[2], note: d[3] };
+  }
+  function collect() {
+    B.family = famRows().map(function (tr) {
+      var c = cells(tr);
+      return { rel: read(c.rel), name: read(c.name), age: read(c.age), job: read(c.job), note: read(c.note) };
+    }).filter(function (r) { return r.rel || r.name || r.age || r.job || r.note; });
+    CT.save(M);
+  }
+
+  // 저장해 둔 줄 수만큼 '가족 추가'를 눌러 칸을 늘린다.
+  // 직접 복제하면 _actions.js 가 걸어 주는 편집 동작이 빠진다.
+  if (host && addCell) {
+    while (famRows().length < B.family.length) addCell.click();
+    famRows().forEach(function (tr, i) {
+      var v = B.family[i]; if (!v) return;
+      var c = cells(tr);
+      write(c.rel, v.rel); write(c.name, v.name); write(c.age, v.age);
+      write(c.job, v.job); write(c.note, v.note);
+    });
+    // 적는 즉시 담는다. 줄을 더하거나 지우는 것도 같이 본다.
+    host.addEventListener('blur', collect, true);
+    host.addEventListener('change', collect, true);
+    if (window.MutationObserver) new MutationObserver(collect).observe(host, { childList: true });
+  }
+})();
+
+/* 주거 형태에서 '기타'를 고를 때만 직접 적는 칸을 연다(시안과 같음).
+   칸을 새로 만들지 않고 한 칸을 둘로 가른다 — 옆줄이 밀려나지 않게. */
+(function () {
+  var sel = document.getElementById('housing');
+  var pair = document.getElementById('housing-pair');
+  var etc = document.getElementById('bs-housing-etc');
+  if (!sel || !pair || !etc) return;
+  function sync() {
+    var on = sel.value === '기타';
+    pair.classList.toggle('split', on);
+    etc.hidden = !on;
+  }
   sel.addEventListener('change', sync);
   sync();
 })();

@@ -54,8 +54,6 @@
       </div>
     </div>
 
-    <div class="ct-hint" style="margin-bottom:20px;">단위: 만원 · 미해당 항목은 0으로 입력</div>
-
     <div class="finance-body">
       <aside class="ct-tot finance-index" id="as-index" aria-label="자산·부채 입력 상태"></aside>
 
@@ -70,11 +68,19 @@
       <div class="ct-panel finance-section" id="debt-section" data-finance-section="부채" style="margin-bottom:0;">
         <div class="ct-card-h" style="margin-bottom:14px;">
           <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">갚을 것</h2>
-          <span class="ct-note">월 상환액은 02 부채상환에 반영</span>
+          <span class="ct-note">월 납입금은 02 부채상환에 반영</span>
         </div>
         <div class="debt-list">
           <div id="debt-rows"></div>
-          <div class="ct-add debt-add" id="debt-add">+ 부채 추가</div>
+          <div class="debt-add">
+            <span class="ct-add" id="debt-add">+ 부채 추가</span>
+            <!-- 매달 갚지 않는 빚 — 월 납입금 칸이 없고 만기에 한 번에 갚는다.
+                 종류를 고르고 눌러 넣는다. -->
+            <span class="debt-lump-add">
+              <select class="ct-nat" id="debt-lump-kind" aria-label="매달 갚지 않는 빚 종류"></select>
+              <span class="ct-add" id="debt-lump">+ 매달 갚지 않는 빚 추가</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -110,6 +116,17 @@
   var dHost = document.getElementById('debt-rows');
   var idx = document.getElementById('as-index');
   var activeSection = '자산';
+
+  /* 기준일 — 적는 잔액이 전부 이 날짜 기준이다.
+     저장하지 않으면 재무재표·상담결과가 코드에 박힌 날짜를 보여 주게 된다. */
+  (function () {
+    var el = document.getElementById('as-date');
+    if (!el) return;
+    el.value = M.asDate || '';
+    function put() { M.asDate = el.value; CT.save(M); }
+    el.addEventListener('change', put);
+    el.addEventListener('blur', put);
+  })();
 
   function buildIndex() {
     var c = CT.calc(M);
@@ -175,8 +192,17 @@
     });
   }
 
+  (function () {
+    var sel = document.getElementById('debt-lump-kind');
+    if (sel) sel.innerHTML = CT.DEBT_LUMP.map(function (k) { return '<option>' + k + '</option>'; }).join('');
+  })();
+
   function buildDebt() {
     dHost.innerHTML = M.debt.map(function (d, i) {
+      // 칸은 기획 문서와 같은 다섯 개: 빚 이름 · 남은 돈 · 월 납입금 · 금리(연 %) · 만기.
+      // '이번 달 원금·이자'는 따로 받지 않는다. 월 납입금과 어긋나게 적을 수 있는데
+      // 그러면 현금흐름표(월 납입금)와 결산(이자)이 서로 다른 말을 하게 된다.
+      // 이자는 남은 돈 × 금리 ÷ 12 로 계산한다(CT.calc).
       // bal·pay = 만원 / rate = % / due = YYYY.MM
       function cell(f) {
         var v = d[f], isDue = (f === 'due'), empty = (v == null || v === '');
@@ -187,16 +213,15 @@
       }
       return '<div class="debt-card">'
         + '<div class="debt-identity">'
+        +   (d.lump ? '<span class="debt-tag">매달 갚지 않는 빚</span>' : '')
         +   '<div class="ct-in" data-hint="부채 이름" data-d="' + i + '" data-f="name">' + d.name + '</div>'
         +   '<div class="ct-in at' + (!d.at ? ' hint' : '') + '" data-hint="금융사" data-d="' + i + '" data-f="at">' + (d.at || '금융사') + '</div>'
         +   '<button type="button" class="del finance-delete with-label" data-act="ddel" data-d="' + i + '"><svg class="ic-svg" width="12" height="12"><use href="#i-trash"/></svg><span class="tx">삭제</span></button>'
         + '</div><div class="debt-fields">'
-        +   '<div class="debt-field"><span class="lb">잔액</span>' + cell('bal') + '</div>'
-        +   '<div class="debt-field"><span class="lb">월 상환</span>' + cell('pay') + '</div>'
-        +   '<div class="debt-field"><span class="lb">금리</span>' + cell('rate') + '</div>'
+        +   '<div class="debt-field"><span class="lb">남은 돈</span>' + cell('bal') + '</div>'
+        +   (d.lump ? '' : '<div class="debt-field"><span class="lb">월 납입금</span>' + cell('pay') + '</div>')
+        +   '<div class="debt-field"><span class="lb">금리(연 %)</span>' + cell('rate') + '</div>'
         +   '<div class="debt-field"><span class="lb">만기</span>' + cell('due') + '</div>'
-        +   '<div class="debt-field"><span class="lb">이번 달 원금</span>' + cell('principal') + '</div>'
-        +   '<div class="debt-field"><span class="lb">이번 달 이자</span>' + cell('interest') + '</div>'
         + '</div></div>';
     }).join('') || '<div class="ct-note" style="padding:20px 0;">등록된 부채 없음 · 아래에서 추가합니다</div>';
     dHost.querySelectorAll('.ct-in[data-d]').forEach(function (el) {
@@ -244,6 +269,11 @@
     }
     if (e.target.closest('#debt-add')) {
       M.debt.push({ name: '새 부채', at: '', bal: null, pay: null, rate: null, due: '' });
+      buildDebt(); commit(); return;
+    }
+    if (e.target.closest('#debt-lump')) {
+      var kind = document.getElementById('debt-lump-kind').value || CT.DEBT_LUMP[0];
+      M.debt.push({ name: kind, at: '', bal: null, pay: null, rate: null, due: '', lump: true });
       buildDebt(); commit(); return;
     }
     // 자산 항목 삭제 · 추가

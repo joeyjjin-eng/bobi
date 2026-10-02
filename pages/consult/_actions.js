@@ -12,8 +12,6 @@
      .ct-add[data-add]          template#<값> 의 줄을 표 끝에 추가
      .ct-more[data-more]        [data-more-item=<값>] 을 모두 보이고 자신은 사라짐
      .ct-tot .li[data-cat]      수입지출 좌측 항목 선택 → 우측 상세 교체
-     .ct-pill[data-weeks]       다음 상담일을 N주 뒤로
-     .ct-cal .days div[data-d]  다음 상담일을 그 날짜로
      [data-print]               인쇄
      [data-todo]                아직 없는 기능 — 토스트로 알림
      .ct-in[contenteditable]    직접 고쳐 쓰기 (힌트는 첫 입력에 지워짐)
@@ -152,25 +150,6 @@
     var cat = t.closest('.ct-tot [data-cat]');
     if (cat) { selectCategory(cat); return; }
 
-    // 다음 상담 — N주 뒤
-    var wk = t.closest('.ct-pill[data-weeks]');
-    if (wk) {
-      $$('.ct-pill[data-weeks]', wk.parentNode).forEach(function (p) { p.classList.remove('on'); });
-      wk.classList.add('on');
-      setNextDate(addWeeks(BASE_DATE, parseInt(wk.dataset.weeks, 10)));
-      return;
-    }
-
-    // 다음 상담 — 달력에서 날짜 선택
-    var day = t.closest('.ct-cal .days div[data-d]');
-    if (day) {
-      $$('.ct-cal .days div[data-d]').forEach(function (d) { d.classList.remove('on'); });
-      day.classList.add('on');
-      $$('.ct-pill[data-weeks]').forEach(function (p) { p.classList.remove('on'); });
-      setNextDate(new Date(2026, 9, parseInt(day.dataset.d, 10)));
-      return;
-    }
-
     // 인쇄
     if (t.closest('[data-print]')) { window.print(); return; }
 
@@ -247,29 +226,10 @@
   }
   function round1(n) { return Math.round(n * 10) / 10; }
 
-  /* ---------- 다음 상담일 ---------- */
-  var BASE_DATE = new Date(2026, 8, 28); // 상담일 2026.09.28
-  var DOW = ['일', '월', '화', '수', '목', '금', '토'];
-  function addWeeks(d, w) { var x = new Date(d); x.setDate(x.getDate() + w * 7); return x; }
-  function fmt(d) {
-    return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.'
-      + String(d.getDate()).padStart(2, '0') + ' (' + DOW[d.getDay()] + ')';
-  }
-  function setNextDate(d) {
-    var text = fmt(d);
-    ['#next-date-hero', '#next-date-field'].forEach(function (sel) {
-      var el = $(sel);
-      if (el) { el.textContent = text; el.classList.remove('hint'); }
-    });
-    // 같은 달이면 달력에도 표시
-    $$('.ct-cal .days div[data-d]').forEach(function (x) {
-      x.classList.toggle('on', d.getMonth() === 9 && parseInt(x.dataset.d, 10) === d.getDate());
-    });
-  }
+  /* 다음 상담일 달력은 04 상담정리(wrapup.html)가 직접 그린다.
+     여기 있던 코드는 2026.10 한 달이 통째로 박힌 시안용이라 치웠다. */
 
   /* ---------- 처음 상태 ---------- */
-  // 신규 작성이면 '4주 후' 같은 선택도 풀어 둔다
-  if (!DEMO) $$('.ct-pill[data-weeks]').forEach(function (p) { p.classList.remove('on'); });
   var openCat = $('.ct-tot [data-cat].on');
   if (openCat) selectCategory(openCat);
 })();

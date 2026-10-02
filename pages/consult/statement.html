@@ -72,7 +72,7 @@
     <!-- ===== 재무상태표 ===== -->
     <div class="ct-panel">
       <div class="ct-card-h" style="margin-bottom:20px;">
-        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">재무상태표 <span class="ct-note">2026.09.28 기준 · 단위 만원</span></h3>
+        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">재무상태표 <span class="ct-note"><span id="st-asof">2026.09.28</span> 기준 · 단위 만원</span></h3>
         <a class="ct-note" href="assets.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">03 자산·부채 수정 ›</a>
       </div>
 
@@ -96,8 +96,9 @@
           <span class="num" style="font-size:28px;font-weight:700;letter-spacing:-0.02em;color:var(--brand-deep);"><span id="st-net">0</span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만원</span></span>
         </div>
         <div class="ct-bar2">
-          <div class="a" id="st-bar-a" style="width:57%;">순자산 57%</div>
-          <div class="b" id="st-bar-b" style="width:43%;">부채 43%</div>
+          <!-- 폭·글자는 CT.bar2 가 채운다. 여기에 예시 비율을 박아 두면 그 값이 잠깐 비친다. -->
+          <div class="a" id="st-bar-a" style="width:0;"></div>
+          <div class="b" id="st-bar-b" style="width:0;"></div>
         </div>
         <div class="ct-bar2-cap" hidden></div>
       </div>
@@ -150,6 +151,7 @@
     var s = M.as[g].reduce(function (a, r) { return a + (Number(r[1]) || 0); }, 0);
     return '<tr><td class="nm">' + (GNAME[g] || g) + '</td><td class="amt">' + CT.comma(s) + '</td></tr>';
   }).join('');
+  $('st-asof').textContent = CT.asDateText(M);
   $('st-assets').textContent = CT.comma(c.assets);
 
   $('st-debt').innerHTML = M.debt.map(function (d) {
@@ -161,7 +163,8 @@
 
   var np = c.assets ? Math.round((c.net / c.assets) * 100) : 0;
   np = Math.max(0, Math.min(100, np));
-  CT.bar2($('st-bar-a'), $('st-bar-b'), np, '순자산', '부채');
+  // 자산도 빚도 안 적었으면 비율이 없다는 뜻으로 null 을 넘겨 빈 막대로 둔다
+  CT.bar2($('st-bar-a'), $('st-bar-b'), (c.assets || c.liab) ? np : null, '순자산', '부채');
 })();
 </script>
 

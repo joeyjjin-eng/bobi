@@ -97,12 +97,17 @@
 <div id="footer-host"></div>
 
 <script src="../../components/layout.js"></script>
+<script src="_model.js"></script>
 <script>
 injectShell('consult');
 
+// 샘플 상담이 들어 있는 고객은 그 상담을 담아 연다(_model.js 가 ?case= 를 읽는다)
+const CASES = (window.CT && CT.caseNames) ? CT.caseNames() : [];
+const resultHref = n => CASES.indexOf(n) >= 0 ? 'result.html?case=' + encodeURIComponent(n) : 'result.html';
+
 const DATA = [
   { name:'김민준', first:'2026.07.21', last:'2026.09.28', next:'2026.10.26', st:'next', s:['07.21','08.25','09.28'] },
-  { name:'이서연', first:'2026.07.30', last:'2026.09.29', next:'', st:'live', s:['07.30','08.28','09.29'] },
+  { name:'이서연', first:'2026.07.30', last:'2026.09.29', next:'2026.11.02', st:'next', s:['07.30','08.28','09.29'] },
   { name:'박지훈', first:'2026.09.26', last:'2026.09.26', next:'', st:'none', s:['09.26'] },
   { name:'최수아', first:'2026.05.16', last:'2026.09.19', next:'2026.10.17', st:'next', s:['05.16','06.20','07.18','08.22','09.19'] },
   { name:'정도윤', first:'2026.07.26', last:'2026.08.30', next:'2026.10.02', st:'next', s:['07.26','08.30'] },
@@ -170,7 +175,7 @@ function render() {
   $('reset').hidden = !(S.q || S.status !== 'all' || S.count !== 'all' || S.first !== 'all');
   $('empty').hidden = list.length > 0;
 
-  $('rows').innerHTML = list.map(d => {
+    $('rows').innerHTML = list.map(d => {
     const n = d.s.length, multi = n > 1, open = multi && S.open === d.name;
     const nxCls = d.st === 'late' ? ' late' : '';
     const row = '<div class="table-row clickable' + (open ? ' open' : '') + '" data-name="' + d.name + '">'
@@ -186,7 +191,7 @@ function render() {
     const sub = open
       ? '<div class="row-sub">' + sessionsOf(d).map(s =>
           '<div class="ct-srow"><span class="n">' + s.n + '</span><span class="d">' + s.date + '</span>'
-          + '<span></span><a href="result.html">결과 보기</a></div>').join('') + '</div>'
+          + '<span></span><a href="' + resultHref(d.name) + '">결과 보기</a></div>').join('') + '</div>'
       : '';
     return row + sub;
   }).join('');
@@ -207,7 +212,7 @@ $('rows').addEventListener('click', e => {
   const el = e.target.closest('[data-name]'); if (!el) return;
   const d = DATA.find(x => x.name === el.dataset.name);
   if (!d) return;
-  if (d.s.length === 1) { location.href = 'result.html'; return; }
+  if (d.s.length === 1) { location.href = resultHref(d.name); return; }
   if (d.s.length > 1) { S.open = S.open === d.name ? null : d.name; render(); }
 });
 $('q').addEventListener('input', e => { S.q = e.target.value; render(); });

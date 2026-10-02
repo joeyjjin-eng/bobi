@@ -11,7 +11,10 @@
 <style>
   html, body { margin: 0; background: #fff; }
   .cE .bf-body { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 28px; align-items: start; }
-  @media (max-width: 960px) { .cE .bf-body { grid-template-columns: 1fr; gap: 20px; } }
+  /* 셸이 961px 위에서 1100px 로 고정돼(.layout min-width) 본문 폭이 780px 까지 줄어든다.
+     왼쪽 칸이 330px 그대로면 오른쪽 표가 칸 밖으로 밀려나므로 왼쪽을 좁혀 2단을 유지한다. */
+  @media (max-width: 1320px) { .cE .bf-body { grid-template-columns: 250px minmax(0, 1fr); gap: 20px; } }
+  @media (max-width: 960px)  { .cE .bf-body { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
 </style>
 </head>
 <body>
@@ -71,13 +74,17 @@
       <div class="ct-stack">
         <div class="ct-card pad">
           <div class="ct-card-t" style="margin-bottom:14px;">가구 조건 <span class="ct-note">· 01 기본정보 기준</span></div>
+          <!-- 값은 01 기본정보에서 읽는다. 여기에 숫자를 박아 두면
+               01 에 무엇을 적든 같은 조건으로 걸러 보여 주게 된다. -->
           <div class="ct-cond">
-            <div class="k">가족 수</div><div class="v">4명</div>
-            <div class="k">연령</div><div class="v">41세</div>
-            <div class="k">자녀</div><div class="v">2명 (12세, 7세)</div>
-            <div class="k">소득 구간</div><div class="v">중위 100–120%</div>
-            <div class="k">직업</div><div class="v">회사원 · 배우자 자영업</div>
+            <div class="k">가족 수</div><div class="v" id="bf-fam"></div>
+            <div class="k">연령</div><div class="v" id="bf-age"></div>
+            <div class="k">자녀</div><div class="v" id="bf-kids"></div>
+            <div class="k">주거</div><div class="v" id="bf-housing"></div>
+            <div class="k">소득 구간</div><div class="v" id="bf-income"></div>
+            <div class="k">직업</div><div class="v" id="bf-job"></div>
           </div>
+          <div class="ct-note" id="bf-cond-note" style="margin-top:10px;" hidden></div>
         </div>
 
         <div class="ct-card pad">
@@ -224,6 +231,7 @@
 <div id="footer-host"></div>
 
 <script src="../../components/layout.js"></script>
+<script src="_model.js"></script>
 <script>
 injectShell('consult');
 
@@ -240,6 +248,53 @@ injectShell('consult');
   if (from && STEP[from]) {
     document.getElementById('back-step').href = STEP[from][0];
     document.getElementById('back-label').textContent = STEP[from][1];
+  }
+})();
+
+/* ===== 가구 조건 — 01 기본정보에 적은 값 그대로 =====
+   본인 나이와 자녀는 '가족 구성' 표의 관계 칸으로 가른다.
+   적지 않은 칸은 꾸며 내지 않고 '미입력'으로 둔다. */
+(function () {
+  var B = (CT.load().basic) || {};
+  var fam = B.family || [];
+  var $ = function (id) { return document.getElementById(id); };
+  function put(id, v) {
+    var el = $(id); if (!el) return;
+    el.textContent = v || '미입력';
+    el.classList.toggle('dim', !v);
+  }
+  function has(s, words) {
+    s = String(s || '');
+    return words.some(function (w) { return s.indexOf(w) >= 0; });
+  }
+
+  var me   = fam.filter(function (r) { return has(r.rel, ['본인', '나']); })[0];
+  var kids = fam.filter(function (r) { return has(r.rel, ['자녀', '아들', '딸', '자식']); });
+
+  // 가구원 수 — '본인' 줄을 안 적었으면 표에 없는 본인을 한 명 더한다
+  var count = fam.length ? fam.length + (me ? 0 : 1) : 0;
+  put('bf-fam',  count ? count + '명' : '');
+  put('bf-age',  me && me.age ? me.age + '세' : '');
+  put('bf-kids', kids.length
+    ? kids.length + '명' + (kids.filter(function (k) { return k.age; }).length
+        ? ' (' + kids.filter(function (k) { return k.age; }).map(function (k) { return k.age + '세'; }).join(', ') + ')'
+        : '')
+    : (fam.length ? '없음' : ''));
+  // 주거 형태 — '기타'면 01 에 적은 기타 주거 형태를 괄호로 붙인다
+  put('bf-housing', B.housing
+    ? B.housing + (B.housing === '기타' && B.housingEtc ? ' · ' + B.housingEtc : '')
+    : '');
+  put('bf-job', [B.job, B.spouseJob ? '배우자 ' + B.spouseJob : ''].filter(Boolean).join(' · '));
+
+  /* 소득 구간은 기준 중위소득 표가 있어야 나온다. 아직 그 표가 붙지 않아 비워 둔다.
+     여기서 임의로 적으면 조건에 맞지 않는 혜택을 맞다고 보여 주게 된다. */
+  put('bf-income', '');
+  var note = $('bf-cond-note');
+  if (note) {
+    note.hidden = false;
+    note.textContent = fam.length
+      ? '소득 구간은 기준 중위소득 자료 연동 후 표시됩니다.'
+      : '01 기본정보에 이름·가족 구성을 적으면 가구 조건이 채워집니다. 소득 구간은 자료 연동 후 표시됩니다.';
   }
 })();
 </script>

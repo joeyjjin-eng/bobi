@@ -31,6 +31,12 @@
   .cE #b-goal .ct-tbl th, .cE #b-goal .ct-tbl tfoot td { white-space: nowrap; }
   /* 결산·재무상태표 — 시안처럼 두 묶음을 나란히 두고 굵은 선으로 합계를 맺는다 */
   .cE .rs-bs, .cE .rs-pl { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px 48px; align-items: start; }
+  /* 수입은 두 줄, 비용은 열두 줄이라 그냥 두면 합계가 서로 다른 높이에 선다.
+     두 칸을 같은 높이로 늘리고 합계만 바닥으로 밀어 한 줄에 맞춘다. */
+  .cE .rs-pl { align-items: stretch; }
+  .cE .rs-pl > div { display: flex; flex-direction: column; }
+  .cE .rs-pl .rs-pl-sum { margin-top: auto; }
+  .cE .rs-pl .ct-kv { gap: 14px 24px; margin-top: 14px; }
   .cE .rs-pl-h { padding-bottom: 12px; border-bottom: 2px solid var(--ink); font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .cE .rs-pl-h .sub { font-weight: 400; color: var(--ink-3); }
   .cE .rs-pl-sum { display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
@@ -115,11 +121,7 @@
         <div class="ct-card pad ct-donut">
           <div class="ring">
             <svg width="200" height="200" viewBox="0 0 340 340" id="rs-donut">
-              <circle cx="170" cy="170" r="140" fill="none" stroke="#44545F" stroke-width="52" stroke-dasharray="384.5 495.1" stroke-dashoffset="0"></circle>
-              <circle cx="170" cy="170" r="140" fill="none" stroke="#42BAFF" stroke-width="64" stroke-dasharray="302.5 577.1" stroke-dashoffset="-386.5"></circle>
-              <circle cx="170" cy="170" r="140" fill="none" stroke="#7C8B97" stroke-width="52" stroke-dasharray="109.6 770" stroke-dashoffset="-691"></circle>
-              <circle cx="170" cy="170" r="140" fill="none" stroke="#1FA463" stroke-width="52" stroke-dasharray="64.8 814.8" stroke-dashoffset="-802.6"></circle>
-              <circle cx="170" cy="170" r="140" fill="none" stroke="#1C50A1" stroke-width="52" stroke-dasharray="8.1 871.5" stroke-dashoffset="-869.4"></circle>
+              <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
             </svg>
             <div class="ctr"><span class="k">수입</span><span class="v" id="rs-income">0</span></div>
           </div>
@@ -127,7 +129,7 @@
         </div>
       </div>
 
-      <!-- 솔루션 / 상담 요청 사항 · 핵심 지표 -->
+      <!-- 솔루션(04에서 적은 글) · 핵심 지표 -->
       <div class="ct-split">
         <div class="ct-stack">
           <div class="ct-card-h">
@@ -135,21 +137,24 @@
             <a class="ct-note" href="wrapup.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">04 상담정리 수정 ›</a>
           </div>
           <!-- 04 상담정리에서 적은 문장을 그대로 읽어 온다. 여기서는 고치지 않는다. -->
-          <div class="ct-f"><span class="lb st">오늘의 결론</span>
-            <div class="ct-in tall" id="rs-conclusion"></div></div>
-          <div class="ct-f"><span class="lb st">고민에 대한 오늘의 답</span>
-            <div class="ct-in tall" id="rs-answer"></div></div>
-          <div class="ct-f"><span class="lb st">AI 평가</span>
-            <div class="ct-in" style="color:var(--ink-4);">API 연동 시 표시</div></div>
-          <div class="ct-f"><span class="lb st">다음 상담일</span>
-            <div class="ct-in" id="rs-next"></div></div>
+          <div class="ct-f read"><span class="lb st">오늘의 결론</span>
+            <div class="ct-read" id="rs-conclusion"></div></div>
+          <div class="ct-f read"><span class="lb st">고민에 대한 오늘의 답</span>
+            <!-- 무엇에 답한 것인지 보이도록 01에 적은 고민을 답 바로 위에 둔다(04 상담정리와 같은 자리) -->
+            <span class="ct-note" id="rs-wish"></span>
+            <div class="ct-read" id="rs-answer"></div></div>
+          <div class="ct-f read"><span class="lb st">AI 평가</span>
+            <!-- API 연동 전이라 자리만 잡아 둔다. 연동되면 알약을 떼고 평가 문장을 넣는다. -->
+            <div class="ct-ai">
+              <span class="ai-ic"><svg class="ic-svg" width="15" height="15"><use href="#i-sparkles"/></svg></span>
+              <span class="ai-t">상담 내용을 바탕으로 AI가 평가를 적어 드립니다</span>
+              <span class="ai-tag">준비 중</span>
+            </div></div>
+          <div class="ct-f read"><span class="lb st">다음 상담일</span>
+            <div class="ct-read" id="rs-next"></div></div>
         </div>
 
         <div class="ct-stack">
-          <div class="ct-quote" >
-            <span class="k">요청</span>
-            <span class="v">“아이 학원비가 늘어나는데 지금처럼 모을 수 있을지 걱정돼요.”</span>
-          </div>
           <div class="ct-card pad" >
             <div class="ct-card-h num" style="margin-bottom:12px;">
               <span class="ct-note" style="font-size:var(--fs-body);">총자산 <span id="rs-assets"></span></span>
@@ -166,29 +171,86 @@
       </div>
     </div>
 
-    <!-- ===================== ② 지출 ===================== -->
-    <div class="ct-panel rs-blk" id="b-spend">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">2</span><h3>지출</h3></div>
+    <!-- ===================== ② 목표 — 적고, 얼마씩 모아야 하는지 보는 자리 ===================== -->
+    <div class="ct-panel rs-blk" id="b-goal">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">2</span><h3>목표</h3></div>
 
-      <div class="ct-split" id="sp-body" hidden>
-        <div class="ct-stack">
-          <div class="ct-hero" id="sp-lead"></div>
-          <div style="font-size:var(--fs-body);color:var(--ink-2);text-wrap:pretty;">모자란 만큼은 저축에서 먼저 빠져요. 식비부터 조정해 보고 다음 상담 때 다시 확인해요.</div>
-          <div class="ct-kv" style="max-width:420px;">
-            <span class="k">고정지출</span><span class="v" id="sp-fixed"></span>
-            <span class="k">변동지출</span><span class="v" id="sp-vari"></span>
-            <span class="k">└ 식비</span><span class="v" id="sp-food"></span>
-            <span class="k tp">조정 목표 · 외식·배달</span><span class="v tp hl">−10만원</span>
+      <div class="ct-card-h" style="margin-bottom:12px;">
+        <div class="ct-card-t">목표 관리</div>
+        <div class="ct-note">여기에 적은 목표가 아래 계산에 반영됩니다</div>
+      </div>
+      <div class="ct-tbl-wrap">
+        <table class="ct-tbl">
+          <thead><tr>
+            <th>목표명</th><th style="width:132px;">종류</th>
+            <th style="width:142px;">목표 시점</th>
+            <th class="amt" style="width:124px;">목표금액</th><th class="amt" style="width:124px;">적립액</th>
+            <th class="amt" style="width:118px;">월 저축액</th><th style="width:72px;"></th>
+          </tr></thead>
+          <tbody id="gl-rows"></tbody>
+          <tfoot><tr>
+            <td colspan="3" id="gl-cnt"></td>
+            <td class="amt" id="gl-need"></td><td class="amt" id="gl-saved"></td>
+            <td class="amt" id="gl-monthly" style="color:var(--brand-deep);"></td><td></td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <div class="ct-note" style="margin-top:12px;">종류: 비상금 · 주택구매 · 결혼자금 · 자녀학비 · 노후 · 기타</div>
+
+      <!-- 목표를 안 적었으면 '매달 0만 원이 필요해요' 같은 빈 계산을 보여 주지 않는다 -->
+      <div class="ct-blank" id="gl-blank" style="margin-top:48px;" hidden>
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-check-circle"/></svg></div>
+        <div class="bt">아직 적은 목표가 없습니다</div>
+        <div class="bd">위 표에 목표를 적으면 매달 얼마씩 모아야 하는지 계산됩니다.</div>
+      </div>
+
+      <div id="gl-body">
+        <div class="ct-card pad" style="margin:48px 0;">
+          <div class="ct-card-h" style="margin-bottom:20px;">
+            <div class="ct-card-t">목표별 적립 현황</div>
+            <div class="ct-note">비율 = 적립액 ÷ 목표금액 · 단위 만원</div>
           </div>
-          <div class="ct-quote"><span class="k">AI 평가</span><span class="v" style="color:var(--ink-3);">API 연동 시 표시</span></div>
+          <div class="ct-goals" id="gl-cards"></div>
+          <!-- 적립액은 목표마다 손으로 적는 값이라 실제 자산과 어긋날 수 있다.
+               시스템이 해 줄 수 있는 건 '둘이 맞는지' 나란히 보여 주는 것까지다. -->
+          <div class="ct-note" id="gl-saved-check" style="margin-top:14px;"></div>
         </div>
 
         <div class="ct-card pad">
           <div class="ct-card-h" style="margin-bottom:14px;">
-            <span class="ct-card-t">시나리오별 월 잔액</span>
-            <span class="ct-note">단위 만원 · 기준선 0</span>
+            <div class="ct-card-t">기간별 필요 저축액</div>
+            <div class="ct-note">현재 월 저축 <span id="gl-now"></span></div>
           </div>
-          <div class="ct-zero" id="sp-bars"></div>
+          <div class="ct-tl" id="gl-tl"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== ③ 지출 — 나가는 돈이 어디에 얼마나 =====================
+         판정하지 않는다. 묶음별로 얼마를 쓰는지 큰 순서로 늘어놓아
+         상담 중에 어디를 볼지 고객과 같이 고르는 자리다. -->
+    <div class="ct-panel rs-blk" id="b-spend">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">3</span><h3>지출</h3></div>
+
+      <div id="sp-body" hidden>
+        <div class="ct-hero" id="sp-lead" style="margin-bottom:28px;"></div>
+
+        <div class="ct-split">
+          <div class="ct-donut">
+            <div class="ring">
+              <svg width="200" height="200" viewBox="0 0 340 340" id="sp-donut">
+                <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
+              </svg>
+              <div class="ctr"><span class="k">나가는 돈</span><span class="v" id="sp-donut-v">0</span></div>
+            </div>
+            <div class="ct-legend" id="sp-band-lg"></div>
+          </div>
+          <div class="ct-kv" style="max-width:420px;align-self:center;">
+            <span class="k">고정지출</span><span class="v" id="sp-fixed"></span>
+            <span class="k">변동지출</span><span class="v" id="sp-vari"></span>
+            <span class="k">부채상환</span><span class="v" id="sp-debt"></span>
+            <span class="k tp">나가는 돈 합계</span><span class="v tp hl" id="sp-total"></span>
+          </div>
         </div>
       </div>
 
@@ -196,101 +258,57 @@
       <div class="ct-blank" id="sp-blank">
         <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
         <div class="bt">아직 계산할 지출이 없습니다</div>
-        <div class="bd">02 수입지출에 금액을 적으면 시나리오별 월 잔액이 나옵니다.</div>
+        <div class="bd">02 수입지출에 금액을 적으면 묶음별로 얼마를 쓰는지 나옵니다.</div>
         <div class="ba"><a class="ct-btn ghost" href="cashflow.html">02 수입지출로</a></div>
       </div>
     </div>
 
-    <!-- ===================== ③ 저축 ===================== -->
-        <div class="ct-panel rs-blk" id="b-save">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">3</span><h3>저축</h3></div>
+    <!-- ===================== ④ 저축 — 지금 속도로 얼마나 쌓이나 =====================
+         수익률을 가정하면 그 순간 꾸며낸 숫자가 된다. 원금만 쌓는다고 보고
+         몇 해 뒤에 얼마가 되는지만 보여 준다. -->
+    <div class="ct-panel rs-blk" id="b-save">
+      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">4</span><h3>저축</h3></div>
 
-      <div class="ct-split" style="margin-bottom:48px;">
-        <div class="ct-stack">
-          <div class="ct-hero" id="rv-nethero"></div>
-          <div class="ct-kv" style="max-width:420px;">
-            <span class="k">월 잔액</span><span class="v" id="rv-bal"></span>
-            <span class="k">총자산</span><span class="v" id="rv-assets"></span>
-            <span class="k">총부채</span><span class="v" id="rv-liab"></span>
-            <span class="k tp">순자산</span><span class="v tp hl" id="rv-net"></span>
-          </div>
+      <div id="rv-body" hidden>
+        <!-- 몇 해 뒤를 볼지 상담 중에 바꿔 가며 본다 -->
+        <div class="ct-hero" style="font-size:var(--fs-h2);">지금 속도면
+          <select class="ct-nat rv-yrsel" id="rv-yr" aria-label="몇 해 뒤">
+            <option value="1">1년</option><option value="3">3년</option>
+            <option value="5">5년</option><option value="10" selected>10년</option>
+            <option value="15">15년</option><option value="20">20년</option>
+            <option value="30">30년</option>
+          </select>
+          뒤 <span class="hl" id="rv-sum">0</span>이 돼요.
         </div>
-        <div class="ct-card pad" style="display:flex;flex-direction:column;gap:14px;justify-content:center;">
-          <div class="ct-sub-t" id="rv-assets2"></div>
-          <div class="ct-bar2" style="height:48px;">
-            <div class="a" id="rv-bar-a"></div><div class="b" id="rv-bar-b"></div>
+
+        <ul class="ct-bul" style="margin-top:16px;">
+          <li>지금 모인 돈 <span class="ct-note">· 금융·연금 자산</span> <b id="rv-seed"></b></li>
+          <li>매달 모으는 돈 <b id="rv-month"></b></li>
+          <li>한 해에 모으는 돈 <b id="rv-year"></b></li>
+        </ul>
+
+        <div class="ct-card-h" style="margin:40px 0 12px;">
+          <div class="ct-card-t">무엇으로 모으고 있나</div>
+          <div class="ct-note">02 저축 · 단위 만원</div>
+        </div>
+        <div class="ct-donut" id="rv-mix" style="max-width:520px;">
+          <div class="ring">
+            <svg width="200" height="200" viewBox="0 0 340 340" id="rv-donut">
+              <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
+            </svg>
+            <div class="ctr"><span class="k">매달</span><span class="v" id="rv-donut-v">0</span></div>
           </div>
-          <div class="ct-bar2-cap" hidden></div>
+          <div class="ct-legend" id="rv-mix-lg"></div>
         </div>
       </div>
 
-      <div class="ct-split">
-        <div class="ct-stack">
-          <div class="ct-hero" id="rv-needhero"></div>
-          <div style="font-size:var(--fs-body);color:var(--ink-2);text-wrap:pretty;" id="rv-needlead"></div>
-          <div class="ct-kv" style="max-width:420px;">
-            <span class="k">현재 월 저축</span><span class="v" id="rv-now"></span>
-            <span class="k">필요 월 저축</span><span class="v" id="rv-need"></span>
-            <span class="k tp">부족액</span><span class="v tp hl" id="rv-short"></span>
-          </div>
-        </div>
-        <div class="ct-card pad">
-          <div class="ct-card-h" style="margin-bottom:14px;">
-            <span class="ct-card-t">월 저축 대비</span><span class="ct-note">단위 만원</span>
-          </div>
-          <div class="ct-stack">
-            <div>
-              <div class="ct-card-h" style="margin-bottom:6px;"><span class="ct-note">현재</span><span class="num" style="font-weight:700;color:var(--ink);" id="rv-now2"></span></div>
-              <div class="ct-track"><i id="rv-track-now" style="background:var(--ink-2);"></i></div>
-            </div>
-            <div>
-              <div class="ct-card-h" style="margin-bottom:6px;"><span class="ct-note" style="color:var(--brand-deep);font-weight:700;">필요</span><span class="num" style="font-weight:700;color:var(--brand-deep);" id="rv-need2"></span></div>
-              <div class="ct-track"><i style="width:100%;"></i></div>
-            </div>
-          </div>
-        </div>
+      <div class="ct-blank" id="rv-blank2">
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-check-circle"/></svg></div>
+        <div class="bt">아직 모으는 돈이 없습니다</div>
+        <div class="bd">02 수입지출의 저축 항목을 적으면 몇 해 뒤에 얼마가 되는지 나옵니다.</div>
+        <div class="ba"><a class="ct-btn ghost" href="cashflow.html">02 수입지출로</a></div>
       </div>
     </div>
-
-    <!-- ===================== ④ 목표별 ===================== -->
-    <div class="ct-panel rs-blk" id="b-goal">
-      <div class="ct-numh" style="margin-bottom:20px;"><span class="n">4</span><h3>목표별</h3></div>
-
-      <div class="ct-card pad" style="margin-bottom:48px;">
-        <div class="ct-card-h" style="margin-bottom:20px;">
-          <div class="ct-card-t">목표별 진행률</div><div class="ct-note">단위 만원</div>
-        </div>
-        <div class="ct-goals" id="gl-cards"></div>
-      </div>
-
-      <div class="ct-card pad" style="margin-bottom:48px;">
-        <div class="ct-card-h" style="margin-bottom:14px;">
-          <div class="ct-card-t">기간별 필요 저축액</div>
-          <div class="ct-note">현재 월 저축 <span id="gl-now"></span></div>
-        </div>
-        <div class="ct-tl" id="gl-tl"></div>
-      </div>
-
-      <div class="ct-card-h" style="margin-bottom:12px;"><div class="ct-card-t">목표 관리</div></div>
-      <div class="ct-tbl-wrap">
-        <table class="ct-tbl">
-          <thead><tr>
-            <th>목표명</th><th style="width:132px;">종류</th><th style="width:112px;">기간</th>
-            <th style="width:142px;">목표 시점</th>
-            <th class="amt" style="width:124px;">목표금액</th><th class="amt" style="width:124px;">적립액</th>
-            <th class="amt" style="width:118px;">월 저축액</th><th style="width:72px;"></th>
-          </tr></thead>
-          <tbody id="gl-rows"></tbody>
-          <tfoot><tr>
-            <td colspan="4" id="gl-cnt"></td>
-            <td class="amt" id="gl-need"></td><td class="amt" id="gl-saved"></td>
-            <td class="amt" id="gl-monthly" style="color:var(--brand-deep);"></td><td></td>
-          </tr></tfoot>
-        </table>
-      </div>
-      <div class="ct-note" style="margin-top:12px;">종류: 비상금 · 주택구매 · 결혼자금 · 자녀학비 · 노후 · 기타</div>
-    </div>
-
 
     <div class="ct-navrow" style="margin-top:20px;">
       <a class="ct-btn ghost" href="wrapup.html">
@@ -326,6 +344,33 @@
           <td class="amt" id="cf-bal" style="color:var(--brand-deep);">0</td>
         </tr></tfoot>
       </table>
+
+      <!-- 02 '이번 달만 있었던 큰돈'(일시 수입·일시 지출).
+           매달 되풀이되는 돈이 아니라 월 잔액(①−②−③)에는 넣지 않고 따로 적어 둔다.
+           적은 게 하나도 없으면 통째로 숨긴다. -->
+      <div id="cf-once-wrap" style="margin-top:28px;" hidden>
+        <div class="ct-card-h" style="margin-bottom:6px;">
+          <div class="ct-card-t">이번 달만 있었던 큰돈</div>
+          <div class="ct-note">월 잔액에는 넣지 않습니다</div>
+        </div>
+        <table class="ct-tbl rs-cf">
+          <thead><tr><th>구분</th><th class="amt" style="width:170px;">금액</th></tr></thead>
+          <tbody id="cf-once"></tbody>
+        </table>
+      </div>
+
+      <!-- 02 에서 목표 금액을 적은 항목만 비교한다. 목표를 안 적은 항목은 비교 대상이 아니다.
+           목표를 적은 게 하나도 없거나 전부 목표 안이면 통째로 숨긴다. -->
+      <div id="cf-over-wrap" style="margin-top:40px;" hidden>
+        <div class="ct-card-h" style="margin-bottom:6px;">
+          <div class="ct-card-t">목표보다 많이 쓴 항목</div>
+          <div class="ct-note">단위 만원</div>
+        </div>
+        <table class="ct-tbl rs-cf">
+          <tbody id="cf-over"></tbody>
+        </table>
+        <div class="ct-note" style="margin-top:12px;">상담 때 정한 목표와 비교했어요. 줄일지는 함께 정해요.</div>
+      </div>
 
       <div class="ct-note" style="margin-top:14px;">금액을 고칠 곳은 해당 단계로 돌아가 고칩니다.
         <a href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 ›</a>
@@ -364,7 +409,8 @@
         <span class="num" style="font-size:28px;font-weight:700;letter-spacing:-0.02em;color:var(--brand-deep);"><span id="pl-net">0</span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만원</span></span>
       </div>
 
-      <div class="ct-note" style="margin-top:14px;">저축·투자, 원금 상환, 자산 구입은 비용이 아니라 현금흐름표 ③에서 봅니다.
+      <div class="ct-note" style="margin-top:14px;">저축·투자와 원금 상환은 비용이 아니라 현금흐름표 ③에서,
+        목돈이 오간 것은 현금흐름표 아래 ‘이번 달만 있었던 큰돈’에서 봅니다.
         집·자동차 가치 변화는 반영하지 않습니다.</div>
     </div>
     </div>
@@ -377,7 +423,7 @@
         <a class="ct-note" href="assets.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">03 자산·부채 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">지금 가진 것과 갚을 것
-        <span class="ct-note">· 2026.09.28 기준 · 단위 만원 · 금액이 0인 줄은 숨김</span>
+        <span class="ct-note">· <span id="bs-asof">2026.09.28</span> 기준 · 단위 만원 · 금액이 0인 자산 묶음은 숨김</span>
       </div>
 
       <div class="rs-bs">
@@ -432,7 +478,9 @@
     ['저축',     c.saving,  '#1FA463', 0],
     ['잔액',     c.balance, '#1C50A1', 1]
   ];
-  var R = 140, C = 2 * Math.PI * R, base = c.income || 1, off = 0, svg = '';
+  var R = 140, C = 2 * Math.PI * R, base = c.income || 1, off = 0;
+  // 바탕 고리를 먼저 깐다. 적은 값이 하나도 없어도 그래프 모양은 서 있어야 한다.
+  var svg = '<circle class="trk" cx="170" cy="170" r="' + R + '" fill="none" stroke-width="52"></circle>';
   SEG.forEach(function (s) {
     var len = Math.max(0, s[1]) / base * C;
     svg += '<circle cx="170" cy="170" r="' + R + '" fill="none" stroke="' + s[2]
@@ -451,36 +499,49 @@
   // 순자산 카드
   var np = c.assets ? Math.max(0, Math.min(100, Math.round(c.net / c.assets * 100))) : 0;
   // 비중이 작은 쪽 글자가 칸 안에서 세로로 쪼개지지 않게 CT.bar2 가 맡는다
-  function bar(a, b) { CT.bar2($(a), $(b), np, '순자산', '부채'); }
+  // 자산도 빚도 안 적었으면 비율이 없다는 뜻으로 null 을 넘겨 빈 막대로 둔다
+  var hasBs = !!(c.assets || c.liab);
+  function bar(a, b) { CT.bar2($(a), $(b), hasBs ? np : null, '순자산', '부채'); }
   $('rs-assets').textContent = CT.won(c.assets);
   $('rs-net').textContent    = CT.won(c.net);
   bar('rs-bar-a', 'rs-bar-b');
-  $('rs-gcnt').textContent = '목표 ' + CT.goalSum(M).count + '건';
-  $('rs-gneed').textContent = CT.comma(CT.goalSum(M).monthly) + '만원';
-  $('rs-gnow').textContent = CT.comma(c.saving) + '만원';
+  var gs = CT.goalSum(M);
+  if (gs.count) {
+    $('rs-gcnt').textContent  = '목표 ' + gs.count + '건';
+    $('rs-gneed').textContent = CT.comma(gs.monthly) + '만원';
+    $('rs-gnow').textContent  = CT.comma(c.saving) + '만원';
+  } else {
+    // 목표가 없으면 '월 0만원'이 아니라 적으러 가는 길을 보여 준다
+    $('rs-gcnt').parentNode.textContent = '아직 적은 목표가 없습니다';
+    $('rs-gneed').parentNode.innerHTML = '<span class="ct-note" style="font-weight:600;color:var(--brand-deep);cursor:pointer;" data-go-goal>02 목표에 적기 ›</span>';
+  }
 
-  /* ===== ③ 저축 ===== */
+  /* ===== ② 목표 — 목표까지 매달 얼마씩 =====
+     판정하지 않는다. 필요한 돈과 지금 모으는 돈을 나란히 놓고 차이만 말한다. */
+  /* 원그래프 하나 그리기 — 둘레를 비율대로 잘라 쓴다(① 요약 도넛과 같은 방식).
+     적은 값이 없으면 바탕 고리만 남아 자리가 비지 않는다. */
+  function donut(id, segs, base) {
+    var R = 140, C = 2 * Math.PI * R, off = 0;
+    var svg = '<circle class="trk" cx="170" cy="170" r="' + R + '" fill="none" stroke-width="52"></circle>';
+    segs.forEach(function (s) {
+      var len = Math.max(0, s.v) / (base || 1) * C;
+      svg += '<circle cx="170" cy="170" r="' + R + '" fill="none" stroke="' + s.c
+        + '" stroke-width="52" stroke-dasharray="' + len.toFixed(1) + ' ' + (C - len).toFixed(1)
+        + '" stroke-dashoffset="' + (-off).toFixed(1) + '"></circle>';
+      off += len;
+    });
+    $(id).innerHTML = svg;
+  }
+
   var g = CT.goalSum(M);
-  var short = Math.max(0, g.monthly - c.saving);
-  $('rv-nethero').innerHTML = '자산 가운데 <span class="hl">' + np + '%</span>가 온전히 우리 집 몫이에요.';
-  $('rv-bal').textContent    = CT.won(c.balance);
-  $('rv-assets').textContent = CT.won(c.assets);
-  $('rv-liab').textContent   = CT.won(c.liab);
-  $('rv-net').textContent    = CT.won(c.net);
-  $('rv-assets2').textContent = '총자산 ' + CT.won(c.assets);
-  bar('rv-bar-a', 'rv-bar-b');
+  var gap = CT.round1(g.monthly - c.saving);     // +면 모자람, −면 여유
+  var hasGoal = g.count > 0;
+  $('gl-blank').hidden = hasGoal;
+  $('gl-body').hidden  = !hasGoal;
 
-  $('rv-needhero').innerHTML = '목표를 모두 지키려면 매달 <span class="hl">' + CT.comma(g.monthly) + '만 원</span>이 필요해요.';
-  $('rv-needlead').textContent = '지금은 매달 ' + CT.comma(c.saving) + '만 원을 모으고 있어요. '
-    + (short ? CT.comma(short) + '만 원이 모자라요.' : '모자라지 않아요.');
-  $('rv-now').textContent   = CT.comma(c.saving) + '만원';
-  $('rv-need').textContent  = CT.comma(g.monthly) + '만원';
-  $('rv-short').textContent = '월 ' + CT.comma(short) + '만원';
-  $('rv-now2').textContent  = CT.comma(c.saving);
-  $('rv-need2').textContent = CT.comma(g.monthly);
-  $('rv-track-now').style.width = (g.monthly ? Math.min(100, Math.round(c.saving / g.monthly * 100)) : 0) + '%';
 
-  /* ===== ④ 목표별 ===== */
+
+  /* 목표별 진행률 */
   $('gl-cards').innerHTML = g.list.length ? g.list.map(function (x) {
     return '<div class="ct-goal flat">'
       + '<div class="gk"><span class="cat">' + x.kind + '</span><span class="dt">' + x.due + '</span></div>'
@@ -492,67 +553,124 @@
       + '</div>';
   }).join('') : '<div class="ct-note">등록된 목표 없음</div>';
 
-  /* ===== ③ 지출 — 시나리오별 월 잔액 =====
-     '학원비 +15 / 외식·배달 −10' 은 상담에서 함께 세우는 가정이고,
-     바탕이 되는 월 잔액·지출은 02 에 적은 값에서 가져온다.
-     02 를 아직 안 적었으면 숫자를 지어내지 않고 빈 상태를 보여 준다. */
+  /* 목표에 적은 적립액 합계와 03 에 적은 금융·연금 자산을 나란히 둔다.
+     목표별 적립액은 손으로 적는 값이라 같은 돈을 두 번 세도 아무도 못 막는다.
+     맞추라고 하지 않고, 어긋나면 어긋난 대로 보여 주기만 한다. */
   (function () {
-    var UP = 15, CUT = 10;                       // 가정 — 학원비 증가 / 외식·배달 절감
+    var el = $('gl-saved-check');
+    if (!g.list.length) { el.textContent = ''; return; }
+    var savedSum = g.list.reduce(function (s2, x) { return s2 + x.saved; }, 0);
+    var own = 0;
+    ['금융자산', '연금자산'].forEach(function (k) {
+      (M.as[k] || []).forEach(function (r) { own += Number(r[1]) || 0; });
+    });
+    if (!own) { el.textContent = '목표에 적은 적립액 합계 ' + CT.comma(savedSum) + '만원'; return; }
+    var diff = CT.round1(own - savedSum);
+    el.textContent = '목표에 적은 적립액 합계 ' + CT.comma(savedSum) + '만원 · '
+      + '03 에 적은 금융·연금 자산 ' + CT.comma(own) + '만원'
+      + (diff === 0 ? ' · 같습니다'
+        : diff > 0 ? ' · 자산이 ' + CT.comma(diff) + '만원 많습니다'
+                   : ' · 적립액이 ' + CT.comma(-diff) + '만원 많습니다');
+  })();
+
+  /* ===== ③ 지출 — 나가는 돈이 어디에 얼마나 =====
+     저축은 쌓이는 돈이라 빼고, 생활비(고정·변동)와 부채상환만 센다.
+     어디를 줄이라고 말하지 않는다. 큰 순서로 늘어놓기만 한다. */
+  (function () {
     var has = !!(c.income || c.expense);
     $('sp-body').hidden  = !has;
     $('sp-blank').hidden = has;
     if (!has) return;
 
-    var now = c.balance, after = CT.round1(now - UP), fixed2 = CT.round1(after + CUT);
-    var short = Math.max(0, -after);
+    var rows = CT.FIXED.map(function (k) { return { name: k, v: CT.catTotal(M, k), grp: '고정지출' }; })
+      .concat(CT.VARI.map(function (k) { return { name: k, v: CT.catTotal(M, k), grp: '변동지출' }; }));
+    if (c.debtPay) rows.push({ name: '부채상환', v: c.debtPay, grp: '빚 갚는 돈' });
+    rows = rows.filter(function (r) { return r.v > 0; }).sort(function (a, b) { return b.v - a.v; });
 
-    $('sp-lead').innerHTML = short
-      ? '학원비가 늘면 한 달에 <span class="hl">' + CT.comma(short) + '만 원이 모자라요.</span>'
-      : '학원비가 늘어도 한 달에 <span class="hl">' + CT.comma(after) + '만 원이 남아요.</span>';
+    var total = CT.round1(c.fixed + c.vari + c.debtPay);
+    var top = rows[0];
+
+    $('sp-lead').innerHTML = top
+      ? '한 달에 <span class="hl">' + CT.comma(total) + '만 원</span>이 나가요.'
+      : '아직 적은 지출이 없어요.';
     $('sp-fixed').textContent = CT.comma(c.fixed) + '만원';
     $('sp-vari').textContent  = CT.comma(c.vari) + '만원';
-    $('sp-food').textContent  = CT.comma(CT.catTotal(M, '식비')) + '만원';
+    $('sp-debt').textContent  = CT.comma(c.debtPay) + '만원';
+    $('sp-total').textContent = CT.comma(total) + '만원';
 
-    // 기준선 0을 가운데 두고, 가장 큰 값에 맞춰 좌우 폭을 잡는다
-    var rows = [['현재', now, false], ['학원비 +' + UP + '만원', after, false],
-                ['외식·배달 −' + CUT + '만원', fixed2, true]];
-    var max = Math.max.apply(null, rows.map(function (r) { return Math.abs(r[1]); })) || 1;
-    $('sp-bars').innerHTML = rows.map(function (r) {
-      var v = r[1], w = (Math.abs(v) / max * 100).toFixed(1);
-      var bar = '<div class="bar ' + (v < 0 ? 'neg' : 'pos') + (r[2] ? ' on' : '')
-        + '" style="width:' + w + '%;min-width:6px;"></div>';
-      return '<div class="zr' + (r[2] ? ' hi' : '') + '"><span class="k">' + r[0] + '</span>'
-        + '<div class="tr"><div class="lf">' + (v < 0 ? bar : '') + '</div>'
-        + '<div>' + (v < 0 ? '' : bar) + '</div></div>'
-        // 라벨의 '−10만원' 과 같은 빼기 기호를 쓴다 (toLocaleString 은 하이픈을 준다)
-        + '<span class="vv">' + (v > 0 ? '+' : '') + CT.comma(v).replace('-', '−') + '</span></div>';
+    /* 한 줄 띠 — 묶음이 많아 색을 다 구분하면 오히려 안 읽힌다.
+       큰 묶음 다섯만 색을 주고 나머지는 '그 밖'으로 묶는다. */
+    var TONE = ['#44545F', '#42BAFF', '#7C8B97', '#1FA463', '#1C50A1'];
+    var band = rows.slice(0, 5).map(function (r, i) { return { name: r.name, v: r.v, c: TONE[i] }; });
+    var restV = CT.round1(rows.slice(5).reduce(function (s, r) { return s + r.v; }, 0));
+    if (restV) band.push({ name: '그 밖', v: restV, c: 'var(--line-strong)' });
+
+    $('sp-donut-v').textContent = CT.comma(total);
+    donut('sp-donut', band, total);
+    $('sp-band-lg').innerHTML = band.map(function (b) {
+      return '<div class="lr"><div class="sw" style="background:' + b.c + ';"></div>'
+        + '<span>' + b.name + '</span><strong>' + CT.comma(b.v) + '</strong>'
+        + '<span class="pc">' + CT.pct(b.v, total) + '%</span></div>';
     }).join('');
   })();
 
-  // 기간별 필요 저축액 — 가로축은 지금부터 마지막 목표까지
+  /* ===== ④ 저축 — 지금 속도로 몇 해 뒤에 얼마 =====
+     수익률은 넣지 않는다. 넣는 순간 지어낸 숫자가 된다. 원금만 쌓는다. */
+  (function () {
+    var seed = 0;
+    ['금융자산', '연금자산'].forEach(function (k) {
+      (M.as[k] || []).forEach(function (r) { seed += Number(r[1]) || 0; });
+    });
+    var monthly = c.saving, yearly = CT.round1(monthly * 12);
+    $('rv-body').hidden   = !(monthly || seed);
+    $('rv-blank2').hidden = !!(monthly || seed);
+    if (!(monthly || seed)) return;
+
+    $('rv-seed').textContent  = CT.won(seed);
+    $('rv-month').textContent = CT.comma(monthly) + '만원';
+    $('rv-year').textContent  = CT.won(yearly);
+
+    // 고른 햇수대로 다시 센다
+    var yrSel = $('rv-yr');
+    function paintYear() {
+      $('rv-sum').textContent = CT.won(CT.round1(seed + yearly * Number(yrSel.value)));
+    }
+    yrSel.addEventListener('change', paintYear);
+    paintYear();
+
+    /* 무엇으로 모으고 있나 — 02 저축 항목 그대로 */
+    var mix = ((M.cf['저축'] || {}).items || [])
+      .map(function (r) { return { name: r[0], v: Number(r[1]) || 0 }; })
+      .filter(function (r) { return r.v > 0; }).sort(function (a, b) { return b.v - a.v; });
+    var MIXTONE = ['#1FA463', '#42BAFF', '#1C50A1', '#44545F', '#7C8B97'];
+    mix.forEach(function (r, i) { r.c = MIXTONE[i % MIXTONE.length]; });
+    $('rv-donut-v').textContent = CT.comma(monthly);
+    donut('rv-donut', mix, monthly);
+    $('rv-mix-lg').innerHTML = mix.length ? mix.map(function (r) {
+      return '<div class="lr"><div class="sw" style="background:' + r.c + ';"></div>'
+        + '<span>' + r.name + '</span><strong>' + CT.comma(r.v) + '</strong>'
+        + '<span class="pc">' + CT.pct(r.v, monthly) + '%</span></div>';
+    }).join('') : '<div class="ct-note">02 수입지출에 저축 항목을 적으면 나옵니다</div>';
+  })();
   $('gl-now').textContent = CT.comma(c.saving);
-  var ph = CT.goalPhases(M), span = ph.length ? ph[ph.length - 1].to : 1;
+  /* 막대만 둔다. 구간 합계 띠와 막대 끝 날짜·금액은 좁은 칸에서 서로 겹쳐
+     읽히지 않았고, 같은 값이 바로 위 '목표별 진행률'과 표에 이미 있다. */
+  var span = g.list.reduce(function (m, x) { return Math.max(m, x.months); }, 1);
   var TONE = ['var(--ink-2)', 'var(--brand-deep)', 'var(--brand)'];
+
+  /* 목표가 겹치는 동안은 그만큼 더 모아야 한다. 목표 하나가 끝날 때마다 금액이 내려간다.
+     구간마다 달라지는 '매달 모을 돈'만 띠로 올린다 — 건수·날짜는 아래 막대와 표에 있다. */
   var tl = '<div></div><div class="band">'
-    + ph.map(function (p, i) {
-        var w = (p.to - p.from) / span * 100, l = p.from / span * 100;
-        var cls = i === 0 ? 'pk' : (i === 1 ? 'pk2' : 'pk3');
-        return '<div class="' + cls + '" style="left:' + l.toFixed(1) + '%;width:' + w.toFixed(1) + '%;">'
-          + p.count + '건 · 월 ' + CT.comma(p.monthly) + '</div>';
+    + CT.goalPhases(M).map(function (ph, i) {
+        return '<div class="zn' + (i === 0 ? ' first' : '') + '" style="left:' + (ph.from / span * 100).toFixed(1)
+          + '%;width:' + ((ph.to - ph.from) / span * 100).toFixed(1) + '%;">'
+          + '<span>월 ' + CT.comma(ph.monthly) + '</span></div>';
       }).join('')
     + '</div>';
   g.list.slice().sort(function (a, b) { return a.months - b.months; }).forEach(function (x, i) {
-    var w = x.months / span * 100;
-    // 막대가 길면 라벨이 카드 밖으로 밀린다. 그럴 때는 막대 안쪽 끝에 붙인다.
-    var inside = w > 62;
-    var pos = inside
-      ? 'right:calc(' + (100 - w).toFixed(1) + '% + 10px);'
-      : 'left:calc(' + w.toFixed(1) + '% + 8px);';
     tl += '<div class="rl">' + x.name + '</div>'
       + '<div class="lane">'
-      +   '<div class="seg" style="width:' + w.toFixed(1) + '%;background:' + TONE[i % 3] + ';"></div>'
-      +   '<span class="cap' + (inside ? ' in' : '') + '" style="' + pos + '">'
-      +     x.due + ' · 월 ' + CT.comma(x.monthly) + '</span>'
+      +   '<div class="seg" style="width:' + (x.months / span * 100).toFixed(1) + '%;background:' + TONE[i % 3] + ';"></div>'
       + '</div>';
   });
   tl += '<div></div><div class="axis">' + axis(span) + '</div>';
@@ -581,7 +699,6 @@
       return '<tr>'
         + '<td class="nm"><div class="ct-in" data-gi="' + i + '" data-gf="name">' + x.name + '</div></td>'
         + '<td>' + sel('kind', i, x.kind, CT.KINDS) + '</td>'
-        + '<td>' + sel('term', i, x.term, CT.TERMS) + '</td>'
         + '<td><div class="ct-in" data-gi="' + i + '" data-gf="due">' + x.due + '</div></td>'
         + amtCell(i, 'need') + amtCell(i, 'saved')
         + '<td class="amt" style="font-weight:700;color:var(--brand-deep);">' + CT.comma(x.monthly) + '</td>'
@@ -638,7 +755,8 @@
 /* 04 상담정리에서 적은 문장과 다음 상담일을 요약에 그대로 보여 준다.
    여기서 고치지 않는다 — 적는 곳은 04 하나뿐이다. */
 (function () {
-  var w = (CT.load().wrap) || {};
+  var M = CT.load();
+  var w = M.wrap || {};
   var $ = function (id) { return document.getElementById(id); };
   function put(id, v, blank) {
     var el = $(id); if (!el) return;
@@ -647,8 +765,28 @@
   }
   put('rs-conclusion', w.conclusion, '오늘의 결론은 상담사가 정리해 드립니다');
   put('rs-answer',     w.answer,     '아직 적지 않았습니다');
-  put('rs-next',       w.next ? w.next.replace(/-/g, '.') : '', '아직 정하지 않았습니다');
+  // 04 에서 고른 날짜와 시간을 같은 문장으로 (CT.nextText)
+  put('rs-next',       CT.nextText(M), '아직 정하지 않았습니다');
+
+  /* 고민 — 01 기본정보에 적은 말. 고객이 한 말이라 따옴표를 씌운다.
+     04 상담정리의 같은 줄과 글자·자리를 맞춘다. */
+  (function () {
+    var el = $('rs-wish');
+    var wish = (M.basic && M.basic.wish || '').trim();
+    el.textContent = wish ? '고민 · “' + wish + '”'
+                          : '고민 · 01 기본정보에 상담목표를 적으면 여기 표시됩니다';
+    el.classList.toggle('dim', !wish);
+  })();
 })();
+
+/* 목표가 없을 때 안내에서 02 목표 자리로 보낸다 */
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('[data-go-goal]')) return;
+  var tab = document.querySelector('[data-tab="sum"]');
+  if (tab) tab.click();
+  var sec = document.getElementById('b-goal');
+  if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
 /* 탭 줄을 단계 바 바로 밑에 붙여 둔다.
    단계 바 높이는 창 폭에 따라 달라질 수 있어 CSS 에 숫자를 박지 않고 재서 넣는다. */
@@ -704,10 +842,55 @@
   grp('모으는 돈', c.saving);
   items(cat('저축'));
   grp('빚 갚는 돈', c.debtPay);
-  items((M.debt || []).map(function (d) { return [d.name + (d.at ? ' · ' + d.at : ''), d.pay]; }));
+  // 매달 갚지 않는 빚은 월 현금흐름에 나가는 돈이 없어 여기 올리지 않는다(재무상태표에는 그대로 잡힌다)
+  items((M.debt || []).filter(function (d) { return !d.lump; })
+    .map(function (d) { return [d.name + (d.at ? ' · ' + d.at : ''), d.pay]; }));
 
   document.getElementById('cf-rows').innerHTML = rows.join('');
   document.getElementById('cf-bal').textContent = CT.comma(c.balance);
+
+  /* ④ 이번 달만 있었던 큰돈 — 02 에서 적는 칸인데 ①②③ 어디에도 들어가지 않는다.
+     되풀이되는 돈이 아니라 월 잔액에 넣으면 그 달만 숫자가 튄다.
+     그래도 적은 값이 화면에서 사라지면 안 되므로 표 아래에 따로 보여 준다. */
+  (function () {
+    var once = [['일시 수입', '들어온 큰돈'], ['일시 지출', '나간 큰돈']];
+    var out = [], any = false;
+    once.forEach(function (o) {
+      var list = cat(o[0]);
+      var sum = list.reduce(function (a, r) { return a + (Number(r[1]) || 0); }, 0);
+      if (!sum) return;
+      any = true;
+      out.push('<tr class="grp"><td>' + o[1] + '</td><td class="amt">' + CT.comma(sum) + '</td></tr>');
+      list.forEach(function (r) {
+        var v = Number(r[1]) || 0;
+        if (!v) return;
+        out.push('<tr class="itm"><td>' + r[0] + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
+      });
+    });
+    document.getElementById('cf-once').innerHTML = out.join('');
+    document.getElementById('cf-once-wrap').hidden = !any;
+  })();
+
+  /* ④ 목표보다 많이 쓴 항목 — 02 에서 목표 금액을 적은 항목만 실제와 견준다.
+     목표를 안 적은 항목(r[2] 가 null)은 견줄 기준이 없으므로 빼고,
+     목표 안에 든 항목도 뺀다. 많이 쓴 것만 큰 순서로 보여 준다. */
+  (function () {
+    var over = [];
+    Object.keys(M.cf).forEach(function (cat) {
+      M.cf[cat].items.forEach(function (r) {
+        var v = Number(r[1]) || 0, goal = r[2];
+        if (goal === null || goal === undefined || goal === '') return;
+        var d = CT.round1(v - Number(goal));
+        if (d > 0) over.push([r[0], d]);
+      });
+    });
+    over.sort(function (a, b) { return b[1] - a[1]; });
+    document.getElementById('cf-over').innerHTML = over.map(function (r) {
+      return '<tr class="grp"><td>' + r[0] + '</td>'
+        + '<td class="amt" style="color:#C92238;">+' + CT.comma(r[1]) + '</td></tr>';
+    }).join('');
+    document.getElementById('cf-over-wrap').hidden = !over.length;
+  })();
 })();
 
 /* ===== 수입·지출 결산 =====
@@ -730,7 +913,7 @@
 
   // 비용 — 생활비 묶음 + 대출·할부 이자
   var cost = CT.FIXED.concat(CT.VARI).map(function (k) { return [k, CT.catTotal(M, k)]; });
-  cost.push(['대출·할부 이자', c.interest]);
+  cost.push(['대출·할부 이자 <span class="ct-note">· 남은 돈 × 금리 ÷ 12</span>', c.interest]);
   rows('pl-out', cost);
   var costSum = CT.round1(c.fixed + c.vari + c.interest);
   $('pl-cost').textContent = CT.comma(costSum) + '만원';
@@ -759,6 +942,9 @@
   function itm(name, v) {
     return '<div class="k">' + name + '</div><div class="v">' + CT.comma(v) + '만원</div>';
   }
+
+  // 03 에 적은 기준일을 그대로 쓴다(안 적었으면 상담일)
+  $('bs-asof').textContent = CT.asDateText(M);
 
   var html = '', liquid = 0;
   Object.keys(M.as).forEach(function (g) {

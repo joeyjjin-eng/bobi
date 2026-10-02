@@ -69,8 +69,6 @@ styles/consult.css            재무상담 전용 클래스 (.ct-*)
 | `.ct-add[data-add="tplId"]` | `<template>` 의 줄을 표 끝에 추가하고 첫 칸에 커서 |
 | `.ct-more[data-more="키"]` | `data-more-item="키"` 를 모두 펴고 자신은 사라짐 |
 | `.ct-tot .li[data-cat="이름"]` | 수입지출 좌측 선택 → 우측 상세 표 교체 |
-| `.ct-pill[data-weeks="N"]` | 다음 상담일을 상담일 + N주로. 달력·문장까지 갱신 |
-| `.ct-cal .days div[data-d="N"]` | 다음 상담일을 그 날짜로 |
 | `[data-print]` | `window.print()` |
 | `[data-todo="문구"]` | 아직 없는 기능 — 토스트로 알림 |
 | `.ct-in` | 직접 고쳐 쓰기(`contenteditable`). 힌트는 첫 입력에 지워지고, 비우면 되돌아옵니다 |
