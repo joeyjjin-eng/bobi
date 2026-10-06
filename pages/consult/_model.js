@@ -191,6 +191,9 @@
     m.debt  = clone(c.debt  || []);
     m.goals = clone(c.goals || []);
     m.wrap  = clone(c.wrap  || {});
+    /* 지난 상담을 열어 보는 자리라 바깥에서 받아 오는 자료(혜택·공공임대·실거래가·연말정산)도
+       이미 조회해 둔 것으로 본다. 새로 적는 상담(blank)은 조회 전이라 이 표시가 없다. */
+    m.fetched = true;
     m.v = VERSION;
     return m;
   }
@@ -206,7 +209,7 @@
      v4 — 부채에 이번 달 원금·이자 추가 (2026-10-01)
      v5 — 빈 상태에서 빚도 줄째 비움 (2026-10-01)
      v6 — 01 상담목표(basic.wish·keep·change)를 모델에 담음 (2026-10-02) */
-  var VERSION = 6;
+  var VERSION = 7;   // 7: 지난 상담에 '조회해 둔 자료' 표시(fetched) 추가
 
   function load() {
     try {

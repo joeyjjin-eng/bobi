@@ -11,6 +11,12 @@
 <style>
   html, body { margin: 0; background: #fff; }
   .cE .bf-body { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 28px; align-items: start; }
+  .cE .bf-body[hidden] { display: none; }
+  /* 조건 묶음 — 묶음 이름 + 그 안의 칩들. 묶음끼리는 간격으로만 나눈다. */
+  .cE .bf-cgrp { display: flex; flex-direction: column; gap: 8px; }
+  .cE .bf-cgrp > .lb { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
+  .cE .bf-cgrp > .lb .opt { font-weight: 400; color: var(--ink-3); }
+  .cE .bf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   /* 셸이 961px 위에서 1100px 로 고정돼(.layout min-width) 본문 폭이 780px 까지 줄어든다.
      왼쪽 칸이 330px 그대로면 오른쪽 표가 칸 밖으로 밀려나므로 왼쪽을 좁혀 2단을 유지한다. */
   @media (max-width: 1320px) { .cE .bf-body { grid-template-columns: 250px minmax(0, 1fr); gap: 20px; } }
@@ -39,10 +45,6 @@
         <h1>혜택·보조금</h1>
         <div class="ct-title-sub">가구 조건 기준 정부·지자체 지원 조회</div>
       </div>
-      <div class="ct-title-act">
-        <span class="ct-note">거주지</span>
-        <div class="ct-pill on" style="height:42px;font-size:var(--fs-body);">대구광역시 달서구</div>
-      </div>
     </div>
 
     <!-- ===== 하위 탭 ===== -->
@@ -52,19 +54,212 @@
       <div data-tab="price">실거래가 · 국토부</div>
     </div>
 
-    <!-- 준비 중 -->
-    <div data-tab-panel="rent" hidden>
-      <div class="ct-blank" style="padding:56px 32px;">
-        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-home"/></svg></div>
-        <div class="bt">공공임대 조회 준비 중</div>
-        <div class="bd">LH·지방공사 공고를 가구 조건으로 걸러 보여 줄 예정입니다.</div>
+    <!-- ===== 공공임대 — 항목은 기획 문서(공공임대 탭) 그대로 ===== -->
+    <div class="bf-body" data-tab-panel="rent" hidden>
+
+      <div class="ct-stack">
+        <div class="ct-card pad">
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="ct-card-t">새 공고 알림</div>
+              <div class="ct-note">이 지역에 공공임대 모집공고가 올라오면 알림톡을 받습니다.</div>
+            </div>
+
+            <div class="ct-f">
+              <span class="lb">시·도</span>
+              <select class="ct-nat" id="rt-sido">
+                <option value="">선택</option>
+                <option>서울특별시</option><option>전남광주통합특별시</option><option>부산광역시</option>
+                <option selected>대구광역시</option><option>인천광역시</option><option>대전광역시</option>
+                <option>울산광역시</option><option>세종특별자치시</option><option>경기도</option>
+                <option>충청북도</option><option>충청남도</option><option>경상북도</option>
+                <option>경상남도</option><option>제주특별자치도</option><option>강원특별자치도</option>
+                <option>전북특별자치도</option>
+              </select>
+            </div>
+
+            <div class="ct-f">
+              <span class="lb">시·군·구<span class="opt"> 비우면 시·도 전체</span></span>
+              <select class="ct-nat" id="rt-gu">
+                <option value="">시·도 전체</option>
+                <option>중구</option><option>동구</option><option>서구</option><option>남구</option>
+                <option>북구</option><option>수성구</option><option selected>달서구</option>
+                <option>달성군</option><option>군위군</option>
+              </select>
+            </div>
+
+            <div class="bf-cgrp">
+              <span class="lb">공급 유형<span class="opt"> 고르지 않으면 모든 유형</span></span>
+              <div class="bf-chips">
+                <div class="ct-chip" data-chip>영구임대</div>
+                <div class="ct-chip" data-chip>국민임대</div>
+                <div class="ct-chip" data-chip>50년임대</div>
+                <div class="ct-chip" data-chip>매입임대</div>
+                <div class="ct-chip" data-chip>10년임대</div>
+                <div class="ct-chip" data-chip>6년임대</div>
+                <div class="ct-chip" data-chip>5년임대</div>
+                <div class="ct-chip" data-chip>장기전세</div>
+                <div class="ct-chip" data-chip>전세임대</div>
+                <div class="ct-chip" data-chip>행복주택</div>
+                <div class="ct-chip" data-chip>공공지원민간임대</div>
+                <div class="ct-chip" data-chip>통합공공임대</div>
+              </div>
+            </div>
+
+            <div class="bf-cgrp">
+              <div class="bf-chips"><div class="ct-chip" data-chip>무주택</div></div>
+              <div class="ct-note">대부분 공공임대의 기본 자격입니다.</div>
+            </div>
+
+            <div class="ct-note">알림톡은 공고 안내만 보냅니다. 입주 자격은 공고에서 확인합니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ct-stack" id="rt-pre">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-home"/></svg></div>
+          <div class="bt">내용이 아직 없어요</div>
+          <div class="bd">왼쪽 조건으로 LH·지방공사 모집공고를 찾아 드립니다.</div>
+          <div class="ba"><button type="button" class="ct-btn primary" data-load="rt">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-search"/></svg> 조회하기</button></div>
+        </div>
+      </div>
+
+      <div class="ct-stack" id="rt-result" hidden>
+        <div class="ct-card-h">
+          <h2 style="font-size:var(--fs-h1);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">지금 모집 중인 공고</h2>
+          <div class="ct-note">마감 임박순</div>
+        </div>
+        <div class="ct-hint">입주 자격과 신청 방법은 공고문에서 확인하시기 바랍니다.</div>
+
+        <div class="ct-card pad ct-benefit">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">전세임대</span>LH · 아파트 · 대구광역시</div>
+            <div class="bt clamp">2026 다자녀 전세임대 입주자 수시모집 공고</div>
+            <div class="bd">접수 기간 · 2026-03-24 ~ 2026-12-31</div>
+          </div>
+          <div class="bside">
+            <div><div class="k">당첨 발표</div><div class="v">2027.02.26</div></div>
+            <a href="#">공고 보기</a>
+          </div>
+        </div>
+
+        <div class="ct-card pad ct-benefit">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
+            <div class="bo"><span class="ct-kind">전세임대</span>LH · 아파트 · 대구광역시</div>
+            <div class="bt clamp">2026년 신혼·신생아 전세임대 I 입주자 수시모집 공고</div>
+            <div class="bd">접수 기간 · 2026-03-24 ~ 2026-12-31</div>
+          </div>
+          <div class="bside">
+            <div><div class="k">당첨 발표</div><div class="v">2027.02.26</div></div>
+            <a href="#">공고 보기</a>
+          </div>
+        </div>
       </div>
     </div>
-    <div data-tab-panel="price" hidden>
-      <div class="ct-blank" style="padding:56px 32px;">
-        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
-        <div class="bt">실거래가 조회 준비 중</div>
-        <div class="bd">국토교통부 실거래가 자료로 거주지 시세를 보여 줄 예정입니다.</div>
+
+    <!-- ===== 실거래가 — 항목은 기획 문서(실거래가 탭) 그대로 ===== -->
+    <div class="bf-body" data-tab-panel="price" hidden>
+
+      <div class="ct-stack">
+        <div class="ct-card pad">
+          <div class="ct-card-t" style="margin-bottom:14px;">우리 집 <span class="ct-note">· 01·03 기준</span></div>
+          <div class="ct-cond">
+            <div class="k">주거 형태</div><div class="v" id="pr-housing"></div>
+            <div class="k">전·월세 보증금</div><div class="v" id="pr-deposit"></div>
+            <div class="k">월세</div><div class="v" id="pr-rent"></div>
+            <div class="k">사는 집(자가)</div><div class="v" id="pr-own"></div>
+          </div>
+        </div>
+
+        <div class="ct-card pad">
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="ct-card-t">조회 지역</div>
+              <div class="ct-note">국토부에 보내는 값입니다.</div>
+            </div>
+            <div class="ct-f"><span class="lb">지역</span>
+              <div class="ct-in soft" style="background:var(--bg-soft);">대구광역시 달서구 · 코드 27290</div></div>
+
+            <div class="ct-f">
+              <span class="lb">집 종류</span>
+              <select class="ct-nat" id="pr-kind">
+                <option value="">선택</option>
+                <option selected>아파트</option><option>연립다세대</option>
+                <option>오피스텔</option><option>단독다가구</option>
+              </select>
+            </div>
+
+            <div class="ct-f">
+              <span class="lb">단지명<span class="opt"> 비우면 지역 전체</span></span>
+              <div class="ct-in" id="pr-apt" data-hint="예) 월성청구" contenteditable="true">예) 월성청구</div>
+            </div>
+
+            <div class="bf-cgrp">
+              <span class="lb">전용면적</span>
+              <!-- 다섯 칸을 한 줄에 넣으면 좁은 폭에서 글자가 깨져 칩으로 둔다 -->
+              <div class="bf-chips">
+                <div class="ct-chip on" data-chip>전체</div>
+                <div class="ct-chip" data-chip>40㎡ 이하</div>
+                <div class="ct-chip" data-chip>40~60㎡</div>
+                <div class="ct-chip" data-chip>60~85㎡</div>
+                <div class="ct-chip" data-chip>85㎡ 초과</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ct-stack" id="pr-pre">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
+          <div class="bt">내용이 아직 없어요</div>
+          <div class="bd">국토교통부 실거래가 자료로 동네 시세를 보여 드립니다.</div>
+          <div class="ba"><button type="button" class="ct-btn primary" data-load="pr">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-search"/></svg> 조회하기</button></div>
+        </div>
+      </div>
+
+      <div class="ct-stack" id="pr-result" hidden>
+        <div class="ct-card-h">
+          <h2 style="font-size:var(--fs-h1);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">동네 시세</h2>
+          <div class="ct-note">대구광역시 달서구 2026-08</div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-kv">
+            <div class="k">전세 보증금</div><div class="v">22,000만원 <span class="ct-note">5건 · 10,000~26,800만원</span></div>
+            <div class="k">월세 보증금 / 월세</div><div class="v">2,000만원 / 110만원 <span class="ct-note">5건</span></div>
+            <div class="k tp">매매</div><div class="v tp">42,000만원 <span class="ct-note">10건 · 21,650~61,475만원</span></div>
+          </div>
+          <div class="ct-note" style="margin-top:12px;">가운데 값(중위)입니다. 단위 만원.</div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">보증금 지키기 <span class="ct-note">· 전세·월세 보증금이 있을 때</span></div>
+            <div class="ct-kv">
+              <div class="k">내 보증금</div><div class="v" id="pr-my">15,000만원</div>
+              <div class="k">같은 조건 매매 가운데 값</div><div class="v">42,000만원</div>
+              <div class="k">보증금이 매매가의</div><div class="v hl">36%</div>
+              <div class="k">같은 조건 전세 가운데 값</div><div class="v">22,000만원</div>
+              <div class="k tp">내 보증금과 차이</div><div class="v tp">내 보증금이 높지 않아요</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ct-card pad">
+          <div class="ct-stack">
+            <div class="ct-card-t">월세 → 전세로 바꾸면 <span class="ct-note">· 월세일 때</span></div>
+            <div class="ct-f"><span class="lb">보탤 수 있는 내 돈 · 만원</span>
+              <div class="ct-in num" data-hint="미입력" contenteditable="true">미입력</div></div>
+            <div class="ct-f"><span class="lb">은행에서 들은 전세대출 금리 · 연 %</span>
+              <div class="ct-in num pc" data-hint="미입력" contenteditable="true">미입력</div></div>
+          </div>
+        </div>
+
+        <div class="ct-hint">국토교통부 실거래가 자료입니다. 거래가 적은 달은 가운데 값이 크게 흔들릴 수 있습니다.</div>
       </div>
     </div>
 
@@ -77,67 +272,124 @@
           <!-- 값은 01 기본정보에서 읽는다. 여기에 숫자를 박아 두면
                01 에 무엇을 적든 같은 조건으로 걸러 보여 주게 된다. -->
           <div class="ct-cond">
+            <!-- 사는 곳도 걸러 내는 조건 가운데 하나라 다른 조건과 같은 줄에 둔다 -->
+            <div class="k">사는 곳 · 시·군·구</div><div class="v">대구광역시 달서구</div>
             <div class="k">가족 수</div><div class="v" id="bf-fam"></div>
-            <div class="k">연령</div><div class="v" id="bf-age"></div>
+            <div class="k">본인 나이</div><div class="v" id="bf-age"></div>
             <div class="k">자녀</div><div class="v" id="bf-kids"></div>
-            <div class="k">주거</div><div class="v" id="bf-housing"></div>
-            <div class="k">소득 구간</div><div class="v" id="bf-income"></div>
+            <div class="k">소득 참고 구간</div><div class="v" id="bf-income"></div>
             <div class="k">직업</div><div class="v" id="bf-job"></div>
           </div>
+          <div class="ct-note" style="margin-top:10px;">소득 참고 구간은 이번 달 소득 ÷ 2026 기준 중위소득입니다. 재산은 빠집니다.</div>
           <div class="ct-note" id="bf-cond-note" style="margin-top:10px;" hidden></div>
         </div>
 
+        <!-- 01·02 에서 자동으로 붙는 조건. 고객에게 물어볼 것이 아니라 이미 아는 것이다. -->
         <div class="ct-card pad">
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <div class="ct-card-t">추가 조건</div>
-            <div class="ct-note">해당하는 항목을 함께 골라 주세요. 고른 조건이 결과에 반영됩니다.</div>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              <div class="ct-chip on" data-chip>본인 여성</div>
-              <div class="ct-chip on" data-chip>다자녀</div>
-              <div class="ct-chip" data-chip>한부모</div>
-              <div class="ct-chip" data-chip>장애</div>
-              <div class="ct-chip" data-chip>임신·출산</div>
-              <div class="ct-chip on" data-chip>무주택</div>
-              <div class="ct-chip" data-chip>소상공인</div>
-              <div class="ct-chip" data-chip>신용 개선</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>청년</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>65세 이상</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>맞벌이</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>외벌이</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>전세 거주</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>월세 거주</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>귀농·귀촌</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>창업 3년 이내</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>실직·구직 중</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>간병·돌봄</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>다문화 가정</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>국가유공자</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>기초생활수급</div>
-              <div class="ct-chip" data-chip data-more-item="cond" hidden>차상위</div>
-              <div class="ct-chip" data-more="cond" style="color:var(--ink-3);">+ 14건 더 보기</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="ct-card-t">자동으로 넣은 조건</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;" id="bf-auto"></div>
+          </div>
+        </div>
+
+        <!-- 조건 이름은 기획 문서(보조금24 지원조건) 그대로다. 임의로 줄이면
+             받아 온 공고의 지원조건과 글자가 달라져 맞춰 거를 수 없다. -->
+        <div class="ct-card pad">
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="ct-card-t">더 확인할 조건</div>
+              <div class="ct-note">고객에게 물어보고 체크합니다. 보조금24 지원조건 그대로입니다.</div>
+            </div>
+
+            <div class="bf-cgrp">
+              <span class="lb">본인 성별</span>
+              <div class="ct-seg" style="grid-template-columns:repeat(3,1fr);">
+                <div class="on" data-sex="">선택 안 함</div>
+                <div data-sex="남">남</div>
+                <div data-sex="여">여</div>
+              </div>
+            </div>
+
+            <div class="bf-cgrp">
+              <span class="lb">본인·가족 상황</span>
+              <div class="bf-chips">
+                <div class="ct-chip" data-chip>예비부모·난임</div>
+                <div class="ct-chip" data-chip>임산부</div>
+                <div class="ct-chip" data-chip>출산·입양</div>
+                <div class="ct-chip" data-chip>대학생·대학원생</div>
+                <div class="ct-chip" data-chip>구직자·실업자</div>
+                <div class="ct-chip" data-chip>장애인</div>
+                <div class="ct-chip" data-chip>국가보훈대상자</div>
+                <div class="ct-chip" data-chip>질병·질환자</div>
+                <div class="ct-chip" data-chip>농업인</div>
+                <div class="ct-chip" data-chip>어업인</div>
+                <div class="ct-chip" data-chip>축산업인</div>
+                <div class="ct-chip" data-chip>임업인</div>
+              </div>
+            </div>
+
+            <div class="bf-cgrp">
+              <span class="lb">가구</span>
+              <div class="bf-chips">
+                <div class="ct-chip" data-chip>무주택세대</div>
+                <div class="ct-chip" data-chip>한부모·조손가정</div>
+                <div class="ct-chip" data-chip>다문화가족</div>
+                <div class="ct-chip" data-chip>북한이탈주민</div>
+                <div class="ct-chip" data-chip>신규전입</div>
+                <div class="ct-chip" data-chip>확대가족</div>
+              </div>
+            </div>
+
+            <div class="bf-cgrp">
+              <span class="lb">사업</span>
+              <div class="bf-chips">
+                <div class="ct-chip" data-chip>예비창업자</div>
+                <div class="ct-chip" data-chip>영업 중(소상공인)</div>
+                <div class="ct-chip" data-chip>생계곤란·폐업예정</div>
+              </div>
+            </div>
+
+            <div class="bf-cgrp">
+              <div class="bf-chips">
+                <div class="ct-chip" data-chip>신용이 좋아짐(취업·승진·소득 증가·빚 감소)</div>
+              </div>
+              <div class="ct-note">금리인하요구권 안내에 씁니다.</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- 오른쪽: 결과 -->
-      <div class="ct-stack">
+      <!-- 바깥에서 받아 오는 자료라 조회하기 전에는 비워 둔다.
+           빈 표를 먼저 보여 주면 '해당 혜택이 없다'로 읽힌다. -->
+      <div class="ct-stack" id="bf-pre">
+        <div class="ct-blank">
+          <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-search"/></svg></div>
+          <div class="bt">내용이 아직 없어요</div>
+          <div class="bd">보조금24를 연결하면 왼쪽 조건과 맞는 혜택이 여기에 나와요(최대 12개).</div>
+          <div class="ba"><button type="button" class="ct-btn primary" id="bf-load">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-search"/></svg> 조회하기</button></div>
+        </div>
+      </div>
+
+      <div class="ct-stack" id="bf-result" hidden>
         <div class="ct-card-h">
-          <h2 style="font-size:var(--fs-h1);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">대상 혜택 <span style="color:var(--brand-deep);">7</span></h2>
+          <h2 style="font-size:var(--fs-h1);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">확인해 볼 혜택 <span style="color:var(--brand-deep);">7</span></h2>
           <div class="ct-note">마감 임박순</div>
         </div>
 
-        <div class="ct-hint">정확한 지원 조건 및 신청은 정부24에서 확인하시기 바랍니다.</div>
+        <!-- 받을 수 있다고 정해진 목록이 아니라 '확인해 볼' 목록이라는 점을 결과 바로 위에 둔다 -->
+        <div class="ct-hint">받을 수 있다고 정해진 건 아니에요. 대상인지 확인하고 신청은 고객이 정부24에서 해요.</div>
 
         <div class="ct-card pad ct-benefit">
           <div style="display:flex;flex-direction:column;gap:8px;min-width:0;">
             <div class="bo"><span class="ct-kind">현금</span>대구광역시 달서구청 교육지원과</div>
             <div class="bt clamp">달서구 다자녀 가정 초·중·고 자녀 방과후 교육비 및 교재비 지원 사업 (2026년 하반기 추가 모집)</div>
             <div class="bd">자녀 2명 이상 · 1인당 연 30만원</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">달서구 거주</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">다자녀</span><span class="ct-tag">달서구 거주</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">2026.10.15</div></div>
+            <div><div class="k">신청 기한</div><div class="v">2026.10.15</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -147,10 +399,10 @@
             <div class="bo"><span class="ct-kind">이용권</span>산업통상자원부</div>
             <div class="bt">에너지바우처</div>
             <div class="bd">하계·동계 전기·가스 요금 일부 지원</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">소득 구간</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">다자녀</span><span class="ct-tag">소득 구간</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">2026.12.31</div></div>
+            <div><div class="k">신청 기한</div><div class="v">2026.12.31</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -160,10 +412,10 @@
             <div class="bo"><span class="ct-kind">현금</span>보건복지부</div>
             <div class="bt">아동수당</div>
             <div class="bd">만 8세 미만 아동 · 월 10만원</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">자녀 7세</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">자녀 7세</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">상시</div></div>
+            <div><div class="k">신청 기한</div><div class="v">상시</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -173,10 +425,10 @@
             <div class="bo"><span class="ct-kind">카드</span>대구광역시</div>
             <div class="bt">대구 아이조아카드 (다자녀 우대)</div>
             <div class="bd">자녀 2명 이상 · 가맹점 할인·공공시설 감면</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">대구 거주</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">다자녀</span><span class="ct-tag">대구 거주</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">상시</div></div>
+            <div><div class="k">신청 기한</div><div class="v">상시</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -186,10 +438,10 @@
             <div class="bo"><span class="ct-kind">감면</span>한국전력공사</div>
             <div class="bt">전기요금 다자녀 할인</div>
             <div class="bd">자녀 3명 이상 또는 대가족 · 월 전기요금 30% 감면(한도 있음)</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span><span class="ct-tag">대상 확인 필요</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">다자녀</span><span class="ct-tag">대상 확인 필요</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">상시</div></div>
+            <div><div class="k">신청 기한</div><div class="v">상시</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -199,10 +451,10 @@
             <div class="bo"><span class="ct-kind">서비스</span>여성가족부</div>
             <div class="bt">아이돌봄 서비스</div>
             <div class="bd">만 12세 이하 아동 · 소득 구간별 이용요금 차등 지원</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">자녀 12세</span><span class="ct-tag">소득 구간</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">자녀 12세</span><span class="ct-tag">소득 구간</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">상시</div></div>
+            <div><div class="k">신청 기한</div><div class="v">상시</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -212,10 +464,10 @@
             <div class="bo"><span class="ct-kind">감면</span>도시가스사</div>
             <div class="bt">도시가스 요금 경감</div>
             <div class="bd">다자녀 가구 · 동절기 요금 일부 경감</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;padding-top:2px;"><span class="ct-tag">다자녀</span></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-top:2px;"><span class="ct-note">맞은 조건</span><span class="ct-tag">다자녀</span></div>
           </div>
           <div class="bside">
-            <div><div class="k">신청 마감</div><div class="v">상시</div></div>
+            <div><div class="k">신청 기한</div><div class="v">상시</div></div>
             <a href="#">정부24 바로가기</a>
           </div>
         </div>
@@ -223,6 +475,27 @@
         <div class="ct-more" data-more="bene">4건 더 보기</div>
       </div>
     </div>
+
+    <script>
+    /* 조회하기 — 연동 전이라 미리 담아 둔 목록을 보여 준다 */
+    (function () {
+      function show(key) {
+        document.getElementById(key + '-pre').hidden = true;
+        document.getElementById(key + '-result').hidden = false;
+      }
+      var btn = document.getElementById('bf-load');
+      if (btn) btn.addEventListener('click', function () { show('bf'); });
+      document.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-load]');
+        if (b) show(b.dataset.load);
+      });
+      // 지난 상담을 열어 보는 경우엔 이미 조회해 둔 자료를 그대로 보여 준다
+      // _model.js 는 문서 아래에서 읽히므로 CT 가 생긴 뒤에 본다
+      window.addEventListener('DOMContentLoaded', function () {
+        if (CT.load().fetched) ['bf', 'rt', 'pr'].forEach(show);
+      });
+    })();
+    </script>
 
   </main>
 </div>
@@ -280,22 +553,61 @@ injectShell('consult');
         ? ' (' + kids.filter(function (k) { return k.age; }).map(function (k) { return k.age + '세'; }).join(', ') + ')'
         : '')
     : (fam.length ? '없음' : ''));
-  // 주거 형태 — '기타'면 01 에 적은 기타 주거 형태를 괄호로 붙인다
-  put('bf-housing', B.housing
-    ? B.housing + (B.housing === '기타' && B.housingEtc ? ' · ' + B.housingEtc : '')
-    : '');
   put('bf-job', [B.job, B.spouseJob ? '배우자 ' + B.spouseJob : ''].filter(Boolean).join(' · '));
 
-  /* 소득 구간은 기준 중위소득 표가 있어야 나온다. 아직 그 표가 붙지 않아 비워 둔다.
+  /* 소득 참고 구간은 기준 중위소득 표가 있어야 나온다. 아직 그 표가 붙지 않아 비워 둔다.
      여기서 임의로 적으면 조건에 맞지 않는 혜택을 맞다고 보여 주게 된다. */
   put('bf-income', '');
   var note = $('bf-cond-note');
   if (note) {
     note.hidden = false;
     note.textContent = fam.length
-      ? '소득 구간은 기준 중위소득 자료 연동 후 표시됩니다.'
-      : '01 기본정보에 이름·가족 구성을 적으면 가구 조건이 채워집니다. 소득 구간은 자료 연동 후 표시됩니다.';
+      ? '소득 참고 구간은 기준 중위소득 자료 연동 후 표시됩니다.'
+      : '01 기본정보에 이름·가족 구성을 적으면 가구 조건이 채워집니다. 소득 참고 구간은 자료 연동 후 표시됩니다.';
   }
+
+  /* 실거래가 탭의 '우리 집' — 01 주거 형태와 03 집·차에 적은 금액을 읽는다 */
+  (function () {
+    var M = CT.load();
+    var row = function (name) {
+      var g = (M.as && M.as['부동산·차량']) || [];
+      var r = g.filter(function (x) { return String(x[0]).indexOf(name) >= 0; })[0];
+      return r && r[1] != null ? CT.comma(r[1]) + '만원' : '';
+    };
+    put('pr-housing', B.housing
+      ? B.housing + (B.housing === '기타' && B.housingEtc ? ' · ' + B.housingEtc : '')
+      : '');
+    put('pr-deposit', row('보증금'));
+    put('pr-rent', (function () {
+      var it = ((M.cf && M.cf['집'] && M.cf['집'].items) || [])
+        .filter(function (r) { return String(r[0]).indexOf('월세') >= 0; })[0];
+      return it && it[1] != null ? CT.comma(it[1]) + '만원' : '';
+    })());
+    put('pr-own', row('사는 집'));
+  })();
+
+  /* 자동으로 넣은 조건 — 01 에 적은 값에서 바로 나오는 것만 붙인다.
+     학령은 자녀 나이로, 직업은 01 의 직업 칸으로 본다. */
+  (function () {
+    var host = $('bf-auto'); if (!host) return;
+    var tags = [];
+    kids.forEach(function (k) {
+      var a = Number(k.age);
+      if (!a) return;
+      var s = a <= 5 ? '미취학' : a <= 12 ? '초등학생' : a <= 15 ? '중학생' : a <= 18 ? '고등학생' : '';
+      if (s && tags.indexOf(s) < 0) tags.push(s);
+    });
+    [B.job, B.spouseJob].forEach(function (j) {
+      if (!j) return;
+      var t = has(j, ['직장', '회사', '근로']) ? '근로자·직장인'
+            : has(j, ['자영', '사업', '소상공']) ? '영업 중(소상공인)'
+            : has(j, ['주부', '무직', '구직']) ? '구직자·실업자' : '';
+      if (t && tags.indexOf(t) < 0) tags.push(t);
+    });
+    host.innerHTML = tags.length
+      ? tags.map(function (t) { return '<div class="ct-chip on">' + t + '</div>'; }).join('')
+      : '<div class="ct-note">01 기본정보를 적으면 자동으로 붙는 조건이 여기 나옵니다.</div>';
+  })();
 })();
 </script>
 <script src="_actions.js"></script>

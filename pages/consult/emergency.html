@@ -10,16 +10,49 @@
 <link rel="stylesheet" href="../../styles/consult.css" />
 <style>
   html, body { margin: 0; background: #fff; }
-  .cE .em-body { display: grid; grid-template-columns: 390px minmax(0, 1fr); gap: 28px; align-items: start; }
+  /* 적는 칸 — 다른 화면의 입력 칸과 같은 모양으로 둔다 */
+  .cE .em-in { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  .cE .em-in .ct-f { gap: 8px; }
+  /* 가져오는 값 — 눌러도 고칠 수 없다는 게 보이게 채워 두고 자물쇠를 붙인다 */
+  .cE .em-in .ct-in.ro { background: var(--bg-soft); border-color: var(--line); color: var(--ink);
+    cursor: default; position: relative; padding-left: 38px; }
+  .cE .em-in .ct-in.ro::before { content: ""; position: absolute; left: 14px; top: 50%; width: 11px; height: 13px;
+    margin-top: -6.5px; border-radius: 2px;
+    background: var(--ink-4);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z'/></svg>") center/contain no-repeat;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z'/></svg>") center/contain no-repeat; }
+  .cE .em-in .ct-in.ro .u { margin-left: 4px; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); }
   .cE .em-mon { display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; align-items: center; }
+  /* 조절 — 적는 칸과 결과 사이 */
+  .cE .em-opt { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; padding: 20px 22px;
+    border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft); }
+  .cE .em-optrow { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  /* 결과 — 조절한 값이 바로 아래에서 바뀌는 자리 */
+  .cE .em-out { margin-top: 32px; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+  .cE .em-out .r { display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding: 16px 20px; font-size: var(--fs-body); color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cE .em-out .r + .r { border-top: 1px solid var(--line); }
+  .cE .em-out .r b { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; }
+  .cE .em-out .r b.hl { color: var(--brand-deep); }
+  /* 생활비에서 뺄 항목 — 묶음 이름 옆에 금액을 같이 둔다 */
+  .cE .em-cut { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cE .em-cut .amt { margin-left: 6px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+  .cE .em-cut .ct-chip.on .amt { color: inherit; }
+  /* 비상금 둘 곳 — 이름 아래에 설명을 쌓는다. 좌우로 나누면 '파킹통장'이 세로로 쪼개진다. */
+  .cE .em-where { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .cE .em-where .nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .cE .em-where .ds { font-size: var(--fs-option); color: var(--ink-2); }
+  @media (max-width: 760px) { .cE .em-where { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
   /* 셸이 961px 위에서 1100px 로 고정돼(.layout min-width) 본문 폭이 780px 까지 줄어든다.
      왼쪽 칸이 390px 그대로면 오른쪽 표가 칸 밖으로 밀려난다.
      왼쪽을 300px 로 좁히고, 그 안의 '개월' 두 칸은 세로로 쌓아 2단을 유지한다. */
   @media (max-width: 1320px) {
-    .cE .em-body { grid-template-columns: 300px minmax(0, 1fr); gap: 20px; }
+    .cE .em-in { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .cE .em-mon { grid-template-columns: minmax(0, 1fr); }
   }
-  @media (max-width: 960px) { .cE .em-body { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
+  @media (max-width: 760px) {
+    .cE .em-in { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  }
 </style>
 </head>
 <body>
@@ -44,136 +77,113 @@
         <h1>비상금</h1>
         <div class="ct-title-sub">준비할 개월 수 기준 목표 비상금 산출</div>
       </div>
-      <div class="ct-title-act">
-        <span class="ct-tool" data-print><svg class="ic-svg" width="14" height="14"><use href="#i-printer"/></svg> 인쇄</span>
+    </div>
+
+    <!-- 02·03 에 적은 값으로 계산하는 화면이라, 아무것도 안 적었으면 0 을 늘어놓지 않는다 -->
+    <div class="ct-panel" id="em-pre" hidden>
+      <div class="ct-blank">
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-won"/></svg></div>
+        <div class="bt">내용이 아직 없어요</div>
+        <div class="bd">02 수입지출에 생활비를, 03 자산·부채에 통장 잔액을 적으면 목표 비상금이 계산됩니다.</div>
+        <div class="ba">
+          <a class="ct-btn primary" href="cashflow.html">02 수입지출로</a>
+          <a class="ct-btn ghost" href="assets.html">03 자산·부채로</a>
+        </div>
       </div>
     </div>
 
-    <!-- ===== 결과 3칸 ===== -->
-    <div class="ct-panel">
-      <div class="ct-stack">
-        <div class="ct-lead" id="em-lead">준비할 개월 수를 정하면 목표 비상금이 나와요</div>
-        <div class="ct-sum">
-          <div class="box" id="em-box-need">
-            <span class="k">목표 비상금</span>
-            <span><span class="v" id="em-need">—</span><span class="u"> 만원</span></span>
-          </div>
-          <div class="op">−</div>
-          <div class="box" id="em-box-have">
-            <span class="k">현재 비상금</span>
-            <span><span class="v" id="em-have">—</span><span class="u"> 만원</span></span>
-          </div>
-          <div class="op">=</div>
-          <div class="box hi" id="em-box-gap">
-            <span class="k">추가 적립 필요액</span>
-            <span><span class="v" id="em-gap">—</span><span class="u"> 만원</span></span>
-          </div>
+    <!-- ===== 적는 칸 → 조절 → 결과. 항목은 기획 문서의 비상금 화면 그대로. ===== -->
+    <div class="ct-panel" id="em-body">
+
+      <!-- 앞의 두 칸은 02·03 에서 가져오는 값이라 여기서 고치지 않는다. 고쳐 적는 칸과 섞이지 않게
+           회색으로 채우고 자물쇠를 붙여 둔다. 고칠 곳은 02·03 이다. -->
+      <div class="em-in">
+        <div class="ct-f">
+          <span class="lb">한 달 생활비</span>
+          <div class="ct-in num ro" id="em-base">0</div>
+          <span class="ct-note">02 수입지출의 생활비 합계입니다. 아래에서 뺄 항목을 고르면 줄어듭니다.</span>
         </div>
-        <div class="ct-note">단위 만원 · 현재 비상금은 03 자산·부채의 유동자산 합계입니다</div>
+        <div class="ct-f">
+          <span class="lb">지금 있는 비상금</span>
+          <div class="ct-in num ro" id="em-have-in">0</div>
+          <span class="ct-note">03 자산·부채의 '바로 쓸 수 있는 돈'(통장·현금)에서 가져옵니다.</span>
+        </div>
+        <div class="ct-f">
+          <span class="lb">준비할 개월<span class="req"> 필수</span></span>
+          <div class="em-mon">
+            <div class="ct-seg" style="grid-template-columns:repeat(3,1fr);">
+              <div class="on" data-months="3">3개월</div>
+              <div data-months="6">6개월</div>
+              <div data-months="12">12개월</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="ct-in num plain" id="em-months" data-hint="3" style="flex:1;min-width:0;">3</div>
+              <span style="font-size:var(--fs-body);color:var(--ink-3);flex:none;">개월</span>
+            </div>
+          </div>
+          <span class="ct-note">직접 고쳐 적을 수 있습니다. 기본값은 3개월입니다.</span>
+        </div>
+      </div>
+
+      <!-- 조절 -->
+      <div class="em-opt">
+        <div class="em-optrow">
+          <div style="min-width:0;">
+            <div style="font-size:var(--fs-body);color:var(--ink);">대출·할부 월 상환액도 포함
+              <span class="ct-note" id="em-debt-amt"></span></div>
+            <div class="ct-note">매달 갚는 금액을 생활비에 더해 계산합니다</div>
+          </div>
+          <div class="ct-sw" id="em-sw-debt" role="switch" aria-checked="true"><i></i></div>
+        </div>
+
+        <div class="ct-hr"></div>
+
+        <div class="em-optrow">
+          <div style="min-width:0;">
+            <div style="font-size:var(--fs-body);color:var(--ink);">생활비에서 뺄 항목 고르기</div>
+            <div class="ct-note">비상 상황에 줄일 수 있는 묶음을 고릅니다</div>
+          </div>
+          <div class="ct-sw off" id="em-sw-cut" data-toggle="cut" role="switch" aria-checked="false"><i></i></div>
+        </div>
+
+        <!-- 뺄 수 있는 묶음은 상담에서 정하므로 일부만 보여 주지 않고 모두 둔다.
+             옆에 금액을 같이 적어야 무엇을 빼는지가 바로 읽힌다(기획 '생활비에서 뺄 항목 고르기'). -->
+        <div data-toggle-target="cut" hidden class="em-cut" id="em-cut"></div>
+      </div>
+
+      <!-- 결과 -->
+      <div class="em-out">
+        <div class="r"><span>목표 비상금</span><b id="em-need">—</b></div>
+        <div class="r"><span>더 모을 금액</span><b id="em-gap" class="hl">—</b></div>
+        <div class="r"><span>지금 비상금으로 버틸 수 있는 기간</span><b id="em-cover">—</b></div>
+      </div>
+
+      <div class="ct-note" style="margin-top:14px;">
+        몇 개월치를 둘지는 상담에서 정합니다.
+        참고 · 맞벌이는 월 수입의 3배, 외벌이는 6배(한국FP협회 FP저널) · 생활비 3~6개월(금융감독원 안내)
       </div>
     </div>
 
-    <div class="em-body">
+    <div class="ct-panel" id="em-grid">
 
-      <!-- ===== 왼쪽: 기준 설정 ===== -->
-      <div class="ct-stack">
 
+        <!-- 기획 "비상금은 어디에 둘까 · 참고". 상품을 권하는 자리가 아니라 둘 곳의 성격을 알려 주는 자리다.
+             이름과 설명을 좌우로 나누면 이름이 세로로 쪼개지므로 위아래로 쌓는다. -->
         <div class="ct-card pad">
           <div class="ct-stack">
-            <div class="ct-card-t">준비할 개월</div>
-            <div class="em-mon">
-              <div class="ct-seg" style="grid-template-columns:repeat(3,1fr);">
-                <div class="on" data-months="3">3개월</div>
-                <div data-months="6">6개월</div>
-                <div data-months="12">12개월</div>
+            <div class="ct-card-t">비상금은 어디에 둘까 <span class="ct-note">· 참고</span></div>
+            <div class="em-where">
+              <div>
+                <div class="nm">파킹통장</div>
+                <div class="ds">은행·저축은행 입출금 통장. 하루만 넣어도 이자, 예금자보호 1억원</div>
               </div>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <div class="ct-in num plain" id="em-months" data-hint="3" style="flex:1;min-width:0;">3</div>
-                <span style="font-size:var(--fs-body);color:var(--ink-3);flex:none;">개월</span>
+              <div>
+                <div class="nm">CMA</div>
+                <div class="ds">증권사 계좌. 종금형만 예금자보호, 나머지는 증권사·운용 위험 확인</div>
               </div>
             </div>
-            <div class="ct-note">직접 고쳐 적을 수 있습니다. 기본값은 3개월입니다.</div>
-          </div>
-        </div>
-
-        <div class="ct-card pad">
-          <div class="ct-stack">
-            <div class="ct-card-t">산출 기준</div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-              <div style="min-width:0;">
-                <div style="font-size:var(--fs-body);color:var(--ink);">부채 상환액 포함</div>
-                <div class="ct-note">매달 갚는 금액을 생활비에 더해 계산합니다</div>
-              </div>
-              <div class="ct-sw" id="em-sw-debt" role="switch" aria-checked="true"><i></i></div>
-            </div>
-
-            <div class="ct-hr"></div>
-
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
-              <div style="min-width:0;">
-                <div style="font-size:var(--fs-body);color:var(--ink);">생활비에서 뺄 묶음</div>
-                <div class="ct-note">비상 상황에 줄일 수 있는 묶음을 고릅니다</div>
-              </div>
-              <div class="ct-sw off" id="em-sw-cut" data-toggle="cut" role="switch" aria-checked="false"><i></i></div>
-            </div>
-
-            <div data-toggle-target="cut" hidden style="display:flex;flex-wrap:wrap;gap:8px;">
-              <div class="ct-chip" data-chip data-cut="꾸밈">꾸밈</div>
-              <div class="ct-chip" data-chip data-cut="여가·경조사·기타">여가·경조사·기타</div>
-              <div class="ct-chip" data-chip data-cut="구독">구독</div>
-              <div class="ct-chip" data-chip data-cut="교통">교통</div>
-              <div class="ct-chip" data-chip data-cut="식비">식비</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="ct-hint">
-          비상금은 소득이 끊겼을 때 생활을 유지하는 자금입니다. 일반적으로 3~6개월치 생활비를 기준으로 하며,
-          수입이 매달 다른 가구는 6개월 이상을 권장합니다.
-        </div>
-      </div>
-
-      <!-- ===== 오른쪽: 생활비 내역 · 버틸 수 있는 기간 ===== -->
-      <div class="ct-stack">
-
-        <div class="ct-card-h">
-          <h2 style="font-size:var(--fs-h1);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">기준 생활비</h2>
-          <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
-        </div>
-
-        <div class="ct-tbl-wrap">
-          <table class="ct-tbl">
-            <thead><tr><th>묶음</th><th class="amt" style="width:140px;">월 금액</th><th class="amt" style="width:110px;">비중</th></tr></thead>
-            <tbody id="em-rows"></tbody>
-            <tfoot><tr>
-              <td>월 기준 생활비</td>
-              <td class="amt" id="em-base" style="color:var(--brand-deep);">0</td>
-              <td class="amt" id="em-basep" style="color:var(--brand-deep);">100%</td>
-            </tr></tfoot>
-          </table>
-        </div>
-
-        <div class="ct-card pad">
-          <div class="ct-stack">
-            <div class="ct-card-h">
-              <span class="ct-card-t">버틸 수 있는 기간</span>
-              <span class="num" style="font-size:28px;font-weight:700;letter-spacing:-0.02em;color:var(--brand-deep);"><span id="em-cover">0</span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 개월</span></span>
-            </div>
-            <div class="ct-track"><i id="em-track" style="width:0%;"></i></div>
-            <div class="ct-note" id="em-cover-note">목표 3개월 기준</div>
-          </div>
-        </div>
-
-        <div class="ct-card pad">
-          <div class="ct-stack">
-            <div class="ct-card-t">적립 계획</div>
-            <div class="ct-kv">
-              <div class="k">추가 적립 필요액</div><div class="v" id="em-plan-gap">—</div>
-              <div class="k">현재 월 저축</div><div class="v" id="em-plan-save">—</div>
-              <div class="k tp">모두 모으기까지</div><div class="v tp hl" id="em-plan-months">—</div>
-            </div>
-            <div class="ct-note">02 수입지출의 저축 합계를 전부 비상금에 넣는다고 보았을 때입니다.</div>
+            <div class="ct-note">금리는 은행연합회 소비자포털 예금금리 비교, 금융투자협회 CMA 수익률 공시에서 확인합니다.
+              특정 상품을 권하는 화면이 아닙니다.</div>
           </div>
         </div>
 
@@ -199,8 +209,23 @@
   var $ = function (id) { return document.getElementById(id); };
   var M = CT.load(), c = CT.calc(M);
 
+  // 생활비도 통장 잔액도 안 적혔으면 계산할 게 없다
+  var liquid = (M.as['유동자산'] || []).reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0);
+  if (!c.fixed && !c.vari && !c.debtPay && !liquid) {
+    $('em-pre').hidden = false;
+    $('em-body').hidden = true;
+    $('em-grid').hidden = true;
+    return;
+  }
+
   // 03 유동자산 합계
-  var have = (M.as['유동자산'] || []).reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0);
+
+  // 뺄 수 있는 묶음 — 02 의 묶음을 전부 두고, 옆에 그 묶음의 월 금액을 같이 적는다
+  $('em-cut').innerHTML = CT.FIXED.concat(CT.VARI).map(function (cat) {
+    return '<div class="ct-chip" data-chip data-cut="' + cat + '">' + cat
+      + '<span class="amt">' + CT.comma(CT.catTotal(M, cat)) + '만원</span></div>';
+  }).join('');
+  $('em-debt-amt').textContent = '· ' + CT.comma(c.debtPay) + '만원';
 
   function months() {
     var n = CT.parse($('em-months').textContent);
@@ -216,6 +241,7 @@
     return out;
   }
 
+
   function render() {
     var cut = cutSet();
     var withDebt = !$('em-sw-debt').classList.contains('off');
@@ -223,61 +249,21 @@
 
     // 생활비 묶음 — 고정지출 · 변동지출 (+ 부채상환)
     var rows = [];
-    CT.FIXED.forEach(function (k) { rows.push(['고정지출', k, CT.catTotal(M, k)]); });
-    CT.VARI.forEach(function (k) { rows.push(['변동지출', k, CT.catTotal(M, k)]); });
-    if (withDebt) rows.push(['부채상환', '부채상환', c.debtPay]);
+    CT.FIXED.concat(CT.VARI).forEach(function (k) { rows.push([k, CT.catTotal(M, k)]); });
+    if (withDebt) rows.push(['부채상환', c.debtPay]);
 
     var base = CT.round1(rows.reduce(function (s, r) {
-      return s + (cut[r[1]] ? 0 : r[2]);
+      return s + (cut[r[0]] ? 0 : r[1]);
     }, 0));
-
-    $('em-rows').innerHTML = rows.map(function (r) {
-      var off = !!cut[r[1]];
-      var nm = r[1] === '부채상환' ? '부채상환' : r[0] + ' · ' + r[1];
-      return '<tr' + (off ? ' style="color:var(--ink-4);"' : '') + '>'
-        + '<td class="nm"' + (off ? ' style="color:var(--ink-4);font-weight:500;"' : '') + '>' + nm
-        + (off ? ' <span class="sub-l">제외</span>' : '') + '</td>'
-        + '<td class="amt"' + (off ? ' style="color:var(--ink-4);"' : '') + '>' + CT.comma(r[2]) + '</td>'
-        + '<td class="amt"' + (off ? ' style="color:var(--ink-4);"' : '') + '>'
-        + (off ? '—' : CT.pct(r[2], base) + '%') + '</td></tr>';
-    }).join('');
-    $('em-base').textContent  = CT.comma(base);
-    $('em-basep').textContent = base ? '100%' : '0%';
+    $('em-base').textContent = CT.comma(base);
 
     var need = CT.round1(base * m);
-    var gap  = CT.round1(Math.max(0, need - have));
+    var gap  = CT.round1(Math.max(0, need - liquid));
     var none = !base;
 
-    $('em-need').textContent = none ? '미입력' : CT.comma(need);
-    $('em-have').textContent = have ? CT.comma(have) : '미입력';
-    $('em-gap').textContent  = none ? '미입력' : CT.comma(gap);
-    ['em-need', 'em-have', 'em-gap'].forEach(function (id) {
-      $(id).classList.toggle('none', $(id).textContent === '미입력');
-    });
-    $('em-box-gap').classList.toggle('none', none);
-
-    // 버틸 수 있는 기간
-    var cover = base ? Math.round((have / base) * 10) / 10 : 0;
-    $('em-cover').textContent = base ? cover : '0';
-    $('em-track').style.width = Math.max(0, Math.min(100, base ? (cover / m) * 100 : 0)) + '%';
-    $('em-cover-note').textContent = '목표 ' + m + '개월 기준' + (base ? '' : ' · 02 수입지출을 적으면 계산됩니다');
-
-    // 문장
-    $('em-lead').innerHTML = none
-      ? '준비할 개월 수를 정하면 목표 비상금이 나와요'
-      : (gap
-          ? '<span class="hl">' + m + '개월</span>치를 두려면 <span class="hl">' + CT.comma(gap) + '만원</span>을 더 모으면 돼요.'
-          : '<span class="hl">' + m + '개월</span>치 비상금은 이미 마련돼 있어요.');
-    $('em-lead').className = none ? 'ct-lead' : 'ct-hero';
-
-    // 적립 계획
-    $('em-plan-gap').textContent  = none ? '미입력' : CT.comma(gap) + '만원';
-    $('em-plan-save').textContent = c.saving ? CT.comma(c.saving) + '만원' : '미입력';
-    $('em-plan-months').textContent = (none || !gap) ? (none ? '미입력' : '달성')
-      : (c.saving ? Math.ceil(gap / c.saving) + '개월' : '저축액 미입력');
-    ['em-plan-gap', 'em-plan-save', 'em-plan-months'].forEach(function (id) {
-      $(id).style.color = /미입력$/.test($(id).textContent) ? 'var(--ink-4)' : '';
-    });
+    $('em-need').textContent = none ? '—' : CT.comma(need) + '만원';
+    $('em-gap').textContent  = none ? '—' : CT.comma(gap) + '만원';
+    $('em-cover').textContent = base ? (Math.round((liquid / base) * 10) / 10) + '개월' : '—';
   }
 
   // 개월 프리셋 → 직접 입력 칸에 그대로 적는다 (칸이 기준값이다)
@@ -295,6 +281,9 @@
       render();
     });
   });
+
+  // 지금 있는 비상금 — 03 에서 가져온 값만 보여 준다(여기서는 고치지 않는다)
+  $('em-have-in').textContent = CT.comma(liquid);
 
   render();
 

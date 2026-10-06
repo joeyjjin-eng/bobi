@@ -15,6 +15,7 @@
      그래서 단계 바 아래에 이어 붙인다(top 값은 아래 스크립트가 단계 바 높이로 채운다). */
   .cE .rs-nav { position: sticky; top: 64px; z-index: 20; background: #fff; padding-top: 10px; }
   .cE .rs-hero { display: grid; grid-template-columns: minmax(0,1fr) 520px; gap: 40px; align-items: center; }
+  .cE .rs-hero[hidden] { display: none; }
   .cE .rs-blk { scroll-margin-top: 70px; }
   /* 현금흐름표 — 구분(①②③) · 묶음 · 항목 세 단계를 들여쓰기로 구분한다 */
   .cE .rs-cf tbody td { padding: 11px 16px; }
@@ -141,10 +142,6 @@
         <h1>재무상담</h1>
         <div class="ct-title-sub">새로운 상담하기</div>
       </div>
-      <div class="ct-title-act">
-        <span class="ct-tool" data-print><svg class="ic-svg" width="14" height="14"><use href="#i-printer"/></svg> 인쇄</span>
-        <span class="ct-tool" data-todo="고객 발송은 준비 중입니다"><svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg> 고객 발송</span>
-      </div>
     </div>
 
     <div class="ct-steps">
@@ -167,7 +164,8 @@
         <div data-tab="pl">수입지출결산</div>
         <div data-tab="bs">재무상태표</div>
         <div class="ct-toolset">
-          <a class="ct-keylink" href="benefits.html?from=result" ><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="n">7</span><span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
+          <!-- 건수는 혜택 화면에서 조회해야 나오는 값이라 여기 박아 두지 않는다 -->
+          <a class="ct-keylink" href="benefits.html?from=result" ><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>공공 혜택<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
           <a class="ct-keylink" href="emergency.html?from=result"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-won"/></svg></span>비상금<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
           <a class="ct-keylink" href="lastyear.html?from=result"><span class="sh"><svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg></span>작년 기록<span class="go"><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span></a>
         </div>
@@ -179,8 +177,16 @@
     <div class="ct-panel rs-blk" id="b-sum">
       <div class="ct-numh" style="margin-bottom:20px;"><span class="n">1</span><h3>요약</h3></div>
 
+      <!-- 02 에 적은 금액으로 그리는 자리라, 아무것도 안 적었으면 0 을 늘어놓지 않는다 -->
+      <div class="ct-blank" id="rs-hero-pre" style="margin-bottom:48px;" hidden>
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
+        <div class="bt">내용이 아직 없어요</div>
+        <div class="bd">02 수입지출에 금액을 적으면 한 달 동안 돈이 어떻게 움직였는지 나옵니다.</div>
+        <div class="ba"><a class="ct-btn primary" href="cashflow.html">02 수입지출로</a></div>
+      </div>
+
       <!-- 월 현금흐름 + 원그래프 -->
-      <div class="rs-hero" style="margin-bottom:48px;" >
+      <div class="rs-hero" id="rs-hero" style="margin-bottom:48px;" >
         <div class="ct-stack">
           <div class="ct-lead">지난 한 달, 우리 집 돈은 이렇게 움직였어요</div>
           <div class="ct-hero" id="rs-flow"></div>
@@ -391,6 +397,15 @@
     </div>
 
     <div data-tab-panel="cf" hidden>
+    <!-- 02 에 적은 값을 옮겨 적는 표라, 아무것도 안 적었으면 0 만 늘어놓게 된다 -->
+    <div class="ct-panel rs-pre" id="cf-pre" hidden>
+      <div class="ct-blank">
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
+        <div class="bt">내용이 아직 없어요</div>
+        <div class="bd">02 수입지출에 금액을 적으면 현금흐름표가 채워집니다.</div>
+        <div class="ba"><a class="ct-btn primary" href="cashflow.html">02 수입지출로</a></div>
+      </div>
+    </div>
     <!-- ===================== 현금흐름표 (탭) =====================
          01–03에서 적은 내용을 그대로 한 장에 모은 표.
          묶음 합계 아래에 항목까지 펼쳐, 상담 중 적은 값을 고객과 같이 확인한다. -->
@@ -455,6 +470,14 @@
     </div>
 
     <div data-tab-panel="pl" hidden>
+    <div class="ct-panel rs-pre" id="pl-pre" hidden>
+      <div class="ct-blank">
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-file-text"/></svg></div>
+        <div class="bt">내용이 아직 없어요</div>
+        <div class="bd">02 수입지출에 금액을 적으면 한 달 수입·지출 결산이 채워집니다.</div>
+        <div class="ba"><a class="ct-btn primary" href="cashflow.html">02 수입지출로</a></div>
+      </div>
+    </div>
     <!-- ===================== 수입지출결산 =====================
          시안: 왼쪽 '수입 · 들어온 돈' / 오른쪽 '비용 · 생활비와 이자' 를 나란히 두고 손익으로 맺는다. -->
     <div class="ct-panel">
@@ -491,6 +514,14 @@
     </div>
 
     <div data-tab-panel="bs" hidden>
+    <div class="ct-panel rs-pre" id="bs-pre" hidden>
+      <div class="ct-blank">
+        <div class="bi"><svg class="ic-svg" width="22" height="22"><use href="#i-layers"/></svg></div>
+        <div class="bt">내용이 아직 없어요</div>
+        <div class="bd">03 자산·부채에 금액을 적으면 재무상태표가 채워집니다.</div>
+        <div class="ba"><a class="ct-btn primary" href="assets.html">03 자산·부채로</a></div>
+      </div>
+    </div>
     <!-- ===================== 재무상태표 ===================== -->
     <div class="ct-panel">
       <div class="ct-card-h" style="margin-bottom:6px;">
@@ -539,6 +570,25 @@
   var M = CT.load(), c = CT.calc(M);
   var $ = function (id) { return document.getElementById(id); };
 
+  // 02 에 한 푼도 안 적었으면 0 만 늘어놓게 되므로 안내로 바꿔 둔다
+  var noFlow = !c.income && !c.expense;
+  $('rs-hero-pre').hidden = !noFlow;
+  $('rs-hero').hidden = noFlow;
+
+  /* 표만 있는 탭은 통째로 안내로 바꾼다. 0 이 찍힌 표는 '안 적었다'가 아니라
+     '정말 0 이다'로 읽혀 상담 중에 오해를 부른다. */
+  (function () {
+    var noBS = !c.assets && !c.liab;
+    [['cf', noFlow], ['pl', noFlow], ['bs', noBS]].forEach(function (t) {
+      var pre = $(t[0] + '-pre');
+      if (!pre) return;
+      pre.hidden = !t[1];
+      pre.parentNode.querySelectorAll(':scope > .ct-panel').forEach(function (p) {
+        if (p !== pre) p.hidden = t[1];
+      });
+    });
+  })();
+
   // 흐름 문장
   $('rs-flow').innerHTML = CT.comma(c.income) + '만 원이 들어와서 ' + CT.comma(c.expense)
     + '만 원이 나가고, <span class="hl">' + CT.comma(c.balance) + '만 원이 남았어요.</span>';
@@ -579,8 +629,10 @@
   // 자산도 빚도 안 적었으면 비율이 없다는 뜻으로 null 을 넘겨 빈 막대로 둔다
   var hasBs = !!(c.assets || c.liab);
   function bar(a, b) { CT.bar2($(a), $(b), hasBs ? np : null, '순자산', '부채'); }
-  $('rs-assets').textContent = CT.won(c.assets);
-  $('rs-net').textContent    = CT.won(c.net);
+  // 03 에 한 줄도 안 적었으면 0 원이 아니라 '아직 모름'이다
+  var noBS = !c.assets && !c.liab;
+  $('rs-assets').textContent = noBS ? '미입력' : CT.won(c.assets);
+  $('rs-net').textContent    = noBS ? '미입력' : CT.won(c.net);
   bar('rs-bar-a', 'rs-bar-b');
   var gs = CT.goalSum(M);
   if (gs.count) {

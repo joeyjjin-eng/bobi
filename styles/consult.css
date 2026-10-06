@@ -252,7 +252,8 @@
 .cE .ct-kind { padding: 2px 8px; border-radius: var(--r-sm); background: var(--bg-soft); font-weight: 600; color: var(--ink-2); }
 
 /* ===== 안내 ===== */
-.cE .ct-hint { padding: 14px 18px; background: var(--brand-pale); border-radius: var(--r-md); font-size: var(--fs-body); color: var(--ink-2); }
+/* 읽고 넘기는 안내 글이라 본문보다 한 단 작게 둔다 */
+.cE .ct-hint { padding: 14px 18px; background: var(--brand-pale); border-radius: var(--r-md); font-size: var(--fs-option); color: var(--ink-2); }
 .cE .ct-warn { padding: 16px 20px; border: 1px solid #FBD8B5; background: #FFF6EE; border-radius: var(--r-md); font-size: var(--fs-body); color: #7A4B10; }
 .cE .ct-warn b { font-weight: 700; }
 
