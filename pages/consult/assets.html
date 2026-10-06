@@ -60,7 +60,7 @@
       <div>
       <!-- 자산 -->
       <div class="ct-panel finance-section" id="assets-section" data-finance-section="자산">
-        <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 4px;color:var(--ink);">가진 것</h2>
+        <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0 0 32px;color:var(--ink);">가진 것</h2>
         <div id="as-groups"></div>
       </div>
 
@@ -68,19 +68,21 @@
       <div class="ct-panel finance-section" id="debt-section" data-finance-section="부채" style="margin-bottom:0;">
         <div class="ct-card-h" style="margin-bottom:14px;">
           <h2 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">갚을 것</h2>
-          <span class="ct-note">월 납입금은 02 부채상환에 반영</span>
+          <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 빚 갚는 돈 ›</a>
         </div>
+        <p class="ct-help">02 수입지출 '빚 갚는 돈'에 적은 빚이 자동으로 들어와요. 남은 돈·금리·만기를 아는 만큼 채워요.
+          매달 갚지 않는 빚(만기에 한 번에 갚는 대출, 가족에게 빌린 돈 등)만 여기서 추가해요.</p>
         <div class="debt-list">
           <div id="debt-rows"></div>
+          <!-- 매달 갚지 않는 빚 — 월 납입금 칸이 없고 만기에 한 번에 갚는다.
+               종류를 고르고 눌러 넣는다. 매달 갚는 빚은 02 에서 들어오므로 여기서 더하지 않는다. -->
           <div class="debt-add">
-            <span class="ct-add" id="debt-add">+ 부채 추가</span>
-            <!-- 매달 갚지 않는 빚 — 월 납입금 칸이 없고 만기에 한 번에 갚는다.
-                 종류를 고르고 눌러 넣는다. -->
             <span class="debt-lump-add">
-              <select class="ct-nat" id="debt-lump-kind" aria-label="매달 갚지 않는 빚 종류"></select>
+              <select class="ct-nat" id="debt-lump-kind" aria-label="추가할 빚 종류"></select>
               <span class="ct-add" id="debt-lump">+ 매달 갚지 않는 빚 추가</span>
             </span>
           </div>
+          <div class="cf-sum"><span>빚 합계</span><b>0<span class="unit"> 만원</span></b></div>
         </div>
       </div>
 
@@ -130,13 +132,14 @@
 
   function buildIndex() {
     var c = CT.calc(M);
-    var h = '<div class="finance-index-section"><div class="index-group"><div class="finance-index-label"><strong>가진 것</strong></div>';
+    // 묶음 제목도 눌러서 그 묶음으로 간다
+    var h = '<div class="finance-index-section"><div class="index-group"><div class="finance-index-label" data-go="asset-0"><strong>가진 것</strong></div>';
     Object.keys(M.as).forEach(function (g) {
       h += '<div class="nav-row index-child' + (activeSection === g ? ' on' : '') + '" data-section="' + g + '" data-go="asset-' + Object.keys(M.as).indexOf(g) + '"><span>' + nameOf(g) + '</span>' + money(assetTotal(g)) + '</div>';
     });
     h += '<div class="nav-row index-sum"><span>합계</span>' + money(c.assets) + '</div></div>';
-    h += '<div class="index-group"><div class="finance-index-label"><strong>갚을 것</strong></div>'
-      + '<div class="nav-row index-child' + (activeSection === '부채' ? ' on' : '') + '" data-section="부채" data-go="debt-section"><span>빚 목록</span>' + money(c.liab) + '</div></div></div>';
+    h += '<div class="index-group"><div class="finance-index-label" data-go="debt-section"><strong>갚을 것</strong></div>'
+      + '<div class="nav-row index-child' + (activeSection === '부채' ? ' on' : '') + '" data-section="부채" data-go="debt-section"><span>빚 목록</span>' + money(debtTotal()) + '</div></div></div>';
     idx.innerHTML = h;
   }
 
@@ -150,6 +153,19 @@
     '기타자산': '기타'
   };
   function nameOf(g) { return NAME[g] || g; }
+  /* 묶음마다 한 줄 안내 — 기획 문서 V4_HELP 그대로 */
+  var HELP = {
+    '유동자산': '기준일에 통장과 지갑에 있는 돈이에요.',
+    '금융자산': '예금·적금, 청약, 주식·펀드의 기준일 잔액이에요.',
+    '연금자산': '연금·퇴직연금·보험 적립금의 기준일 금액이에요.',
+    '부동산·차량': '지금 가격으로 적어요(산 가격 아님).',
+    '기타자산': '빌려준 돈처럼 나중에 받을 돈이에요.'
+  };
+  function help(text) { return text ? '<p class="ct-help">' + text + '</p>' : ''; }
+  function sumLine(label, value) {
+    return '<div class="cf-sum"><span>' + label + '</span><b>' + CT.comma(value)
+      + '<span class="unit"> 만원</span></b></div>';
+  }
 
   function money(value) {
     return '<span class="row-value">' + CT.comma(value) + '<span class="unit">만원</span></span>';
@@ -160,7 +176,8 @@
   function buildAssets() {
     gHost.innerHTML = Object.keys(M.as).map(function (g) {
       return '<section class="cf-sec finance-section finance-flat-group" id="asset-' + Object.keys(M.as).indexOf(g) + '" data-asset-group="' + g + '">'
-        + '<div class="ct-card-h finance-flat-heading"><h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">' + nameOf(g) + '</h3></div>'
+        + '<div class="ct-card-h finance-flat-heading"><h3 class="finance-category-title">' + nameOf(g) + '</h3></div>'
+        + help(HELP[g])
         + '<div class="finance-grid-head finance-asset-row"><span>항목 · 기준일 잔액</span><span style="text-align:right;">현재 · 만원</span><span></span></div>'
         + M.as[g].map(function (r, i) {
             return '<div class="finance-asset-row"><div class="finance-item-name"><div class="ct-in" data-g="' + g + '" data-i="' + i + '" data-af="name">' + r[0] + '</div></div>'
@@ -169,6 +186,7 @@
               + '<button type="button" class="del finance-delete" data-act="adel" data-g="' + g + '" data-i="' + i + '" aria-label="항목 삭제"><svg class="ic-svg" width="11" height="11"><use href="#i-x"/></svg></button></div>';
           }).join('')
         + '<div class="ct-add finance-flat-add" data-addasset="' + g + '"><button type="button">+ 항목 추가</button></div>'
+        + sumLine(nameOf(g) + ' 합계', assetTotal(g))
         + '</section>';
     }).join('');
     gHost.querySelectorAll('.ct-in[data-g]').forEach(function (el) {
@@ -197,13 +215,32 @@
     if (sel) sel.innerHTML = CT.DEBT_LUMP.map(function (k) { return '<option>' + k + '</option>'; }).join('');
   })();
 
+  /* 02 '빚 갚는 돈'에 적은 빚도 여기 그대로 보인다. 다만 월 납입금은 02 에서 적는 값이라
+     여기서는 다시 받지 않고, 남은 돈·금리·만기만 채운다. 매달 갚지 않는 빚만 여기서 더한다. */
+  function allDebts() {
+    return M.debt.map(function (d, i) { return { d: d, i: i }; });
+  }
+  /* 빚 이름은 정해진 종류에서 고른다. 직접 적게 두면 같은 빚이 사람마다 다른 이름으로 쌓인다.
+     예전에 적어 둔 이름이 목록에 없으면 그 이름도 하나 끼워 넣어 지금 값을 잃지 않게 한다. */
+  function kindSelect(name, i, lump) {
+    var kinds = (lump ? CT.DEBT_LUMP : CT.DEBT_PAY_KINDS).slice();
+    if (name && kinds.indexOf(name) < 0) kinds.unshift(name);
+    return '<select class="ct-nat debt-kind" data-d="' + i + '" aria-label="빚 종류">'
+      + kinds.map(function (k) {
+          return '<option' + (k === name ? ' selected' : '') + '>' + k + '</option>';
+        }).join('')
+      + '</select>';
+  }
+  function debtTotal() {
+    return allDebts().reduce(function (s, x) { return s + (Number(x.d.bal) || 0); }, 0);
+  }
   function buildDebt() {
-    dHost.innerHTML = M.debt.map(function (d, i) {
-      // 칸은 기획 문서와 같은 다섯 개: 빚 이름 · 남은 돈 · 월 납입금 · 금리(연 %) · 만기.
-      // '이번 달 원금·이자'는 따로 받지 않는다. 월 납입금과 어긋나게 적을 수 있는데
-      // 그러면 현금흐름표(월 납입금)와 결산(이자)이 서로 다른 말을 하게 된다.
-      // 이자는 남은 돈 × 금리 ÷ 12 로 계산한다(CT.calc).
-      // bal·pay = 만원 / rate = % / due = YYYY.MM
+    dHost.innerHTML = allDebts().map(function (x) {
+      var d = x.d, i = x.i;
+      // 적는 칸은 기획 문서(oweEditor)를 따라 빚 성격에 따라 갈린다.
+      //   매달 갚지 않는 빚 : 어디·누구에게 / 남은 돈 / 금리 / 만기
+      //   매달 갚는 빚      : 남은 돈 / 금리 / 만기 / 이번 달 원금 / 이번 달 이자
+      // bal·pay·principal·interest = 만원 / rate = % / due = YYYY.MM
       function cell(f) {
         var v = d[f], isDue = (f === 'due'), empty = (v == null || v === '');
         var ph  = isDue ? 'YYYY.MM' : '미입력';
@@ -211,19 +248,38 @@
         return '<div class="ct-in' + mod + (empty ? ' hint' : '') + '" data-hint="' + ph + '" data-d="' + i + '" data-f="' + f + '">'
           + (empty ? ph : (isDue ? v : CT.comma(v))) + '</div>';
       }
+      function atCell() {
+        var ph = '예) 세입자, 부모님';
+        return '<div class="ct-in at' + (!d.at ? ' hint' : '') + '" data-hint="' + ph + '" data-d="' + i + '" data-f="at">'
+          + (d.at || ph) + '</div>';
+      }
+      function field(label, html) { return '<div class="debt-field"><span class="lb">' + label + '</span>' + html + '</div>'; }
+
+      var note = d.lump ? '매달 갚지 않는 빚이에요.'
+        : d.manualSplit ? '원금·이자를 직접 적었어요.'
+        : '원금·이자는 금리·남은 돈으로 자동으로 나눠요(모르면 납입금 전체를 원금으로 봐요).';
+
       return '<div class="debt-card">'
         + '<div class="debt-identity">'
-        +   (d.lump ? '<span class="debt-tag">매달 갚지 않는 빚</span>' : '')
-        +   '<div class="ct-in" data-hint="부채 이름" data-d="' + i + '" data-f="name">' + d.name + '</div>'
-        +   '<div class="ct-in at' + (!d.at ? ' hint' : '') + '" data-hint="금융사" data-d="' + i + '" data-f="at">' + (d.at || '금융사') + '</div>'
+        +   kindSelect(d.name, i, d.lump)
         +   '<button type="button" class="del finance-delete with-label" data-act="ddel" data-d="' + i + '"><svg class="ic-svg" width="12" height="12"><use href="#i-trash"/></svg><span class="tx">삭제</span></button>'
         + '</div><div class="debt-fields">'
-        +   '<div class="debt-field"><span class="lb">남은 돈</span>' + cell('bal') + '</div>'
-        +   (d.lump ? '' : '<div class="debt-field"><span class="lb">월 납입금</span>' + cell('pay') + '</div>')
-        +   '<div class="debt-field"><span class="lb">금리(연 %)</span>' + cell('rate') + '</div>'
-        +   '<div class="debt-field"><span class="lb">만기</span>' + cell('due') + '</div>'
+        +   (d.lump ? field('어디·누구에게', atCell()) : '')
+        +   field('남은 돈', cell('bal'))
+        +   field('금리 · 연 %', cell('rate'))
+        +   field('만기', cell('due'))
+        +   (d.lump ? '' : field('이번 달 원금', cell('principal')) + field('이번 달 이자', cell('interest')))
+        +   '<p class="ct-help debt-note">' + note + '</p>'
         + '</div></div>';
-    }).join('') || '<div class="ct-note" style="padding:20px 0;">등록된 부채 없음 · 아래에서 추가합니다</div>';
+    }).join('') || '<div class="ct-note" style="padding:20px 0;">적은 빚이 없어요 · 02 빚 갚는 돈에 적거나 아래에서 골라 추가합니다</div>';
+    dHost.querySelectorAll('select.debt-kind').forEach(function (el) {
+      el.addEventListener('change', function () {
+        var d = M.debt[Number(el.dataset.d)];
+        if (!d) return;
+        d.name = el.value;
+        commit();
+      });
+    });
     dHost.querySelectorAll('.ct-in[data-d]').forEach(function (el) {
       el.setAttribute('contenteditable', 'true');
       el.addEventListener('focus', function () {
@@ -232,9 +288,9 @@
       el.addEventListener('blur', function () {
         var d = M.debt[Number(el.dataset.d)], f = el.dataset.f;
         if (!d) return;
-        if (f === 'name' || f === 'at') {
-          d[f] = el.textContent.trim();
-          if (!d[f]) { el.textContent = el.dataset.hint || (f === 'name' ? '부채 이름' : '금융사'); el.classList.add('hint'); }
+        if (f === 'at') {
+          d.at = el.textContent.trim();
+          if (!d.at) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
         }
         else if (f === 'due') {
           var t = el.textContent.trim();
@@ -244,6 +300,8 @@
         }
         else {
           d[f] = CT.parse(el.textContent);
+          // 원금·이자를 손으로 적으면 더는 금리에서 나눠 쓰지 않는다(기획 manualSplit)
+          if (f === 'principal' || f === 'interest') d.manualSplit = true;
           el.classList.toggle('hint', d[f] === null);
           el.textContent = d[f] === null ? '미입력' : CT.comma(d[f]);
         }
@@ -255,7 +313,15 @@
   function commit() { CT.save(M); paint(); }
   function paint() {
     buildIndex();
+    // 줄을 다시 그리면 적고 있던 칸이 날아가므로 합계 숫자만 고쳐 쓴다
+    gHost.querySelectorAll('[data-asset-group]').forEach(function (sec) {
+      var b = sec.querySelector('.cf-sum b');
+      if (b) b.innerHTML = CT.comma(assetTotal(sec.dataset.assetGroup)) + '<span class="unit"> 만원</span>';
+    });
     var c = CT.calc(M);
+    // 합계는 이 화면에 보이는 빚만 더한다. 매달 갚는 빚은 02 에서 다룬다.
+    var lb = document.querySelector('#debt-section .cf-sum b');
+    if (lb) lb.innerHTML = CT.comma(debtTotal()) + '<span class="unit"> 만원</span>';
     document.getElementById('as-sum').textContent =
       '가진 것 ' + CT.comma(c.assets) + '만원 · 갚을 것 ' + CT.comma(c.liab) + '만원 · 순자산 ' + CT.comma(c.net) + '만원';
   }
@@ -266,10 +332,6 @@
       var target = document.getElementById(go.dataset.go);
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
-    }
-    if (e.target.closest('#debt-add')) {
-      M.debt.push({ name: '새 부채', at: '', bal: null, pay: null, rate: null, due: '' });
-      buildDebt(); commit(); return;
     }
     if (e.target.closest('#debt-lump')) {
       var kind = document.getElementById('debt-lump-kind').value || CT.DEBT_LUMP[0];

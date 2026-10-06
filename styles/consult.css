@@ -96,7 +96,7 @@
 .cE .ct-step.fin .n { border-radius: var(--r-sm); }
 
 /* ===== 패널 · 카드 ===== */
-.cE .ct-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--sh-1); padding: 28px 32px; margin-bottom: 20px; }
+.cE .ct-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--sh-1); padding: 36px 40px; margin-bottom: 24px; }
 .cE .ct-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-1); }
 .cE .ct-card.pad { padding: 20px 24px; }
 .cE .ct-card.flat { box-shadow: none; }
@@ -304,6 +304,7 @@
 /* 좌우 여백은 .nav-row(10px) 와 맞춘다. 묶음 제목·합계·단독 줄의 글머리가 한 줄로 서야 한다.
    들여쓰기는 묶음 안의 항목(.index-child)에만 준다. */
 .cE .finance-index-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 0 10px 8px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); }
+.cE .finance-index-label[data-go] { cursor: pointer; }
 .cE .finance-index-label strong { font-size: var(--fs-body); color: var(--ink); font-weight: 700; }
 /* 묶음 이름 옆 성격(매달 거의 같은 돈 · 달마다 다른 돈) — 이름이 아니라 설명이라 얇고 연하게 */
 .cE .finance-index-label .sub { margin-left: 6px; font-size: var(--fs-option); font-weight: 400; color: var(--ink-3); letter-spacing: 0; }
@@ -319,7 +320,6 @@
 /* 묶음 합계 — 누르는 줄이 아니라 읽는 줄이라 구분선으로 떼어 둔다 */
 .cE .finance-index .index-sum { margin-top: 4px; padding-top: 11px; border-top: 1px solid var(--line);
   border-radius: 0; font-weight: 700; color: var(--ink); cursor: default; }
-.cE .finance-index .index-sum:hover { background: none; }
 .cE .finance-index .row-value .unit { margin-left: 4px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
 .cE .finance-section { scroll-margin-top: 92px; }
 .cE .finance-index .index-parent { display: flex; justify-content: space-between; gap: 12px; padding: 10px; font-weight: 700; color: var(--ink); }
@@ -327,8 +327,7 @@
 /* 묶음 사이는 줄 간격(7px)보다 넉넉히 띄워 묶음이 먼저 읽히게 한다.
    합계 줄이 이미 윗선을 긋고 있어 구분선을 또 두면 선이 겹쳐 보인다. */
 .cE .finance-index .index-group + .index-group { margin-top: 20px; padding-top: 0; border-top: 0; }
-.cE .finance-index [data-go] { cursor: pointer; transition: background-color .15s ease, color .15s ease; }
-.cE .finance-index [data-go]:hover { background: var(--bg-soft); color: var(--ink); border-radius: var(--r-sm); }
+.cE .finance-index [data-go] { cursor: pointer; }
 /* ===== 재무 입력 공통 행: 바깥 패널 하나, 안쪽은 선과 여백만 사용 ===== */
 .cE .finance-optionbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 18px; margin-bottom: 20px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg-soft); }
 .cE .finance-optionbar .copy { display: flex; flex-direction: column; gap: 3px; }
@@ -336,19 +335,24 @@
 .cE .finance-optionbar .copy span { font-size: var(--fs-option); color: var(--ink-3); }
 .cE .finance-domain-stack { display: flex; flex-direction: column; gap: 20px; }
 .cE .finance-domain-stack .finance-domain { margin-bottom: 0; }
-.cE .finance-domain-title { margin: 0 0 18px; font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+.cE .finance-domain-title { margin: 0 0 32px; font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
 .cE .finance-domain-title .sub { margin-left: 8px; font-size: var(--fs-body); font-weight: 400; color: var(--ink-3); letter-spacing: 0; }
 .cE .finance-subgroup + .finance-subgroup { margin-top: 28px; padding-top: 26px; border-top: 1px solid var(--line); }
 .cE .finance-subgroup-title { margin: 0 0 8px; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); }
-.cE .finance-flat-group { padding: 16px 0; }
-.cE .finance-flat-group + .finance-flat-group { border-top: 1px solid var(--line); }
-.cE .finance-category-title { margin: 0; font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
-.cE .finance-flat-heading { margin-bottom: 12px; }
+/* 묶음은 선이 아니라 간격으로 나눈다. 선까지 그으면 제목·설명·줄·합계가 모두 선으로 둘러싸여 층이 안 읽힌다. */
+.cE .finance-flat-group { padding: 0; }
+.cE .finance-flat-group + .finance-flat-group { margin-top: 48px; border-top: 0; }
+/* 중분류 제목 — 크기 단은 본문 그대로 두고(4단 규칙), 굵기·색과 앞뒤 여백으로 층을 만든다 */
+.cE .finance-category-title { margin: 0; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+/* 제목 바로 밑에 붙는 설명이라 제목과 가깝게 둔다. 떨어뜨리면 어느 묶음 설명인지 흐려진다. */
+.cE .finance-flat-heading { margin-bottom: 4px; }
 .cE .finance-grid-row { display: grid; grid-template-columns: minmax(180px, .9fr) minmax(200px, 1.1fr) 34px; gap: 16px; align-items: center; }
 .cE .finance-grid-row:has([data-toggle-target="goal"]:not([hidden])) { grid-template-columns: minmax(150px, .8fr) minmax(150px, 1fr) minmax(150px, 1fr) 34px; }
-.cE .finance-grid-head { padding: 8px 0 10px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); }
+/* 머리글은 바로 아래 칸을 가리키는 라벨이라 칸에 붙여 둔다 */
+.cE .finance-grid-head { padding: 0 0 3px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); }
 .cE .finance-grid-head > span:not(:first-child) { text-align: right; }
-.cE .finance-input-row { min-height: 66px; padding: 10px 0; border-top: 1px solid var(--line); }
+/* 줄 사이에는 선을 두지 않는다. 입력 칸 자체가 테두리를 갖고 있어 선이 겹친다. */
+.cE .finance-input-row { min-height: 58px; padding: 5px 0; }
 /* 기본 제공 항목도 고쳐 쓸 수 있는 입력 칸으로 둔다.
    테두리를 지워 두면 글자처럼 보여 아무도 누르지 않는다.
    테두리 색은 오른쪽 금액 칸(.ct-in 기본값 --line-strong)과 똑같이 맞춘다. */
@@ -364,34 +368,52 @@
   font-family: inherit; font-size: var(--fs-option); font-weight: 600;
   transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
 .cE .finance-delete.with-label:hover { border-color: #F2C4C9; background: #FFF4F5; color: #C92238; }
-.cE .finance-flat-add { padding: 8px 0 2px; border-top: 1px solid var(--line); }
-.cE .finance-flat-add button { min-height: 36px; padding: 0 14px; border: 1px solid var(--brand-soft); border-radius: var(--r-sm); background: var(--brand-pale); color: var(--brand-deep); font-family: inherit; font-size: var(--fs-body); font-weight: 650; cursor: pointer; }
-.cE .finance-flat-add button:hover { border-color: var(--brand); background: var(--brand-pale); color: var(--brand-deep); }
+/* 항목 추가 — 줄을 하나 더 만드는 작은 일이라 글자 버튼으로만 둔다 */
+.cE .finance-flat-add { padding: 6px 0 0; border-top: 0; }
+.cE .finance-flat-add button { min-height: 0; padding: 4px 0; border: 0; border-radius: 0; background: none; color: var(--brand-deep); font-family: inherit; font-size: var(--fs-body); font-weight: 600; cursor: pointer; }
+.cE .finance-flat-add button:hover { background: none; color: var(--brand-hover); }
 .cE .finance-domain-stack .finance-flat-group + .finance-flat-group { border-top: 0; }
 .cE .finance-domain-stack .finance-subgroup + .finance-subgroup { border-top: 0; }
-.cE .finance-asset-row { display: grid; grid-template-columns: minmax(180px, .85fr) minmax(240px, 1.15fr) 34px; gap: 24px; align-items: center; min-height: 66px; padding: 10px 0; border-top: 1px solid var(--line); }
+.cE .finance-asset-row { display: grid; grid-template-columns: minmax(180px, .85fr) minmax(240px, 1.15fr) 34px; gap: 24px; align-items: center; min-height: 58px; padding: 5px 0; }
+.cE .finance-grid-head.finance-asset-row { min-height: 0; padding: 0 0 3px; }
 
 /* 부채는 한 건의 기본정보와 세부 입력을 좌우로 나눈다. */
-.cE .debt-list { border-top: 1px solid var(--line); }
 .cE .debt-card { display: grid; grid-template-columns: minmax(160px, .7fr) minmax(340px, 1.4fr); gap: 36px; padding: 24px 0; }
 .cE .debt-card + .debt-card { border-top: 1px solid var(--line); }
 .cE .debt-identity { display: flex; flex-direction: column; gap: 8px; align-self: start; }
 .cE .debt-identity .ct-in { width: 100%; }
-/* 금융사도 적는 칸이다. 테두리를 지워 두면 글자처럼 보여 아무도 누르지 않는다.
-   이름 칸보다 한 단계 연한 테두리로 두되, 입력 칸인 것은 분명히 한다. */
-.cE .debt-identity .at { min-height: 42px; padding: 9px 14px; border-color: var(--line); font-size: var(--fs-body); color: var(--ink-2); }
-.cE .debt-identity .at:hover { border-color: var(--line-strong); }
 .cE .debt-identity .finance-delete { align-self: flex-start; margin-top: 2px; }
+/* 어디·누구에게는 글자 칸이라 금액 칸과 달리 왼쪽에 쓴다 */
+.cE .debt-field .ct-in.at { text-align: left; font-weight: 400; color: var(--ink-2); }
+/* 카드 끝의 한 줄 설명 — 칸 두 개를 가로지른다 */
+.cE .debt-note { grid-column: 1 / -1; margin: 2px 0 0; }
 .cE .debt-fields { display: flex; flex-direction: column; gap: 10px; }
-.cE .debt-field { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; align-items: center; }
+.cE .debt-field { display: grid; grid-template-columns: 124px minmax(0, 1fr); gap: 14px; align-items: center; }
 .cE .debt-field .lb { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
-.cE .debt-add { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 16px 0 4px; border-top: 1px solid var(--line); }
+.cE .debt-add { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 16px 0 4px; }
 .cE .debt-lump-add { display: inline-flex; align-items: center; gap: 10px; }
-.cE .debt-lump-add select { width: auto; min-width: 200px; min-height: 40px; padding: 8px 40px 8px 12px; font-size: var(--fs-option); }
-/* 매달 갚지 않는 빚이라는 꼬리표 — 월 납입금 칸이 없는 이유를 카드에서 바로 알린다 */
-.cE .debt-tag { align-self: flex-start; padding: 3px 10px; border-radius: var(--r-pill);
-  background: var(--bg-soft); border: 1px solid var(--line);
-  font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); }
+.cE .debt-lump-add select { width: auto; min-width: 200px; min-height: 42px; padding: 8px 40px 8px 14px; font-size: var(--fs-body); }
+
+/* ===== 02 빚 갚는 돈 =====
+   한 줄에 빚 이름 · 어디서 빌렸나 · 월 납입금만 둔다(기획 문서 '빚 갚는 돈').
+   남은 돈·금리·만기는 03 빚 목록에서 받으므로 여기 칸을 늘리지 않는다. */
+.cE .debt-pay-row { display: grid; grid-template-columns: minmax(140px, .9fr) minmax(140px, 1fr) minmax(110px, .8fr) 34px; gap: 16px; align-items: center; }
+/* '어디서 빌렸나'는 글자 칸이라 머리글도 왼쪽에 둔다. 금액 칸만 오른쪽. */
+.cE .finance-grid-head.debt-pay-row > span:nth-child(2) { text-align: left; }
+.cE .debt-pay-rows .debt-pay-row { min-height: 58px; padding: 5px 0; }
+.cE .finance-grid-head.debt-pay-row { min-height: 0; padding: 0 0 3px; }
+/* 빚 종류는 고르는 칸이라 입력 칸(.ct-in)과 같은 크기·굵기로 맞춰 한 줄로 서게 한다 */
+.cE select.ct-nat.debt-kind { width: 100%; min-height: 42px; padding: 9px 38px 9px 14px;
+  font-size: var(--fs-body); font-weight: 650; color: var(--ink); }
+.cE .debt-pay-add { display: flex; align-items: center; gap: 10px; padding: 10px 0 0; }
+.cE .debt-pay-add select { width: auto; min-width: 190px; min-height: 42px; padding: 8px 40px 8px 14px; font-size: var(--fs-body); }
+.cE .ct-add-link { padding: 0; border: 0; background: none; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--brand-deep); cursor: pointer; }
+.cE .ct-add-link:hover { color: var(--brand-hover); }
+/* 묶음 한 줄 안내 — 어디에 적는 돈인지 짚어 주는 글. 제목이 아니라 주석이라 가장 작은 단으로 둔다. */
+.cE .ct-help { margin: 0 0 20px; font-size: var(--fs-option); color: var(--ink-3); }
+/* 묶음 끝 합계 — 묶음마다 같은 모양. 줄마다 쓰이므로 칠하지 않고 선 하나로 둔다. */
+.cE .cf-sum { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 16px; padding: 14px 16px; border-radius: var(--r-md); background: var(--bg-soft); font-size: var(--fs-body); font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cE .cf-sum .unit { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); }
 
 /* ===== 좁은 데스크탑 (961–1320px) =====
    셸은 961px 위에서 최소 1100px 로 고정된다(.layout min-width).
@@ -407,17 +429,21 @@
   .cE .finance-grid-row:has([data-toggle-target="goal"]:not([hidden])) { grid-template-columns: minmax(110px, .8fr) minmax(110px, 1fr) minmax(110px, 1fr) 34px; gap: 14px; }
   .cE .finance-asset-row { grid-template-columns: minmax(150px, .85fr) minmax(200px, 1.15fr) 34px; gap: 20px; }
   .cE .debt-card { grid-template-columns: minmax(130px, .7fr) minmax(280px, 1.4fr); gap: 24px; }
-  .cE .debt-field { grid-template-columns: 86px minmax(0, 1fr); gap: 12px; }
+  .cE .debt-field { grid-template-columns: 112px minmax(0, 1fr); gap: 12px; }
+  .cE .debt-pay-row { grid-template-columns: minmax(100px, .9fr) minmax(100px, 1fr) minmax(80px, .7fr) 34px; gap: 12px; }
 }
 
 @media (max-width: 760px) {
   .cE .debt-card { grid-template-columns: 1fr; gap: 18px; }
-  .cE .debt-field { grid-template-columns: 80px minmax(0, 1fr); }
+  .cE .debt-field { grid-template-columns: 104px minmax(0, 1fr); }
   .cE .finance-grid-row,
   .cE .finance-grid-row:has([data-toggle-target="goal"]:not([hidden])),
   .cE .finance-asset-row { grid-template-columns: 1fr; gap: 8px; }
   .cE .finance-grid-head { display: none; }
   .cE .finance-input-row .del { justify-self: start; }
+  .cE .debt-pay-row { grid-template-columns: 1fr; gap: 8px; }
+  .cE .debt-pay-row .del { justify-self: start; }
+  .cE .debt-pay-add { flex-wrap: wrap; }
 }
 
 @media (max-width: 960px) {
@@ -666,10 +692,21 @@
 .cE .ct-next .side { gap: 10px; }
 .cE .ct-next .when { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .cE .ct-next .when.hint { font-size: var(--fs-body); font-weight: 500; color: var(--ink-4); }
-.cE .ct-next .tm { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.cE .ct-next .tm { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; }
 .cE .ct-next .tmrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cE .ct-next .ampm { grid-template-columns: repeat(2, 1fr); width: 132px; flex: none; }
 .cE .ct-next .tmrow select { width: 92px; flex: none; }
+/* 다음 상담일을 정하지 않음 — 날짜를 고르는 대신 '안 정했다'를 고르는 자리 */
+.cE .ct-check { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start;
+  margin-top: 22px; padding: 0; border: 0; background: none; cursor: pointer;
+  font-family: inherit; font-size: var(--fs-body); color: var(--ink-2); }
+.cE .ct-check .bx { display: inline-grid; place-items: center; width: 20px; height: 20px; flex: none;
+  border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: #fff; color: transparent;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+.cE .ct-check.on { color: var(--ink); font-weight: 600; }
+.cE .ct-check.on .bx { border-color: var(--brand); background: var(--brand); color: #fff; }
+/* 안 정하기로 했으면 달력·시간은 만지지 않는다 */
+.cE .ct-next .ct-cal.off, .cE .ct-next .tm.off { opacity: .4; pointer-events: none; }
 @media (max-width: 760px) {
   .cE .ct-next { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .cE .ct-cal { max-width: 380px; }

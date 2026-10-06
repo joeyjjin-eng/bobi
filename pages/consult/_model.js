@@ -60,9 +60,12 @@
   var BASE_YM = '2026-09';   // 상담일 기준
   var BASE_DATE_TEXT = '2026.09.28';   // 기준일을 안 적었을 때 쓰는 상담일
   var KINDS = ['비상금', '주택구매', '결혼자금', '자녀학비', '노후', '기타'];
-  /* 매달 갚지 않는 빚 — 월 납입금이 없고 만기에 한 번에 갚는 종류.
+  /* 매달 갚지 않는 빚 — 월 납입금이 없고 만기에 한 번에 갚는 종류. 기획 문서 OWE_KINDS + 기타.
      남은 돈·금리·만기는 똑같이 받되 02 부채상환에는 들어가지 않는다. */
-  var DEBT_LUMP = ['만기에 한 번에 갚는 대출'];
+  var DEBT_LUMP = ['만기에 한 번에 갚는 대출', '가족·지인에게 빌린 돈', '세 준 집 보증금', '미납 세금', '기타'];
+  /* 매달 갚는 빚 — 02 빚 갚는 돈에서 골라 더한다. 기획 문서 PAY_KINDS 그대로. */
+  var DEBT_PAY_KINDS = ['전세·주택 대출', '차량 할부', '휴대폰 기기 할부', '신용대출',
+    '카드론·리볼빙', '카드 할부', '그 밖의 대출'];
   var TERMS = ['단기', '중기', '장기'];
 
   var FIXED = ['집', '통신', '보험', '구독', '가족', '교통'];
@@ -258,6 +261,8 @@
   var DOW = ['일', '월', '화', '수', '목', '금', '토'];
   function nextText(m) {
     var w = (m && m.wrap) || {};
+    // 안 정하기로 한 것과 아직 안 적은 것은 다른 말이라 문장을 나눈다
+    if (w.noNext) return '다음 상담일을 정하지 않았어요';
     var d = String(w.next || '');
     if (!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(d)) return '';
     var p = d.split('-');
@@ -285,6 +290,8 @@
        남은 돈 × 연 금리 ÷ 12 로 이번 달 이자를 잡고, 월 납입금을 넘지 않게 자른다
        (금리를 안 적었으면 0). 원금은 월 납입금 − 이자다. */
     var interest = round1(m.debt.reduce(function (s, d) {
+      // 설계사가 이번 달 이자를 직접 적었으면 그 값을 쓴다(기획 manualSplit)
+      if (d.manualSplit && d.interest != null && d.interest !== '') return s + (Number(d.interest) || 0);
       var bal = Number(d.bal) || 0, rate = Number(d.rate) || 0, pay = d.lump ? 0 : (Number(d.pay) || 0);
       var i = bal * rate / 100 / 12;
       return s + (pay ? Math.min(i, pay) : i);
@@ -433,7 +440,7 @@
   }
 
   window.CT = {
-    asDateText: asDateText, nextText: nextText, DOW: DOW, DEBT_LUMP: DEBT_LUMP,
+    asDateText: asDateText, nextText: nextText, DOW: DOW, DEBT_LUMP: DEBT_LUMP, DEBT_PAY_KINDS: DEBT_PAY_KINDS,
     KEY: KEY, SAMPLE: SAMPLE, blank: blank, FIXED: FIXED, VARI: VARI, ORDER: ORDER, KINDS: KINDS, TERMS: TERMS, BASE_YM: BASE_YM,
     load: load, save: save, reset: reset, calc: calc,
     loadCase: loadCase, caseNames: caseNames,

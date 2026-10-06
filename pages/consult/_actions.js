@@ -91,6 +91,9 @@
       $$('div[data-tab]', tab.parentNode).forEach(function (d) { d.classList.remove('on'); });
       tab.classList.add('on');
       $$('[data-tab-panel]').forEach(function (p) { p.hidden = p.dataset.tabPanel !== tab.dataset.tab; });
+      // 탭을 바꾸면 내용이 통째로 바뀐다. 앞 탭에서 내려온 자리에 그대로 두면
+      // 새 탭의 중간부터 보이므로 맨 위로 올린다.
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 

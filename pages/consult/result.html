@@ -20,7 +20,17 @@
   .cE .rs-cf tbody td { padding: 11px 16px; }
   .cE .rs-cf tr.sec td { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); background: var(--bg-soft); border-top: 2px solid var(--ink); padding-top: 14px; padding-bottom: 14px; }
   .cE .rs-cf tr.sec:first-child td { border-top: 0; }
+  /* 한 열짜리 표라 패널 폭을 다 쓰면 이름과 금액이 양 끝으로 멀어져 눈이 따라가기 어렵다.
+     표만 줄이면 패널이 혼자 넓게 남으므로 패널째 줄인다. */
+  .cE #b-cf { max-width: 760px; margin-left: auto; margin-right: auto; }
+  /* 맨 아래 잔액은 이 표가 말하려는 값이라 크게 둔다 */
+  .cE .rs-cf tfoot td { font-size: var(--fs-h2); padding-top: 20px; padding-bottom: 20px; }
+  .cE .rs-cf tfoot td.amt { font-size: var(--fs-h1); letter-spacing: -0.02em; }
   .cE .rs-cf tr.grp td { font-weight: 700; color: var(--ink); }
+  /* 묶음 줄 — 누르면 아래 항목이 펴진다 */
+  .cE .rs-cf tr.grp[data-cfgrp] { cursor: pointer; }
+  .cE .rs-cf tr.grp[data-cfgrp]:hover td { background: var(--bg-soft); }
+  .cE .rs-cf tr.grp[data-cfgrp] .ct-chev { margin-right: 10px; vertical-align: 1px; }
   .cE .rs-cf tr.grp td:first-child { padding-left: 32px; }
   .cE .rs-cf tr.itm td { color: var(--ink-2); }
   .cE .rs-cf tr.itm td:first-child { padding-left: 54px; }
@@ -36,9 +46,13 @@
   .cE .rs-pl { align-items: stretch; }
   .cE .rs-pl > div { display: flex; flex-direction: column; }
   .cE .rs-pl .rs-pl-sum { margin-top: auto; }
-  .cE .rs-pl .ct-kv { gap: 14px 24px; margin-top: 14px; }
+  /* 합계 줄이 margin-top:auto 로 바닥에 붙으면서 긴 쪽(비용)은 윗선과 글자가 맞닿는다.
+     줄 간격은 margin 이 아니라 목록의 padding 으로 잡아 두 칸 모두 같은 여백을 갖게 한다. */
   .cE .rs-pl-h { padding-bottom: 12px; border-bottom: 2px solid var(--ink); font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .cE .rs-pl-h .sub { font-weight: 400; color: var(--ink-3); }
+  /* 단위는 머리글 오른쪽 끝에 — 금액이 서는 자리와 같은 쪽 */
+  .cE .rs-pl-h { display: flex; align-items: baseline; gap: 6px; }
+  .cE .rs-pl-h .unit { margin-left: auto; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
   .cE .rs-pl-sum { display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
     margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--ink);
     font-size: var(--fs-body); color: var(--ink-2); font-variant-numeric: tabular-nums; }
@@ -47,6 +61,60 @@
   /* 묶음 줄은 항목보다 위에 서야 해서 위쪽 여백을 준다 */
   .cE .rs-bs .ct-kv .k.tp, .cE .rs-bs .ct-kv .v.tp { border-top: 0; padding-top: 20px; }
   .cE .rs-bs .ct-kv .k.tp:first-child, .cE .rs-bs .ct-kv .k.tp:first-child + .v.tp { padding-top: 14px; }
+  /* ===== 세 장(현금흐름표·수입지출결산·재무상태표) 공통 규칙 =====
+     1열이냐 2열이냐만 다르고 글자·굵기·여백·선은 똑같이 간다.
+       글자 — 열 머리 13 · 묶음/항목 15 · 합계 금액 24
+       굵기 — 항목 400 · 묶음 600 · 구분·합계 700 (그 밖에는 굵게 쓰지 않는다)
+       여백 — 줄 높이 14px 위아래
+       선   — 줄 사이에는 긋지 않고, 묶음이 끝나는 곳과 합계 위에만 긋는다 */
+
+  /* 표의 선·헤더·색은 보비 기본 표(.ct-tbl)를 그대로 쓴다.
+     여기서는 세 단계(구분·묶음·항목)의 굵기와 들여쓰기만 정한다. */
+  .cE #b-cf .rs-cf tbody td { padding: 14px 16px; font-size: var(--fs-body); }
+  .cE #b-cf .rs-cf tr.sec td { font-size: var(--fs-body); font-weight: 700; color: var(--ink);
+    background: var(--bg-soft); border-top: 1px solid var(--line-strong); padding-top: 14px; padding-bottom: 14px; }
+  .cE #b-cf .rs-cf tr.sec:first-child td { border-top: 0; }
+  .cE #b-cf .rs-cf tr.grp td { font-weight: 600; color: var(--ink); }
+  .cE #b-cf .rs-cf tr.grp td:first-child { padding-left: 16px; }
+  .cE #b-cf .rs-cf tr.itm td { font-weight: 400; color: var(--ink-2); }
+  .cE #b-cf .rs-cf tr.itm td:first-child { padding-left: 42px; }
+  .cE #b-cf .rs-cf tfoot td.amt { font-size: var(--fs-h1); letter-spacing: -0.02em; }
+
+  /* 결산·재무상태표는 표가 아니라 두 칸 목록이지만, 선과 머리는 표와 같게 맞춘다.
+     머리 = 회색 배경 + 아래 굵은 선, 줄마다 아래 선, 합계 위 선. */
+  .cE .rs-pl-h { display: flex; align-items: baseline; gap: 6px;
+    padding: 14px 16px; background: var(--bg-soft); border-bottom: 2px solid var(--ink);
+    font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; }
+  .cE .rs-pl-h .sub { font-weight: 500; color: var(--ink-3); letter-spacing: 0; }
+  .cE .rs-pl-h .unit { margin-left: auto; font-weight: 500; color: var(--ink-3); }
+
+  .cE .rs-pl .ct-kv, .cE .rs-bs .ct-kv { gap: 0 24px; margin: 0; font-size: var(--fs-body); }
+  .cE .rs-pl .ct-kv > *, .cE .rs-bs .ct-kv > * { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  /* 마지막 줄은 아래 선을 빼야 합계 줄의 윗선과 겹쳐 두 줄로 보이지 않는다 */
+  .cE .rs-pl .ct-kv > *:nth-last-child(-n+2),
+  .cE .rs-bs .ct-kv > *:nth-last-child(-n+2) { border-bottom: 0; }
+  .cE .ct-kv .v { font-weight: 600; }
+  .cE .rs-bs .ct-kv .k.tp { font-weight: 600; }
+  .cE .rs-bs .ct-kv .k.tp, .cE .rs-bs .ct-kv .v.tp { border-top: 0; padding-top: 14px; }
+
+  .cE .rs-pl-sum { margin-top: 0; padding: 18px 16px; border-top: 1px solid var(--line); border-bottom: 0;
+    background: var(--bg-soft); font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .rs-pl-sum b { font-size: var(--fs-h1); font-weight: 700; }
+  /* 묶음 목록을 표처럼 보이게 바깥을 두른다 */
+  .cE .rs-pl > div, .cE .rs-bs > div { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: #fff; }
+
+  /* 설명 줄은 테두리 안에 들어가므로 윗줄과 같은 좌우 여백, 위아래 같은 간격으로 둔다 */
+  .cE .rs-bs .ct-note { padding: 14px 16px; }
+  /* 순자산 — 두 칸 아래 전체 폭 한 줄. 이 표가 맺는 값이라 브랜드 색으로 세운다. */
+  .cE .rs-net { display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    margin-top: 20px; padding: 18px 20px;
+    border: 1px solid var(--brand); border-radius: var(--r-md); background: var(--brand-pale);
+    font-size: var(--fs-body); font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cE .rs-net .sub { font-weight: 400; color: var(--ink-3); }
+  .cE .rs-net b { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--brand-deep); }
+  /* 글자 크기가 달라도 줄 상자 높이를 같게 두어야 가운데가 맞는다 */
+  .cE .rs-net > span, .cE .rs-net > b { line-height: 32px; }
+
   @media (max-width: 960px) {
     .cE .rs-hero { grid-template-columns: 1fr; gap: 20px; }
     .cE .rs-bs, .cE .rs-pl { grid-template-columns: 1fr; gap: 28px; }
@@ -235,7 +303,8 @@
       <div id="sp-body" hidden>
         <div class="ct-hero" id="sp-lead" style="margin-bottom:28px;"></div>
 
-        <div class="ct-split">
+        <!-- 아래도 패널 안쪽 여백(28px)에 20px 를 더해 위 간격과 맞춘다 -->
+        <div class="ct-split" style="margin-bottom:20px;">
           <div class="ct-donut">
             <div class="ring">
               <svg width="200" height="200" viewBox="0 0 340 340" id="sp-donut">
@@ -287,11 +356,12 @@
           <li>한 해에 모으는 돈 <b id="rv-year"></b></li>
         </ul>
 
-        <div class="ct-card-h" style="margin:40px 0 12px;">
+        <!-- 위 묶음과 48px 로 떼고, 아래도 패널 안쪽 여백(28px)에 20px 를 더해 같은 48px 로 맞춘다 -->
+        <div class="ct-card-h" style="margin:48px 0 12px;">
           <div class="ct-card-t">무엇으로 모으고 있나</div>
           <div class="ct-note">02 저축 · 단위 만원</div>
         </div>
-        <div class="ct-donut" id="rv-mix" style="max-width:520px;">
+        <div class="ct-donut" id="rv-mix" style="max-width:520px;margin-bottom:20px;">
           <div class="ring">
             <svg width="200" height="200" viewBox="0 0 340 340" id="rv-donut">
               <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
@@ -330,20 +400,22 @@
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">한 달 동안 들어온 돈이 어디로 갔는지
-        <span class="ct-note">· 2026.09 · 단위 만원 · 01–03에 적은 금액 그대로</span>
+        <span class="ct-note">· 2026.09</span>
       </div>
 
-      <table class="ct-tbl rs-cf">
-        <thead><tr>
-          <th>구분</th>
-          <th class="amt" style="width:170px;">금액</th>
-        </tr></thead>
-        <tbody id="cf-rows"></tbody>
-        <tfoot><tr>
-          <td>현금흐름 잔액 <span class="ct-note" style="font-weight:500;">① − ② − ③</span></td>
-          <td class="amt" id="cf-bal" style="color:var(--brand-deep);">0</td>
-        </tr></tfoot>
-      </table>
+      <div class="ct-tbl-wrap">
+        <table class="ct-tbl rs-cf">
+          <thead><tr>
+            <th>구분</th>
+            <th class="amt" style="width:170px;">금액 <span class="ct-note">· 만원</span></th>
+          </tr></thead>
+          <tbody id="cf-rows"></tbody>
+          <tfoot><tr>
+            <td>현금흐름 잔액 <span class="ct-note" style="font-weight:500;">① − ② − ③</span></td>
+            <td class="amt" id="cf-bal" style="color:var(--brand-deep);">0</td>
+          </tr></tfoot>
+        </table>
+      </div>
 
       <!-- 02 '이번 달만 있었던 큰돈'(일시 수입·일시 지출).
            매달 되풀이되는 돈이 아니라 월 잔액(①−②−③)에는 넣지 않고 따로 적어 둔다.
@@ -354,7 +426,7 @@
           <div class="ct-note">월 잔액에는 넣지 않습니다</div>
         </div>
         <table class="ct-tbl rs-cf">
-          <thead><tr><th>구분</th><th class="amt" style="width:170px;">금액</th></tr></thead>
+          <thead><tr><th>구분</th><th class="amt" style="width:170px;">금액 <span class="ct-note">· 만원</span></th></tr></thead>
           <tbody id="cf-once"></tbody>
         </table>
       </div>
@@ -364,9 +436,12 @@
       <div id="cf-over-wrap" style="margin-top:40px;" hidden>
         <div class="ct-card-h" style="margin-bottom:6px;">
           <div class="ct-card-t">목표보다 많이 쓴 항목</div>
-          <div class="ct-note">단위 만원</div>
         </div>
         <table class="ct-tbl rs-cf">
+          <thead><tr>
+            <th>항목</th>
+            <th class="amt" style="width:170px;">초과 금액 <span class="ct-note">· 만원</span></th>
+          </tr></thead>
           <tbody id="cf-over"></tbody>
         </table>
         <div class="ct-note" style="margin-top:12px;">상담 때 정한 목표와 비교했어요. 줄일지는 함께 정해요.</div>
@@ -388,17 +463,17 @@
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">손익계산서
-        <span class="ct-note">· 2026.09 · 수입에서 생활비와 이자를 뺀 결과 · 단위 만원</span>
+        <span class="ct-note">· 2026.09</span>
       </div>
 
       <div class="rs-pl">
         <div>
-          <div class="rs-pl-h">수입 <span class="sub">· 들어온 돈</span></div>
+          <div class="rs-pl-h">수입 <span class="sub">· 들어온 돈</span><span class="unit">만원</span></div>
           <div class="ct-kv" id="pl-in"></div>
           <div class="rs-pl-sum"><span>수입 합계</span><b id="pl-income">0</b></div>
         </div>
         <div>
-          <div class="rs-pl-h">비용 <span class="sub">· 생활비와 이자</span></div>
+          <div class="rs-pl-h">비용 <span class="sub">· 생활비와 이자</span><span class="unit">만원</span></div>
           <div class="ct-kv" id="pl-out"></div>
           <div class="rs-pl-sum"><span>비용 합계</span><b id="pl-cost">0</b></div>
         </div>
@@ -423,26 +498,28 @@
         <a class="ct-note" href="assets.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">03 자산·부채 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">지금 가진 것과 갚을 것
-        <span class="ct-note">· <span id="bs-asof">2026.09.28</span> 기준 · 단위 만원 · 금액이 0인 자산 묶음은 숨김</span>
+        <span class="ct-note">· <span id="bs-asof">2026.09.28</span> 기준</span>
       </div>
 
       <div class="rs-bs">
         <div>
-          <div class="rs-pl-h">가진 것 <span class="sub">· 자산</span></div>
+          <div class="rs-pl-h">가진 것 <span class="sub">· 자산</span><span class="unit">만원</span></div>
           <div class="ct-kv" id="bs-as"></div>
           <div class="rs-pl-sum"><span>총자산</span><b id="bs-assets">0</b></div>
-          <div class="ct-note" id="bs-as-note" style="margin-top:8px;"></div>
+          <div class="ct-note" id="bs-as-note"></div>
         </div>
         <div>
-          <div class="rs-pl-h">갚을 것 <span class="sub">· 부채</span></div>
+          <div class="rs-pl-h">갚을 것 <span class="sub">· 부채</span><span class="unit">만원</span></div>
           <div class="ct-kv" id="bs-debt"></div>
           <div class="rs-pl-sum"><span>총부채</span><b id="bs-liab">0</b></div>
 
-          <div class="rs-pl-h" style="margin-top:28px;">순자산 <span class="sub">· 가진 것 − 갚을 것</span></div>
-          <div class="rs-pl-sum"><span>순자산</span><b id="bs-net" style="color:var(--brand-deep);">0</b></div>
-          <div class="ct-note" id="bs-net-note" style="margin-top:8px;"></div>
         </div>
       </div>
+
+      <!-- 순자산 — 두 칸을 받는 값이라 아래에 한 줄로 따로 둔다 -->
+      <div class="rs-net"><span>순자산 <span class="sub">· 가진 것 − 갚을 것</span></span><b id="bs-net">0</b></div>
+      <!-- 박스 밖 설명 — 박스 변과 붙지 않게만 살짝 들인다 -->
+      <div class="ct-note" id="bs-net-note" style="margin-top:12px;padding-left:8px;"></div>
     </div>
     </div>
 
@@ -812,14 +889,19 @@ document.addEventListener('click', function (e) {
   function sec(name, v) {
     rows.push('<tr class="sec"><td>' + name + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
   }
+  /* 묶음 줄을 누르면 그 아래 항목이 펴진다. 묶음까지만 보면 한 장에 들어오고,
+     자세히 볼 묶음만 펴서 고객과 같이 본다. */
+  var gi = 0;
   function grp(name, v) {
-    rows.push('<tr class="grp"><td>' + name + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
+    gi += 1;
+    rows.push('<tr class="grp" data-cfgrp="' + gi + '"><td><i class="ct-chev right"></i>' + name + '</td>'
+      + '<td class="amt">' + CT.comma(v) + '</td></tr>');
   }
   function items(list) {   // [[이름, 금액], …]
     list.forEach(function (r) {
       var v = Number(r[1]) || 0;
       if (!v && !blank) return;
-      rows.push('<tr class="itm' + (v ? '' : ' none') + '"><td>' + r[0] + '</td>'
+      rows.push('<tr class="itm' + (v ? '' : ' none') + '" data-cfitem="' + gi + '" hidden><td>' + r[0] + '</td>'
         + '<td class="amt">' + (v ? CT.comma(v) : '미입력') + '</td></tr>');
     });
   }
@@ -849,6 +931,19 @@ document.addEventListener('click', function (e) {
   document.getElementById('cf-rows').innerHTML = rows.join('');
   document.getElementById('cf-bal').textContent = CT.comma(c.balance);
 
+  // 묶음 줄 누르면 그 묶음 항목만 펴고 접는다
+  document.getElementById('cf-rows').addEventListener('click', function (e) {
+    var g = e.target.closest('tr[data-cfgrp]');
+    if (!g) return;
+    var open = !g.classList.contains('open');
+    g.classList.toggle('open', open);
+    var chev = g.querySelector('.ct-chev');
+    if (chev) chev.classList.toggle('right', !open);
+    Array.prototype.forEach.call(
+      this.querySelectorAll('tr[data-cfitem="' + g.dataset.cfgrp + '"]'),
+      function (r) { r.hidden = !open; });
+  });
+
   /* ④ 이번 달만 있었던 큰돈 — 02 에서 적는 칸인데 ①②③ 어디에도 들어가지 않는다.
      되풀이되는 돈이 아니라 월 잔액에 넣으면 그 달만 숫자가 튄다.
      그래도 적은 값이 화면에서 사라지면 안 되므로 표 아래에 따로 보여 준다. */
@@ -876,7 +971,9 @@ document.addEventListener('click', function (e) {
      목표 안에 든 항목도 뺀다. 많이 쓴 것만 큰 순서로 보여 준다. */
   (function () {
     var over = [];
-    Object.keys(M.cf).forEach(function (cat) {
+    // 생활비(고정·변동)만 본다. 수입·저축·일시는 목표를 넘겨도 '많이 쓴' 게 아니다.
+    CT.FIXED.concat(CT.VARI).forEach(function (cat) {
+      if (!M.cf[cat]) return;
       M.cf[cat].items.forEach(function (r) {
         var v = Number(r[1]) || 0, goal = r[2];
         if (goal === null || goal === undefined || goal === '') return;
@@ -884,7 +981,7 @@ document.addEventListener('click', function (e) {
         if (d > 0) over.push([r[0], d]);
       });
     });
-    over.sort(function (a, b) { return b[1] - a[1]; });
+    // 02 에 적은 차례 그대로 둔다. 금액 큰 순으로 다시 세우면 02 와 짝이 안 맞는다.
     document.getElementById('cf-over').innerHTML = over.map(function (r) {
       return '<tr class="grp"><td>' + r[0] + '</td>'
         + '<td class="amt" style="color:#C92238;">+' + CT.comma(r[1]) + '</td></tr>';
