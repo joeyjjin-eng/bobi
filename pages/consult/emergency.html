@@ -30,8 +30,12 @@
   .cE .em-out .r + .r { border-top: 1px solid var(--line); }
   .cE .em-out .r b { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; }
   .cE .em-out .r b.hl { color: var(--brand-deep); }
-  /* 필수 생활비에 넣을 항목 — 묶음 이름 옆에 금액을 같이 둔다 */
-  .cE .em-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* 필수 생활비에 넣을 항목 — 02 와 같은 묶음으로 줄을 나누고, 칩 옆에 금액을 같이 둔다 */
+  .cE .em-pick { display: flex; flex-direction: column; gap: 14px; }
+  .cE .em-pick-g { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .cE .em-pick-g .gl { min-height: 38px; display: flex; align-items: center;
+    font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .em-pick-g .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .cE .em-pick .amt { margin-left: 6px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
   .cE .em-pick .ct-chip.on .amt { color: inherit; }
   /* 계산 방법 — 결과를 받치는 팁 쪽지다. 카드로 세우면 결과만큼 무거워져서
@@ -144,7 +148,7 @@
         <div class="em-optrow">
           <div style="min-width:0;">
             <div style="font-size:var(--fs-body);color:var(--ink);">필수 생활비에 넣을 항목</div>
-            <div class="ct-note">수입이 끊겨도 계속 나가는 묶음을 고릅니다 · 처음에는 전부 켜져 있어요</div>
+            <div class="ct-note">02 에서 매달 돈이 나가는 묶음을 모두 늘어놨어요 · 수입이 끊기면 멈출 묶음을 꺼 주세요</div>
           </div>
           <button type="button" class="ct-add-link" id="em-all">모두 켜기</button>
         </div>
@@ -166,8 +170,8 @@
           <ul class="em-how-l">
             <li>수입이 끊겨도 꼭 필요한 생활비를 감당하기 위해 마련해 두는 돈이 비상금입니다. 비상금으로 몇 달을 버틸 수 있는지는 이 필수 생활비를 기준으로 계산합니다.</li>
             <li>빚 갚는 돈도 넣습니다. 대출·할부는 수입이 끊겨도 나가고, 밀리면 바로 신용 문제가 됩니다.</li>
-            <li>저축·투자는 넣지 않습니다. 위기 때 가장 먼저 멈추는 돈이라 미리 쌓아 둘 이유가 없습니다.</li>
-            <li>여가·꾸밈처럼 위기 때 실제로 줄일 수 있는 묶음은 꺼 두면 더 현실적인 금액이 됩니다.</li>
+            <li>매달 돈이 나가는 묶음은 저축까지 모두 켜 둔 채로 시작합니다. 빠뜨리는 것보다 눈으로 보고 끄는 쪽이 낫습니다.</li>
+            <li>저축·여가·꾸밈처럼 위기 때 멈추거나 줄일 수 있는 묶음은 꺼 주세요. 그만큼 목표 금액이 현실에 가까워집니다.</li>
           </ul>
         </div>
         <p class="ct-note">몇 개월치를 둘지는 상담에서 정합니다.
@@ -214,7 +218,7 @@
 <script>
 /* ===== 비상금 — 02 수입지출·03 자산·부채에 적은 값으로 계산 =====
    목표 비상금 = 필수 생활비 × 준비할 개월
-   필수 생활비 = 넣기로 고른 묶음의 한 달 합계 (02 고정·변동지출 + 빚 갚는 돈)
+   필수 생활비 = 넣기로 고른 묶음의 한 달 합계 (02 고정·변동지출 + 저축 + 빚 갚는 돈)
    지금 있는 비상금 = 03 유동자산 합계
    버틸 수 있는 기간 = 지금 있는 비상금 ÷ 필수 생활비
    앞의 두 값은 가져오되 상담 자리에서 고쳐 적을 수 있다(M.em).          */
@@ -232,10 +236,16 @@
     return;
   }
 
-  /* 넣을 수 있는 묶음 — 02 의 고정·변동지출 전부에 '빚 갚는 돈'을 더한 목록.
-     저축은 위기 때 멈추는 돈이라 아예 고를 거리에 두지 않는다. */
+  /* 넣을 수 있는 묶음 — 02 에서 매달 돈이 나가는 자리를 하나도 빼지 않고 늘어놓는다.
+     02 와 같은 묶음(고정지출 / 변동지출 / 그 밖)으로 줄을 나눠, 무엇을 끄고 켰는지 한눈에 보이게 한다.
+     '일시 지출'은 이번 달에만 있었던 큰돈이라 매달 나가는 돈이 아니어서 여기 올리지 않는다. */
   var DEBT = '빚 갚는 돈';
-  var PICKS = CT.FIXED.concat(CT.VARI, [DEBT]);
+  var GROUPS = [
+    ['고정지출', CT.FIXED],
+    ['변동지출', CT.VARI],
+    ['그 밖',    ['저축', DEBT]]
+  ];
+  var PICKS = GROUPS.reduce(function (a, g) { return a.concat(g[1]); }, []);
   function amountOf(cat) { return cat === DEBT ? c.debtPay : CT.catTotal(M, cat); }
   function incSet() {
     var out = {};
@@ -247,10 +257,14 @@
   function drawPicks() {
     // 처음 열면 전부 켠다. 고친 적이 있으면 그때 고른 대로 되살린다.
     var on = EM.inc;
-    $('em-pick').innerHTML = PICKS.map(function (cat) {
-      var isOn = on == null || on.indexOf(cat) >= 0;
-      return '<div class="ct-chip' + (isOn ? ' on' : '') + '" data-chip data-inc="' + cat + '">' + cat
-        + '<span class="amt">' + CT.comma(amountOf(cat)) + '만원</span></div>';
+    $('em-pick').innerHTML = GROUPS.map(function (g) {
+      return '<div class="em-pick-g"><span class="gl">' + g[0] + '</span><div class="chips">'
+        + g[1].map(function (cat) {
+            var isOn = on == null || on.indexOf(cat) >= 0;
+            return '<div class="ct-chip' + (isOn ? ' on' : '') + '" data-chip data-inc="' + cat + '">' + cat
+              + '<span class="amt">' + CT.comma(amountOf(cat)) + '만원</span></div>';
+          }).join('')
+        + '</div></div>';
     }).join('');
   }
   function savePicks() {
