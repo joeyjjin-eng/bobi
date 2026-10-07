@@ -213,15 +213,19 @@
   }
   /* 빚 이름은 다른 항목 이름과 같이 직접 적는다. */
   function nameCell(name, i) {
-    return '<div class="ct-in debt-name" data-d="' + i + '" data-f="name">' + (name || '빚') + '</div>';
+    return '<div class="ct-in debt-name' + (name ? '' : ' hint') + '" data-hint="새 빚" data-d="' + i + '" data-f="name">'
+      + (name || '새 빚') + '</div>';
   }
   function debtTotal() {
     return CT.round1(allDebts().reduce(function (s, x) { return s + CT.debtBal(x.d, M); }, 0));
   }
-  /* 남은 돈 — 월 납입금·만기·금리로 나오는 값이라 적는 칸이 아니다. */
+  /* 남은 돈 — 월 납입금·만기·금리로 나오는 값이라 적는 칸이 아니다.
+     밑줄은 '얼마나 남았는지' 한 줄로만 둔다. 길어지면 줄이 접혀 자리만 먹는다. */
   function balHtml(d) {
     if (!d.pay || !d.due) return '<span class="ct-note">월 납입금과 만기를 적으면 나와요</span>';
-    return '<b>' + CT.comma(CT.debtBal(d, M)) + '</b> <span class="ct-note">만원</span>';
+    // 숫자와 '만원'은 한 줄에 서야 한다 — 바깥이 세로 flex 라 묶어 두지 않으면 둘로 쪼개진다
+    return '<span class="v"><b>' + CT.comma(CT.debtBal(d, M)) + '</b> <span class="ct-note">만원</span></span>'
+      + '<span class="sub">앞으로 ' + CT.monthsTo(d.due, M) + '개월 남았어요</span>';
   }
   function buildDebt() {
     dHost.innerHTML = allDebts().map(function (x) {
@@ -257,8 +261,9 @@
         var d = M.debt[Number(el.dataset.d)], f = el.dataset.f;
         if (!d) return;
         if (f === 'name') {
-          d.name = el.textContent.trim() || '빚';
-          el.textContent = d.name;
+          d.name = el.textContent.trim();
+          if (!d.name) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
+          else el.classList.remove('hint');
         }
         else if (f === 'due') {
           var t = el.textContent.trim();
@@ -267,7 +272,8 @@
           el.textContent = d.due || 'YYYY.MM';
         }
         else {
-          d[f] = CT.parse(el.textContent);
+          // 금리는 3.8 처럼 소수점을 쓴다. 나머지(만원 단위)는 정수로 받는다.
+          d[f] = (f === 'rate') ? CT.parseF(el.textContent) : CT.parse(el.textContent);
           el.classList.toggle('hint', d[f] === null);
           el.textContent = d[f] === null ? '미입력' : CT.comma(d[f]);
         }
@@ -304,7 +310,7 @@
       return;
     }
     if (e.target.closest('#debt-add-btn')) {
-      M.debt.push({ name: '새 빚', pay: null, rate: null, due: '' });
+      M.debt.push({ name: '', pay: null, rate: null, due: '' });
       buildDebt(); commit();
       var names = dHost.querySelectorAll('.ct-in[data-f="name"]');
       if (names.length) names[names.length - 1].focus();

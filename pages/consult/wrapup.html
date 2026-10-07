@@ -80,13 +80,22 @@
         </div>
 
         <!-- 고객과 같이 달을 넘겨 가며 고르는 자리라 달력을 펼쳐 둔다.
-             제목·고른 날짜·시간은 왼쪽에, 달력은 패널 오른쪽 끝에 붙인다. -->
+             적는 차례대로 왼쪽에 달력, 오른쪽에 고른 날짜·시간을 둔다. -->
         <div class="ct-next">
+          <div class="ct-cal" id="wu-cal">
+            <div class="ch">
+              <button type="button" class="nav" data-mv="-1" aria-label="앞 달"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg></button>
+              <span class="m" id="wu-cal-m"></span>
+              <button type="button" class="nav" data-mv="1" aria-label="다음 달"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></button>
+            </div>
+            <div class="dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+            <div class="days" id="wu-cal-days"></div>
+          </div>
           <div class="ct-f side">
             <span class="lb st">다음 상담일</span>
             <div class="when hint" id="wu-next-when">아직 정하지 않았습니다</div>
             <div class="tm">
-              <span class="lb">시간<span class="opt">선택</span></span>
+              <span class="lb">시간</span>
               <!-- 오전·오후는 둘 중 하나라 버튼으로, 시·분은 고르는 값이라 드롭다운으로.
                    분은 상담 약속에 쓰는 단위만 둔다(10분). -->
               <div class="tmrow">
@@ -124,16 +133,6 @@
               <span class="bx"><svg class="ic-svg" width="12" height="12"><use href="#i-check"/></svg></span>
               다음 상담일을 정하지 않음
             </button>
-          </div>
-
-          <div class="ct-cal" id="wu-cal">
-            <div class="ch">
-              <button type="button" class="nav" data-mv="-1" aria-label="앞 달"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg></button>
-              <span class="m" id="wu-cal-m"></span>
-              <button type="button" class="nav" data-mv="1" aria-label="다음 달"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></button>
-            </div>
-            <div class="dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
-            <div class="days" id="wu-cal-days"></div>
           </div>
         </div>
       </div>

@@ -148,7 +148,7 @@
         <div class="em-optrow">
           <div style="min-width:0;">
             <div style="font-size:var(--fs-body);color:var(--ink);">필수 생활비에 넣을 항목</div>
-            <div class="ct-note">02 에서 매달 돈이 나가는 묶음을 모두 늘어놨어요 · 수입이 끊기면 멈출 묶음을 꺼 주세요</div>
+            <div class="ct-note">02 에서 매달 돈이 나가는 자리를 모두 늘어놨어요 · 수입이 끊기면 멈출 것, 다른 묶음과 겹치는 것을 꺼 주세요</div>
           </div>
           <button type="button" class="ct-add-link" id="em-all">모두 켜기</button>
         </div>
@@ -172,6 +172,7 @@
             <li>빚 갚는 돈도 넣습니다. 대출·할부는 수입이 끊겨도 나가고, 밀리면 바로 신용 문제가 됩니다.</li>
             <li>매달 돈이 나가는 묶음은 저축까지 모두 켜 둔 채로 시작합니다. 빠뜨리는 것보다 눈으로 보고 끄는 쪽이 낫습니다.</li>
             <li>저축·여가·꾸밈처럼 위기 때 멈추거나 줄일 수 있는 묶음은 꺼 주세요. 그만큼 목표 금액이 현실에 가까워집니다.</li>
+            <li>빚은 건별로 늘어놨습니다. 주택 대출이 '집'과 겹치는 것처럼 다른 묶음에 이미 들어간 빚이 있으면 그 한 건만 끄면 됩니다.</li>
           </ul>
         </div>
         <p class="ct-note">몇 개월치를 둘지는 상담에서 정합니다.
@@ -218,14 +219,15 @@
 <script>
 /* ===== 비상금 — 02 수입지출·03 자산·부채에 적은 값으로 계산 =====
    목표 비상금 = 필수 생활비 × 준비할 개월
-   필수 생활비 = 넣기로 고른 묶음의 한 달 합계 (02 고정·변동지출 + 저축 + 빚 갚는 돈)
+   필수 생활비 = 켜 둔 묶음의 한 달 합계 (02 고정·변동지출 + 저축 + 빚은 건별로)
    지금 있는 비상금 = 03 유동자산 합계
    버틸 수 있는 기간 = 지금 있는 비상금 ÷ 필수 생활비
    앞의 두 값은 가져오되 상담 자리에서 고쳐 적을 수 있다(M.em).          */
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   var M = CT.load(), c = CT.calc(M);
-  var EM = M.em = M.em || { base: null, have: null, inc: null };
+  var EM = M.em = M.em || { base: null, have: null, off: [] };
+  if (!EM.off) EM.off = [];
 
   // 생활비도 통장 잔액도 안 적혔으면 계산할 게 없다
   var liquid = (M.as['유동자산'] || []).reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0);
@@ -237,39 +239,45 @@
   }
 
   /* 넣을 수 있는 묶음 — 02 에서 매달 돈이 나가는 자리를 하나도 빼지 않고 늘어놓는다.
-     02 와 같은 묶음(고정지출 / 변동지출 / 그 밖)으로 줄을 나눠, 무엇을 끄고 켰는지 한눈에 보이게 한다.
-     '일시 지출'은 이번 달에만 있었던 큰돈이라 매달 나가는 돈이 아니어서 여기 올리지 않는다. */
-  var DEBT = '빚 갚는 돈';
+     빚은 한 덩어리로 두지 않고 건별로 펼친다. 뭉쳐 두면 주택 대출 하나가
+     '집'과 겹쳐 보여도 빚 전체를 꺼야 해서, 겹치는 한 건만 끄지 못한다.
+     '일시 지출'은 이번 달에만 있었던 큰돈이라 매달 나가는 돈이 아니어서 여기 올리지 않는다.
+     키는 묶음 이름, 빚은 '빚·<이름>'. 금액은 키에서 바로 찾는다. */
+  function debtName(d, i) { return (d.name || '').trim() || ('이름 없는 빚 ' + (i + 1)); }
+  var DEBTS = (M.debt || []).map(function (d, i) { return { key: '빚·' + debtName(d, i), pay: Number(d.pay) || 0 }; });
+  var DEBTAMT = {};
+  DEBTS.forEach(function (x) { DEBTAMT[x.key] = CT.round1((DEBTAMT[x.key] || 0) + x.pay); });
+  var DEBTKEYS = Object.keys(DEBTAMT);
+
   var GROUPS = [
-    ['고정지출', CT.FIXED],
-    ['변동지출', CT.VARI],
-    ['그 밖',    ['저축', DEBT]]
-  ];
+    ['고정지출',   CT.FIXED],
+    ['변동지출',   CT.VARI],
+    ['모으는 돈',  ['저축']],
+    ['빚 갚는 돈', DEBTKEYS]
+  ].filter(function (g) { return g[1].length; });
   var PICKS = GROUPS.reduce(function (a, g) { return a.concat(g[1]); }, []);
-  function amountOf(cat) { return cat === DEBT ? c.debtPay : CT.catTotal(M, cat); }
-  function incSet() {
-    var out = {};
-    Array.prototype.forEach.call(document.querySelectorAll('[data-inc].on'), function (ch) {
-      out[ch.dataset.inc] = true;
-    });
-    return out;
-  }
+
+  function amountOf(key) { return (key in DEBTAMT) ? DEBTAMT[key] : CT.catTotal(M, key); }
+  function labelOf(key) { return (key in DEBTAMT) ? key.slice(2) : key; }
+  function isOff(key) { return EM.off.indexOf(key) >= 0; }
+
   function drawPicks() {
-    // 처음 열면 전부 켠다. 고친 적이 있으면 그때 고른 대로 되살린다.
-    var on = EM.inc;
+    // 뺀 것만 저장해 두므로, 처음 열거나 02 에 줄이 늘면 켜진 채로 나온다
     $('em-pick').innerHTML = GROUPS.map(function (g) {
       return '<div class="em-pick-g"><span class="gl">' + g[0] + '</span><div class="chips">'
-        + g[1].map(function (cat) {
-            var isOn = on == null || on.indexOf(cat) >= 0;
-            return '<div class="ct-chip' + (isOn ? ' on' : '') + '" data-chip data-inc="' + cat + '">' + cat
-              + '<span class="amt">' + CT.comma(amountOf(cat)) + '만원</span></div>';
+        + g[1].map(function (key) {
+            return '<div class="ct-chip' + (isOff(key) ? '' : ' on') + '" data-chip data-inc="' + key + '">'
+              + labelOf(key)
+              + '<span class="amt">' + CT.comma(amountOf(key)) + '만원</span></div>';
           }).join('')
         + '</div></div>';
     }).join('');
   }
   function savePicks() {
-    var inc = incSet();
-    EM.inc = PICKS.filter(function (cat) { return inc[cat]; });
+    var on = {};
+    Array.prototype.forEach.call(document.querySelectorAll('[data-inc].on'), function (ch) { on[ch.dataset.inc] = true; });
+    // 화면에 없는 키(지워진 빚 등)는 같이 털어 낸다
+    EM.off = PICKS.filter(function (key) { return !on[key]; });
     CT.save(M);
   }
   drawPicks();
@@ -280,8 +288,7 @@
   }
   /* 02·03 에서 가져오는 값. 고쳐 적은 값이 있으면 그쪽이 이긴다. */
   function baseAuto() {
-    var inc = incSet();
-    return CT.round1(PICKS.reduce(function (s, cat) { return s + (inc[cat] ? amountOf(cat) : 0); }, 0));
+    return CT.round1(PICKS.reduce(function (s, key) { return s + (isOff(key) ? 0 : amountOf(key)); }, 0));
   }
   function haveAuto() { return liquid; }
   var AUTO = { base: baseAuto, have: haveAuto };

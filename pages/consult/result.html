@@ -259,12 +259,14 @@
             <th>목표명</th><th style="width:132px;">종류</th>
             <th style="width:142px;">목표 시점</th>
             <th class="amt" style="width:124px;">목표금액</th><th class="amt" style="width:124px;">적립액</th>
-            <th class="amt" style="width:118px;">월 저축액</th><th style="width:72px;"></th>
+            <th class="amt" style="width:118px;">지금 월 저축액</th>
+            <th class="amt" style="width:118px;">필요 월 저축액</th><th style="width:48px;"></th>
           </tr></thead>
           <tbody id="gl-rows"></tbody>
           <tfoot><tr>
             <td colspan="3" id="gl-cnt"></td>
             <td class="amt" id="gl-need"></td><td class="amt" id="gl-saved"></td>
+            <td class="amt" id="gl-now"></td>
             <td class="amt" id="gl-monthly" style="color:var(--brand-deep);"></td><td></td>
           </tr></tfoot>
         </table>
@@ -577,35 +579,65 @@
   $('rs-flow').innerHTML = CT.comma(c.income) + '만 원이 들어와서 ' + CT.comma(c.expense)
     + '만 원이 나가고, <span class="hl">' + CT.comma(c.balance) + '만 원이 남았어요.</span>';
   $('rs-rate').textContent = c.income
-    ? '들어온 돈 100원 중 ' + Math.max(0, Math.round(c.balance / c.income * 100)) + '원이 남는 셈이에요.'
+    ? '들어온 돈 100만원 중 ' + Math.max(0, Math.round(c.balance / c.income * 100)) + '만원이 남는 셈이에요.'
     : '';
   $('rs-income').textContent = CT.comma(c.income);
 
-  // 원그래프 — 둘레를 비율대로 잘라 쓴다
-  var SEG = [
-    ['고정지출', c.fixed,   '#44545F', 0],
-    ['변동지출', c.vari,    '#42BAFF', 1],
-    ['부채상환', c.debtPay, '#7C8B97', 0],
-    ['저축',     c.saving,  '#1FA463', 0],
-    ['잔액',     c.balance, '#1C50A1', 1]
-  ];
-  var R = 140, C = 2 * Math.PI * R, base = c.income || 1, off = 0;
-  // 바탕 고리를 먼저 깐다. 적은 값이 하나도 없어도 그래프 모양은 서 있어야 한다.
-  var svg = '<circle class="trk" cx="170" cy="170" r="' + R + '" fill="none" stroke-width="52"></circle>';
-  SEG.forEach(function (s) {
-    var len = Math.max(0, s[1]) / base * C;
-    svg += '<circle cx="170" cy="170" r="' + R + '" fill="none" stroke="' + s[2]
-      + '" stroke-width="' + (s[3] ? 64 : 52) + '" stroke-dasharray="' + len.toFixed(1) + ' ' + (C - len).toFixed(1)
-      + '" stroke-dashoffset="' + (-off).toFixed(1) + '"></circle>';
-    off += len;
-  });
-  $('rs-donut').innerHTML = svg;
+  /* ===== 원그래프 =====
+     색은 다섯 칸을 정해 두고 순서대로만 쓴다(돌려 쓰지 않는다). 여섯 번째부터는
+     '기타'로 접어 회색으로 둔다 — 색을 더 만들면 서로 구분이 안 간다.
+     구분은 색만으로 지지 않는다. 옆의 범례가 이름·금액·비중을 같이 적는다.
+     (색맞춤 검증: 이웃 조각 CVD ΔE 12.4 / 정상시 15.1 — 둘 다 기준 통과.
+      흰 바탕 대비는 3:1 아래라 범례의 이름·금액이 그 몫을 대신한다.) */
+  var VIZ = ['#3EC0A6', '#6DA8F0', '#8C62D8', '#E97EAA', '#E2A24E'];
+  var VIZ_ETC = '#C7CFD9';
 
-  $('rs-legend').innerHTML = SEG.map(function (s) {
-    return '<div class="lr' + (s[3] ? ' hi' : '') + '"><div class="sw" style="background:' + s[2] + ';"></div>'
-      + '<span>' + s[0] + '</span><strong>' + CT.comma(s[1]) + '</strong>'
-      + '<span class="pc">' + CT.pct(s[1], c.income) + '%</span></div>';
-  }).join('');
+  /* 도넛 한 장 — 12시에서 시작해 시계 방향으로, 큰 조각부터 돈다.
+     두께는 모두 같다(굵기로 강조하면 면적이 비중을 속인다).
+     조각 사이는 둘레에서 조금 떼어 경계를 만든다.
+     남는 몫이 있으면 '기타'로 채워 조각 합이 늘 바탕과 맞게 한다.
+     그린 차례 그대로 범례를 적어 두 쪽이 어긋나지 않게 한다. */
+  function paintDonut(ringId, lgId, segs, base, blankMsg) {
+    // 고리가 340 칸 밖으로 잘리지 않게 R + W/2 <= 170 을 지킨다
+    var R = 133, W = 70, C = 2 * Math.PI * R, GAP = 3;
+    var list = (segs || []).filter(function (x) { return x.v > 0; })
+      .sort(function (a, b) { return b.v - a.v; });
+    // 묶음 합이 바탕에 못 미치면 그 차이가 '기타'다
+    var etc = Math.round(((base || 0) - list.reduce(function (t, x) { return t + x.v; }, 0)) * 10) / 10;
+    if (etc > 0.05) list.push({ name: '기타', v: etc, c: VIZ_ETC });
+
+    var off = 0;
+    /* 바탕 고리는 적은 값이 하나도 없을 때만 깐다. 조각 밑에 깔아 두면
+       조각 사이 간격으로 회색이 비쳐 보여 띄운 자리가 또 하나의 조각처럼 읽힌다. */
+    var svg = list.length ? '' : '<circle class="trk" cx="170" cy="170" r="' + R + '" fill="none" stroke-width="' + W + '"></circle>';
+    list.forEach(function (x) {
+      var len = x.v / (base || 1) * C;
+      var draw = list.length > 1 ? Math.max(2, len - GAP) : len;
+      svg += '<circle cx="170" cy="170" r="' + R + '" fill="none" stroke="' + x.c + '" stroke-width="' + W
+        + '" stroke-dasharray="' + draw.toFixed(1) + ' ' + (C - draw).toFixed(1)
+        + '" stroke-dashoffset="' + (-off).toFixed(1) + '"></circle>';
+      off += len;
+    });
+    $(ringId).innerHTML = svg;
+
+    if (!lgId) return list;
+    $(lgId).innerHTML = list.length
+      ? list.map(function (x) {
+          return '<div class="lr"><div class="sw" style="background:' + x.c + ';"></div>'
+            + '<span>' + x.name + '</span><strong>' + CT.comma(x.v) + '</strong>'
+            + '<span class="pc">' + CT.pct(x.v, base) + '%</span></div>';
+        }).join('')
+      : '<div class="ct-note">' + (blankMsg || '아직 적은 값이 없습니다') + '</div>';
+    return list;
+  }
+
+  paintDonut('rs-donut', 'rs-legend', [
+    { name: '고정지출', v: c.fixed,   c: VIZ[0] },
+    { name: '변동지출', v: c.vari,    c: VIZ[1] },
+    { name: '부채상환', v: c.debtPay, c: VIZ[2] },
+    { name: '저축',     v: c.saving,  c: VIZ[3] },
+    { name: '잔액',     v: c.balance, c: VIZ[4] }
+  ], c.income || 1);
 
   // 순자산 카드
   var np = c.assets ? Math.max(0, Math.min(100, Math.round(c.net / c.assets * 100))) : 0;
@@ -621,8 +653,8 @@
   var gs = CT.goalSum(M);
   if (gs.count) {
     $('rs-gcnt').textContent  = '목표 ' + gs.count + '건';
-    $('rs-gneed').textContent = CT.comma(gs.monthly) + '만원';
-    $('rs-gnow').textContent  = CT.comma(c.saving) + '만원';
+    $('rs-gneed').textContent = CT.comma(gs.more) + '만원';
+    $('rs-gnow').textContent  = CT.comma(gs.now) + '만원';
   } else {
     // 목표가 없으면 '월 0만원'이 아니라 적으러 가는 길을 보여 준다
     $('rs-gcnt').parentNode.textContent = '아직 적은 목표가 없습니다';
@@ -631,23 +663,7 @@
 
   /* ===== ② 목표 — 목표까지 매달 얼마씩 =====
      판정하지 않는다. 필요한 돈과 지금 모으는 돈을 나란히 놓고 차이만 말한다. */
-  /* 원그래프 하나 그리기 — 둘레를 비율대로 잘라 쓴다(① 요약 도넛과 같은 방식).
-     적은 값이 없으면 바탕 고리만 남아 자리가 비지 않는다. */
-  function donut(id, segs, base) {
-    var R = 140, C = 2 * Math.PI * R, off = 0;
-    var svg = '<circle class="trk" cx="170" cy="170" r="' + R + '" fill="none" stroke-width="52"></circle>';
-    segs.forEach(function (s) {
-      var len = Math.max(0, s.v) / (base || 1) * C;
-      svg += '<circle cx="170" cy="170" r="' + R + '" fill="none" stroke="' + s.c
-        + '" stroke-width="52" stroke-dasharray="' + len.toFixed(1) + ' ' + (C - len).toFixed(1)
-        + '" stroke-dashoffset="' + (-off).toFixed(1) + '"></circle>';
-      off += len;
-    });
-    $(id).innerHTML = svg;
-  }
-
   var g = CT.goalSum(M);
-  var gap = CT.round1(g.monthly - c.saving);     // +면 모자람, −면 여유
   var hasGoal = g.count > 0;
   $('gl-blank').hidden = hasGoal;
   $('gl-body').hidden  = !hasGoal;
@@ -658,11 +674,14 @@
   $('gl-cards').innerHTML = g.list.length ? g.list.map(function (x) {
     return '<div class="ct-goal flat">'
       + '<div class="gk"><span class="cat">' + x.kind + '</span><span class="dt">' + x.due + '</span></div>'
-      + '<div class="gn">' + x.name + '</div>'
+      + '<div class="gn">' + ((x.name || '').trim() || '이름 없음') + '</div>'
       + '<div class="gv"><span class="v">' + CT.comma(x.saved) + '</span><span class="of">/ ' + CT.comma(x.need) + '</span>'
       +   '<span class="pc">' + x.pct + '%</span></div>'
       + '<div class="ct-track"><i style="width:' + Math.min(100, x.pct) + '%;"></i></div>'
-      + '<div class="gm">잔여 ' + CT.comma(x.remain) + ' · <b>월 ' + CT.comma(x.monthly) + '</b></div>'
+      + '<div class="gm">잔여 ' + CT.comma(x.remain) + ' · 지금 월 ' + CT.comma(x.now)
+      +   (x.more > 0 ? ' · <span class="short">월 ' + CT.comma(x.more) + ' 더 필요</span>'
+                      : ' · <b>충분해요</b>')
+      + '</div>'
       + '</div>';
   }).join('') : '<div class="ct-note">등록된 목표 없음</div>';
 
@@ -711,20 +730,11 @@
     $('sp-debt').textContent  = CT.comma(c.debtPay) + '만원';
     $('sp-total').textContent = CT.comma(total) + '만원';
 
-    /* 한 줄 띠 — 묶음이 많아 색을 다 구분하면 오히려 안 읽힌다.
-       큰 묶음 다섯만 색을 주고 나머지는 '그 밖'으로 묶는다. */
-    var TONE = ['#44545F', '#42BAFF', '#7C8B97', '#1FA463', '#1C50A1'];
-    var band = rows.slice(0, 5).map(function (r, i) { return { name: r.name, v: r.v, c: TONE[i] }; });
-    var restV = CT.round1(rows.slice(5).reduce(function (s, r) { return s + r.v; }, 0));
-    if (restV) band.push({ name: '그 밖', v: restV, c: 'var(--line-strong)' });
-
+    /* 묶음이 많아 색을 다 구분하면 오히려 안 읽힌다. 큰 묶음 다섯만 색을 주고,
+       나머지는 paintDonut 이 남는 몫을 '기타'로 묶어 준다. */
+    var band = rows.slice(0, 5).map(function (r, i) { return { name: r.name, v: r.v, c: VIZ[i] }; });
     $('sp-donut-v').textContent = CT.comma(total);
-    donut('sp-donut', band, total);
-    $('sp-band-lg').innerHTML = band.map(function (b) {
-      return '<div class="lr"><div class="sw" style="background:' + b.c + ';"></div>'
-        + '<span>' + b.name + '</span><strong>' + CT.comma(b.v) + '</strong>'
-        + '<span class="pc">' + CT.pct(b.v, total) + '%</span></div>';
-    }).join('');
+    paintDonut('sp-donut', 'sp-band-lg', band, total);
   })();
 
   /* ===== ④ 저축 — 지금 속도로 몇 해 뒤에 얼마 =====
@@ -755,15 +765,10 @@
     var mix = ((M.cf['저축'] || {}).items || [])
       .map(function (r) { return { name: r[0], v: Number(r[1]) || 0 }; })
       .filter(function (r) { return r.v > 0; }).sort(function (a, b) { return b.v - a.v; });
-    var MIXTONE = ['#1FA463', '#42BAFF', '#1C50A1', '#44545F', '#7C8B97'];
-    mix.forEach(function (r, i) { r.c = MIXTONE[i % MIXTONE.length]; });
+    // 다섯 칸을 넘는 항목은 색을 새로 만들지 않고 '기타'로 접는다
+    var mix5 = mix.slice(0, 5).map(function (r, i) { return { name: r.name, v: r.v, c: VIZ[i] }; });
     $('rv-donut-v').textContent = CT.comma(monthly);
-    donut('rv-donut', mix, monthly);
-    $('rv-mix-lg').innerHTML = mix.length ? mix.map(function (r) {
-      return '<div class="lr"><div class="sw" style="background:' + r.c + ';"></div>'
-        + '<span>' + r.name + '</span><strong>' + CT.comma(r.v) + '</strong>'
-        + '<span class="pc">' + CT.pct(r.v, monthly) + '%</span></div>';
-    }).join('') : '<div class="ct-note">02 수입지출에 저축 항목을 적으면 나옵니다</div>';
+    paintDonut('rv-donut', 'rv-mix-lg', mix5, monthly, '02 수입지출에 저축 항목을 적으면 나옵니다');
   })();
   $('gl-now').textContent = CT.comma(c.saving);
   /* 막대만 둔다. 구간 합계 띠와 막대 끝 날짜·금액은 좁은 칸에서 서로 겹쳐
@@ -810,19 +815,22 @@
   function goalRows() {
     $('gl-rows').innerHTML = g.list.map(function (x, i) {
       return '<tr>'
-        + '<td class="nm"><div class="ct-in" data-gi="' + i + '" data-gf="name">' + x.name + '</div></td>'
+        + '<td class="nm"><div class="ct-in' + (x.name ? '' : ' hint') + '" data-hint="새 목표" data-gi="' + i + '" data-gf="name">'
+        +   (x.name || '새 목표') + '</div></td>'
         + '<td>' + sel('kind', i, x.kind, CT.KINDS) + '</td>'
-        + '<td><div class="ct-in" data-gi="' + i + '" data-gf="due">' + x.due + '</div></td>'
-        + amtCell(i, 'need') + amtCell(i, 'saved')
-        + '<td class="amt" style="font-weight:700;color:var(--brand-deep);">' + CT.comma(x.monthly) + '</td>'
-        + '<td class="del" data-gdel="' + i + '">삭제</td>'
+        + '<td><div class="ct-in' + (x.due ? '' : ' hint') + '" data-hint="YYYY-MM" data-gi="' + i + '" data-gf="due">' + (x.due || 'YYYY-MM') + '</div></td>'
+        + amtCell(i, 'need') + amtCell(i, 'saved') + amtCell(i, 'now')
+        + '<td class="amt" style="font-weight:700;color:var(--brand-deep);">' + CT.comma(x.more) + '</td>'
+        + '<td class="del"><button type="button" class="finance-delete" data-gdel="' + i + '" aria-label="목표 삭제">'
+        +   '<svg class="ic-svg" width="11" height="11"><use href="#i-x"/></svg></button></td>'
         + '</tr>';
     }).join('')
       + '<tr class="addrow"><td colspan="8" class="ct-add" id="gl-add">+ 목표 추가</td></tr>';
     $('gl-cnt').textContent    = '합계 ' + g.count + '건';
     $('gl-need').textContent   = CT.comma(g.need);
     $('gl-saved').textContent  = CT.comma(g.saved);
-    $('gl-monthly').textContent = CT.comma(g.monthly);
+    $('gl-now').textContent    = CT.comma(g.now);
+    $('gl-monthly').textContent = CT.comma(g.more);
     $('gl-rows').querySelectorAll('.ct-in[data-gi]').forEach(function (el) {
       el.setAttribute('contenteditable', 'true');
       el.addEventListener('focus', function () {
@@ -831,7 +839,8 @@
       el.addEventListener('blur', function () {
         var t = M.goals[Number(el.dataset.gi)], f = el.dataset.gf;
         if (!t) return;
-        t[f] = (f === 'need' || f === 'saved') ? CT.parse(el.textContent) : el.textContent.trim();
+        t[f] = (f === 'need' || f === 'saved' || f === 'now') ? CT.parse(el.textContent) : el.textContent.trim();
+        if ((f === 'name' || f === 'due') && !t[f]) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
         CT.save(M); refresh();
       });
     });
@@ -857,7 +866,7 @@
   });
   document.addEventListener('click', function (e) {
     if (e.target.closest('#gl-add')) {
-      M.goals.push({ name: '새 목표', kind: '기타', term: '중기', due: '2028-01', need: 0, saved: 0 });
+      M.goals.push({ name: '', kind: '기타', term: '중기', due: '', need: null, saved: null, now: null });
       CT.save(M); refresh(true); return;
     }
     var d = e.target.closest('[data-gdel]');
@@ -933,11 +942,13 @@ document.addEventListener('click', function (e) {
     rows.push('<tr class="grp" data-cfgrp="' + gi + '"><td><i class="ct-chev right"></i>' + name + '</td>'
       + '<td class="amt">' + CT.comma(v) + '</td></tr>');
   }
+  // 02 에서 이름을 안 적고 둔 줄 — 표에서는 빈 칸으로 두지 않는다
+  function nm(s) { return (s && String(s).trim()) || '이름 없음'; }
   function items(list) {   // [[이름, 금액], …]
     list.forEach(function (r) {
       var v = Number(r[1]) || 0;
       if (!v && !blank) return;
-      rows.push('<tr class="itm' + (v ? '' : ' none') + '" data-cfitem="' + gi + '" hidden><td>' + r[0] + '</td>'
+      rows.push('<tr class="itm' + (v ? '' : ' none') + '" data-cfitem="' + gi + '" hidden><td>' + nm(r[0]) + '</td>'
         + '<td class="amt">' + (v ? CT.comma(v) : '미입력') + '</td></tr>');
     });
   }
@@ -960,7 +971,7 @@ document.addEventListener('click', function (e) {
   grp('모으는 돈', c.saving);
   items(cat('저축'));
   grp('빚 갚는 돈', c.debtPay);
-  items((M.debt || []).map(function (d) { return [d.name, d.pay]; }));
+  items((M.debt || []).map(function (d) { return [nm(d.name), d.pay]; }));
 
   document.getElementById('cf-rows').innerHTML = rows.join('');
   document.getElementById('cf-bal').textContent = CT.comma(c.balance);
@@ -993,7 +1004,7 @@ document.addEventListener('click', function (e) {
       list.forEach(function (r) {
         var v = Number(r[1]) || 0;
         if (!v) return;
-        out.push('<tr class="itm"><td>' + r[0] + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
+        out.push('<tr class="itm"><td>' + ((r[0] || '').trim() || '이름 없음') + '</td><td class="amt">' + CT.comma(v) + '</td></tr>');
       });
     });
     document.getElementById('cf-once').innerHTML = out.join('');
@@ -1012,12 +1023,12 @@ document.addEventListener('click', function (e) {
   function rows(host, list) {
     $(host).innerHTML = list.filter(function (r) { return r[1]; })
       .map(function (r) {
-        return '<div class="k">' + r[0] + '</div><div class="v">' + CT.comma(r[1]) + '만원</div>';
+        return '<div class="k">' + ((r[0] || '').trim() || '이름 없음') + '</div><div class="v">' + CT.comma(r[1]) + '만원</div>';
       }).join('') || '<div class="k" style="color:var(--ink-4);">미입력</div><div class="v"></div>';
   }
 
   // 수입 — 02 '들어오는 돈' 항목 그대로
-  rows('pl-in', (M.cf['수입'] ? M.cf['수입'].items : []).map(function (r) { return [r[0], Number(r[1]) || 0]; }));
+  rows('pl-in', (M.cf['수입'] ? M.cf['수입'].items : []).map(function (r) { return [(r[0] || '').trim() || '이름 없음', Number(r[1]) || 0]; }));
   $('pl-income').textContent = CT.comma(c.income) + '만원';
 
   // 비용 — 생활비 묶음 + 대출·할부 이자
@@ -1088,7 +1099,7 @@ document.addEventListener('click', function (e) {
     return grp(name, sub, sum)
       + (list.length
           ? list.map(function (x) {
-              return itm(x.d.name + (x.d.rate ? ' 연 ' + x.d.rate + '%' : ''), x.bal);
+              return itm(((x.d.name || '').trim() || '이름 없음') + (x.d.rate ? ' 연 ' + x.d.rate + '%' : ''), x.bal);
             }).join('')
           : '<div class="k" style="color:var(--ink-4);">없음</div><div class="v"></div>');
   }

@@ -394,9 +394,13 @@
 .cE .debt-fields { display: flex; flex-direction: column; gap: 10px; }
 .cE .debt-field { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; align-items: center; }
 .cE .debt-field .lb { font-size: var(--fs-body); font-weight: 400; color: var(--ink-2); }
-/* 남은 돈은 적는 칸이 아니라 나오는 값이라 테두리 없이 숫자만 둔다 */
-.cE .debt-bal { min-height: 46px; display: flex; align-items: center; justify-content: flex-end; padding: 11px 14px; font-size: var(--fs-body); color: var(--ink); }
+/* 남은 돈은 적는 칸이 아니라 나오는 값이라 테두리 없이 숫자만 둔다.
+   숫자 밑에 '무엇을 빼고 남은 돈인지' 한 줄을 붙인다. */
+.cE .debt-bal { min-height: 46px; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+  gap: 2px; padding: 8px 14px; font-size: var(--fs-body); color: var(--ink); line-height: 1.4; }
+.cE .debt-bal .v { display: flex; align-items: baseline; gap: 4px; white-space: nowrap; }
 .cE .debt-bal b { font-weight: 700; font-variant-numeric: tabular-nums; }
+.cE .debt-bal .sub { font-size: var(--fs-option); color: var(--ink-3); text-align: right; white-space: nowrap; }
 .cE .debt-add { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 16px 0 4px; }
 
 /* ===== 02 빚 갚는 돈 =====
@@ -468,7 +472,9 @@
 .cE .ct-tbl tbody tr.sub td, .cE .ct-tbl tbody tr.sub:hover { background: var(--bg-soft); padding: 0 28px 6px; }
 .cE .ct-tbl tfoot td { font-size: var(--fs-body); font-weight: 700; color: var(--ink); padding: 16px; border-top: 2px solid var(--ink); background: var(--bg-soft); }
 .cE .ct-tbl .ct-in { min-height: 42px; }
-.cE .ct-tbl .del { font-size: var(--fs-option); color: var(--ink-3); text-align: right; }
+.cE .ct-tbl .del { font-size: var(--fs-option); color: var(--ink-3); text-align: center; }
+/* 목표 카드 — 필요한 돈에 못 미치는 만큼만 붉게 짚는다 */
+.cE .ct-goal .gm .short { color: #C92238; font-weight: 600; }
 .cE .ct-tbl .sub-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
 /* 칸 너비가 고정된 표(목표 관리 등)는 좁은 화면에서 가로로 넘친다.
    overflow:hidden 으로 두면 넘친 칸이 잘려 안 보이므로 가로로 밀어서 본다. */
@@ -592,13 +598,13 @@
 /* 순자산 ↔ 부채 비율 막대 — 100%를 둘이 나눠 갖는 구조라
    한쪽을 회색으로 두면 비율이 읽히지 않는다. 파랑 : 빨강으로 맞선다. */
 .cE .ct-bar2 { display: flex; height: 40px; border-radius: var(--r-sm); overflow: hidden; font-size: var(--fs-option); font-weight: 700; }
-/* 파랑은 브랜드 그라데이션(--brand-grad)을 그대로 쓰고,
-   붉은 쪽도 같은 구조(옅은 색 → 중간 → 진한 색)로 맞춘다. */
-.cE .ct-bar2 { --bar-red-grad: linear-gradient(135deg, #FFB3B8 0%, #FF7A85 45%, #9E2430 100%); }
+/* 막대는 그라데이션 없이 한 가지 색으로 채운다. 도넛보다 채도를 조금 높이되,
+   칸 안의 글자가 읽히도록 바탕과 같은 계열의 진한 색으로 적는다(대비 5:1 이상). */
+.cE .ct-bar2 { --bar-a: #7BCFFF; --bar-a-ink: #0A4062; --bar-b: #FFAEC1; --bar-b-ink: #7A1E35; }
 /* 적은 값이 없을 때 — 색을 칠하지 않고 빈 막대 자리만 둔다(CT.bar2 에 null 을 넘긴 경우) */
 .cE .ct-bar2.empty { background: var(--line); }
-.cE .ct-bar2 .a { background: var(--brand-grad); color: #fff; display: flex; align-items: center; padding: 0 14px; }
-.cE .ct-bar2 .b { background: var(--bar-red-grad); color: #fff; display: flex; align-items: center; padding: 0 14px; }
+.cE .ct-bar2 .a { background: var(--bar-a); color: var(--bar-a-ink); display: flex; align-items: center; padding: 0 14px; }
+.cE .ct-bar2 .b { background: var(--bar-b); color: var(--bar-b-ink); display: flex; align-items: center; padding: 0 14px; }
 /* 비중이 작은 쪽은 칸이 글자보다 좁다. 줄바꿈을 막아 세로로 쌓이지 않게 하고,
    글자를 지운 칸은 좌우 여백까지 걷어 비율이 그대로 보이게 한다.
    넘쳐서 지운 글자는 막대 아래 .ct-bar2-cap 에 적는다(CT.bar2). */
@@ -687,7 +693,8 @@
 /* ===== 다음 상담일 =====
    제목·고른 날짜·시간은 왼쪽 줄에 쌓고, 달력은 패널 오른쪽 끝에 붙인다.
    달력은 날짜를 고르는 칸이라 폭을 늘리지 않고 380px 로 고정한다. */
-.cE .ct-next { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 32px; align-items: start; }
+/* 달력이 왼쪽 — 날짜를 고른 다음 오른쪽에서 시간을 정하는 차례다 */
+.cE .ct-next { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 32px; align-items: start; }
 .cE .ct-next .side { gap: 10px; }
 .cE .ct-next .when { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
 .cE .ct-next .when.hint { font-size: var(--fs-body); font-weight: 500; color: var(--ink-4); }

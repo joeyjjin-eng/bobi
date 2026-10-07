@@ -168,8 +168,9 @@
           if (v === null) { el.textContent = '미입력'; el.classList.add('hint'); }
           else { el.textContent = CT.comma(v); el.classList.remove('hint'); }
         } else {
-          d.name = el.textContent.trim() || '빚';
-          el.textContent = d.name;
+          d.name = el.textContent.trim();
+          if (!d.name) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
+          else el.classList.remove('hint');
         }
         commit();
       });
@@ -185,7 +186,8 @@
 
   /* 빚 이름은 다른 항목 이름과 같이 직접 적는다. */
   function nameCell(name, i) {
-    return '<div class="ct-in debt-name" data-dp="' + i + '" data-df="name">' + (name || '빚') + '</div>';
+    return '<div class="ct-in debt-name' + (name ? '' : ' hint') + '" data-hint="새 빚" data-dp="' + i + '" data-df="name">'
+      + (name || '새 빚') + '</div>';
   }
 
   /* 빚 갚는 돈 — 기획 문서의 '빚 갚는 돈' 화면 그대로.
@@ -238,9 +240,10 @@
   function rowsOf(cat) {
     var c = M.cf[cat];
     return c.items.map(function (r, i) {
-      var isCustom = r[2] === true || r[0] === '새 항목';
+      var isCustom = r[2] === true;
+      var noName = !r[0];
       return '<div class="finance-input-row finance-grid-row">'
-        + '<div class="finance-item-name' + (isCustom ? ' is-custom' : '') + '"><div class="ct-in" data-f="name" data-i="' + i + '" data-custom="' + isCustom + '">' + r[0] + '</div></div>'
+        + '<div class="finance-item-name' + (isCustom ? ' is-custom' : '') + '"><div class="ct-in' + (noName ? ' hint' : '') + '" data-hint="새 항목" data-f="name" data-i="' + i + '" data-custom="' + isCustom + '">' + (r[0] || '새 항목') + '</div></div>'
         + '<div class="ct-in num' + (r[1] === null ? ' hint' : '') + '" data-hint="미입력" data-f="now" data-i="' + i + '">' + (r[1] === null ? '미입력' : CT.comma(r[1])) + '</div>'
         + '<button type="button" class="del finance-delete" data-act="del" aria-label="항목 삭제"><svg class="ic-svg" width="11" height="11"><use href="#i-x"/></svg></button>'
         + '</div>';
@@ -267,9 +270,10 @@
         var i = Number(el.dataset.i), f = el.dataset.f, items = M.cf[cat].items;
         if (!items[i]) return;
         if (f === 'name') {
-          items[i][0] = el.textContent.trim() || '이름 없음';
+          items[i][0] = el.textContent.trim();
           items[i][2] = true;
-          el.textContent = items[i][0];
+          if (!items[i][0]) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
+          else el.classList.remove('hint');
         } else {
           var v = CT.parse(el.textContent);
           items[i][1] = v;
@@ -378,7 +382,7 @@
     var add = e.target.closest('.ct-add[data-addcat]');
     if (add) {
       var cat = add.dataset.addcat;
-      M.cf[cat].items.push(['새 항목', null, true]);
+      M.cf[cat].items.push(['', null, true]);
       var tb = host.querySelector('[data-cat="' + cat + '"]');
       tb.innerHTML = rowsOf(cat);
       bindRows(tb);
@@ -389,7 +393,7 @@
     }
     // 빚도 다른 항목처럼 한 줄을 더하고 이름부터 적는다
     if (e.target.closest('#cf-debt-add')) {
-      M.debt.push({ name: '새 빚', pay: null, rate: null, due: '' });
+      M.debt.push({ name: '', pay: null, rate: null, due: '' });
       redrawDebt();
       commit();
       var names = host.querySelectorAll('.ct-in[data-df="name"]');

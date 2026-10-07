@@ -18,8 +18,9 @@
     cfMonth: '',
     /* 비상금 화면. base = 필수 생활비 / have = 지금 있는 비상금 —
        null 이면 02·03 에서 가져온 값을 그대로 쓰고, 숫자가 있으면 고쳐 적은 값이다.
-       inc = 필수 생활비에 넣은 묶음 이름들. null 이면 기본(저축을 뺀 전부). */
-    em: { base: null, have: null, inc: null },
+       off = 필수 생활비에서 빼 둔 묶음 키들. 빈 배열이면 전부 넣는다.
+       넣은 것이 아니라 뺀 것을 담아야, 02 에 빚이 늘어도 새 줄이 꺼진 채로 나오지 않는다. */
+    em: { base: null, have: null, off: [] },
     // 03 자산·부채 기준일(YYYY-MM-DD). 재무상태표가 '언제 기준'인지 여기서 읽는다.
     asDate: '',
     cf: {
@@ -89,11 +90,22 @@
     // 아무것도 안 적었는데 '가족 여행 · 차량 교체 · 첫째 대학 등록금'이 들어 있으면
     // 고객이 적은 목표처럼 읽힌다. SAMPLE 의 3건은 항목 구성을 보여 주는 예시일 뿐이다.
     m.goals = [];
+    // 상담일과 기준월은 거의 언제나 '오늘·이번 달'이라 미리 채워 둔다
+    m.basic.date = todayISO();
+    m.cfMonth = todayYM();
     m.v = VERSION;
     return m;
   }
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  /* 오늘 — 새 상담을 열 때 상담일·기준월을 미리 채워 둔다. 둘 다 고쳐 쓸 수 있다. */
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+  function todayYM() { return todayISO().slice(0, 7); }
 
   /* ============================================================
      상담 사례 — 리스트에서 고른 고객의 상담을 그대로 열어 보는 용도.
@@ -155,9 +167,9 @@
       goals: [
         /* 목표 합계가 월 145만원 — 지금 저축 114만원에서 31만원만 더 돌리면 되고,
            그 31만원은 월 잔액 42만원 안에서 나온다. 셋이 맞물려야 상담이 성립한다. */
-        { name: '자녀 대학 등록금', kind: '자녀학비', term: '장기', due: '2031-03', need: 2400,  saved: 850 },
-        { name: '주택담보대출 조기상환', kind: '기타', term: '중기', due: '2029-12', need: 3000,  saved: 1200 },
-        { name: '노후 자금',        kind: '노후',     term: '장기', due: '2046-09', need: 25000, saved: 8300 }
+        { name: '자녀 대학 등록금', kind: '자녀학비', term: '장기', due: '2031-03', need: 2400,  saved: 850,  now: 29 },
+        { name: '주택담보대출 조기상환', kind: '기타', term: '중기', due: '2029-12', need: 3000,  saved: 1200, now: 25 },
+        { name: '노후 자금',        kind: '노후',     term: '장기', due: '2046-09', need: 25000, saved: 8300, now: 60 }
       ],
       wrap: {
         conclusion: '수입 800만원에서 매달 42만원이 남고, 저축으로 114만원을 따로 모으고 있습니다.\n'
@@ -175,7 +187,7 @@
     var m = blank();
     m.basic  = clone(c.basic || {});
     m.cfMonth = c.cfMonth || '';
-    m.em = clone(c.em || { base: null, have: null, inc: null });
+    m.em = clone(c.em || { base: null, have: null, off: [] });
     m.asDate = c.asDate || '';
     Object.keys(c.cf || {}).forEach(function (k) {
       if (!m.cf[k]) return;
@@ -206,7 +218,7 @@
      v4 — 부채에 이번 달 원금·이자 추가 (2026-10-01)
      v5 — 빈 상태에서 빚도 줄째 비움 (2026-10-01)
      v6 — 01 상담목표(basic.wish·keep·change)를 모델에 담음 (2026-10-02) */
-  var VERSION = 13;  // 13: 비상금 — 뺄 항목 고르기를 넣을 항목 고르기로 바꿈
+  var VERSION = 16;  // 16: 목표의 '필요 월 저축액'에서 지금 넣는 돈을 뺀다
 
   function load() {
     try {
@@ -355,11 +367,17 @@
     return (m.goals || []).map(function (g) {
       var months = monthsTo(g.due, m);
       var remain = Math.max(0, (Number(g.need) || 0) - (Number(g.saved) || 0));
+      var monthly = Math.round(remain / months);
+      var now = Number(g.now) || 0;
       return {
         name: g.name, kind: g.kind, term: g.term, due: g.due,
         need: Number(g.need) || 0, saved: Number(g.saved) || 0,
         months: months, remain: remain,
-        monthly: Math.round(remain / months),
+        monthly: monthly,
+        /* now  = 지금 이 목표에 매달 넣고 있는 돈
+           more = 앞으로 더 넣어야 하는 돈. 이미 충분히 넣고 있으면 0 이다.
+                  화면의 '필요 월 저축액'이 이 값이다. */
+        now: now, more: Math.max(0, monthly - now),
         pct: g.need ? Math.round((Number(g.saved) || 0) / Number(g.need) * 100) : 0
       };
     });
@@ -371,7 +389,9 @@
       count: gs.length,
       need: gs.reduce(function (s, g) { return s + g.need; }, 0),
       saved: gs.reduce(function (s, g) { return s + g.saved; }, 0),
-      monthly: gs.reduce(function (s, g) { return s + g.monthly; }, 0)
+      monthly: gs.reduce(function (s, g) { return s + g.monthly; }, 0),
+      now: gs.reduce(function (s, g) { return s + g.now; }, 0),
+      more: gs.reduce(function (s, g) { return s + g.more; }, 0)
     };
   }
   // 기간별 필요 저축액 — 목표가 하나씩 끝날 때마다 줄어든다
@@ -465,6 +485,15 @@
     var s = String(v == null ? '' : v).replace(/[^0-9-]/g, '');
     return s === '' ? null : Number(s);
   }
+  /* 금리처럼 소수점이 있는 값 — 점은 하나만 남긴다(3.8 / 3.85 모두 그대로). */
+  function parseF(v) {
+    var s = String(v == null ? '' : v).replace(/[^0-9.-]/g, '');
+    var i = s.indexOf('.');
+    if (i >= 0) s = s.slice(0, i + 1) + s.slice(i + 1).replace(/\./g, '');
+    if (s === '' || s === '.' || s === '-' || s === '-.') return null;
+    var n = Number(s);
+    return isNaN(n) ? null : n;
+  }
 
   window.CT = {
     cfMonthText: cfMonthText, asDateText: asDateText, nextText: nextText, DOW: DOW,
@@ -473,6 +502,6 @@
     loadCase: loadCase, caseNames: caseNames,
     sumItems: sumItems, unknown: unknown, catTotal: catTotal, groupTotal: groupTotal,
     goals: goals, goalSum: goalSum, goalPhases: goalPhases, monthsTo: monthsTo, debtBal: debtBal,
-    comma: comma, won: won, pct: pct, parse: parse, round1: round1, bar2: bar2
+    comma: comma, won: won, pct: pct, parse: parse, parseF: parseF, round1: round1, bar2: bar2
   };
 })();

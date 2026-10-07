@@ -156,7 +156,7 @@
   $('st-assets').textContent = CT.comma(c.assets);
 
   $('st-debt').innerHTML = M.debt.map(function (d) {
-    return '<tr><td class="nm">' + d.name
+    return '<tr><td class="nm">' + ((d.name || '').trim() || '이름 없음')
       + '</td><td class="amt">' + CT.comma(CT.debtBal(d, M)) + '</td></tr>';
   }).join('') || '<tr><td colspan="2" style="color:var(--ink-4);">등록된 부채 없음</td></tr>';
   $('st-liab').textContent = CT.comma(c.liab);
