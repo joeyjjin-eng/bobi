@@ -13,15 +13,11 @@
   /* 적는 칸 — 다른 화면의 입력 칸과 같은 모양으로 둔다 */
   .cE .em-in { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
   .cE .em-in .ct-f { gap: 8px; }
-  /* 가져오는 값 — 눌러도 고칠 수 없다는 게 보이게 채워 두고 자물쇠를 붙인다 */
-  .cE .em-in .ct-in.ro { background: var(--bg-soft); border-color: var(--line); color: var(--ink);
-    cursor: default; position: relative; padding-left: 38px; }
-  .cE .em-in .ct-in.ro::before { content: ""; position: absolute; left: 14px; top: 50%; width: 11px; height: 13px;
-    margin-top: -6.5px; border-radius: 2px;
-    background: var(--ink-4);
-    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z'/></svg>") center/contain no-repeat;
-            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h8V8a4 4 0 0 0-8 0v2z'/></svg>") center/contain no-repeat; }
-  .cE .em-in .ct-in.ro .u { margin-left: 4px; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); }
+  /* 02·03 에서 가져온 값을 고쳐 적으면 테두리로 표시하고, 자동값으로 돌아가는 길을 밑에 둔다 */
+  .cE .em-in .ct-in.edited { border-color: var(--brand); }
+  .cE .em-in .em-edited { color: var(--brand-deep); }
+  .cE .em-in .em-edited button { padding: 0; border: 0; background: none; font: inherit;
+    color: var(--brand-deep); font-weight: 600; text-decoration: underline; cursor: pointer; }
   .cE .em-mon { display: grid; grid-template-columns: minmax(0, 1fr) 132px; gap: 12px; align-items: center; }
   /* 조절 — 적는 칸과 결과 사이 */
   .cE .em-opt { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; padding: 20px 22px;
@@ -34,10 +30,24 @@
   .cE .em-out .r + .r { border-top: 1px solid var(--line); }
   .cE .em-out .r b { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; }
   .cE .em-out .r b.hl { color: var(--brand-deep); }
-  /* 생활비에서 뺄 항목 — 묶음 이름 옆에 금액을 같이 둔다 */
-  .cE .em-cut { display: flex; flex-wrap: wrap; gap: 8px; }
-  .cE .em-cut .amt { margin-left: 6px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
-  .cE .em-cut .ct-chip.on .amt { color: inherit; }
+  /* 필수 생활비에 넣을 항목 — 묶음 이름 옆에 금액을 같이 둔다 */
+  .cE .em-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cE .em-pick .amt { margin-left: 6px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+  .cE .em-pick .ct-chip.on .amt { color: inherit; }
+  /* 계산 방법 — 결과를 받치는 팁 쪽지다. 카드로 세우면 결과만큼 무거워져서
+     바탕만 깔고 글자 단을 한 단 내린다(제목 15 · 본문 13). */
+  /* 제목 / 내용 / 캡션 세 덩어리. 덩어리 사이 16 · 덩어리 안쪽 4~6 으로 두어
+     사이가 안쪽의 3배쯤 되게 한다. <p>·<ul> 의 기본 여백은 전부 0 으로 눌러 두고
+     간격은 gap 한 곳에서만 준다 — 그래야 사방 패딩 28 이 그대로 지켜진다. */
+  .cE .em-how { margin-top: 32px; padding: 28px; border-radius: var(--r-md); background: var(--bg-soft);
+    display: flex; flex-direction: column; gap: 16px; }
+  .cE .em-how-t { font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .cE .em-how-b { display: flex; flex-direction: column; gap: 6px; }
+  .cE .em-how-f { margin: 0; font-size: var(--fs-option); font-weight: 600; color: var(--ink); line-height: 1.4; }
+  .cE .em-how-f .x { margin: 0 4px; color: var(--ink-3); font-weight: 400; }
+  .cE .em-how-l { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 4px;
+    font-size: var(--fs-option); color: var(--ink-2); line-height: 1.4; }
+  .cE .em-how .ct-note { display: block; margin: 0; }
   /* 비상금 둘 곳 — 이름 아래에 설명을 쌓는다. 좌우로 나누면 '파킹통장'이 세로로 쪼개진다. */
   .cE .em-where { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .cE .em-where .nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-bottom: 4px; }
@@ -95,21 +105,23 @@
     <!-- ===== 적는 칸 → 조절 → 결과. 항목은 기획 문서의 비상금 화면 그대로. ===== -->
     <div class="ct-panel" id="em-body">
 
-      <!-- 앞의 두 칸은 02·03 에서 가져오는 값이라 여기서 고치지 않는다. 고쳐 적는 칸과 섞이지 않게
-           회색으로 채우고 자물쇠를 붙여 둔다. 고칠 곳은 02·03 이다. -->
+      <!-- 앞의 두 칸은 02·03 에서 값을 가져오되, 상담 자리에서 바로 고쳐 적을 수 있다.
+           고쳐 적으면 그 값이 계산에 쓰이고, 밑의 링크로 언제든 자동값으로 되돌린다. -->
       <div class="em-in">
         <div class="ct-f">
-          <span class="lb">한 달 생활비</span>
-          <div class="ct-in num ro" id="em-base">0</div>
-          <span class="ct-note">02 수입지출의 생활비 합계입니다. 아래에서 뺄 항목을 고르면 줄어듭니다.</span>
+          <span class="lb">필수 생활비</span>
+          <div class="ct-in num" id="em-base">0</div>
+          <span class="ct-note" data-note="base">아래에서 고른 묶음의 합계입니다. 직접 고쳐 적을 수도 있어요.</span>
+          <span class="ct-note em-edited" data-edited="base" hidden>직접 적은 값이라 아래 조절에 따라 바뀌지 않아요 · <button type="button" data-auto="base">자동값으로</button></span>
         </div>
         <div class="ct-f">
           <span class="lb">지금 있는 비상금</span>
-          <div class="ct-in num ro" id="em-have-in">0</div>
-          <span class="ct-note">03 자산·부채의 '바로 쓸 수 있는 돈'(통장·현금)에서 가져옵니다.</span>
+          <div class="ct-in num" id="em-have-in">0</div>
+          <span class="ct-note" data-note="have">03 자산·부채의 '바로 쓸 수 있는 돈'(통장·현금)에서 가져옵니다. 직접 고쳐 적을 수도 있어요.</span>
+          <span class="ct-note em-edited" data-edited="have" hidden>직접 적은 값이에요 · <button type="button" data-auto="have">자동값으로</button></span>
         </div>
         <div class="ct-f">
-          <span class="lb">준비할 개월<span class="req"> 필수</span></span>
+          <span class="lb">준비할 개월<span class="req">필수</span></span>
           <div class="em-mon">
             <div class="ct-seg" style="grid-template-columns:repeat(3,1fr);">
               <div class="on" data-months="3">3개월</div>
@@ -125,30 +137,18 @@
         </div>
       </div>
 
-      <!-- 조절 -->
+      <!-- 조절 — 무엇을 뺄지가 아니라 무엇을 넣을지로 고른다.
+           비상금은 '수입이 끊겨도 나가는 돈'을 세는 자리라, 넣을 것을 고르는 쪽이 뜻에 맞다.
+           묶음은 일부만 보여 주지 않고 모두 두고, 옆에 금액을 같이 적어 무엇이 들어갔는지 바로 읽히게 한다. -->
       <div class="em-opt">
         <div class="em-optrow">
           <div style="min-width:0;">
-            <div style="font-size:var(--fs-body);color:var(--ink);">대출·할부 월 상환액도 포함
-              <span class="ct-note" id="em-debt-amt"></span></div>
-            <div class="ct-note">매달 갚는 금액을 생활비에 더해 계산합니다</div>
+            <div style="font-size:var(--fs-body);color:var(--ink);">필수 생활비에 넣을 항목</div>
+            <div class="ct-note">수입이 끊겨도 계속 나가는 묶음을 고릅니다 · 처음에는 전부 켜져 있어요</div>
           </div>
-          <div class="ct-sw" id="em-sw-debt" role="switch" aria-checked="true"><i></i></div>
+          <button type="button" class="ct-add-link" id="em-all">모두 켜기</button>
         </div>
-
-        <div class="ct-hr"></div>
-
-        <div class="em-optrow">
-          <div style="min-width:0;">
-            <div style="font-size:var(--fs-body);color:var(--ink);">생활비에서 뺄 항목 고르기</div>
-            <div class="ct-note">비상 상황에 줄일 수 있는 묶음을 고릅니다</div>
-          </div>
-          <div class="ct-sw off" id="em-sw-cut" data-toggle="cut" role="switch" aria-checked="false"><i></i></div>
-        </div>
-
-        <!-- 뺄 수 있는 묶음은 상담에서 정하므로 일부만 보여 주지 않고 모두 둔다.
-             옆에 금액을 같이 적어야 무엇을 빼는지가 바로 읽힌다(기획 '생활비에서 뺄 항목 고르기'). -->
-        <div data-toggle-target="cut" hidden class="em-cut" id="em-cut"></div>
+        <div class="em-pick" id="em-pick"></div>
       </div>
 
       <!-- 결과 -->
@@ -158,9 +158,20 @@
         <div class="r"><span>지금 비상금으로 버틸 수 있는 기간</span><b id="em-cover">—</b></div>
       </div>
 
-      <div class="ct-note" style="margin-top:14px;">
-        몇 개월치를 둘지는 상담에서 정합니다.
-        참고 · 맞벌이는 월 수입의 3배, 외벌이는 6배(한국FP협회 FP저널) · 생활비 3~6개월(금융감독원 안내)
+      <!-- 왜 '필수 생활비 × 개월'인지가 화면에서 바로 읽혀야 한다. 상담 중 고객에게 그대로 보여 주는 자리다. -->
+      <div class="em-how">
+        <div class="em-how-t">이렇게 계산해요</div>
+        <div class="em-how-b">
+          <p class="em-how-f">목표 비상금 = 필수 생활비 <span class="x">×</span> 준비할 개월</p>
+          <ul class="em-how-l">
+            <li>수입이 끊겨도 꼭 필요한 생활비를 감당하기 위해 마련해 두는 돈이 비상금입니다. 비상금으로 몇 달을 버틸 수 있는지는 이 필수 생활비를 기준으로 계산합니다.</li>
+            <li>빚 갚는 돈도 넣습니다. 대출·할부는 수입이 끊겨도 나가고, 밀리면 바로 신용 문제가 됩니다.</li>
+            <li>저축·투자는 넣지 않습니다. 위기 때 가장 먼저 멈추는 돈이라 미리 쌓아 둘 이유가 없습니다.</li>
+            <li>여가·꾸밈처럼 위기 때 실제로 줄일 수 있는 묶음은 꺼 두면 더 현실적인 금액이 됩니다.</li>
+          </ul>
+        </div>
+        <p class="ct-note">몇 개월치를 둘지는 상담에서 정합니다.
+          참고 · 생활비 3~6개월(금융감독원 안내) · 맞벌이는 월 수입의 3배, 외벌이는 6배(한국FP협회 FP저널)</p>
       </div>
     </div>
 
@@ -202,12 +213,15 @@
 <script src="_actions.js"></script>
 <script>
 /* ===== 비상금 — 02 수입지출·03 자산·부채에 적은 값으로 계산 =====
-   목표 비상금 = 월 기준 생활비 × 준비할 개월
-   현재 비상금 = 유동자산 합계 (03에서 적은 값, 입력 칸이 아니다)
-   버틸 수 있는 기간 = 현재 비상금 ÷ 월 기준 생활비                   */
+   목표 비상금 = 필수 생활비 × 준비할 개월
+   필수 생활비 = 넣기로 고른 묶음의 한 달 합계 (02 고정·변동지출 + 빚 갚는 돈)
+   지금 있는 비상금 = 03 유동자산 합계
+   버틸 수 있는 기간 = 지금 있는 비상금 ÷ 필수 생활비
+   앞의 두 값은 가져오되 상담 자리에서 고쳐 적을 수 있다(M.em).          */
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   var M = CT.load(), c = CT.calc(M);
+  var EM = M.em = M.em || { base: null, have: null, inc: null };
 
   // 생활비도 통장 잔액도 안 적혔으면 계산할 게 없다
   var liquid = (M.as['유동자산'] || []).reduce(function (s, r) { return s + (Number(r[1]) || 0); }, 0);
@@ -218,59 +232,99 @@
     return;
   }
 
-  // 03 유동자산 합계
-
-  // 뺄 수 있는 묶음 — 02 의 묶음을 전부 두고, 옆에 그 묶음의 월 금액을 같이 적는다
-  $('em-cut').innerHTML = CT.FIXED.concat(CT.VARI).map(function (cat) {
-    return '<div class="ct-chip" data-chip data-cut="' + cat + '">' + cat
-      + '<span class="amt">' + CT.comma(CT.catTotal(M, cat)) + '만원</span></div>';
-  }).join('');
-  $('em-debt-amt').textContent = '· ' + CT.comma(c.debtPay) + '만원';
+  /* 넣을 수 있는 묶음 — 02 의 고정·변동지출 전부에 '빚 갚는 돈'을 더한 목록.
+     저축은 위기 때 멈추는 돈이라 아예 고를 거리에 두지 않는다. */
+  var DEBT = '빚 갚는 돈';
+  var PICKS = CT.FIXED.concat(CT.VARI, [DEBT]);
+  function amountOf(cat) { return cat === DEBT ? c.debtPay : CT.catTotal(M, cat); }
+  function incSet() {
+    var out = {};
+    Array.prototype.forEach.call(document.querySelectorAll('[data-inc].on'), function (ch) {
+      out[ch.dataset.inc] = true;
+    });
+    return out;
+  }
+  function drawPicks() {
+    // 처음 열면 전부 켠다. 고친 적이 있으면 그때 고른 대로 되살린다.
+    var on = EM.inc;
+    $('em-pick').innerHTML = PICKS.map(function (cat) {
+      var isOn = on == null || on.indexOf(cat) >= 0;
+      return '<div class="ct-chip' + (isOn ? ' on' : '') + '" data-chip data-inc="' + cat + '">' + cat
+        + '<span class="amt">' + CT.comma(amountOf(cat)) + '만원</span></div>';
+    }).join('');
+  }
+  function savePicks() {
+    var inc = incSet();
+    EM.inc = PICKS.filter(function (cat) { return inc[cat]; });
+    CT.save(M);
+  }
+  drawPicks();
 
   function months() {
     var n = CT.parse($('em-months').textContent);
     return n && n > 0 ? n : 3;
   }
-  function cutSet() {
-    var sw = $('em-sw-cut');
-    if (sw.classList.contains('off')) return {};
-    var out = {};
-    Array.prototype.forEach.call(document.querySelectorAll('[data-cut].on'), function (ch) {
-      out[ch.dataset.cut] = true;
-    });
-    return out;
+  /* 02·03 에서 가져오는 값. 고쳐 적은 값이 있으면 그쪽이 이긴다. */
+  function baseAuto() {
+    var inc = incSet();
+    return CT.round1(PICKS.reduce(function (s, cat) { return s + (inc[cat] ? amountOf(cat) : 0); }, 0));
+  }
+  function haveAuto() { return liquid; }
+  var AUTO = { base: baseAuto, have: haveAuto };
+  function valOf(key) { return EM[key] == null ? AUTO[key]() : EM[key]; }
+
+  /* 적고 있는 칸은 건드리지 않는다. 글자를 다시 써 넣으면 커서가 날아간다. */
+  function paintCell(id, key) {
+    var el = $(id), edited = EM[key] != null;
+    if (document.activeElement !== el) el.textContent = CT.comma(valOf(key));
+    el.classList.toggle('edited', edited);
+    document.querySelector('[data-note="' + key + '"]').hidden = edited;
+    document.querySelector('[data-edited="' + key + '"]').hidden = !edited;
   }
 
-
   function render() {
-    var cut = cutSet();
-    var withDebt = !$('em-sw-debt').classList.contains('off');
     var m = months();
+    paintCell('em-base', 'base');
+    paintCell('em-have-in', 'have');
 
-    // 생활비 묶음 — 고정지출 · 변동지출 (+ 부채상환)
-    var rows = [];
-    CT.FIXED.concat(CT.VARI).forEach(function (k) { rows.push([k, CT.catTotal(M, k)]); });
-    if (withDebt) rows.push(['부채상환', c.debtPay]);
-
-    var base = CT.round1(rows.reduce(function (s, r) {
-      return s + (cut[r[0]] ? 0 : r[1]);
-    }, 0));
-    $('em-base').textContent = CT.comma(base);
-
+    var base = valOf('base'), have = valOf('have');
     var need = CT.round1(base * m);
-    var gap  = CT.round1(Math.max(0, need - liquid));
+    var gap  = CT.round1(Math.max(0, need - have));
     var none = !base;
 
     $('em-need').textContent = none ? '—' : CT.comma(need) + '만원';
     $('em-gap').textContent  = none ? '—' : CT.comma(gap) + '만원';
-    $('em-cover').textContent = base ? (Math.round((liquid / base) * 10) / 10) + '개월' : '—';
+    $('em-cover').textContent = base ? (Math.round((have / base) * 10) / 10) + '개월' : '—';
   }
+
+  /* 고쳐 적기 — 자동값과 같은 값을 적거나 비우면 다시 자동으로 돌아간다 */
+  ['base', 'have'].forEach(function (key) {
+    var el = $(key === 'base' ? 'em-base' : 'em-have-in');
+    el.setAttribute('contenteditable', 'true');
+    el.addEventListener('blur', function () {
+      // 눌렀다 나오기만 한 경우 — CT.parse 는 소수점을 떼므로 적힌 그대로면 손대지 않는다
+      var typed = el.textContent.trim();
+      if (typed === CT.comma(valOf(key))) { render(); return; }
+      var v = CT.parse(typed);
+      EM[key] = (v === null || v === AUTO[key]()) ? null : v;
+      CT.save(M);
+      render();
+    });
+  });
 
   // 개월 프리셋 → 직접 입력 칸에 그대로 적는다 (칸이 기준값이다)
   document.addEventListener('click', function (e) {
     var seg = e.target.closest('.ct-seg > div[data-months]');
     if (seg) { $('em-months').textContent = seg.dataset.months; $('em-months').classList.remove('hint'); }
-    if (seg || e.target.closest('.ct-sw, .ct-chip[data-chip]')) render();
+    var auto = e.target.closest('[data-auto]');
+    if (auto) { EM[auto.dataset.auto] = null; CT.save(M); render(); return; }
+    if (e.target.closest('#em-all')) {
+      Array.prototype.forEach.call(document.querySelectorAll('[data-inc]'), function (ch) { ch.classList.add('on'); });
+      savePicks(); render(); return;
+    }
+    // 묶음 켜고 끄기는 _actions.js 가 .on 을 붙인 뒤라 여기서는 저장과 다시 그리기만 한다
+    if (e.target.closest('.ct-chip[data-inc]')) { savePicks(); render(); return; }
+    if (seg) render();
   });
   ['input', 'blur'].forEach(function (ev) {
     $('em-months').addEventListener(ev, function () {
@@ -281,9 +335,6 @@
       render();
     });
   });
-
-  // 지금 있는 비상금 — 03 에서 가져온 값만 보여 준다(여기서는 고치지 않는다)
-  $('em-have-in').textContent = CT.comma(liquid);
 
   render();
 

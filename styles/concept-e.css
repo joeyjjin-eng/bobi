@@ -28,7 +28,7 @@
 .cE .enav a:hover { background: var(--bg-soft); color: var(--ink); }
 .cE .enav a.on { background: var(--brand-pale); color: var(--brand-deep); box-shadow: inset 2px 0 0 var(--brand); }
 .cE .enav a .badge { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
-.cE .enav a .beta-tag { margin-left: auto; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; color: var(--brand-deep); background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 4px; padding: 2px 6px; line-height: 1; }
+.cE .enav a .beta-tag { margin-left: auto; font-size: var(--fs-option); font-weight: 800; letter-spacing: 0.04em; color: var(--brand-deep); background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 4px; padding: 2px 6px; line-height: 1; }
 .cE .enav a.on .beta-tag { background: #fff; }
 .cE .eside .logout { margin-top: auto; display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: var(--fs-body); font-weight: 600; padding: 11px 14px; cursor: pointer; }
 .cE .eside .logout:hover { color: var(--ink); }
@@ -434,7 +434,7 @@
   .m-drawer-list a:hover { background: var(--bg-soft); color: var(--ink); }
   .m-drawer-list a.on { background: var(--brand-pale); color: var(--brand-deep); box-shadow: inset 2px 0 0 var(--brand); }
   .m-drawer-badge { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
-  .m-drawer-beta { margin-left: auto; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; color: var(--brand-deep); background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 4px; padding: 2px 6px; line-height: 1; }
+  .m-drawer-beta { margin-left: auto; font-size: var(--fs-option); font-weight: 800; letter-spacing: 0.04em; color: var(--brand-deep); background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 4px; padding: 2px 6px; line-height: 1; }
   .m-drawer-list a.on .m-drawer-beta { background: #fff; }
   .m-drawer-logout { margin-top: auto; display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: var(--fs-body); font-weight: 600; padding: 12px 14px; cursor: pointer; }
 
@@ -488,7 +488,7 @@
   .cE .costnums .v { font-size: var(--fs-h2); }
   .cA .chart { height: 140px; gap: 10px; padding: 0 10px 0 4px; }
   .cA .chart-years { gap: 10px; padding: 8px 10px 0 4px; }
-  .cA .chart-years > span { font-size: 12px; }
+  .cA .chart-years > span { font-size: var(--fs-option); }
   .cE .radials { height: auto; gap: 12px; }
 
   /* 10대 주요질환 — 스탯 wrap */

@@ -375,9 +375,9 @@
     + '.qm-status-v b { color: #C92238; }'
     + '.qm-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }'
     + '.qm-plan { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; text-align: left; }'
-    + '.qm-plan .qp-l { font-size: 11px; color: var(--ink-3); font-weight: 800; letter-spacing: 0.04em; }'
+    + '.qm-plan .qp-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 800; letter-spacing: 0.04em; }'
     + '.qm-plan .qp-v { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-top: 4px; }'
-    + '.qm-plan .qp-v small { font-size: 11px; font-weight: 600; color: var(--ink-3); margin-left: 2px; }'
+    + '.qm-plan .qp-v small { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); margin-left: 2px; }'
     + '.qm-actions { display: flex; flex-direction: column; gap: 8px; }'
     + '.qm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; border: 1px solid transparent; text-decoration: none; transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }'
     + '.qm-btn.primary { background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }'
@@ -492,10 +492,10 @@
   // ===== [DEV] 스위처 CSS =====
   var DEV_SWITCH_CSS = ''
     + '.dev-switch { margin: 12px 12px 0; padding: 10px 12px; background: #F3F5F7; border: 1px dashed #C7CFD6; border-radius: 10px; font-family: "Pretendard", system-ui, sans-serif; }'
-    + '.dev-switch-title { font-size: 11px; color: #6B7681; font-weight: 800; letter-spacing: 0.03em; margin-bottom: 6px; }'
+    + '.dev-switch-title { font-size: var(--fs-option); color: #6B7681; font-weight: 800; letter-spacing: 0.03em; margin-bottom: 6px; }'
     + '.dev-switch-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }'
-    + '.dev-switch-row > span { font-size: 11px; color: #6B7681; font-weight: 700; flex: none; width: 34px; }'
-    + '.dev-switch-sel { flex: 1; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: 12px; color: #2A343B; padding: 0 6px; outline: none; }'
+    + '.dev-switch-row > span { font-size: var(--fs-option); color: #6B7681; font-weight: 700; flex: none; width: 34px; }'
+    + '.dev-switch-sel { flex: 1; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #2A343B; padding: 0 6px; outline: none; }'
     + '.dev-switch-sel:focus { border-color: var(--brand); }';
 
   function bindDevSwitcher() {

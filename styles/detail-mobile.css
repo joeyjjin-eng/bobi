@@ -185,7 +185,7 @@
   }
   .cE .tr-filter .dlabel,
   .cE .card-pad.period-host .dlabel {
-    font-size: 12px !important; padding-left: 2px !important;
+    font-size: var(--fs-option) !important; padding-left: 2px !important;
     font-weight: 600 !important; color: var(--ink-3) !important;
     margin-bottom: 4px;
   }
@@ -224,7 +224,7 @@
   .cE .cd-tabs::-webkit-scrollbar { display: none; }
   .cE .cd-tab { padding: 12px 12px; font-size: var(--fs-body); flex: none; white-space: nowrap; gap: 8px; }
   .cE .cd-tab-ic { width: 26px; height: 26px; }
-  .cE .cd-tab-code { font-size: 12px; }
+  .cE .cd-tab-code { font-size: var(--fs-option); }
 
   /* ===== 정렬 칩 — 가로 스크롤 ===== */
   .cE .sort-chips {

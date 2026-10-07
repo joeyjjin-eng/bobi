@@ -198,32 +198,20 @@
     eyebrow.textContent = d[0];
     title.textContent = name;
 
-    // 목표 열이 접혀 있으면 새로 그린 칸도 접힌 채로 둔다
-    var sw = $('.ct-sw[data-toggle="goal"]');
-    var goalOff = sw ? sw.classList.contains('off') : false;
-    var gAttr = ' data-toggle-target="goal"' + (goalOff ? ' hidden' : '');
-
-    var now = 0, goal = 0, unknown = 0;
+    var now = 0;
     body.innerHTML = d[1].map(function (r) {
       // 신규 작성은 항목 이름만 두고 금액은 비워 둔다
       var v = DEMO ? r[1] : null;
-      var g = DEMO ? r[2] : null;
       if (v !== null) now += v;
-      if (g === null) unknown++; else goal += g;
       return '<tr><td class="nm">' + r[0] + '</td>'
         + '<td class="amt"><div class="ct-in num' + (v === null ? ' hint' : '') + '" data-hint="0">'
-        + (v === null ? '0' : v) + '</div></td>'
-        + '<td class="amt"' + gAttr + '><div class="ct-in num soft' + (g === null ? ' hint' : '') + '" data-hint="미입력">'
-        + (g === null ? '미입력' : g) + '</div></td></tr>';
+        + (v === null ? '0' : v) + '</div></td></tr>';
     }).join('')
-      + '<tr class="addrow" data-addrow><td colspan="3" class="ct-add" data-add="tpl-cf">+ 항목 추가</td></tr>';
+      + '<tr class="addrow" data-addrow><td colspan="2" class="ct-add" data-add="tpl-cf">+ 항목 추가</td></tr>';
 
     foot.innerHTML = '<tr><td>' + name + ' 소계</td>'
       + '<td class="amt" style="font-size:var(--fs-h1);font-weight:800;">' + round1(now)
-      + '<span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만원</span></td>'
-      + '<td class="amt"' + gAttr + '>' + round1(goal)
-      + (DEMO && unknown ? '<span class="ct-note" style="font-weight:500;"> · 미입력 ' + unknown + '건 제외</span>' : '')
-      + '</td></tr>';
+      + '<span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만원</span></td></tr>';
 
     $$('.ct-in', body).forEach(bindEditable);
   }

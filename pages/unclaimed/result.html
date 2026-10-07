@@ -44,7 +44,7 @@
   .cE .uc-filter-l svg { color: var(--ink-4); flex: none; }
   .cE .uc-filter-b { min-width: 0; }
   .cE .uc-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .cE .uc-chip { padding: 10px 22px; border-radius: var(--r-pill); font-size: var(--fs-body); font-weight: 500; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); cursor: pointer; font-family: inherit; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .uc-chip { padding: 10px 22px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 500; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); cursor: pointer; font-family: inherit; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
   .cE .uc-chip:hover:not(.on) { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
   .cE .uc-chip.on.year { background: var(--ink); color: #fff; border-color: var(--ink); font-weight: 700; }
   .cE .uc-chip.on.gen { background: var(--ink); color: #fff; border-color: var(--ink); font-weight: 700; }
@@ -63,7 +63,7 @@
   .cE .uc-card.primary { background: var(--brand); border-color: var(--brand); box-shadow: var(--sh-brand); }
   .cE .uc-card-l { display: flex; align-items: center; gap: 6px; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); }
   .cE .uc-card.primary .uc-card-l { color: #fff; }
-  .cE .uc-card .hint-q { width: 18px; height: 18px; border-radius: 50%; border: 1.4px solid var(--ink-4); color: var(--ink-4); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex: none; }
+  .cE .uc-card .hint-q { width: 18px; height: 18px; border-radius: 50%; border: 1.4px solid var(--ink-4); color: var(--ink-4); display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-option); font-weight: 700; flex: none; }
   .cE .uc-card.primary .hint-q { border-color: rgba(255,255,255,.85); color: rgba(255,255,255,.85); }
   .cE .uc-amt { display: flex; align-items: baseline; gap: 2px; justify-content: flex-end; font-variant-numeric: tabular-nums; }
   .cE .uc-amt .n { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
@@ -110,7 +110,7 @@
 
   /* ===== 베타 참고용 안내 (계산 결과 상단) ===== */
   .cE .uc-beta-notice { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 12px 16px; background: #FFF5F6; border: 1px solid #F5BFC3; border-radius: var(--r-sm); font-size: var(--fs-option); color: #7A1826; line-height: 1.4; }
-  .cE .uc-beta-notice .bn-tag { flex: none; font-size: 10px; font-weight: 800; letter-spacing: 0.04em; color: #fff; background: #C92238; border: 1px solid #C92238; border-radius: 4px; padding: 3px 7px; line-height: 1; }
+  .cE .uc-beta-notice .bn-tag { flex: none; font-size: var(--fs-option); font-weight: 800; letter-spacing: 0.04em; color: #fff; background: #C92238; border: 1px solid #C92238; border-radius: 4px; padding: 3px 7px; line-height: 1; }
   .cE .uc-beta-notice b { color: #C92238; font-weight: 800; }
 
   /* ===== 의료비내역 (헤더 rec-head/rec-tabs 패턴 재사용 — report/main.html과 통일) ===== */
@@ -336,7 +336,7 @@
 
     /* ===== 페이지네이션 ===== */
     .cE .uc-pagination { gap: 4px; margin-top: 20px; flex-wrap: wrap; }
-    .cE .uc-pg { min-width: 32px; height: 32px; font-size: 12px; padding: 0 8px; }
+    .cE .uc-pg { min-width: 32px; height: 32px; font-size: var(--fs-option); padding: 0 8px; }
 
     /* ===== 위플랫 모달 — 모바일 폭에 맞춤 ===== */
     .wp-modal { padding: 16px; }

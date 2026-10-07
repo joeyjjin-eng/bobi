@@ -57,7 +57,7 @@
     <!-- ===== 현금흐름표 ===== -->
     <div class="ct-panel">
       <div class="ct-card-h" style="margin-bottom:20px;">
-        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">현금흐름표 <span class="ct-note">2026.09 · 단위 만원</span></h3>
+        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">현금흐름표 <span class="ct-note"><span id="st-cfm">2026.09</span> 기준 · 단위 만원</span></h3>
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <table class="ct-tbl">
@@ -151,12 +151,13 @@
     var s = M.as[g].reduce(function (a, r) { return a + (Number(r[1]) || 0); }, 0);
     return '<tr><td class="nm">' + (GNAME[g] || g) + '</td><td class="amt">' + CT.comma(s) + '</td></tr>';
   }).join('');
+  $('st-cfm').textContent  = CT.cfMonthText(M) || '기준월 미입력';
   $('st-asof').textContent = CT.asDateText(M);
   $('st-assets').textContent = CT.comma(c.assets);
 
   $('st-debt').innerHTML = M.debt.map(function (d) {
-    return '<tr><td class="nm">' + d.name + (d.at ? '<div class="sub-l">' + d.at + '</div>' : '')
-      + '</td><td class="amt">' + CT.comma(d.bal) + '</td></tr>';
+    return '<tr><td class="nm">' + d.name
+      + '</td><td class="amt">' + CT.comma(CT.debtBal(d, M)) + '</td></tr>';
   }).join('') || '<tr><td colspan="2" style="color:var(--ink-4);">등록된 부채 없음</td></tr>';
   $('st-liab').textContent = CT.comma(c.liab);
   $('st-net').textContent  = CT.comma(c.net);

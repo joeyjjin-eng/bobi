@@ -415,7 +415,7 @@
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">한 달 동안 들어온 돈이 어디로 갔는지
-        <span class="ct-note">· 2026.09</span>
+        <span class="ct-note">· <span class="rs-cfm">2026.09</span> 기준</span>
       </div>
 
       <div class="ct-tbl-wrap">
@@ -446,22 +446,6 @@
         </table>
       </div>
 
-      <!-- 02 에서 목표 금액을 적은 항목만 비교한다. 목표를 안 적은 항목은 비교 대상이 아니다.
-           목표를 적은 게 하나도 없거나 전부 목표 안이면 통째로 숨긴다. -->
-      <div id="cf-over-wrap" style="margin-top:40px;" hidden>
-        <div class="ct-card-h" style="margin-bottom:6px;">
-          <div class="ct-card-t">목표보다 많이 쓴 항목</div>
-        </div>
-        <table class="ct-tbl rs-cf">
-          <thead><tr>
-            <th>항목</th>
-            <th class="amt" style="width:170px;">초과 금액 <span class="ct-note">· 만원</span></th>
-          </tr></thead>
-          <tbody id="cf-over"></tbody>
-        </table>
-        <div class="ct-note" style="margin-top:12px;">상담 때 정한 목표와 비교했어요. 줄일지는 함께 정해요.</div>
-      </div>
-
       <div class="ct-note" style="margin-top:14px;">금액을 고칠 곳은 해당 단계로 돌아가 고칩니다.
         <a href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 ›</a>
         <a href="assets.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;margin-left:8px;">03 자산·부채 ›</a>
@@ -486,7 +470,7 @@
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">손익계산서
-        <span class="ct-note">· 2026.09</span>
+        <span class="ct-note">· <span class="rs-cfm">2026.09</span> 기준</span>
       </div>
 
       <div class="rs-pl">
@@ -976,9 +960,7 @@ document.addEventListener('click', function (e) {
   grp('모으는 돈', c.saving);
   items(cat('저축'));
   grp('빚 갚는 돈', c.debtPay);
-  // 매달 갚지 않는 빚은 월 현금흐름에 나가는 돈이 없어 여기 올리지 않는다(재무상태표에는 그대로 잡힌다)
-  items((M.debt || []).filter(function (d) { return !d.lump; })
-    .map(function (d) { return [d.name + (d.at ? ' · ' + d.at : ''), d.pay]; }));
+  items((M.debt || []).map(function (d) { return [d.name, d.pay]; }));
 
   document.getElementById('cf-rows').innerHTML = rows.join('');
   document.getElementById('cf-bal').textContent = CT.comma(c.balance);
@@ -1018,28 +1000,6 @@ document.addEventListener('click', function (e) {
     document.getElementById('cf-once-wrap').hidden = !any;
   })();
 
-  /* ④ 목표보다 많이 쓴 항목 — 02 에서 목표 금액을 적은 항목만 실제와 견준다.
-     목표를 안 적은 항목(r[2] 가 null)은 견줄 기준이 없으므로 빼고,
-     목표 안에 든 항목도 뺀다. 많이 쓴 것만 큰 순서로 보여 준다. */
-  (function () {
-    var over = [];
-    // 생활비(고정·변동)만 본다. 수입·저축·일시는 목표를 넘겨도 '많이 쓴' 게 아니다.
-    CT.FIXED.concat(CT.VARI).forEach(function (cat) {
-      if (!M.cf[cat]) return;
-      M.cf[cat].items.forEach(function (r) {
-        var v = Number(r[1]) || 0, goal = r[2];
-        if (goal === null || goal === undefined || goal === '') return;
-        var d = CT.round1(v - Number(goal));
-        if (d > 0) over.push([r[0], d]);
-      });
-    });
-    // 02 에 적은 차례 그대로 둔다. 금액 큰 순으로 다시 세우면 02 와 짝이 안 맞는다.
-    document.getElementById('cf-over').innerHTML = over.map(function (r) {
-      return '<tr class="grp"><td>' + r[0] + '</td>'
-        + '<td class="amt" style="color:#C92238;">+' + CT.comma(r[1]) + '</td></tr>';
-    }).join('');
-    document.getElementById('cf-over-wrap').hidden = !over.length;
-  })();
 })();
 
 /* ===== 수입·지출 결산 =====
@@ -1092,6 +1052,14 @@ document.addEventListener('click', function (e) {
     return '<div class="k">' + name + '</div><div class="v">' + CT.comma(v) + '만원</div>';
   }
 
+  // 02 에 적은 기준월 — 현금흐름표·손익계산서가 어느 달 자료인지 밝힌다
+  (function () {
+    var t = CT.cfMonthText(M);
+    [].forEach.call(document.querySelectorAll('.rs-cfm'), function (el) {
+      el.textContent = t || '기준월 미입력';
+    });
+  })();
+
   // 03 에 적은 기준일을 그대로 쓴다(안 적었으면 상담일)
   $('bs-asof').textContent = CT.asDateText(M);
 
@@ -1112,15 +1080,15 @@ document.addEventListener('click', function (e) {
 
   // 갚을 것 — 만기가 1년 안이면 '곧 갚을 빚', 그 뒤면 '오래 갚는 빚'
   var soon = [], late = [];
-  (M.debt || []).filter(function (d) { return Number(d.bal); }).forEach(function (d) {
-    (CT.monthsTo(d.due) <= 12 ? soon : late).push(d);
-  });
+  (M.debt || []).map(function (d) { return { d: d, bal: CT.debtBal(d, M) }; })
+    .filter(function (x) { return x.bal; })
+    .forEach(function (x) { (CT.monthsTo(x.d.due, M) <= 12 ? soon : late).push(x); });
   function block(name, sub, list) {
-    var sum = list.reduce(function (a, d) { return a + (Number(d.bal) || 0); }, 0);
+    var sum = CT.round1(list.reduce(function (a, x) { return a + x.bal; }, 0));
     return grp(name, sub, sum)
       + (list.length
-          ? list.map(function (d) {
-              return itm((d.at ? d.at + ' · ' : '') + d.name + (d.rate ? ' 연 ' + d.rate + '%' : ''), d.bal);
+          ? list.map(function (x) {
+              return itm(x.d.name + (x.d.rate ? ' 연 ' + x.d.rate + '%' : ''), x.bal);
             }).join('')
           : '<div class="k" style="color:var(--ink-4);">없음</div><div class="v"></div>');
   }
