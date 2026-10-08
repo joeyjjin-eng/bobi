@@ -220,6 +220,42 @@
   /* 다음 상담일 달력은 04 상담정리(wrapup.html)가 직접 그린다.
      여기 있던 코드는 2026.10 한 달이 통째로 박힌 시안용이라 치웠다. */
 
+  /* ---------- 자동 저장 표시 ---------- */
+  /* 저장 버튼이 없으니 "저장됐나?" 에 답하는 건 이 줄뿐이다.
+     고쳐 쓰는 중에는 저장 중, 멈추면 방금 저장됨, 시간이 지나면 저장된 시각을 보여 준다. */
+  var savedEl = $('#ct-saved');
+  if (savedEl) {
+    var savedAt = null, saveTimer = null;
+
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function hhmm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+    function ymd(d) { return d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate()); }
+
+    function paint(txt, saving) {
+      savedEl.className = 'ct-saved' + (saving ? ' saving' : '');
+      savedEl.innerHTML = '<i class="dot"></i>' + txt;
+    }
+
+    /* 저장한 지 1분 안이면 "방금", 같은 날이면 시각만, 그 뒤로는 날짜까지 */
+    function refresh() {
+      if (!savedAt) return;
+      var now = new Date(), gap = (now - savedAt) / 1000;
+      if (gap < 60) return paint('방금 저장됨', false);
+      if (ymd(now) === ymd(savedAt)) return paint(hhmm(savedAt) + ' 저장됨', false);
+      paint(ymd(savedAt) + ' ' + hhmm(savedAt) + ' 저장됨', false);
+    }
+
+    function touched() {
+      clearTimeout(saveTimer);
+      paint('저장 중…', true);
+      saveTimer = setTimeout(function () { savedAt = new Date(); refresh(); }, 600);
+    }
+
+    document.addEventListener('input', touched, true);
+    document.addEventListener('change', touched, true);
+    setInterval(refresh, 30000);
+  }
+
   /* ---------- 처음 상태 ---------- */
   var openCat = $('.ct-tot [data-cat].on');
   if (openCat) selectCategory(openCat);

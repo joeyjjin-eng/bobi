@@ -45,7 +45,11 @@
       <a class="ct-step" href="wrapup.html"><span class="n">04</span>상담정리</a>
       <div class="split"></div>
       <a class="ct-step fin" href="result.html"><span class="n"><svg class="ic-svg" width="14" height="14"><use href="#i-file-text"/></svg></span>상담결과</a>
+      <span class="ct-saved" id="ct-saved"><i class="dot"></i>자동 저장</span>
     </div>
+
+    <!-- 다음 회차로 들어왔을 때만 보이는 안내 -->
+    <div class="ct-carry" id="carry-note" hidden></div>
 
     <!-- ===== 가구 정보 =====
          항목 이름·순서·입력 성격은 시안(bovi-v1.html customerForm) 그대로입니다.
@@ -156,6 +160,17 @@
 
   // 새로고침 때 적던 값을 다시 지우지 않도록 주소에서 플래그를 뗀다
   if (history.replaceState) history.replaceState(null, '', location.pathname);
+})();
+
+/* 직전 회차에서 값을 들고 왔으면 그 사실을 알린다.
+   말 없이 채워 두면 설계사가 이번에 확인한 값으로 착각한다. */
+(function () {
+  var M = CT.load(), el = document.getElementById('carry-note');
+  if (!el || !M.carried) return;
+  var when = (M.prev && M.prev.date) ? M.prev.date.replace(/-/g, '.') + ' ' : '';
+  el.innerHTML = '<b>' + when + '직전 상담의 내용을 가져왔습니다.</b> 바뀐 값만 고치면 됩니다. '
+    + '상담일·상담목표·특이사항·상담정리는 이번 회차에 새로 적는 자리라 비워 두었습니다.';
+  el.hidden = false;
 })();
 
 /* 01 에 적은 것은 전부 모델에 담는다.

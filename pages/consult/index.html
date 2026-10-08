@@ -27,7 +27,7 @@
       <div class="ct-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-trending-up"/></svg></div>
       <div class="ct-title-txt">
         <h1>재무상담</h1>
-        <div class="ct-title-sub">고객 <b id="t-total">0</b>명 · 진행 중 <b id="t-live">0</b>건 · 상담일 지남 <b id="t-late">0</b>건</div>
+        <div class="ct-title-sub">고객 <b id="t-total">0</b>명 · 다음 상담 예정 <b id="t-next">0</b>건 · 상담일 지남 <b id="t-late">0</b>건</div>
       </div>
       <div class="ct-title-act">
         <a class="ct-btn primary" href="basic.html?new=1">
@@ -37,42 +37,17 @@
       </div>
     </div>
 
-    <!-- ===== 검색 + 정렬 ===== -->
+    <!-- ===== 검색 ===== -->
     <div class="search-bar">
       <span class="si-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg></span>
       <input type="text" id="q" placeholder="고객 이름으로 검색" />
-      <div class="sb-divider"></div>
-      <div class="sort-select">
-        <select id="f-sort">
-          <option value="last">마지막 상담 최근순</option>
-          <option value="first">최초 상담 오래된순</option>
-          <option value="count">회차 많은순</option>
-          <option value="name">이름순</option>
-        </select>
-        <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-down"/></svg>
-      </div>
     </div>
 
-    <!-- ===== 필터 ===== -->
-    <div class="filter-bar">
-      <div class="filter-group">
-        <span class="fg-l">상태</span>
-        <div class="pills" id="p-status"></div>
-      </div>
-      <div class="fb-divider"></div>
-      <div class="filter-group">
-        <span class="fg-l">회차</span>
-        <div class="pills" id="p-count"></div>
-      </div>
-      <div class="fb-divider"></div>
-      <div class="filter-group">
-        <span class="fg-l">최초 상담</span>
-        <div class="pills" id="p-first"></div>
-      </div>
-      <span class="fb-count">
-        <button class="fb-reset" id="reset" type="button" hidden>필터 초기화</button>
-        총 <b id="c-shown">0명</b> 표시 중
-      </span>
+    <!-- ===== 정렬 ===== -->
+    <div class="sort-row">
+      <span class="fg-l">정렬</span>
+      <div class="sort-pills" id="sort-pills"></div>
+      <span class="fb-count">총 <b id="c-shown">0명</b> 표시 중</span>
     </div>
 
     <!-- ===== 목록 ===== -->
@@ -87,7 +62,7 @@
         <span></span>
       </div>
       <div id="rows"></div>
-      <div class="ct-empty" id="empty" hidden>조건에 맞는 고객이 없습니다</div>
+      <div class="ct-empty" id="empty" hidden>검색 결과가 없습니다</div>
     </div>
 
   </main>
@@ -104,79 +79,101 @@ injectShell('consult');
 // 샘플 상담이 들어 있는 고객은 그 상담을 담아 연다(_model.js 가 ?case= 를 읽는다)
 const CASES = (window.CT && CT.caseNames) ? CT.caseNames() : [];
 const resultHref = n => CASES.indexOf(n) >= 0 ? 'result.html?case=' + encodeURIComponent(n) : 'result.html';
+const nextHref = name => 'basic.html?next=' + encodeURIComponent(name);
 
+// 이어서 쓰기 — 그 회차에서 마지막으로 보던 단계로 간다.
+// 끝까지 쓴 회차는 마지막 단계(04 상담정리)로 보낸다.
+const STEPS = {
+  basic : ['basic.html'   , '01 기본정보'],
+  cash  : ['cashflow.html', '02 수입지출'],
+  assets: ['assets.html'  , '03 자산·부채'],
+  wrap  : ['wrapup.html'  , '04 상담정리'],
+};
+const stepOf  = (d, i) => (d.at && d.at[i]) || 'wrap';
+const stepRow = k => STEPS[k] || STEPS.wrap;
+const contHref = (name, k) => stepRow(k)[0] + '?case=' + encodeURIComponent(name);
+
+// s  = 회차 날짜(오래된 순). 자동 저장이라 모든 상담은 언제든 고쳐 쓸 수 있고,
+//      그래서 '작성 중' 같은 따로 된 상태를 두지 않는다. 회차 번호는 날짜 차례일 뿐이다.
+// at = 같은 자리의 '마지막으로 보던 단계'. 없으면 끝까지 쓴 것으로 보고 wrap(04 상담정리).
 const DATA = [
   { name:'김민준', first:'2026.07.21', last:'2026.09.28', next:'2026.10.26', st:'next', s:['07.21','08.25','09.28'] },
   { name:'이서연', first:'2026.07.30', last:'2026.09.29', next:'2026.11.02', st:'next', s:['07.30','08.28','09.29'] },
-  { name:'박지훈', first:'2026.09.26', last:'2026.09.26', next:'', st:'none', s:['09.26'] },
+  { name:'박지훈', first:'2026.09.26', last:'2026.09.26', next:'', st:'none', s:['09.26'], at:['cash'] },
   { name:'최수아', first:'2026.05.16', last:'2026.09.19', next:'2026.10.17', st:'next', s:['05.16','06.20','07.18','08.22','09.19'] },
-  { name:'정도윤', first:'2026.07.26', last:'2026.08.30', next:'2026.10.02', st:'next', s:['07.26','08.30'] },
+  { name:'정도윤', first:'2026.07.26', last:'2026.08.30', next:'2026.10.02', st:'next', s:['07.26','08.30'], at:['wrap','assets'] },
   { name:'한예린', first:'2025.11.08', last:'2026.09.06', next:'2026.10.05', st:'next', s:['11.08','12.13','2026.01.24','03.21','05.09','07.11','09.06'] },
   { name:'강태오', first:'2026.03.14', last:'2026.08.16', next:'2026.10.11', st:'next', s:['03.14','04.25','06.13','08.16'] },
   { name:'서하은', first:'2026.06.20', last:'2026.07.25', next:'', st:'none', s:['06.20','07.25'] },
   { name:'윤지아', first:'2026.07.12', last:'2026.07.12', next:'2026.08.09', st:'late', s:['07.12'] },
 ];
 
-const STATUS = [['all','전체'],['live','진행 중'],['next','다음 상담 있음'],['none','다음 상담 없음'],['late','상담일 지남']];
-const COUNT  = [['all','전체'],['1','1회차'],['2-4','2–4회차'],['5','5회차 이상']];
-const FIRST  = [['all','전체'],['2026','2026년'],['2025','2025년']];
+// 정렬 — 기준마다 칩 하나. 켜진 칩을 다시 누르면 방향이 뒤집힌다.
+// 날짜는 YYYY.MM.DD 라 문자열 비교로 충분하다.
+const SORTS = [
+  { k:'last' , label:'마지막 상담', def:'desc', desc:'최근순', asc:'오래된순', get:d => d.last },
+  { k:'first', label:'최초 상담'  , def:'desc', desc:'최근순', asc:'오래된순', get:d => d.first },
+  { k:'next' , label:'다음 상담'  , def:'asc' , desc:'늦은순', asc:'빠른순'  , get:d => d.next || '9999' },
+  { k:'name' , label:'이름'       , def:'asc' , desc:'역순'  , asc:'가나다순', get:d => d.name },
+];
+const sortOf = k => SORTS.find(o => o.k === k) || SORTS[0];
+const dirLabel = (o, dir) => dir === 'asc' ? o.asc : o.desc;
 
-const S = { q:'', status:'all', count:'all', first:'all', sort:'last', open:null };
+function sortFn(o, dir) {
+  // 같은 값이면 마지막 상담이 최근인 고객을 위로
+  const tie = (a, b) => b.last.localeCompare(a.last);
+  return (a, b) => {
+    // 다음 상담이 없는 고객은 방향과 무관하게 늘 맨 아래
+    if (o.k === 'next' && !a.next !== !b.next) return a.next ? -1 : 1;
+    const r = o.k === 'name' ? o.get(a).localeCompare(o.get(b), 'ko') : o.get(a).localeCompare(o.get(b));
+    return (dir === 'asc' ? r : -r) || tie(a, b);
+  };
+}
+
+// dir 은 기준별로 따로 기억한다 — 칩을 오갈 때 방향이 초기화되면 성가시다
+const S = { q:'', sort:'last', dir:{}, open:null, del:null };
+SORTS.forEach(o => S.dir[o.k] = o.def);
 const $ = (id) => document.getElementById(id);
 
-// 회차 날짜 — 연도가 생략된 항목은 최초/마지막 상담 연도로 채운다
+// 회차 — 최신이 맨 앞. i 는 d.s 에서의 자리, n 은 화면에 보이는 번호.
+// 연도가 생략된 항목은 최초/마지막 상담 연도로 채운다.
 function sessionsOf(d) {
   const longIdx = d.s.findIndex(x => x.length > 5);
   return d.s.map((x, i) => ({
+    i: i,
     n: (i + 1) + '회차',
+    step: stepOf(d, i),
     date: x.length > 5 ? x
       : ((i === 0 || d.first.slice(0,4) === d.last.slice(0,4) || i < longIdx) ? d.first.slice(0,4) : d.last.slice(0,4)) + '.' + x
   })).reverse();
 }
 
-function matchCount(d) {
-  return S.count === 'all' || (S.count === '1' ? d.s.length === 1
-    : S.count === '5' ? d.s.length >= 5
-    : d.s.length >= 2 && d.s.length <= 4);
+// 어느 회차든 지울 수 있고, 지우면 남은 상담이 날짜 차례대로 1회차부터 다시 매겨진다.
+// 번호에 구멍을 내지 않는 이유 — 회차는 기록의 이름이 아니라 '몇 번째 상담인가' 라는 셈이다.
+function deleteSession(d, i) {
+  const left = sessionsOf(d).reverse();        // 오래된 순 · 연도까지 채워진 날짜
+  left.splice(i, 1);
+  if (d.at) d.at.splice(i, 1);                 // 단계도 같은 자리를 뺀다
+  if (!left.length) { DATA.splice(DATA.indexOf(d), 1); return; }   // 하나뿐이면 고객까지 사라진다
+  d.s = left.map(x => x.date);
+  d.first = left[0].date;
+  d.last  = left[left.length - 1].date;
+  // 마지막 회차를 지웠다면 거기서 잡았던 다음 상담 약속도 함께 사라진다
+  if (i === left.length) { d.next = ''; d.st = 'none'; }
 }
 
 function render() {
-  // 칩 개수는 '그 필터만 뺀' 나머지 조건 기준으로 센다
-  const byQ = d => !S.q || d.name.includes(S.q.trim());
-  const byFirst = d => S.first === 'all' || d.first.startsWith(S.first);
-  const byStatus = d => S.status === 'all' || d.st === S.status;
-
-  const list = DATA.filter(d => byQ(d) && byFirst(d) && byStatus(d) && matchCount(d))
-    .sort((a, b) => S.sort === 'name' ? a.name.localeCompare(b.name, 'ko')
-      : S.sort === 'count' ? b.s.length - a.s.length
-      : S.sort === 'first' ? a.first.localeCompare(b.first)
-      : b.last.localeCompare(a.last));
+  const list = DATA.filter(d => !S.q || d.name.includes(S.q.trim()))
+    .sort(sortFn(sortOf(S.sort), S.dir[S.sort]));
 
   $('t-total').textContent = DATA.length;
-  $('t-live').textContent = DATA.filter(d => d.st === 'live').length;
+  $('t-next').textContent = DATA.filter(d => d.st === 'next').length;
   $('t-late').textContent = DATA.filter(d => d.st === 'late').length;
   $('c-shown').textContent = list.length + '명';
-
-  const pills = (host, defs, key, counter) => {
-    $(host).innerHTML = defs.map(([k, label]) => {
-      const c = counter(k);
-      return '<button class="pill' + (S[key] === k ? ' on' : '') + '" type="button" data-k="' + k + '">'
-        + label + '<span class="c">' + c + '</span></button>';
-    }).join('');
-  };
-  pills('p-status', STATUS, 'status', k => DATA.filter(d => byQ(d) && byFirst(d) && matchCount(d) && (k === 'all' || d.st === k)).length);
-  pills('p-count', COUNT, 'count', k => {
-    const save = S.count; S.count = k;
-    const n = DATA.filter(d => byQ(d) && byFirst(d) && byStatus(d) && matchCount(d)).length;
-    S.count = save; return n;
-  });
-  pills('p-first', FIRST, 'first', k => DATA.filter(d => byQ(d) && byStatus(d) && matchCount(d) && (k === 'all' || d.first.startsWith(k))).length);
-
-  $('reset').hidden = !(S.q || S.status !== 'all' || S.count !== 'all' || S.first !== 'all');
   $('empty').hidden = list.length > 0;
 
-    $('rows').innerHTML = list.map(d => {
-    const n = d.s.length, multi = n > 1, open = multi && S.open === d.name;
+  $('rows').innerHTML = list.map(d => {
+    const n = d.s.length, open = S.open === d.name;
     const nxCls = d.st === 'late' ? ' late' : '';
     const row = '<div class="table-row clickable' + (open ? ' open' : '') + '" data-name="' + d.name + '">'
       + '<div class="tr-name"><div class="patient-avatar" data-name="' + d.name + '"></div><span class="nm">' + d.name + '</span></div>'
@@ -185,43 +182,93 @@ function render() {
       + '<span class="tr-date">' + d.first + '</span>'
       + '<span class="tr-date">' + d.last + '</span>'
       + '<span class="tr-next' + nxCls + '">' + d.next + '</span>'
-      // 2회차 이상이면 펼치기(∨/∧), 1회차면 바로 결과로(›)
-      + '<span class="tr-go">' + (multi ? '<i class="ct-chev' + (open ? ' up' : '') + '"></i>' : '<i class="ct-chev right"></i>') + '</span>'
+      // 행을 누르면 상담이 열리고, 회차 목록을 펴는 건 이 버튼뿐이다(∨/∧).
+      // 1회차 고객도 펼쳐야 '다음 회차 작성' 에 닿는다 — 그래서 행마다 둔다.
+      + '<button class="tr-go" type="button" data-toggle="1" aria-expanded="' + open + '"'
+        + ' aria-label="' + d.name + ' 회차 ' + (open ? '접기' : '펼치기') + '">'
+        + '<i class="ct-chev' + (open ? ' up' : '') + '"></i></button>'
       + '</div>';
-    const sub = open
-      ? '<div class="row-sub">' + sessionsOf(d).map(s =>
-          '<div class="ct-srow"><span class="n">' + s.n + '</span><span class="d">' + s.date + '</span>'
-          + '<span></span><a href="' + resultHref(d.name) + '">결과 보기</a></div>').join('') + '</div>'
-      : '';
-    return row + sub;
+
+    if (!open) return row;
+
+    const sess = sessionsOf(d).map(x => {
+      // 지울 때는 회차 번호가 아니라 날짜로 묻는다 — 번호는 지우고 나면 바뀌는 값이다
+      const asking = S.del === d.name + '|' + x.i;
+      const act = asking
+        ? '<span class="cfm"><span class="cfm-q">' + x.date + ' 상담을 삭제할까요?</span>'
+          + '<button class="yes" type="button" data-act="del-ok" data-name="' + d.name + '" data-i="' + x.i + '">삭제</button>'
+          + '<button class="no" type="button" data-act="del-no" data-name="' + d.name + '">취소</button></span>'
+        : '<a class="go" href="' + contHref(d.name, x.step) + '"'
+            + ' title="' + stepRow(x.step)[1] + '부터 이어서 씁니다">이어서 쓰기</a>'
+          + '<a href="' + resultHref(d.name) + '">결과 보기</a>'
+          + '<button class="del" type="button" data-act="del" data-name="' + d.name + '" data-i="' + x.i + '">삭제</button>';
+      return '<div class="ct-srow">'
+        + '<span class="n">' + x.n + '</span>'
+        + '<span class="d">' + x.date + '</span>'
+        + '<span></span>'
+        + '<span class="a">' + act + '</span>'
+        + '</div>';
+    }).join('');
+
+    const add = '<div class="ct-srow add"><a class="ct-btn solid sm" href="' + nextHref(d.name) + '">'
+      + '<svg class="ic-svg" width="12" height="12"><use href="#i-plus"/></svg>'
+      + '다음 회차 작성</a></div>';
+
+    return row + '<div class="row-sub">' + sess + add + '</div>';
   }).join('');
 
   window.paintPatientAvatars();
 }
 
-// 필터 칩
-[['p-status','status'],['p-count','count'],['p-first','first']].forEach(([host, key]) => {
-  $(host).addEventListener('click', e => {
-    const el = e.target.closest('[data-k]');
-    if (el) { S[key] = el.dataset.k; render(); }
-  });
-});
-// 펼치기
+// 삭제 → 펼치기 → 행 열기 순으로 가른다. 안쪽 버튼이 늘 먼저다.
 $('rows').addEventListener('click', e => {
+  const act = e.target.closest('[data-act]');
+  if (act) {
+    const t = DATA.find(x => x.name === act.dataset.name);
+    if (!t) return;
+    const i = Number(act.dataset.i);
+    if (act.dataset.act === 'del')    S.del = t.name + '|' + i;
+    if (act.dataset.act === 'del-no') S.del = null;
+    if (act.dataset.act === 'del-ok') { deleteSession(t, i); S.del = null; if (!DATA.includes(t)) S.open = null; }
+    render();
+    return;
+  }
   if (e.target.closest('a')) return;
   const el = e.target.closest('[data-name]'); if (!el) return;
   const d = DATA.find(x => x.name === el.dataset.name);
   if (!d) return;
-  if (d.s.length === 1) { location.href = resultHref(d.name); return; }
-  if (d.s.length > 1) { S.open = S.open === d.name ? null : d.name; render(); }
+  if (e.target.closest('[data-toggle]')) {
+    S.open = S.open === d.name ? null : d.name;
+    S.del = null;
+    render();
+    return;
+  }
+  location.href = resultHref(d.name);
 });
 $('q').addEventListener('input', e => { S.q = e.target.value; render(); });
-$('f-sort').addEventListener('change', e => { S.sort = e.target.value; render(); });
-$('reset').addEventListener('click', () => {
-  Object.assign(S, { q:'', status:'all', count:'all', first:'all' });
-  $('q').value = ''; render();
+
+// 정렬 칩
+function renderSort() {
+  $('sort-pills').innerHTML = SORTS.map(o => {
+    const on = S.sort === o.k, dir = S.dir[o.k];
+    return '<button class="sort-pill' + (on ? ' on' : '') + '" type="button" data-k="' + o.k + '"'
+      + ' aria-pressed="' + on + '" title="' + o.label + ' ' + dirLabel(o, dir)
+      + (on ? ' — 다시 누르면 ' + dirLabel(o, dir === 'asc' ? 'desc' : 'asc') : '') + '">'
+      + o.label
+      + (on ? '<span class="sp-dir">' + dirLabel(o, dir) + '</span>'
+            + '<svg class="ic-svg" width="13" height="13"><use href="#i-sort"/></svg>' : '')
+      + '</button>';
+  }).join('');
+}
+$('sort-pills').addEventListener('click', e => {
+  const el = e.target.closest('[data-k]'); if (!el) return;
+  const k = el.dataset.k;
+  if (S.sort === k) S.dir[k] = S.dir[k] === 'asc' ? 'desc' : 'asc';  // 켜진 칩 → 방향 전환
+  else S.sort = k;
+  renderSort(); render();
 });
 
+renderSort();
 render();
 </script>
 

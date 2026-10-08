@@ -208,6 +208,40 @@
   }
   function caseNames() { return Object.keys(CASES); }
 
+  /* ---------- 다음 회차 ----------
+     직전 회차를 그대로 들고 와서 시작한다. 백지에서 시작하면 설계사가 지난 화면을
+     띄워 놓고 베끼게 되고, 회차끼리 견줄 수도 없다.
+
+     들고 오는 것 — 인적사항·가족, 항목 구성, 금액, 자산·부채, 목표
+     비우는 것   — 상담일·기준월·기준일(오늘로), 상담목표, 특이사항,
+                   상담정리 문장, 다음 상담일, 바깥 자료 조회 여부
+
+     비우는 쪽은 이번 회차에 새로 들어야 하는 말이다. 지난 회차의 메모를 그대로 두면
+     그때 이야기가 이번 회차 기록으로 둔갑한다. */
+  function startNext(name) {
+    // 서버가 붙기 전까지는 샘플 상담이 직전 회차 노릇을 한다.
+    // 샘플이 없는 고객은 표본(SAMPLE)을 직전 회차로 본다.
+    var m = loadCase(name);
+    if (!m) { m = clone(SAMPLE); m.v = VERSION; }
+
+    var B = m.basic = m.basic || {};
+    var keepOff = (m.em && m.em.off) || [];     // 비상금에서 빼 둔 묶음은 설정이라 이어받는다
+
+    m.prev = { name: name, date: B.date || '' };   // 어느 회차에서 가져왔는지 — 화면 안내가 읽는다
+    m.carried = true;
+
+    B.name = name;
+    B.date = todayISO();
+    B.wish = ''; B.keep = ''; B.change = '';
+    m.cfMonth = todayYM();
+    m.asDate = todayISO();
+    m.em = { base: null, have: null, off: keepOff };
+    m.wrap = { conclusion: '', answer: '', next: '', nextTime: '' };
+    m.fetched = false;                          // 바깥 자료는 이번 회차에 다시 조회한다
+    m.v = VERSION;
+    return m;
+  }
+
   /* 저장 값에 찍는 버전.
      뼈대(항목 구성·빈 값 규칙)를 바꾸면 이 숫자를 올린다. 그러면 예전 구조로 저장돼 있던
      값은 읽을 때 버려지고 빈 화면으로 시작한다.
@@ -239,10 +273,13 @@
     return blank();
   }
 
+  /* ?case=<이름> 지난 상담을 그대로 열어 본다
+     ?next=<이름> 그 고객의 다음 회차를 직전 회차 값으로 채워 시작한다 */
   (function () {
-    var want = new URLSearchParams(location.search).get('case');
-    if (!want) return;
-    var m = loadCase(want);
+    var qs = new URLSearchParams(location.search);
+    var m = qs.get('case') ? loadCase(qs.get('case'))
+          : qs.get('next') ? startNext(qs.get('next'))
+          : null;
     if (!m) return;
     save(m);
     if (history.replaceState) history.replaceState(null, '', location.pathname);
@@ -495,7 +532,7 @@
     cfMonthText: cfMonthText, asDateText: asDateText, nextText: nextText, DOW: DOW,
     KEY: KEY, SAMPLE: SAMPLE, blank: blank, FIXED: FIXED, VARI: VARI, ORDER: ORDER, KINDS: KINDS, TERMS: TERMS, BASE_YM: BASE_YM,
     load: load, save: save, reset: reset, calc: calc,
-    loadCase: loadCase, caseNames: caseNames,
+    loadCase: loadCase, caseNames: caseNames, startNext: startNext,
     sumItems: sumItems, unknown: unknown, catTotal: catTotal, groupTotal: groupTotal,
     goals: goals, goalSum: goalSum, goalPhases: goalPhases, monthsTo: monthsTo, debtBal: debtBal,
     comma: comma, won: won, pct: pct, parse: parse, parseF: parseF, round1: round1, bar2: bar2
