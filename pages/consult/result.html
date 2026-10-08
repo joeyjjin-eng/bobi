@@ -14,8 +14,13 @@
      먼저 붙어 있어서 top:0 으로 두면 그 밑에 깔려 안 보인다.
      그래서 단계 바 아래에 이어 붙인다(top 값은 아래 스크립트가 단계 바 높이로 채운다). */
   .cE .rs-nav { position: sticky; top: 64px; z-index: 20; background: #fff; padding-top: 10px; }
-  .cE .rs-hero { display: grid; grid-template-columns: minmax(0,1fr) 520px; gap: 40px; align-items: center; }
+  .cE .rs-hero { display: grid; grid-template-columns: minmax(0,1fr); gap: 40px; align-items: center; }
   .cE .rs-hero[hidden] { display: none; }
+  /* 솔루션 — 라벨과 글이 6px 로 붙어 있어 네 묶음이 한 덩어리로 뭉쳐 보였다.
+     오른쪽 지표 칸과 같은 규칙으로 맞춘다: 안쪽 16px, 묶음 사이 48px(구분선이 가운데). */
+  .cE .rs-sol { gap: 24px; }
+  .cE .rs-sol .ct-f.read { gap: 16px; }
+  .cE .rs-sol .ct-f.read + .ct-f.read { padding-top: 24px; }
   .cE .rs-blk { scroll-margin-top: 70px; }
   /* 현금흐름표 — 구분(①②③) · 묶음 · 항목 세 단계를 들여쓰기로 구분한다 */
   .cE .rs-cf tbody td { padding: 11px 16px; }
@@ -192,20 +197,11 @@
           <div class="ct-hero" id="rs-flow"></div>
           <div class="ct-lead" id="rs-rate"></div>
         </div>
-        <div class="ct-card pad ct-donut">
-          <div class="ring">
-            <svg width="200" height="200" viewBox="0 0 340 340" id="rs-donut">
-              <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
-            </svg>
-            <div class="ctr"><span class="k">수입</span><span class="v" id="rs-income">0</span></div>
-          </div>
-          <div class="ct-legend" id="rs-legend"></div>
-        </div>
       </div>
 
       <!-- 솔루션(04에서 적은 글) · 핵심 지표 -->
       <div class="ct-split">
-        <div class="ct-stack">
+        <div class="ct-stack rs-sol">
           <div class="ct-card-h">
             <span class="ct-card-t" style="font-size:var(--fs-h2);">솔루션</span>
             <a class="ct-note" href="wrapup.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">04 상담정리 수정 ›</a>
@@ -228,8 +224,51 @@
             <div class="ct-read" id="rs-next"></div></div>
         </div>
 
-        <div class="ct-stack">
-          <div class="ct-card pad" >
+        <!-- 오른쪽 칸 — 네 장을 같은 규칙으로 쌓는다.
+             제목(.ct-card-t) + 출처·단위(.ct-note) → 20px → 내용 → 48px → 다음 제목.
+             블록 사이 48px 은 .ct-stack-lg 가, 제목 아래 20px 은 각 카드가 맡는다.
+             안쪽 20 과 바깥 48 이 2.4배라 네 장이 각각 한 덩어리로 읽힌다. -->
+        <div class="ct-stack-lg">
+          <!-- ② 들어온 돈 한 바퀴 — 쓴 돈·모은 돈·남은 돈이 모두 들어 있어 '지출'이 아니다 -->
+          <div class="ct-card pad">
+            <div class="ct-card-h" style="margin-bottom:20px;">
+              <div class="ct-card-t">들어온 돈이 어떻게 쓰이나</div>
+              <div class="ct-note">02 수입지출 · 단위 만원</div>
+            </div>
+            <div class="ct-donut">
+              <div class="ring">
+                <svg width="200" height="200" viewBox="0 0 340 340" id="rs-donut">
+                  <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
+                </svg>
+                <div class="ctr"><span class="k">수입</span><span class="v" id="rs-income2">0</span></div>
+              </div>
+              <div class="ct-legend" id="rs-legend"></div>
+            </div>
+          </div>
+
+          <!-- ③ 쌓인 돈은 무엇으로 갖고 있나 — 03 에 적은 묶음 그대로 -->
+          <div class="ct-card pad">
+            <div class="ct-card-h" style="margin-bottom:20px;">
+              <div class="ct-card-t">자산을 무엇으로 갖고 있나</div>
+              <div class="ct-note">03 자산·부채 · 단위 만원</div>
+            </div>
+            <div class="ct-donut">
+              <div class="ring">
+                <svg width="200" height="200" viewBox="0 0 340 340" id="rs-as-donut">
+                  <circle class="trk" cx="170" cy="170" r="140" fill="none" stroke-width="52"></circle>
+                </svg>
+                <div class="ctr"><span class="k">총자산</span><span class="v" id="rs-as-total">0</span></div>
+              </div>
+              <div class="ct-legend" id="rs-as-legend"></div>
+            </div>
+          </div>
+
+          <!-- ④ 그 자산 가운데 내 몫은 얼마인가 -->
+          <div class="ct-card pad">
+            <div class="ct-card-h" style="margin-bottom:20px;">
+              <div class="ct-card-t">자산에서 내 몫</div>
+              <div class="ct-note">03 자산·부채</div>
+            </div>
             <div class="ct-card-h num" style="margin-bottom:12px;">
               <span class="ct-note" style="font-size:var(--fs-body);">총자산 <span id="rs-assets"></span></span>
               <span class="ct-card-t" style="font-size:var(--fs-h2);">순자산 <span style="color:var(--brand-deep);" id="rs-net"></span></span>
@@ -237,10 +276,7 @@
             <div class="ct-bar2"><div class="a" id="rs-bar-a"></div><div class="b" id="rs-bar-b"></div></div>
             <div class="ct-bar2-cap" hidden></div>
           </div>
-          <div class="ct-card pad ct-card-h num" >
-            <span class="ct-note" style="font-size:var(--fs-body);"><span id="rs-gcnt"></span> 필요 저축</span>
-            <span class="ct-card-t" style="font-size:var(--fs-h2);">월 <span id="rs-gneed"></span> <span class="ct-note">현재 <span id="rs-gnow"></span></span></span>
-          </div>
+
         </div>
       </div>
     </div>
@@ -259,14 +295,12 @@
             <th>목표명</th><th style="width:132px;">종류</th>
             <th style="width:142px;">목표 시점</th>
             <th class="amt" style="width:124px;">목표금액</th><th class="amt" style="width:124px;">적립액</th>
-            <th class="amt" style="width:118px;">지금 월 저축액</th>
-            <th class="amt" style="width:118px;">필요 월 저축액</th><th style="width:48px;"></th>
+            <th class="amt" style="width:132px;">필요 월 저축액</th><th style="width:48px;"></th>
           </tr></thead>
           <tbody id="gl-rows"></tbody>
           <tfoot><tr>
             <td colspan="3" id="gl-cnt"></td>
             <td class="amt" id="gl-need"></td><td class="amt" id="gl-saved"></td>
-            <td class="amt" id="gl-now"></td>
             <td class="amt" id="gl-monthly" style="color:var(--brand-deep);"></td><td></td>
           </tr></tfoot>
         </table>
@@ -295,7 +329,7 @@
         <div class="ct-card pad">
           <div class="ct-card-h" style="margin-bottom:14px;">
             <div class="ct-card-t">기간별 필요 저축액</div>
-            <div class="ct-note">현재 월 저축 <span id="gl-now"></span></div>
+            <div class="ct-note" id="gl-cfsave"></div>
           </div>
           <div class="ct-tl" id="gl-tl"></div>
         </div>
@@ -581,7 +615,7 @@
   $('rs-rate').textContent = c.income
     ? '들어온 돈 100만원 중 ' + Math.max(0, Math.round(c.balance / c.income * 100)) + '만원이 남는 셈이에요.'
     : '';
-  $('rs-income').textContent = CT.comma(c.income);
+  $('rs-income2').textContent = CT.comma(c.income);
 
   /* ===== 원그래프 =====
      색은 다섯 칸을 정해 두고 순서대로만 쓴다(돌려 쓰지 않는다). 여섯 번째부터는
@@ -631,13 +665,44 @@
     return list;
   }
 
+  /* ② 들어온 돈이 어떻게 쓰이나 — 쓴 돈만이 아니라 모은 돈·남은 돈까지 한 바퀴다 */
   paintDonut('rs-donut', 'rs-legend', [
     { name: '고정지출', v: c.fixed,   c: VIZ[0] },
     { name: '변동지출', v: c.vari,    c: VIZ[1] },
     { name: '부채상환', v: c.debtPay, c: VIZ[2] },
     { name: '저축',     v: c.saving,  c: VIZ[3] },
     { name: '잔액',     v: c.balance, c: VIZ[4] }
-  ], c.income || 1);
+  ], c.income || 1, '02 수입지출에 금액을 적으면 나옵니다');
+
+  /* ③ 자산을 무엇으로 갖고 있나 — 03 의 묶음 이름(유동·금융·연금자산)은 장부 이름이라
+     상담에서 쓰는 말이 아니다. 항목을 '무엇인가'로 다시 묶는다.
+     집과 차는 성격이 달라 따로 세고(집은 안 팔면 못 쓰고 차는 값이 내려간다),
+     보증금도 부동산에 묶지 않는다(돌려받는 돈이다). 큰 다섯만 색을 주고 나머지는 '기타'다. */
+  var AS_GRP = {
+    '사는 집 (자가)': '부동산', '그 밖의 부동산': '부동산',
+    '전·월세 보증금': '보증금', '자동차': '차량',
+    '통장·현금': '현금', '예·적금': '예금·적금', '주택청약': '예금·적금',
+    '주식·펀드·ISA': '투자', '연금저축·IRP·퇴직연금': '연금', '보험 적립금': '보험'
+  };
+  (function () {
+    var bag = {}, order = [];
+    Object.keys(M.as).forEach(function (g) {
+      (M.as[g] || []).forEach(function (r) {
+        var v = Number(r[1]) || 0;
+        if (v <= 0) return;
+        var k = AS_GRP[r[0]] || '기타';   // 직접 적어 넣은 항목은 '기타'로 모은다
+        if (!(k in bag)) { bag[k] = 0; order.push(k); }
+        bag[k] = CT.round1(bag[k] + v);
+      });
+    });
+    var segs = order.map(function (k) { return { name: k, v: bag[k] }; })
+      .sort(function (a2, b2) { return b2.v - a2.v; })
+      .filter(function (x) { return x.name !== '기타'; })
+      .slice(0, 5)
+      .map(function (x, i) { return { name: x.name, v: x.v, c: VIZ[i] }; });
+    $('rs-as-total').textContent = CT.comma(c.assets);
+    paintDonut('rs-as-donut', 'rs-as-legend', segs, c.assets, '03 자산·부채에 금액을 적으면 나옵니다');
+  })();
 
   // 순자산 카드
   var np = c.assets ? Math.max(0, Math.min(100, Math.round(c.net / c.assets * 100))) : 0;
@@ -650,17 +715,6 @@
   $('rs-assets').textContent = noBS ? '미입력' : CT.won(c.assets);
   $('rs-net').textContent    = noBS ? '미입력' : CT.won(c.net);
   bar('rs-bar-a', 'rs-bar-b');
-  var gs = CT.goalSum(M);
-  if (gs.count) {
-    $('rs-gcnt').textContent  = '목표 ' + gs.count + '건';
-    $('rs-gneed').textContent = CT.comma(gs.more) + '만원';
-    $('rs-gnow').textContent  = CT.comma(gs.now) + '만원';
-  } else {
-    // 목표가 없으면 '월 0만원'이 아니라 적으러 가는 길을 보여 준다
-    $('rs-gcnt').parentNode.textContent = '아직 적은 목표가 없습니다';
-    $('rs-gneed').parentNode.innerHTML = '<span class="ct-note" style="font-weight:600;color:var(--brand-deep);cursor:pointer;" data-go-goal>02 목표에 적기 ›</span>';
-  }
-
   /* ===== ② 목표 — 목표까지 매달 얼마씩 =====
      판정하지 않는다. 필요한 돈과 지금 모으는 돈을 나란히 놓고 차이만 말한다. */
   var g = CT.goalSum(M);
@@ -673,14 +727,16 @@
   /* 목표별 진행률 */
   $('gl-cards').innerHTML = g.list.length ? g.list.map(function (x) {
     return '<div class="ct-goal flat">'
-      + '<div class="gk"><span class="cat">' + x.kind + '</span><span class="dt">' + x.due + '</span></div>'
+      // 목표 시점만으로는 급한지 아닌지 안 읽힌다. 남은 개월을 날짜 옆에 같이 둔다.
+      // 시점을 아직 안 적었으면 개월수도 지어내지 않는다(그때 months 는 기준달 1개월이다).
+      + '<div class="gk"><span class="cat">' + x.kind + '</span><span class="dt">' + x.due
+      +   (x.due ? ' <b>' + x.months + '개월</b> 남음' : '') + '</span></div>'
       + '<div class="gn">' + ((x.name || '').trim() || '이름 없음') + '</div>'
       + '<div class="gv"><span class="v">' + CT.comma(x.saved) + '</span><span class="of">/ ' + CT.comma(x.need) + '</span>'
       +   '<span class="pc">' + x.pct + '%</span></div>'
       + '<div class="ct-track"><i style="width:' + Math.min(100, x.pct) + '%;"></i></div>'
-      + '<div class="gm">잔여 ' + CT.comma(x.remain) + ' · 지금 월 ' + CT.comma(x.now)
-      +   (x.more > 0 ? ' · <span class="short">월 ' + CT.comma(x.more) + ' 더 필요</span>'
-                      : ' · <b>충분해요</b>')
+      + '<div class="gm">잔여 ' + CT.comma(x.remain)
+      +   ' · <span class="need">월 ' + CT.comma(x.monthly) + ' 필요</span>'
       + '</div>'
       + '</div>';
   }).join('') : '<div class="ct-note">등록된 목표 없음</div>';
@@ -722,8 +778,13 @@
     var total = CT.round1(c.fixed + c.vari + c.debtPay);
     var top = rows[0];
 
+    /* 합계 644 는 도넛 가운데와 오른쪽 합계줄에 이미 두 번 있다.
+       이 자리에서만 할 수 있는 말은 '그 돈이 어디에 가장 많이 몰렸나'다.
+       묶음 이름 뒤에는 조사를 붙이지 않는다. 받침이 있는 이름(식비·보험)과
+       없는 이름(가족·교통)에 같은 조사를 쓰면 한쪽이 어색해진다. */
     $('sp-lead').innerHTML = top
-      ? '한 달에 <span class="hl">' + CT.comma(total) + '만 원</span>이 나가요.'
+      ? '가장 많이 나가는 묶음은 <span class="hl">' + top.name + '</span>, 월 <span class="hl">'
+        + CT.comma(top.v) + '만 원</span>으로 나가는 돈의 ' + CT.pct(top.v, total) + '%예요.'
       : '아직 적은 지출이 없어요.';
     $('sp-fixed').textContent = CT.comma(c.fixed) + '만원';
     $('sp-vari').textContent  = CT.comma(c.vari) + '만원';
@@ -770,7 +831,11 @@
     $('rv-donut-v').textContent = CT.comma(monthly);
     paintDonut('rv-donut', 'rv-mix-lg', mix5, monthly, '02 수입지출에 저축 항목을 적으면 나옵니다');
   })();
-  $('gl-now').textContent = CT.comma(c.saving);
+  /* 목표마다 손으로 적던 '지금 월 저축액' 칸은 없앴다.
+     지금 모으고 있는 돈은 02 수입지출의 저축 항목에 이미 적혀 있다. */
+  $('gl-cfsave').textContent = c.saving
+    ? '현재 월 저축 ' + CT.comma(c.saving) + '만원 · 02 수입지출'
+    : '02 수입지출에 저축을 적으면 지금 모으는 돈이 함께 보입니다';
   /* 막대만 둔다. 구간 합계 띠와 막대 끝 날짜·금액은 좁은 칸에서 서로 겹쳐
      읽히지 않았고, 같은 값이 바로 위 '목표별 진행률'과 표에 이미 있다. */
   var span = g.list.reduce(function (m, x) { return Math.max(m, x.months); }, 1);
@@ -819,18 +884,17 @@
         +   (x.name || '새 목표') + '</div></td>'
         + '<td>' + sel('kind', i, x.kind, CT.KINDS) + '</td>'
         + '<td><div class="ct-in' + (x.due ? '' : ' hint') + '" data-hint="YYYY-MM" data-gi="' + i + '" data-gf="due">' + (x.due || 'YYYY-MM') + '</div></td>'
-        + amtCell(i, 'need') + amtCell(i, 'saved') + amtCell(i, 'now')
-        + '<td class="amt" style="font-weight:700;color:var(--brand-deep);">' + CT.comma(x.more) + '</td>'
+        + amtCell(i, 'need') + amtCell(i, 'saved')
+        + '<td class="amt" style="font-weight:700;color:var(--brand-deep);">' + CT.comma(x.monthly) + '</td>'
         + '<td class="del"><button type="button" class="finance-delete" data-gdel="' + i + '" aria-label="목표 삭제">'
         +   '<svg class="ic-svg" width="11" height="11"><use href="#i-x"/></svg></button></td>'
         + '</tr>';
     }).join('')
-      + '<tr class="addrow"><td colspan="8" class="ct-add" id="gl-add">+ 목표 추가</td></tr>';
+      + '<tr class="addrow"><td colspan="7" class="ct-add" id="gl-add">+ 목표 추가</td></tr>';
     $('gl-cnt').textContent    = '합계 ' + g.count + '건';
     $('gl-need').textContent   = CT.comma(g.need);
     $('gl-saved').textContent  = CT.comma(g.saved);
-    $('gl-now').textContent    = CT.comma(g.now);
-    $('gl-monthly').textContent = CT.comma(g.more);
+    $('gl-monthly').textContent = CT.comma(g.monthly);
     $('gl-rows').querySelectorAll('.ct-in[data-gi]').forEach(function (el) {
       el.setAttribute('contenteditable', 'true');
       el.addEventListener('focus', function () {
@@ -839,7 +903,7 @@
       el.addEventListener('blur', function () {
         var t = M.goals[Number(el.dataset.gi)], f = el.dataset.gf;
         if (!t) return;
-        t[f] = (f === 'need' || f === 'saved' || f === 'now') ? CT.parse(el.textContent) : el.textContent.trim();
+        t[f] = (f === 'need' || f === 'saved') ? CT.parse(el.textContent) : el.textContent.trim();
         if ((f === 'name' || f === 'due') && !t[f]) { el.textContent = el.dataset.hint; el.classList.add('hint'); }
         CT.save(M); refresh();
       });
@@ -866,7 +930,7 @@
   });
   document.addEventListener('click', function (e) {
     if (e.target.closest('#gl-add')) {
-      M.goals.push({ name: '', kind: '기타', term: '중기', due: '', need: null, saved: null, now: null });
+      M.goals.push({ name: '', kind: '기타', term: '중기', due: '', need: null, saved: null });
       CT.save(M); refresh(true); return;
     }
     var d = e.target.closest('[data-gdel]');

@@ -167,9 +167,9 @@
       goals: [
         /* 목표 합계가 월 145만원 — 지금 저축 114만원에서 31만원만 더 돌리면 되고,
            그 31만원은 월 잔액 42만원 안에서 나온다. 셋이 맞물려야 상담이 성립한다. */
-        { name: '자녀 대학 등록금', kind: '자녀학비', term: '장기', due: '2031-03', need: 2400,  saved: 850,  now: 29 },
-        { name: '주택담보대출 조기상환', kind: '기타', term: '중기', due: '2029-12', need: 3000,  saved: 1200, now: 25 },
-        { name: '노후 자금',        kind: '노후',     term: '장기', due: '2046-09', need: 25000, saved: 8300, now: 60 }
+        { name: '자녀 대학 등록금', kind: '자녀학비', term: '장기', due: '2031-03', need: 2400,  saved: 850 },
+        { name: '주택담보대출 조기상환', kind: '기타', term: '중기', due: '2029-12', need: 3000,  saved: 1200 },
+        { name: '노후 자금',        kind: '노후',     term: '장기', due: '2046-09', need: 25000, saved: 8300 }
       ],
       wrap: {
         conclusion: '수입 800만원에서 매달 42만원이 남고, 저축으로 114만원을 따로 모으고 있습니다.\n'
@@ -368,16 +368,14 @@
       var months = monthsTo(g.due, m);
       var remain = Math.max(0, (Number(g.need) || 0) - (Number(g.saved) || 0));
       var monthly = Math.round(remain / months);
-      var now = Number(g.now) || 0;
       return {
         name: g.name, kind: g.kind, term: g.term, due: g.due,
         need: Number(g.need) || 0, saved: Number(g.saved) || 0,
         months: months, remain: remain,
+        /* monthly = 목표 시점까지 매달 넣어야 하는 돈 — 화면의 '필요 월 저축액'.
+           목표마다 '지금 넣고 있는 돈'을 손으로 적는 칸은 뺐다.
+           지금 모으는 돈은 02 수입지출의 저축 항목이 이미 가지고 있다. */
         monthly: monthly,
-        /* now  = 지금 이 목표에 매달 넣고 있는 돈
-           more = 앞으로 더 넣어야 하는 돈. 이미 충분히 넣고 있으면 0 이다.
-                  화면의 '필요 월 저축액'이 이 값이다. */
-        now: now, more: Math.max(0, monthly - now),
         pct: g.need ? Math.round((Number(g.saved) || 0) / Number(g.need) * 100) : 0
       };
     });
@@ -389,9 +387,7 @@
       count: gs.length,
       need: gs.reduce(function (s, g) { return s + g.need; }, 0),
       saved: gs.reduce(function (s, g) { return s + g.saved; }, 0),
-      monthly: gs.reduce(function (s, g) { return s + g.monthly; }, 0),
-      now: gs.reduce(function (s, g) { return s + g.now; }, 0),
-      more: gs.reduce(function (s, g) { return s + g.more; }, 0)
+      monthly: gs.reduce(function (s, g) { return s + g.monthly; }, 0)
     };
   }
   // 기간별 필요 저축액 — 목표가 하나씩 끝날 때마다 줄어든다

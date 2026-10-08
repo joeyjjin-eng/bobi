@@ -473,8 +473,8 @@
 .cE .ct-tbl tfoot td { font-size: var(--fs-body); font-weight: 700; color: var(--ink); padding: 16px; border-top: 2px solid var(--ink); background: var(--bg-soft); }
 .cE .ct-tbl .ct-in { min-height: 42px; }
 .cE .ct-tbl .del { font-size: var(--fs-option); color: var(--ink-3); text-align: center; }
-/* 목표 카드 — 필요한 돈에 못 미치는 만큼만 붉게 짚는다 */
-.cE .ct-goal .gm .short { color: #C92238; font-weight: 600; }
+/* 목표 카드 — 매달 필요한 돈만 표와 같은 색으로 짚는다(경고가 아니라 금액이다) */
+.cE .ct-goal .gm .need { color: var(--brand-deep); font-weight: 600; }
 .cE .ct-tbl .sub-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
 /* 칸 너비가 고정된 표(목표 관리 등)는 좁은 화면에서 가로로 넘친다.
    overflow:hidden 으로 두면 넘친 칸이 잘려 안 보이므로 가로로 밀어서 본다. */
@@ -639,7 +639,8 @@
 .cE .ct-goal .gk { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .cE .ct-goal .gk .cat { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); background: var(--brand-pale); border-radius: var(--r-pill); padding: 3px 10px; }
 .cE .ct-goal.empty .gk .cat { color: var(--ink-3); background: var(--bg-soft); }
-.cE .ct-goal .gk .dt { font-size: var(--fs-option); color: var(--ink-3); }
+.cE .ct-goal .gk .dt { font-size: var(--fs-option); color: var(--ink-3); white-space: nowrap; }
+.cE .ct-goal .gk .dt b { font-weight: 700; color: var(--ink-2); }
 .cE .ct-goal .gn { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
 .cE .ct-goal .gv { display: flex; align-items: baseline; gap: 6px; }
 .cE .ct-goal .gv .v { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
