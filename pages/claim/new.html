@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
 <link rel="stylesheet" href="../../styles/detail-mobile.css" />
+<link rel="stylesheet" href="tutorial.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -294,6 +295,10 @@
           <h1>새 보험금청구</h1>
         </div>
         <span data-quota-pill="claim" style="margin-left:auto;"></span>
+        <button class="ct-replay" type="button" id="tourReplay" aria-label="사용법 보기">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-help-circle"/></svg>
+          <span class="label">사용법 보기</span>
+        </button>
       </div>
     </div>
 
@@ -657,7 +662,8 @@
       var chipsHtml = opts.length ? '<div class="same-row">'
         + opts.map(function (o) {
             var on = p.sameAs === o;
-            return '<button type="button" class="same-chip ' + (on ? 'on' : '') + '" data-role="' + r.key + '" data-same="' + o + '">' + ROLE_LABEL[o] + '과 같음</button>';
+            // 피보험자 · 계약자 · 수익자 모두 모음으로 끝나므로 조사는 '와'
+            return '<button type="button" class="same-chip ' + (on ? 'on' : '') + '" data-role="' + r.key + '" data-same="' + o + '">' + ROLE_LABEL[o] + '와 같음</button>';
           }).join('')
         + '<button type="button" class="same-chip ' + (!p.sameAs ? 'on' : '') + '" data-role="' + r.key + '" data-same="">직접 입력</button>'
         + '</div>' : '';
@@ -666,7 +672,7 @@
       if (mirrored) {
         body = '<div class="mirror-note">'
           + '<svg class="ic-svg" width="16" height="16"><use href="#i-check"/></svg>'
-          + '<span>' + ROLE_LABEL[resolveRole(r.key)] + '과 동일' + (src.name ? ' · ' + escapeHTML(src.name) : '') + '</span>'
+          + '<span>' + ROLE_LABEL[resolveRole(r.key)] + '와 동일' + (src.name ? ' · ' + escapeHTML(src.name) : '') + '</span>'
           + '</div>';
       } else {
         body = '<div class="field-grid">'
@@ -931,7 +937,7 @@
       var base = resolveRole(r.key);
       var src = state.persons[base];
       var mirrored = base !== r.key;
-      var name = src.name ? (mirrored ? src.name + ' (' + ROLE_LABEL[base] + '과 동일)' : src.name) : '미입력';
+      var name = src.name ? (mirrored ? src.name + ' (' + ROLE_LABEL[base] + '와 동일)' : src.name) : '미입력';
       return '<div class="review-row"><span class="k">' + r.label + '</span><span class="v">' + escapeHTML(name) + '</span></div>';
     }).join('');
     document.getElementById('review-persons').innerHTML = personsHtml;
@@ -1266,5 +1272,6 @@
     });
   })();
 </script>
+<script src="tutorial.js"></script>
 </body>
 </html>

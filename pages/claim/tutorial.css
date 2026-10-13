@@ -1,0 +1,130 @@
+/* ============================================================
+   보험금청구 · 사용 튜토리얼 (코치마크) — 전용 스타일
+   - 꼬리 달린 작은 말풍선 한 줄 + 스포트라이트
+   - 폰트 4단계(24/19/15/13) · 행간 1.4 규칙 준수
+   ============================================================ */
+
+/* ===== 타이틀 줄 우측 : 사용법 보기 ===== */
+.cE .ct-replay {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-family: inherit; font-size: var(--fs-option); font-weight: 600; line-height: 1.4;
+  color: var(--ink-2); cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+.cE .ct-replay:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
+.cE .ct-replay svg { color: #7C4DFF; flex: none; }
+
+/* ===== 투어 루트 ===== */
+.ct-root {
+  position: fixed; inset: 0; z-index: 400;
+  font-family: 'Pretendard', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+}
+.ct-root[hidden] { display: none; }
+
+/* 가림막 4분할 — 구멍 둘레만 덮어 아래 화면 오조작을 막는다 */
+.ct-shade { position: fixed; pointer-events: auto; }
+
+/* 클릭이 인식된 뒤 다음 단계가 준비되는 동안 구멍까지 덮어 중복 클릭을 막는다 */
+.ct-lock { position: fixed; inset: 0; display: none; }
+.ct-root.is-locked .ct-lock { display: block; pointer-events: auto; }
+
+/* 스포트라이트 — 주변은 옅게만 덮고(배경이 읽히도록), 대상은 링으로 또렷하게 */
+.ct-spot {
+  position: fixed; left: 0; top: 0; width: 0; height: 0;
+  border-radius: 14px; pointer-events: none;
+  box-shadow:
+    0 0 0 9999px rgba(7,22,32,.38),
+    0 0 0 3px rgba(124,77,255,1),
+    0 0 0 9px rgba(124,77,255,.26),
+    0 0 22px 4px rgba(124,77,255,.3);
+  /* 위치 전환 없음 — 전환을 걸면 화면이 바뀌거나 스크롤될 때
+     하이라이트가 뒤에서 끌려와 배경과 속도가 어긋난다. 항상 대상에 붙어 있게 한다. */
+  transition: none;
+}
+/* 직접 눌러야 하는 단계에서만 링이 맥동한다 */
+.ct-spot::after { content: ''; position: absolute; inset: -3px; border-radius: 17px; border: 2px solid rgba(124,77,255,.9); opacity: 0; }
+.ct-root.is-do .ct-spot::after { animation: ct-pulse 1.6s ease-out infinite; }
+
+/* ===== 말풍선 ===== */
+.ct-tip {
+  position: fixed; left: 0; top: 0;
+  width: 324px; max-width: calc(100vw - 32px);
+  padding: 18px 20px 14px;
+  background: #fff; border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(7,22,32,.3), 0 2px 8px rgba(14,26,36,.1);
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity .13s ease, transform .16s cubic-bezier(.33,1,.68,1);
+}
+.ct-tail {
+  position: fixed; width: 18px; height: 18px;
+  background: #fff; transform: rotate(45deg); border-radius: 3px;
+  pointer-events: none; opacity: 1; transition: opacity .13s ease;
+}
+
+/* 단계 이동 중 — 말풍선을 숨겼다가 새 위치에서 다시 나타낸다 */
+.ct-root.is-moving .ct-tip { opacity: 0; transform: translateY(6px) scale(.99); transition: none; }
+.ct-root.is-moving .ct-tail { opacity: 0; transition: none; }
+
+.ct-desc { margin: 0; font-size: var(--fs-body); font-weight: 600; line-height: 1.4; color: var(--ink); }
+.ct-desc .k { color: #7C4DFF; font-weight: 700; }
+
+/* 하단 — 왼쪽 다음 / 오른쪽 진행 */
+.ct-foot { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+.ct-next {
+  padding: 9px 20px; border: none; border-radius: var(--r-pill);
+  background: #7C4DFF; color: #fff;
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700; line-height: 1.4;
+  cursor: pointer; transition: background-color .15s ease;
+}
+.ct-next:hover { background: #6A36F5; }
+.ct-next[disabled] { opacity: .55; cursor: default; }
+.ct-prev {
+  padding: 9px 16px; border-radius: var(--r-pill);
+  background: #fff; color: var(--ink-3); border: 1px solid var(--line-strong);
+  font-family: inherit; font-size: var(--fs-body); font-weight: 700; line-height: 1.4;
+  cursor: pointer; transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+.ct-prev:hover { color: var(--ink); border-color: var(--ink-4); background: var(--bg-soft); }
+.ct-prev[disabled] { opacity: .55; cursor: default; }
+.ct-count { margin-left: auto; flex: none; font-size: var(--fs-option); font-weight: 700; line-height: 1.4; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.ct-count b { color: #7C4DFF; font-weight: 700; }
+
+/* 화면 우상단 닫기 */
+.ct-close {
+  position: fixed; top: 20px; right: 24px;
+  width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(7,22,32,.55); border: none; color: #fff; cursor: pointer;
+  pointer-events: auto;
+  transition: background-color .15s ease;
+}
+.ct-close:hover { background: rgba(7,22,32,.75); }
+
+@keyframes ct-pulse { 0% { opacity: .85; transform: scale(1); } 70% { opacity: 0; transform: scale(1.05); } 100% { opacity: 0; transform: scale(1.05); } }
+
+/* ===== 좁은 화면 — 칸 밖으로 넘치지 않게 ===== */
+@media (max-width: 1320px) { .ct-tip { width: 310px; } }
+
+@media (max-width: 960px) {
+  /* 상단바(54px) 아래로 내려서 상단바 아이콘과 겹치지 않게 */
+  .ct-close { top: 64px; right: 12px; width: 34px; height: 34px; }
+
+  /* 모바일 상단바로 옮겨진 "사용법 보기" — 아이콘 전용 42×42 */
+  .cE .m-topbar .ct-replay {
+    width: 42px; height: 42px; padding: 0;
+    border: none; background: none; border-radius: 50%;
+    display: grid; place-items: center; flex: none;
+  }
+  .cE .m-topbar .ct-replay:hover { background: var(--bg-soft); }
+  .cE .m-topbar .ct-replay .label { display: none; }
+  .cE .m-topbar .ct-replay svg { width: 20px; height: 20px; }
+  .m-topbar.has-tour .m-spacer { display: none; }
+}

@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
 <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="tutorial.css" />
 </head>
 <body>
 
@@ -54,6 +55,10 @@
         <button class="sm-tab on" type="button" data-screen="search" role="tab" aria-selected="true">간편보험 인수가이드</button>
         <button class="sm-tab" type="button" data-screen="history" role="tab" aria-selected="false">조회 내역</button>
       </div>
+      <button class="sm-tour-replay" type="button" id="tourReplay">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-help-circle"/></svg>
+        사용법 보기
+      </button>
     </div>
 
     <!-- ===== 화면 A · 간편보험 인수가이드 ===== -->
@@ -373,5 +378,6 @@
 <script src="../../components/layout.js"></script>
 <script>injectShell('jjaepity');</script>
 <script src="script.js"></script>
+<script src="tutorial.js"></script>
 </body>
 </html>

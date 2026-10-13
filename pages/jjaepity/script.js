@@ -845,6 +845,13 @@
       render();
       return;
     }
+    // 수술 여부 세그먼트 (예 / 아니오)
+    var segBtn = e.target.closest('.sm-seg button');
+    if (segBtn) {
+      var seg = segBtn.closest('.sm-seg');
+      seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === segBtn); });
+      return;
+    }
     // 캘린더 아이콘
     var ic = e.target.closest('.sm-date-ic');
     if (ic) {
