@@ -170,18 +170,18 @@
   .cE .review-note { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-sm); font-size: var(--fs-option); color: var(--brand-deep); line-height: 1.5; margin-bottom: 18px; }
   .cE .review-note svg { flex: none; margin-top: 2px; }
 
-  /* 서명 방법 선택 (링크 전송 / 직접 서명) */
-  .cE .sign-method { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .cE .sm-btn { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; text-align: left; box-shadow: var(--sh-1); font-family: inherit; transition: border-color .12s ease, background-color .12s ease; }
+  /* 서명 방법 선택 — 서명자 카드 안쪽, 라디오 2열 */
+  .cE .sign-method { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .cE .sm-btn { display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; text-align: left; font-family: inherit; transition: border-color .12s ease, background-color .12s ease; }
   .cE .sm-btn:hover { border-color: var(--ink-4); }
-  .cE .sm-btn.on { border-color: var(--brand); background: var(--brand-pale); box-shadow: none; }
-  .cE .sm-icwrap { width: 38px; height: 38px; border-radius: 10px; background: var(--bg-soft); color: var(--ink-2); display: grid; place-items: center; flex: none; }
-  .cE .sm-btn.on .sm-icwrap { background: #fff; color: var(--brand-deep); }
+  .cE .sm-btn.on { border-color: var(--brand); background: var(--brand-pale); }
+  .cE .sm-radio { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--line-strong); background: #fff; flex: none; margin-top: 2px; display: grid; place-items: center; transition: border-color .12s ease; }
+  .cE .sm-radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); transform: scale(0); transition: transform .12s ease; }
+  .cE .sm-btn.on .sm-radio { border-color: var(--brand); }
+  .cE .sm-btn.on .sm-radio::after { transform: scale(1); }
   .cE .sm-txt { display: block; flex: 1; min-width: 0; }
   .cE .sm-name { display: block; font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; line-height: 1.4; }
   .cE .sm-desc { display: block; font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; line-height: 1.4; }
-  .cE .sm-btn .ic-check { color: var(--brand-deep); flex: none; opacity: 0; margin-top: 10px; }
-  .cE .sm-btn.on .ic-check { opacity: 1; }
 
   /* 서명 링크 받을 분 */
   .cE .signer-order { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); flex: none; }
@@ -191,7 +191,7 @@
   .cE .signer-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
   .cE .signer-roles { display: inline-flex; gap: 4px; flex: none; }
   .cE .signer-role-tag { font-size: var(--fs-option); font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--brand-pale); color: var(--brand-deep); letter-spacing: -0.01em; white-space: nowrap; }
-  .cE .signer-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .signer-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; white-space: nowrap; }
   .cE .signer-phone { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-body); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; flex: none; }
   .cE .signer-phone svg { color: var(--ink-3); flex: none; }
   .cE .signer-phone.empty { color: var(--ink-3); font-weight: 500; }
@@ -275,6 +275,9 @@
     .cE .insurer-name { font-size: var(--fs-option); }
     .cE .type-grid { grid-template-columns: 1fr; gap: 8px; }
     .cE .sign-method { grid-template-columns: 1fr; gap: 8px; }
+    /* 자격 라벨이 길면 이름이 쪼개지므로 폭이 좁을 땐 연락처를 아랫줄로 */
+    .cE .signer-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .cE .signer-main { width: 100%; }
     .cE .photo-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
 
     .cE .review-card { padding: 18px 20px; }
@@ -459,35 +462,28 @@
         <div class="review-card" id="review-account"></div>
 
         <div class="p-card" style="padding: 18px 20px;">
-          <div class="p-card-head" style="margin-bottom:12px;">
-            <span class="p-card-title">서명 방법</span>
-          </div>
-          <div class="sign-method" id="sign-method">
-            <button class="sm-btn" type="button" data-method="link">
-              <span class="sm-icwrap"><svg class="ic-svg" width="18" height="18"><use href="#i-send"/></svg></span>
-              <span class="sm-txt">
-                <span class="sm-name">서명 링크 전송</span>
-                <span class="sm-desc">고객 휴대폰으로 링크를 보내 서명받습니다</span>
-              </span>
-              <svg class="ic-svg ic-check" width="16" height="16"><use href="#i-check"/></svg>
-            </button>
-            <button class="sm-btn" type="button" data-method="direct">
-              <span class="sm-icwrap"><svg class="ic-svg" width="18" height="18"><use href="#i-edit"/></svg></span>
-              <span class="sm-txt">
-                <span class="sm-name">직접 서명</span>
-                <span class="sm-desc">고객이 옆에 있을 때 이 화면에서 바로 서명받습니다</span>
-              </span>
-              <svg class="ic-svg ic-check" width="16" height="16"><use href="#i-check"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="p-card" style="padding: 18px 20px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
             <svg class="ic-svg" width="18" height="18" style="color:var(--ink-3);" id="signer-head-ic"><use href="#i-send"/></svg>
             <span style="font-size:var(--fs-body);font-weight:800;color:var(--ink);" id="signer-head-t">서명 링크 받을 분</span>
           </div>
           <div class="signer-list" id="signer-list"></div>
+
+          <div class="sign-method" id="sign-method" role="radiogroup" aria-label="서명 방법">
+            <button class="sm-btn" type="button" role="radio" aria-checked="true" data-method="link">
+              <span class="sm-radio"></span>
+              <span class="sm-txt">
+                <span class="sm-name">서명 링크 보내기</span>
+                <span class="sm-desc">알림톡으로 링크를 보내 고객이 직접 서명해요</span>
+              </span>
+            </button>
+            <button class="sm-btn" type="button" role="radio" aria-checked="false" data-method="direct">
+              <span class="sm-radio"></span>
+              <span class="sm-txt">
+                <span class="sm-name">이 화면에서 바로 서명</span>
+                <span class="sm-desc">고객이 옆에 있을 때, 지금 이 기기에서 서명해요</span>
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1042,7 +1038,9 @@
     var total = state.signerGroups.length;
 
     document.querySelectorAll('#sign-method .sm-btn').forEach(function (b) {
-      b.classList.toggle('on', b.dataset.method === state.signMethod);
+      var on = b.dataset.method === state.signMethod;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-checked', on ? 'true' : 'false');
     });
     document.getElementById('signer-head-t').textContent = direct ? '직접 서명할 분' : '서명 링크 받을 분';
     document.getElementById('signer-head-ic').querySelector('use')
@@ -1289,7 +1287,7 @@
     }
     if (state.step === 6) {
       if (state.signMethod === 'direct') {
-        btnNext.innerHTML = '<svg class="ic-svg" width="15" height="15"><use href="#i-edit"/></svg>직접 서명 시작';
+        btnNext.innerHTML = '<svg class="ic-svg" width="15" height="15"><use href="#i-edit"/></svg>저장하고 바로 서명';
         btnNext.onclick = startDirectSign;
       } else {
         btnNext.innerHTML = '<svg class="ic-svg" width="15" height="15"><use href="#i-send"/></svg>서명 링크 전송';
