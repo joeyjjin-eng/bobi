@@ -468,6 +468,9 @@
   .cA .sumc-ic { width: 40px; height: 40px; }
   .cA .sumc .days { font-size: var(--fs-h2); margin-top: 14px; }
   .cA .sumc .cst { font-size: var(--fs-option); }
+  .cA .sum-head { gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .cA .med-cta { margin-left: auto; padding: 8px 13px; gap: 6px; font-size: var(--fs-option); }
+  .cA .med-cta-ic svg, .cA .med-cta-arw { width: 14px; height: 14px; }
 
   /* 키워드 배너 — 세로 스택 */
   .cA .kw { flex-direction: column; align-items: flex-start; padding: 14px 16px; gap: 10px; }

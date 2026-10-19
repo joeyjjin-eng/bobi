@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
 <link rel="stylesheet" href="../../styles/detail-mobile.css" />
+<link rel="stylesheet" href="direct-sign.css" />
 <style>
   html, body { margin: 0; background: #fff; }
   .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
@@ -82,7 +83,11 @@
   .cE .sign-status.sent { color: var(--ink-3); }
   .cE .sign-status.sent::before { background: var(--ink-4); }
   .cE .sign-t { font-size: var(--fs-option); color: var(--ink-3); margin-top: 6px; font-variant-numeric: tabular-nums; }
-  .cE .sign-resend { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 10px; padding: 8px 12px; background: #fff; border: 1px solid var(--line-strong); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .sign-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .cE .sign-direct { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 8px 12px; background: #fff; border: 1px solid var(--brand); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease; }
+  .cE .sign-direct:hover { background: var(--brand-pale); }
+  .cE .sign-direct svg { flex: none; }
+  .cE .sign-resend { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 8px 12px; background: #fff; border: 1px solid var(--line-strong); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
   .cE .sign-resend:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-4); }
   .cE .sign-resend:disabled { background: var(--brand-pale); color: var(--brand-deep); border-color: var(--brand-soft); cursor: default; }
   .cE .sign-resend svg { flex: none; }
@@ -229,6 +234,7 @@
 </div>
 
 <script src="_data.js"></script>
+<script src="direct-sign.js"></script>
 <script>
 (function () {
   function escapeHTML(s) {
@@ -254,9 +260,7 @@
     document.getElementById('dt-benef').textContent = beneName;
     document.getElementById('dt-benef-wrap').hidden = false;
   }
-  var status = document.getElementById('dt-status');
-  status.textContent = claim.status;
-  status.classList.add(claim.tone);
+  var statusEl = document.getElementById('dt-status');
   document.title = 'BoBi · ' + claim.customer + ' 청구 상세';
 
   // ===== 보류 알림 =======================================================
@@ -265,57 +269,90 @@
     document.getElementById('hold-reason').textContent = claim.holdReason;
   }
 
-  // ===== 처리 현황 =======================================================
-  var tl = document.getElementById('timeline');
-  tl.innerHTML = (claim.timeline || []).map(function (t, i, arr) {
-    var last = i === arr.length - 1;
-    return '<div class="tl-item">'
-      + '<div class="tl-track">'
-      +   '<div class="tl-dot ' + (t.on ? 'on' : '') + '"></div>'
-      +   (last ? '' : '<div class="tl-line ' + (t.on && arr[i + 1] && arr[i + 1].on ? 'on' : '') + '"></div>')
-      + '</div>'
-      + '<div class="tl-info">'
-      +   '<div class="tl-lbl ' + (t.on ? 'on' : '') + '">' + escapeHTML(t.label) + '</div>'
-      +   '<div class="tl-t">' + escapeHTML(t.time) + '</div>'
-      + '</div>'
-      + '</div>';
-  }).join('');
+  // ===== 상태 · 처리 현황 · 서명 현황 (직접 서명 후 다시 그린다) =========
+  function renderSignState() {
+    // ----- 상태 pill -----
+    statusEl.textContent = claim.status;
+    statusEl.classList.remove('sent', 'done', 'hold');
+    statusEl.classList.add(claim.tone);
 
-  // ===== 서명 현황 =======================================================
-  var signers = claim.signers || [];
-  var doneCount = signers.filter(function (s) { return s.status === 'done'; }).length;
-  document.getElementById('sign-summary').textContent = signers.length
-    ? (doneCount === signers.length ? '전원 서명 완료' : doneCount + '/' + signers.length + '명 서명 완료')
-    : '-';
-  var roleToClass = { '피보험자':'insured', '수익자':'beneficiary', '법정대리인':'guardian' };
-  var roleToBg = { '피보험자':'insured', '수익자':'beneficiary', '계약자':'guardian', '법정대리인':'guardian' };
-  document.getElementById('sign-list').innerHTML = signers.map(function (s, i) {
-    var roleHtml = s.roles.map(function (r) {
-      var cls = roleToBg[r] || 'guardian';
-      return '<span class="sign-role ' + cls + '">' + escapeHTML(r) + '</span>';
+    // ----- 처리 현황 -----
+    var tl = document.getElementById('timeline');
+    tl.innerHTML = (claim.timeline || []).map(function (t, i, arr) {
+      var last = i === arr.length - 1;
+      return '<div class="tl-item">'
+        + '<div class="tl-track">'
+        +   '<div class="tl-dot ' + (t.on ? 'on' : '') + '"></div>'
+        +   (last ? '' : '<div class="tl-line ' + (t.on && arr[i + 1] && arr[i + 1].on ? 'on' : '') + '"></div>')
+        + '</div>'
+        + '<div class="tl-info">'
+        +   '<div class="tl-lbl ' + (t.on ? 'on' : '') + '">' + escapeHTML(t.label) + '</div>'
+        +   '<div class="tl-t">' + escapeHTML(t.time) + '</div>'
+        + '</div>'
+        + '</div>';
     }).join('');
-    var resendBtn = s.status === 'sent'
-      ? '<button class="sign-resend" type="button" data-idx="' + i + '">'
-        + '<svg class="ic-svg" width="12" height="12"><use href="#i-send"/></svg>'
-        + '서명 링크 재전송'
-        + '</button>'
-      : '';
-    return '<div class="sign-card">'
-      + '<div class="sign-roles">' + roleHtml + '</div>'
-      + '<div class="sign-head">'
-      +   '<span class="sign-name">' + escapeHTML(s.name) + '</span>'
-      +   '<span class="sign-status ' + s.status + '">' + escapeHTML(s.statusLbl) + '</span>'
-      + '</div>'
-      + '<div class="sign-t">' + escapeHTML(s.time || '-') + '</div>'
-      + resendBtn
-      + '</div>';
-  }).join('');
-  document.querySelectorAll('.sign-resend').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      btn.disabled = true;
-      btn.innerHTML = '<svg class="ic-svg" width="12" height="12"><use href="#i-check"/></svg>링크를 다시 보냈어요';
+
+    // ----- 서명 현황 -----
+    var signers = claim.signers || [];
+    var doneCount = signers.filter(function (s) { return s.status === 'done'; }).length;
+    document.getElementById('sign-summary').textContent = signers.length
+      ? (doneCount === signers.length ? '전원 서명 완료' : doneCount + '/' + signers.length + '명 서명 완료')
+      : '-';
+    var roleToBg = { '피보험자':'insured', '수익자':'beneficiary', '계약자':'guardian', '법정대리인':'guardian' };
+    document.getElementById('sign-list').innerHTML = signers.map(function (s, i) {
+      // 한 사람이 두 자격(예: 법정대리인 · 수익자)이면 라벨 하나에 같이 쓴다
+      var roleHtml = '<span class="sign-role ' + (roleToBg[s.roles[0]] || 'guardian') + '">'
+        + escapeHTML(s.roles.join(' · ')) + '</span>';
+      // 링크는 보냈지만 아직 서명 전 → 재전송 / 직접 서명으로 변경
+      var actions = s.status === 'sent'
+        ? '<div class="sign-actions">'
+          + '<button class="sign-direct" type="button" data-idx="' + i + '">'
+          +   '<svg class="ic-svg" width="12" height="12"><use href="#i-edit"/></svg>'
+          +   '직접 서명으로 변경'
+          + '</button>'
+          + '<button class="sign-resend" type="button" data-idx="' + i + '">'
+          +   '<svg class="ic-svg" width="12" height="12"><use href="#i-send"/></svg>'
+          +   '서명 링크 재전송'
+          + '</button>'
+          + '</div>'
+        : '';
+      return '<div class="sign-card">'
+        + '<div class="sign-roles">' + roleHtml + '</div>'
+        + '<div class="sign-head">'
+        +   '<span class="sign-name">' + escapeHTML(s.name) + '</span>'
+        +   '<span class="sign-status ' + s.status + '">' + escapeHTML(s.statusLbl) + '</span>'
+        + '</div>'
+        + '<div class="sign-t">' + escapeHTML(s.time || '-') + '</div>'
+        + actions
+        + '</div>';
+    }).join('');
+    document.querySelectorAll('.sign-resend').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="ic-svg" width="12" height="12"><use href="#i-check"/></svg>링크를 다시 보냈어요';
+      });
     });
-  });
+    document.querySelectorAll('.sign-direct').forEach(function (btn) {
+      btn.addEventListener('click', function () { openDirectSign(parseInt(btn.dataset.idx, 10)); });
+    });
+  }
+  renderSignState();
+
+  // ===== 링크 대신 이 화면에서 직접 서명받기 =============================
+  function openDirectSign(idx) {
+    var signers = claim.signers || [];
+    if (!signers[idx]) return;
+    window.DirectSign.open({
+      title: '직접 서명',
+      signers: signers.map(function (s) { return { roles: s.roles, name: s.name }; }),
+      queue: [idx],
+      onComplete: function (doneIdx, at) {
+        window.saveDirectSign(claim.id, doneIdx, signers.length, at);
+        claim = window.getClaimById(id);   // 바뀐 기록으로 다시 읽어옴
+        renderSignState();
+      }
+    });
+  }
 
   // ===== 인적사항 ========================================================
   document.getElementById('persons-panel').innerHTML = (claim.persons || []).map(function (p) {

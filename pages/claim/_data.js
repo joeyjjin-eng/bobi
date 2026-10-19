@@ -414,20 +414,49 @@
       signers.push({ roles: ['수익자'], name: beneSigner.name, phone: beneSigner.phone,
                      status: statusCode, statusLbl: statusLbl, time: timeVal });
     }
+    // 계약자는 서명 대상이 아니지만, 서명자가 계약자를 겸하면 라벨에 같이 쓴다
+    var polSigner = policyDiffers
+      ? { name: c.policyholderInfo.name, phone: c.policyholderInfo.phone }
+      : { name: c.customer, phone: c.customerInfo.phone };
+    signers.forEach(function (s) {
+      if (s.roles.indexOf('계약자') === -1 && s.name === polSigner.name && s.phone === polSigner.phone) {
+        s.roles.push('계약자');
+      }
+    });
+
+    // 설계사 화면에서 직접 받은 서명 (localStorage) 반영
+    var direct = readDirect()[c.id];
+    var directAll = false;
+    if (direct && direct.idx) {
+      signers.forEach(function (s, i) {
+        if (direct.idx.indexOf(i) === -1) return;
+        s.status = 'done';
+        s.statusLbl = '직접 서명 완료';
+        s.time = (direct.times && direct.times[i]) || direct.at || s.time;
+        s.direct = true;
+      });
+      if (signers.length && signers.every(function (s) { return s.status === 'done'; })) {
+        doneAll = true;
+        directAll = true;
+        now = { sent: now.sent, signed: direct.at || now.signed };
+      }
+    }
 
     // 타임라인 (2단계)
     var timeline = [
       { label:'청구서 전송 · 서명 링크 발송', time: now.sent || '-',   on: !!now.sent },
-      { label:'청구 완료 · 고객 서명 완료',   time: now.signed || '-', on: doneAll && !!now.signed }
+      { label: directAll ? '청구 완료 · 직접 서명 완료' : '청구 완료 · 고객 서명 완료',
+        time: now.signed || '-', on: doneAll && !!now.signed }
     ];
 
     return {
+      id: c.id,
       insurerLabel: c.insurer,
       customer: c.customer,
       typeLabel: c.typeLabel,
       date: c.date,
-      status: c.status,
-      tone: c.tone,
+      status: (doneAll && c.tone !== 'hold') ? '청구완료' : c.status,
+      tone: (doneAll && c.tone !== 'hold') ? 'done' : c.tone,
       holdReason: c.tone === 'hold' ? (c.holdReason || null) : null, // 정상 상태에서는 무조건 null
       persons: persons,
       incident: incident,
@@ -439,6 +468,34 @@
     };
   }
 
+  // ===== 직접 서명 기록 (설계사 화면에서 바로 받은 서명) =================
+  //   { claimId: { idx:[서명 끝난 signer 인덱스], total:서명자 수,
+  //                 times:{ 인덱스: 'YYYY.MM.DD HH:MM' }, at:마지막 서명 시각 } }
+  var DIRECT_KEY = 'bobi-claims-directsign';
+  function readDirect() {
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(DIRECT_KEY);
+      return raw ? (JSON.parse(raw) || {}) : {};
+    } catch (e) { return {}; }
+  }
+  window.readDirectSign = readDirect;
+  //  이미 받아둔 서명에 이번 서명자를 더한다 (한 명씩 따로 받아도 누적)
+  window.saveDirectSign = function (claimId, signedIdx, total, at) {
+    try {
+      var all = readDirect();
+      var rec = all[claimId] || { idx: [], times: {} };
+      rec.total = total;
+      rec.times = rec.times || {};
+      (signedIdx || []).forEach(function (i) {
+        if (rec.idx.indexOf(i) === -1) rec.idx.push(i);
+        rec.times[i] = at;
+      });
+      rec.at = at;
+      all[claimId] = rec;
+      window.localStorage.setItem(DIRECT_KEY, JSON.stringify(all));
+    } catch (e) {}
+  };
+
   // ===== localStorage 에서 새로 제출된 청구 병합 (최신이 위로) ===========
   try {
     var raw = window.localStorage && window.localStorage.getItem('bobi-claims-extra');
@@ -449,6 +506,25 @@
       }
     }
   } catch (e) {}
+
+  // 직접 서명 기록을 목록 요약(상태 pill · 서명 요약)에도 반영
+  (function () {
+    var all = readDirect();
+    CLAIMS.forEach(function (c) {
+      var d = all[c.id];
+      if (!d || !d.idx || !d.total) return;
+      if (c.tone === 'hold') return;   // 보류 건은 서명이 끝나도 보류 유지
+      if (d.idx.length >= d.total) {
+        c.status = '청구완료';
+        c.tone = 'done';
+        c.signSummary = d.total + '/' + d.total + ' 서명';
+        c.times = c.times || {};
+        c.times.signed = d.at || c.times.signed;
+      } else {
+        c.signSummary = d.idx.length + '/' + d.total + ' 서명';
+      }
+    });
+  })();
 
   window.CLAIMS = CLAIMS;
   window.getClaimById = function (id) {

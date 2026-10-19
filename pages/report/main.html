@@ -579,7 +579,14 @@
     </div>
 
     <div class="card-pad print-host view-general">
-      <h2 data-print="summary">주요정보</h2>
+      <div class="sum-head">
+        <h2 data-print="summary">주요정보</h2>
+        <a class="med-cta" id="med-3m-cta" href="treatment.html?tab=medication">
+          <span class="med-cta-ic"><svg class="ic-svg" width="16" height="16"><use href="#i-pill"/></svg></span>
+          3개월 이내 투약 정보 보기
+          <svg class="ic-svg med-cta-arw" width="15" height="15"><use href="#i-arrow-right"/></svg>
+        </a>
+      </div>
       <div class="sum-grid" data-print="summary">
         <a class="sumc out" href="treatment.html?tab=outpatient">
           <div class="top"><span class="l">통원</span><img class="sumc-ic" src="../../assets/icons/icn_medi_01_48.svg" alt="" /></div>
@@ -1462,6 +1469,13 @@
         url.searchParams.set('end', e);
         a.setAttribute('href', 'treatment.html' + url.search);
       });
+      // 투약 CTA — 기준일 기준 최근 3개월만
+      const medCta = document.getElementById('med-3m-cta');
+      if (medCta && e) {
+        const from = parseISO(e);
+        from.setMonth(from.getMonth() - 3);
+        medCta.setAttribute('href', 'treatment.html?tab=medication&start=' + fmtISO(from) + '&end=' + e);
+      }
     }
 
     function recalc(){
