@@ -52,6 +52,7 @@
   .cE .mg-v { font-size: var(--fs-body); color: var(--ink); font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; }
   .cE .mg-v.muted { color: var(--ink-3); font-weight: 500; }
   .cE .mg-v.warn { color: #C15A18; }
+  .cE .mg-v.struck { color: var(--ink-3); font-weight: 500; text-decoration: line-through; }
 
 
   /* ===== 액션 행 — 가능한 것만 버튼으로 ===== */
@@ -259,7 +260,7 @@
 
     var stTag;
     if (b.depositWaiting) stTag = '<span class="mg-tag warn">입금 대기</span>';
-    else if (b.refunded) stTag = '<span class="mg-tag warn">환불 완료 · 이용 종료</span>';
+    else if (b.refunded) stTag = '<span class="mg-tag warn">환불 완료</span>';
     else if (expired)    stTag = '<span class="mg-tag warn">만료됨</span>';
     else if (b.canceled) stTag = '<span class="mg-tag warn">해지 예약됨</span>';
     else                 stTag = '<span class="mg-tag live">이용중</span>';
@@ -277,10 +278,10 @@
       +       '<div class="mg-cell"><span class="mg-k">' + (b.refunded ? '이용 종료' : expired ? '종료일' : '이용 종료일') + '</span>'
       +         '<span class="mg-v' + (b.refunded || expired || b.depositWaiting ? ' warn' : '') + '">'
       +           (b.depositWaiting ? '입금 후 시작'
-                   : b.refunded ? fmt(today) + ' 환불로 종료'
+                   : b.refunded ? fmt(today)
                    : fmt(b.periodEnd)) + '</span></div>'
       +       '<div class="mg-cell"><span class="mg-k">결제 금액</span>'
-      +         '<span class="mg-v">' + won(b.amount) + (b.refunded ? ' <span style="color:#C15A18;">환불</span>' : '') + '</span></div>'
+      +         '<span class="mg-v' + (b.refunded ? ' struck' : '') + '">' + won(b.amount) + '</span></div>'
       +       '<div class="mg-cell"><span class="mg-k">' + fourthLabel + '</span>' + fourthHtml + '</div>'
       +     '</div>'
       +     (b.depositWaiting

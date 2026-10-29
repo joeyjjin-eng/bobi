@@ -30,11 +30,6 @@
   .cE .ph-back:hover { background: var(--bg-soft); color: var(--ink); }
 
   /* ===== 요약 카드 ===== */
-  .cE .ph-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-  .cE .ph-sum-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
-  .cE .ph-sum-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; letter-spacing: -0.01em; }
-  .cE .ph-sum-v { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; }
-  .cE .ph-sum-v small { font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); margin-left: 3px; }
 
   /* ===== 내역 테이블 ===== */
   .cE .ph-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 40px; }
@@ -78,7 +73,6 @@
     .cE .ph-title-row { padding-bottom: 16px; margin-bottom: 16px; }
     .cE .ph-title-ic { width: 38px; height: 38px; }
     .cE .ph-title-l h1 { font-size: var(--fs-h2); }
-    .cE .ph-summary { grid-template-columns: 1fr; }
     .cE .ph-thead { display: none; }
     .cE .ph-row { grid-template-columns: 1fr; gap: 6px; padding: 16px 20px; }
     .cE .ph-status { justify-self: start; }
@@ -117,9 +111,6 @@
       </div>
     </div>
 
-    <!-- 요약 -->
-    <section class="ph-summary" id="ph-summary"></section>
-
     <!-- 내역 -->
     <section class="ph-panel">
       <div class="ph-panel-head">
@@ -152,19 +143,11 @@
     var fmt    = window.fmtDate;
 
     var body    = document.getElementById('ph-tbody');
-    var summary = document.getElementById('ph-summary');
     var cntEl   = document.getElementById('ph-cnt');
 
     function won(n) { return n.toLocaleString() + '원'; }
-    function sumCard(label, value) {
-      return '<div class="ph-sum-card"><span class="ph-sum-l">' + label + '</span><span class="ph-sum-v">' + value + '</span></div>';
-    }
 
     if (!pays.length) {
-      summary.innerHTML = ''
-        + sumCard('누적 결제 금액', '0<small>원</small>')
-        + sumCard('결제 횟수', '0<small>회</small>')
-        + sumCard('최근 결제일', '<span style="color:var(--ink-3);font-size:var(--fs-body);">—</span>');
       cntEl.innerHTML = '총 <b>0</b>건';
       body.innerHTML = ''
         + '<div class="ph-empty">'
@@ -178,13 +161,7 @@
       return;
     }
 
-    var paid = pays.filter(function (p) { return p.status === 'paid'; });
-    var totalPaid = paid.reduce(function (acc, p) { return acc + p.amount; }, 0);
 
-    summary.innerHTML = ''
-      + sumCard('누적 결제 금액', totalPaid.toLocaleString() + '<small>원</small>')
-      + sumCard('결제 횟수', paid.length + '<small>회</small>')
-      + sumCard('최근 결제일', fmt(pays[0].date));
 
     cntEl.innerHTML = '총 <b>' + pays.length + '</b>건';
 

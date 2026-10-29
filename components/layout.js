@@ -354,7 +354,7 @@
   // 결제 내역 — 최신순. refundable은 약관 제1항 판정 결과를 최근 플랜 결제 1건에만 부여.
   window.getPayments = function () {
     var a = getCurrentAgent();
-    var plan = getEffectivePlan(a);
+    var plan = PLANS[a.plan];              // 결제 당시 플랜 (환불 후 FREE 전환과 무관)
     var rows = (a.payments || []).map(function (r) {
       var d = new Date(r.date);
       return {
@@ -368,6 +368,14 @@
         refundable: false
       };
     });
+    var bil = window.getBilling();
+    if (bil && bil.refunded) {
+      var src = rows.filter(function (r) { return r.kind === 'plan' && r.status === 'paid'; })[0];
+      rows.push({
+        date: new Date(TODAY), kind: 'plan', amount: bil.amount, status: 'refund',
+        label: src ? src.label : plan.label + ' 플랜', method: '', refundable: false
+      });
+    }
     rows.sort(function (x, y) { return y.date - x.date; });
     var el = window.getRefundEligibility();
     if (el.ok) {
