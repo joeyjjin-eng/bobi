@@ -85,11 +85,9 @@
   .cE .mg-reset:hover { color: var(--ink-3); }
 
   /* ===== 가상계좌 입금 대기 ===== */
-  .cE .mg-dep { margin-top: 16px; padding: 16px 18px; background: #FFF8EC; border: 1px solid #F5D9A8; border-radius: var(--r-md); }
-  .cE .mg-dep-t { font-size: var(--fs-body); font-weight: 700; color: #B4710F; line-height: 1.4; letter-spacing: -0.01em; }
-  .cE .mg-dep-d { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin-top: 4px; }
-  .cE .mg-dep-acc { font-size: var(--fs-body); color: var(--ink); font-weight: 500; line-height: 1.4; margin-top: 10px; }
-  .cE .mg-dep-acc b { font-weight: 700; letter-spacing: -0.01em; }
+  .cE .mg-dep { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding: 14px 18px; background: #FFF8EC; border: 1px solid #F5D9A8; border-radius: var(--r-md); }
+  .cE .mg-dep-k { font-size: var(--fs-option); font-weight: 700; color: #B4710F; line-height: 1.4; flex: none; }
+  .cE .mg-dep-v { font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.4; letter-spacing: -0.01em; }
 
   /* ===== 카드 안 소제목 ===== */
   .cE .mg-sub { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px 12px; border-top: 1px solid var(--line); }
@@ -286,12 +284,8 @@
       +       '<div class="mg-cell"><span class="mg-k">' + fourthLabel + '</span>' + fourthHtml + '</div>'
       +     '</div>'
       +     (b.depositWaiting
-             ? '<div class="mg-dep">'
-               + '<div class="mg-dep-t">아직 입금이 확인되지 않았어요</div>'
-               + '<div class="mg-dep-d">아래 계좌로 입금하시면 바로 이용할 수 있어요. '
-               + '기한이 지나면 발급된 계좌가 만료됩니다.</div>'
-               + '<div class="mg-dep-acc">' + dep.bank + ' <b>' + dep.accountNumber + '</b></div>'
-               + '</div>'
+             ? '<div class="mg-dep"><span class="mg-dep-k">입금 계좌</span>'
+               + '<span class="mg-dep-v">' + dep.bank + ' ' + dep.accountNumber + '</span></div>'
              : '')
       +   '</div>'
       +   recentHtml
