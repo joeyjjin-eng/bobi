@@ -47,28 +47,90 @@
   var CLAIM_EXTRA_PRICE = 500;
 
   // ===== 데모 에이전트 (플랜 스위처용) =====
+  // billing   — 현재 결제 상태 (약관 제6조 해지 판정용)
+  // usedSince — 해당 결제 이후 기능별 사용 건수 (약관 제5조 1항 미사용 판정용)
+  // payments  — 결제 내역. kind: plan=요금제 · extra=추가 이용권(약관 제2조 5호)
+  //
+  // 결제 방식은 정기결제와 일반결제 둘뿐이다(약관 제2조 3·4호). 이용기간은 모두 1개월.
+  //            | 취소 가능 | 취소 불가
+  //   정기결제  | 최신규    | 김미래 (사용 이력) · 이보험 (7일 경과)
+  //   일반결제  | 정미연    | 윤상호 (7일 경과) · 박만료 (만료)
   var AGENTS = [
-    // FREE — 진료기록리포트 잔여 소진(0), 미청구는 여유 있음 (모달 트리거 시연용)
+    // FREE — 결제 자체가 없음
     { id: 'hong',  name: '홍길동', initial: '홍', org: '메가미래라이프', role: 'FC',   plan: 'free',
       remaining: { report: 0,  unclaimed: 6,  jjaepity: 0,  claim: 0  },
       usage30: { report: 10, unclaimed: 4,  jjaepity: 0 },
-      payment: null }, // 무료 → 등록된 결제수단 없음
-    // BASIC — 진료기록리포트 16%, 째피티 15% 경고
+      payment: null,
+      billing: null, usedSince: null, payments: [] },
+
+    // 정기결제 · 취소 가능 — 결제 2일 경과 + 사용 0건 → 해지 O / 취소 O
+    { id: 'choi',  name: '최신규', initial: '최', org: '교보생명',       role: 'FC',   plan: 'basic',
+      remaining: { report: 50, unclaimed: 50, jjaepity: 20, claim: 10 },
+      usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
+      payment: { type: 'card' },
+      billing: { paymentKey: 'tgen_20260809_bobi_choi_0001', method: 'auto', paidAt: '2026-08-09', periodEnd: '2026-09-08', amount: 5900 },
+      usedSince: { report: 0, unclaimed: 0, jjaepity: 0, claim: 0 },
+      payments: [ { date: '2026-08-09', kind: 'plan', amount: 5900, status: 'paid' } ] },
+
+    // 정기결제 · 취소 불가(사용 이력) — 해지 O / 취소 X
     { id: 'kim',   name: '김미래', initial: '김', org: '삼성생명',       role: '팀장', plan: 'basic',
       remaining: { report: 8,  unclaimed: 35, jjaepity: 3,  claim: 5  },
       usage30: { report: 42, unclaimed: 15, jjaepity: 17 },
-      payment: { brand: '신한카드', last4: '1234' } },
-    // PRO — 진료기록리포트 12% 경고, 나머지는 여유
+      payment: { type: 'card' },
+      billing: { paymentKey: 'tgen_20260805_bobi_kim_0007', method: 'auto', paidAt: '2026-08-05', periodEnd: '2026-09-04', amount: 5900 },
+      usedSince: { report: 9, unclaimed: 3, jjaepity: 4, claim: 1 },
+      payments: [
+        { date: '2026-08-05', kind: 'plan',  amount: 5900, status: 'paid' },
+        { date: '2026-07-28', kind: 'extra', amount: 500,  status: 'paid' },
+        { date: '2026-07-05', kind: 'plan',  amount: 5900, status: 'paid' },
+        { date: '2026-06-05', kind: 'plan',  amount: 5900, status: 'paid' },
+        { date: '2026-05-05', kind: 'plan',  amount: 5900, status: 'refund' },
+        { date: '2026-04-05', kind: 'plan',  amount: 5900, status: 'paid' }
+      ] },
+
+    // 정기결제 · 취소 불가(7일 경과) · PRO — 해지 O / 취소 X
     { id: 'lee',   name: '이보험', initial: '이', org: '한화생명',       role: '지점장', plan: 'pro',
       remaining: { report: 12, unclaimed: 60, jjaepity: 40, claim: 15 },
       usage30: { report: 88, unclaimed: 40, jjaepity: 20 },
-      payment: { brand: '삼성카드', last4: '5678' } },
-    // BASIC · 만료됨 (재구독 유도 시연용)
+      payment: { type: 'card' },
+      billing: { paymentKey: 'tgen_20260722_bobi_lee_0003', method: 'auto', paidAt: '2026-07-22', periodEnd: '2026-08-21', amount: 14900 },
+      usedSince: { report: 31, unclaimed: 12, jjaepity: 8, claim: 3 },
+      payments: [
+        { date: '2026-07-22', kind: 'plan',  amount: 14900, status: 'paid' },
+        { date: '2026-07-19', kind: 'extra', amount: 500,   status: 'paid' },
+        { date: '2026-06-22', kind: 'plan',  amount: 14900, status: 'paid' }
+      ] },
+
+    // 일반결제 · 취소 가능 — 해지 대상 없음 → 해지 X / 취소 O
+    { id: 'jung',  name: '정미연', initial: '정', org: '미래에셋생명',   role: 'FC',   plan: 'basic',
+      remaining: { report: 50, unclaimed: 50, jjaepity: 20, claim: 10 },
+      usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
+      payment: { type: 'virtual' },
+      billing: { paymentKey: 'tgen_20260808_bobi_jung_0001', method: 'once', paidAt: '2026-08-08', periodEnd: '2026-09-07', amount: 5900 },
+      usedSince: { report: 0, unclaimed: 0, jjaepity: 0, claim: 0 },
+      payments: [ { date: '2026-08-08', kind: 'plan', amount: 5900, status: 'paid' } ] },
+
+    // 일반결제 · 취소 불가(7일 경과) · PRO — 해지 X / 취소 X
+    { id: 'yoon',  name: '윤상호', initial: '윤', org: '신한라이프',     role: '지점장', plan: 'pro',
+      remaining: { report: 64, unclaimed: 80, jjaepity: 45, claim: 22 },
+      usage30: { report: 36, unclaimed: 20, jjaepity: 15 },
+      payment: { type: 'transfer' },
+      billing: { paymentKey: 'tgen_20260727_bobi_yoon_0002', method: 'once', paidAt: '2026-07-27', periodEnd: '2026-08-26', amount: 14900 },
+      usedSince: { report: 36, unclaimed: 20, jjaepity: 15, claim: 8 },
+      payments: [
+        { date: '2026-07-27', kind: 'plan',  amount: 14900, status: 'paid' },
+        { date: '2026-08-03', kind: 'extra', amount: 500,   status: 'paid' }
+      ] },
+
+    // 일반결제 · 만료 — 해지 X / 취소 X
     { id: 'park',  name: '박만료', initial: '박', org: 'DB손해보험',     role: 'FC',   plan: 'basic', expired: true,
       remaining: { report: 0,  unclaimed: 0,  jjaepity: 0,  claim: 0  },
       usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
-      payment: { brand: '국민카드', last4: '9012' },
-      expiredAt: '2026-06-05' }
+      payment: { type: 'virtual' },
+      expiredAt: '2026-06-05',
+      billing: { paymentKey: 'tgen_20260506_bobi_park_0001', method: 'once', paidAt: '2026-05-06', periodEnd: '2026-06-05', amount: 5900 },
+      usedSince: { report: 12, unclaimed: 5, jjaepity: 2, claim: 0 },
+      payments: [ { date: '2026-05-06', kind: 'plan', amount: 5900, status: 'paid' } ] }
   ];
 
   var FEATURE_LABEL = {
@@ -148,6 +210,153 @@
   window.getExpiredAt = function () {
     var a = getCurrentAgent();
     return a.expiredAt ? new Date(a.expiredAt) : null;
+  };
+
+  // ===== 결제 · 구독 =====
+  // 약관 제1항(미사용 7일 내 전액환불) · 제4항(정기결제 해지) 자동 판정.
+  // 그 밖의 환불은 제9항에 따라 고객센터 접수.
+  var TODAY = new Date('2026-08-11');          // 데모 기준일
+  var REFUND_WINDOW_DAYS = 7;                  // 약관 제1항 환불 가능 기간
+  var SUPPORT = { tel: '1644-0161', email: 'cs@weplat.co.kr', hours: '평일 09:00–18:00' };
+  var BILLING_LABEL = { auto: '정기결제', once: '일반결제' };   // 약관 제2조 3·4호
+
+  // 결제 방식별로 쓸 수 있는 결제수단이 정해져 있다.
+  //   일반결제 → 가상계좌 · 계좌이체   /   정기결제 → 신용카드
+  var METHODS_BY_BILLING = { once: ['virtual', 'transfer'], auto: ['card'] };
+
+  // 수단별 환불 조건 (토스페이먼츠 결제 취소 기준)
+  var PAY_METHOD = {
+    card:     { label: '신용카드',  chip: 'CARD',  verb: '승인취소',        notice: '카드사 반영까지 영업일 기준 3~4일이 걸릴 수 있어요.' },
+    transfer: { label: '계좌이체',  chip: 'BANK',  verb: '계좌로 환불',     notice: '결제한 계좌로 바로 입금돼요.' },
+    virtual:  { label: '가상계좌',  chip: 'VA',    verb: '지정 계좌로 입금', notice: '영업일 기준 2일 안에 환불 계좌로 입금돼요.' }
+  };
+  window.getMethodsFor = function (billingMethod) { return (METHODS_BY_BILLING[billingMethod] || []).slice(); };
+  window.getPayMethod = function (type) { return PAY_METHOD[type] || PAY_METHOD.card; };
+
+
+  window.getToday = function () { return new Date(TODAY); };
+  window.getRefundWindowDays = function () { return REFUND_WINDOW_DAYS; };
+  window.getSupport = function () { return SUPPORT; };
+  window.getBillingLabel = function (m) { return BILLING_LABEL[m] || m; };
+
+  function dayDiff(from, to) {
+    var a = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    var b = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+    return Math.round((b - a) / 86400000);
+  }
+  window.dayDiff = dayDiff;
+  window.fmtDate = function (d) {
+    return d.getFullYear() + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + String(d.getDate()).padStart(2, '0');
+  };
+
+  // 데모 상태 — 해지 예약 / 환불 완료
+  function cancelKey(id) { return 'bobi-autorenew-' + id; }
+  function refundKey(id) { return 'bobi-refunded-' + id; }
+
+  window.getBilling = function () {
+    var a = getCurrentAgent();
+    if (!a.billing) return null;
+    var b = a.billing;
+    var canceled = false, refunded = false;
+    try { canceled = localStorage.getItem(cancelKey(a.id)) === 'off'; } catch (e) {}
+    try { refunded = localStorage.getItem(refundKey(a.id)) === '1'; } catch (e) {}
+    var paidAt = new Date(b.paidAt);
+    var elapsed = dayDiff(paidAt, TODAY);
+    return {
+      paymentKey: b.paymentKey,
+      method: b.method,
+      methodLabel: BILLING_LABEL[b.method],
+      planLabel: PLANS[a.plan].label,   // 결제 당시 플랜 (환불 후 FREE 전환과 무관)
+      isRecurring: b.method === 'auto',
+      paidAt: paidAt,
+      periodEnd: new Date(b.periodEnd),
+      amount: b.amount,
+      daysElapsed: elapsed,
+      refundDeadline: new Date(paidAt.getFullYear(), paidAt.getMonth(), paidAt.getDate() + REFUND_WINDOW_DAYS),
+      autoRenew: b.method === 'auto' && !canceled && !refunded,
+      canceled: canceled,
+      refunded: refunded
+    };
+  };
+
+  // 약관 제1·2·3항 자동 판정
+  // code: ok=환불 가능 · used=사용 이력 있음 · window=7일 경과 · done=이미 환불 · none=결제 없음
+  window.getRefundEligibility = function () {
+    var a = getCurrentAgent();
+    var b = window.getBilling();
+    if (!b) return { ok: false, code: 'none' };
+    if (b.refunded) return { ok: false, code: 'done', billing: b };
+
+    var used = a.usedSince || {};
+    var detail = [], total = 0;
+    ['report', 'unclaimed', 'jjaepity', 'claim'].forEach(function (f) {
+      var n = used[f] || 0;
+      total += n;
+      if (n > 0) detail.push({ feature: f, label: FEATURE_LABEL[f], count: n });
+    });
+
+    var base = {
+      billing: b,
+      daysElapsed: b.daysElapsed,
+      daysLeft: REFUND_WINDOW_DAYS - b.daysElapsed,
+      usedTotal: total,
+      usedDetail: detail
+    };
+    if (b.daysElapsed > REFUND_WINDOW_DAYS) return Object.assign({ ok: false, code: 'window' }, base);
+    if (total > 0) return Object.assign({ ok: false, code: 'used' }, base);
+    return Object.assign({ ok: true, code: 'ok' }, base);
+  };
+
+  // 정기결제 해지 / 해지 취소 (약관 제4항)
+  window.cancelAutoRenew = function () {
+    try { localStorage.setItem(cancelKey(getCurrentAgent().id), 'off'); } catch (e) {}
+  };
+  window.resumeAutoRenew = function () {
+    try { localStorage.removeItem(cancelKey(getCurrentAgent().id)); } catch (e) {}
+  };
+
+  // 미사용 전액환불 (약관 제1항) — 환불 시 이용기간도 즉시 종료되므로 FREE로 전환
+  window.applyRefund = function () {
+    var id = getCurrentAgent().id;
+    try {
+      localStorage.setItem(refundKey(id), '1');
+      localStorage.setItem('bobi-plan-override-' + id, 'free');
+    } catch (e) {}
+  };
+  window.resetBillingDemo = function () {
+    var id = getCurrentAgent().id;
+    try {
+      localStorage.removeItem(cancelKey(id));
+      localStorage.removeItem(refundKey(id));
+      localStorage.removeItem('bobi-plan-override-' + id);
+    } catch (e) {}
+  };
+
+  // 결제 내역 — 최신순. refundable은 약관 제1항 판정 결과를 최근 플랜 결제 1건에만 부여.
+  window.getPayments = function () {
+    var a = getCurrentAgent();
+    var plan = getEffectivePlan(a);
+    var rows = (a.payments || []).map(function (r) {
+      var d = new Date(r.date);
+      return {
+        date: d,
+        kind: r.kind,
+        amount: r.amount,
+        status: r.status,
+        label: r.kind === 'extra'
+          ? '보험금청구 추가 이용권 1회'
+          : plan.label + ' 플랜 · ' + (a.billing ? BILLING_LABEL[a.billing.method] : '월 정액'),
+        refundable: false
+      };
+    });
+    rows.sort(function (x, y) { return y.date - x.date; });
+    var el = window.getRefundEligibility();
+    if (el.ok) {
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].kind === 'plan' && rows[i].status === 'paid') { rows[i].refundable = true; break; }
+      }
+    }
+    return rows;
   };
 
   // ===== SVG Symbols (전 페이지 공통) =====
@@ -247,10 +456,23 @@
   }
 
   // ===== [DEV] 로그인 설계사 + 플랜 스위처 =====
+  // 스위처 옵션에 붙일 결제 상황 (결제방식 · 취소 가능 여부)
+  function agentSituation(a) {
+    if (!a.billing) return 'FREE';
+    var abbr = { auto: '정기결제', once: '일반결제' }[a.billing.method];
+    if (a.expired) return abbr + ' · 만료';
+    var used = 0;
+    ['report', 'unclaimed', 'jjaepity', 'claim'].forEach(function (f) {
+      used += (a.usedSince && a.usedSince[f]) || 0;
+    });
+    if (dayDiff(new Date(a.billing.paidAt), TODAY) > REFUND_WINDOW_DAYS) return abbr + ' · 기한경과';
+    return abbr + (used > 0 ? ' · 사용이력' : ' · 환불가능');
+  }
+
   function devSwitcherHTML(agent, plan) {
     var opts = AGENTS.map(function (a) {
       var sel = (a.id === agent.id) ? ' selected' : '';
-      return '<option value="' + a.id + '"' + sel + '>' + a.name + ' (' + PLANS[a.plan].label + ')</option>';
+      return '<option value="' + a.id + '"' + sel + '>' + a.name + ' · ' + agentSituation(a) + '</option>';
     }).join('');
     var planOpts = Object.keys(PLANS).map(function (k) {
       var sel = (plan.key === k) ? ' selected' : '';
@@ -381,7 +603,7 @@
     + '.qm-plan .qp-v small { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); margin-left: 2px; }'
     + '.qm-actions { display: flex; flex-direction: column; gap: 8px; }'
     + '.qm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; border: 1px solid transparent; text-decoration: none; transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }'
-    + '.qm-btn.primary { background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }'
+    + '.qm-btn.primary { border: none; background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }'
     + '.qm-btn.primary:hover { filter: brightness(1.05); }'
     + '.qm-btn.extra { background: #fff; color: var(--brand-deep); border-color: var(--brand-soft); }'
     + '.qm-btn.extra:hover { background: var(--brand-pale); }'
@@ -496,7 +718,7 @@
     + '.dev-switch-title { font-size: var(--fs-option); color: #6B7681; font-weight: 800; letter-spacing: 0.03em; margin-bottom: 6px; }'
     + '.dev-switch-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }'
     + '.dev-switch-row > span { font-size: var(--fs-option); color: #6B7681; font-weight: 700; flex: none; width: 34px; }'
-    + '.dev-switch-sel { flex: 1; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #2A343B; padding: 0 6px; outline: none; }'
+    + '.dev-switch-sel { flex: 1; min-width: 0; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #2A343B; padding: 0 6px; outline: none; }'
     + '.dev-switch-sel:focus { border-color: var(--brand); }';
 
   function bindDevSwitcher() {
@@ -543,6 +765,7 @@
       +       '<button class="ft-link bold">개인정보처리방침</button>'
       +     '</div>'
       +     '<div class="ft-info">'
+      +       '<p>고객센터 ' + SUPPORT.tel + '<span class="ft-sep-dot">·</span>' + SUPPORT.email + '<span class="ft-sep-dot">·</span>' + SUPPORT.hours + '</p>'
       +       '<p>주식회사 천호인터내셔널<span class="ft-sep-dot">·</span>대표 이승엽<span class="ft-sep-dot">·</span>사업자등록번호 342-81-00261</p>'
       +       '<p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)<span class="ft-sep-dot">·</span>대표번호 1644-0161</p>'
       +     '</div>'

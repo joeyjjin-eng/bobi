@@ -249,7 +249,7 @@
 
 /* ===== 버튼 · 칩 ===== */
 .cE .ct-btn { height: 46px; padding: 0 24px; border-radius: var(--r-pill); display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: var(--fs-body); font-weight: 700; border: 1px solid transparent; font-family: inherit; letter-spacing: -0.01em; text-decoration: none; cursor: pointer; transition: filter .2s ease, background-color .2s ease, border-color .2s ease, color .2s ease; }
-.cE .ct-btn.primary { background: var(--brand-grad); background-origin: border-box; color: #fff; box-shadow: var(--sh-brand); }
+.cE .ct-btn.primary { border: none; background: var(--brand-grad); background-origin: border-box; color: #fff; box-shadow: var(--sh-brand); }
 .cE .ct-btn.primary:hover { filter: brightness(1.05); }
 .cE .ct-btn.ghost { background: #fff; color: var(--ink-2); border-color: var(--line-strong); }
 .cE .ct-btn.ghost:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
@@ -258,7 +258,7 @@
 /* 평평한 브랜드 버튼 — 그라데이션도 그림자도 없이 색 하나.
    brand-deep 은 브랜드 그라데이션이 끝나는 색이라 가족 안에 있으면서,
    흰 글자가 또렷하게 읽히는 유일한 단계이기도 하다. */
-.cE .ct-btn.solid { background: var(--brand-deep); color: #fff; border-color: var(--brand-deep); }
+.cE .ct-btn.solid { border: none; background: var(--brand-deep); color: #fff; border-color: var(--brand-deep); }
 .cE .ct-btn.solid:hover { filter: brightness(1.18); }
 .cE .ct-navrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 4px; }
 .cE .ct-navrow.end { justify-content: flex-end; }

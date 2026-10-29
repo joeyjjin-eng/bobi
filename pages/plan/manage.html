@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 구독 관리</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 (plan/history.html과 동일) ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; background: var(--bg-soft); }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; background: var(--bg-soft); }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 ===== */
+  .cE .mg-title-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 22px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .cE .mg-title-l { display: flex; align-items: center; gap: 14px; }
+  .cE .mg-title-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
+  .cE .mg-title-txt { display: flex; flex-direction: column; }
+  .cE .mg-title-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .mg-title-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; line-height: 1.4; }
+  .cE .mg-back { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 9px 16px; font-family: inherit; font-size: var(--fs-option); font-weight: 700; text-decoration: none; letter-spacing: -0.01em; line-height: 1.4; transition: background-color .15s ease; }
+  .cE .mg-back:hover { background: var(--bg-soft); color: var(--ink); }
+
+  /* ===== 패널 (사이 24px) ===== */
+  .cE .mg-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 24px; }
+  .cE .mg-panel:last-child { margin-bottom: 40px; }
+  .cE .mg-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px solid var(--line); }
+  .cE .mg-panel-head h2 { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0; }
+  .cE .mg-panel-body { padding: 20px 24px; }
+
+  /* 상태 태그 */
+  .cE .mg-tag { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-option); font-weight: 700; padding: 5px 11px; border-radius: var(--r-pill); line-height: 1.4; letter-spacing: -0.01em; background: var(--bg-soft); color: var(--ink-3); }
+  .cE .mg-tag.live { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .mg-tag.ok { background: #E6F7EE; color: #1E9552; }
+  .cE .mg-tag.warn { background: #FEF0E6; color: #C15A18; }
+
+  /* ===== 현재 이용 상태 ===== */
+  .cE .mg-now-plan { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+  .cE .mg-now-name { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; }
+  .cE .mg-now-method { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); background: var(--brand-pale); border-radius: var(--r-pill); padding: 4px 10px; line-height: 1.4; }
+  .cE .mg-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 168px)); column-gap: 28px; row-gap: 16px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
+  .cE .mg-cell { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .cE .mg-k { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; line-height: 1.4; }
+  .cE .mg-v { font-size: var(--fs-body); color: var(--ink); font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; }
+  .cE .mg-v.muted { color: var(--ink-3); font-weight: 500; }
+  .cE .mg-v.warn { color: #C15A18; }
+
+
+  /* ===== 액션 행 — 가능한 것만 버튼으로 ===== */
+  .cE .mg-act { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 24px; border-bottom: 1px solid var(--line); }
+  .cE .mg-act:last-child { border-bottom: none; }
+  .cE .mg-act-t { font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.4; letter-spacing: -0.01em; }
+  .cE .mg-act-d { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin-top: 4px; }
+  .cE .mg-act .mg-btn { height: 40px; padding: 0 18px; font-size: var(--fs-option); flex: none; }
+  .cE .mg-cs { margin: 0 0 40px; padding: 0 4px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+  .cE .mg-cs a { color: var(--ink-2); font-weight: 700; text-decoration: none; }
+  .cE .mg-cs a:hover { text-decoration: underline; }
+  .cE .mg-cs-sep { color: var(--ink-4); margin: 0 6px; }
+
+  /* 안내문 */
+  .cE .mg-note { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin: 0; }
+  .cE .mg-note.sp { margin-top: 16px; }
+  .cE .mg-note b { color: var(--ink-2); font-weight: 700; }
+
+  /* ===== 버튼 ===== */
+  .cE .mg-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .cE .mg-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 46px; padding: 0 24px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; letter-spacing: -0.01em; cursor: pointer; text-decoration: none; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .mg-btn.danger { background: #C92238; color: #fff; border: none; }
+  .cE .mg-btn.danger:hover { background: #A81A2D; }
+  .cE .mg-btn.ghost { background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); }
+  .cE .mg-btn.ghost:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
+  .cE .mg-btn.ghost-danger { background: #fff; color: #C92238; border: 1px solid #F5BFC3; }
+  .cE .mg-btn.ghost-danger:hover { background: #FEF0F1; border-color: #E0445A; }
+  .cE .mg-btn.primary { background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); }
+  .cE .mg-btn.primary:hover { filter: brightness(1.05); }
+  .cE .mg-reset { background: none; border: none; padding: 0; font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--ink-4); text-decoration: underline; cursor: pointer; line-height: 1.4; }
+  .cE .mg-reset:hover { color: var(--ink-3); }
+
+  /* ===== 카드 안 소제목 ===== */
+  .cE .mg-sub { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px 12px; border-top: 1px solid var(--line); }
+  .cE .mg-sub h3 { font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); margin: 0; line-height: 1.4; letter-spacing: -0.01em; }
+
+  /* ===== 최근 결제 ===== */
+  .cE .mg-link { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); text-decoration: none; line-height: 1.4; }
+  .cE .mg-link:hover { text-decoration: underline; }
+  .cE .mg-payrow { display: grid; grid-template-columns: 112px 1fr auto 60px; align-items: center; gap: 16px; padding: 15px 24px; border-bottom: 1px solid var(--line); }
+  .cE .mg-payrow:last-child { border-bottom: none; }
+  .cE .mg-pay-d { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; line-height: 1.4; }
+  .cE .mg-pay-l { font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; line-height: 1.4; }
+  .cE .mg-pay-a { font-size: var(--fs-body); color: var(--ink); font-weight: 700; line-height: 1.4; text-align: right; letter-spacing: -0.01em; }
+  .cE .mg-pay-s { font-size: var(--fs-option); font-weight: 700; line-height: 1.4; text-align: right; color: var(--ink-3); }
+  .cE .mg-pay-s.refund { color: #C15A18; }
+  .cE .mg-pay-s.fail { color: #C92238; }
+
+  /* ===== 빈 상태 (FREE) ===== */
+  .cE .mg-empty { padding: 80px 20px; text-align: center; }
+  .cE .mg-empty-ic { width: 68px; height: 68px; border-radius: 50%; background: var(--bg-soft); color: var(--ink-4); display: grid; place-items: center; margin: 0 auto 16px; }
+  .cE .mg-empty-t { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin-bottom: 8px; }
+  .cE .mg-empty-d { font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin-bottom: 20px; }
+
+  /* ===== 모달 ===== */
+  .mg-modal[hidden] { display: none; }
+  .mg-modal { position: fixed; inset: 0; z-index: 1200; display: grid; place-items: center; padding: 20px; }
+  .mg-modal-bd { position: absolute; inset: 0; background: rgba(14, 26, 36, .5); }
+  .mg-modal-card { position: relative; width: 100%; max-width: 440px; background: #fff; border-radius: var(--r-lg); padding: 32px 30px 26px; box-shadow: var(--sh-2); text-align: center; font-family: inherit; }
+  .mg-modal-ic { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; margin: 0 auto 18px; background: var(--bg-soft); color: var(--ink-3); }
+  .mg-modal-ic.danger { background: #FEF0F1; color: #C92238; }
+  .mg-modal-ic.ok { background: #E6F7EE; color: #1E9552; }
+  .mg-modal-card h3 { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0 0 12px; }
+  .mg-modal-body { font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; line-height: 1.4; margin-bottom: 20px; }
+  .mg-modal-body b { color: var(--ink); font-weight: 700; }
+  .mg-modal-sum { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; background: var(--bg-soft); border-radius: var(--r-md); margin-top: 16px; text-align: left; }
+  .mg-modal-sum .r { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: var(--fs-option); line-height: 1.4; }
+  .mg-modal-sum .r .k { color: var(--ink-3); font-weight: 700; }
+  .mg-modal-sum .r .v { color: var(--ink); font-weight: 700; }
+  .mg-modal-sum .r .v a { color: var(--brand-deep); text-decoration: none; }
+  .mg-modal-sum .r .v a:hover { text-decoration: underline; }
+  .mg-modal-acts { display: flex; gap: 10px; }
+  .mg-modal-acts .mg-btn { flex: 1; height: 44px; padding: 0 16px; }
+  .mg-modal-acts .mg-btn[disabled] { opacity: .55; cursor: default; pointer-events: none; }
+
+  /* ===== 좁은 폭 — 칸을 좁히고 접지 않는다 ===== */
+  @media (max-width: 1320px) {
+    .cE .mg-grid { column-gap: 20px; }
+  }
+  @media (max-width: 960px) {
+    .cE .mg-title-row { padding-bottom: 16px; margin-bottom: 16px; }
+    .cE .mg-title-ic { width: 38px; height: 38px; }
+    .cE .mg-title-l h1 { font-size: var(--fs-h2); }
+    .cE .mg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <div class="mg-title-row">
+      <div class="mg-title-l">
+        <div class="mg-title-ic"><svg class="ic-svg" width="22" height="22"><use href="#i-won"/></svg></div>
+        <div class="mg-title-txt">
+          <h1>구독 관리</h1>
+          <div class="mg-title-sub">결제 취소와 자동결제 해지를 직접 처리할 수 있습니다.</div>
+        </div>
+      </div>
+      <a class="mg-back" href="../mypage/index.html">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg>
+        마이페이지로
+      </a>
+    </div>
+
+    <div id="mg-root"></div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<!-- 확인 모달 -->
+<div class="mg-modal" id="mg-modal" hidden>
+  <div class="mg-modal-bd" data-mg-close></div>
+  <div class="mg-modal-card" role="dialog" aria-modal="true" aria-labelledby="mg-modal-t">
+    <div class="mg-modal-ic" id="mg-modal-ic"></div>
+    <h3 id="mg-modal-t"></h3>
+    <div class="mg-modal-body" id="mg-modal-b"></div>
+    <div class="mg-modal-acts" id="mg-modal-a"></div>
+  </div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script src="../../components/payments.js"></script>
+<script>
+  injectShell('mypage');
+
+  (function () {
+    var plan  = window.getEffectivePlan();
+    var b     = window.getBilling();
+    var el    = window.getRefundEligibility();
+    var sup   = window.getSupport();
+    var pm    = window.getPaymentMethod();
+    var fmt   = window.fmtDate;
+    var today = window.getToday();
+    var root  = document.getElementById('mg-root');
+
+    function won(n) { return n.toLocaleString() + '원'; }
+    function md(d) { return (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
+    function ic(name, size) {
+      var s = size || 14;
+      return '<svg class="ic-svg" width="' + s + '" height="' + s + '"><use href="#' + name + '"/></svg>';
+    }
+
+    /* ===== FREE — 관리할 결제가 없음 ===== */
+    if (!b) {
+      root.innerHTML = ''
+        + '<section class="mg-panel"><div class="mg-empty">'
+        +   '<div class="mg-empty-ic">' + ic('i-won', 30) + '</div>'
+        +   '<div class="mg-empty-t">관리할 결제가 없어요</div>'
+        +   '<div class="mg-empty-d">FREE 플랜은 결제가 발생하지 않습니다.</div>'
+        +   '<a class="mg-btn primary" href="index.html">' + ic('i-sparkles') + ' 요금제 보기</a>'
+        + '</div></section>';
+      return;
+    }
+
+    var expired = window.isExpired() || b.periodEnd < today;
+    var nextCharge = new Date(b.periodEnd.getFullYear(), b.periodEnd.getMonth(), b.periodEnd.getDate() + 1);
+    var pmMeta  = pm ? window.getPayMethod(pm.type) : null;
+    var nextChargeHtml = (!b.isRecurring || b.refunded)
+      ? '<span class="mg-v muted">없음</span>'
+      : b.canceled ? '<span class="mg-v warn">청구 중단됨</span>'
+                   : '<span class="mg-v">' + fmt(nextCharge) + '</span>';
+    var pmName  = pmMeta ? pmMeta.label : '결제수단';
+
+    /* ===== 1. 현재 이용 상태 — 결제일 · 결제수단 · 최근 결제를 한 카드에 ===== */
+    var payStatus = { paid: '결제완료', refund: '환불', fail: '실패' };
+    var recent = window.getPayments().slice(0, 3);
+    var recentHtml = recent.length
+      ? '<div class="mg-sub"><h3>최근 결제</h3>'
+        + '<a class="mg-link" href="history.html">전체 내역 ' + ic('i-chevron-right', 13) + '</a></div>'
+        + recent.map(function (p) {
+            return '<div class="mg-payrow">'
+              + '<span class="mg-pay-d">' + fmt(p.date) + '</span>'
+              + '<span class="mg-pay-l">' + p.label + '</span>'
+              + '<span class="mg-pay-a">' + (p.status === 'refund' ? '- ' : '') + won(p.amount) + '</span>'
+              + '<span class="mg-pay-s ' + p.status + '">' + payStatus[p.status] + '</span>'
+              + '</div>';
+          }).join('')
+      : '';
+
+    var stTag;
+    if (b.refunded)      stTag = '<span class="mg-tag warn">환불 완료 · 이용 종료</span>';
+    else if (expired)    stTag = '<span class="mg-tag warn">만료됨</span>';
+    else if (b.canceled) stTag = '<span class="mg-tag warn">해지 예약됨</span>';
+    else                 stTag = '<span class="mg-tag live">이용중</span>';
+
+    var statusPanel = ''
+      + '<section class="mg-panel">'
+      +   '<div class="mg-panel-head"><h2>현재 이용 상태</h2>' + stTag + '</div>'
+      +   '<div class="mg-panel-body">'
+      +     '<div class="mg-now-plan">'
+      +       '<span class="mg-now-name">' + (b.refunded ? b.planLabel : plan.label) + ' 플랜</span>'
+      +       '<span class="mg-now-method">' + b.methodLabel + '</span>'
+      +     '</div>'
+      +     '<div class="mg-grid">'
+      +       '<div class="mg-cell"><span class="mg-k">결제일</span><span class="mg-v">' + fmt(b.paidAt) + '</span></div>'
+      +       '<div class="mg-cell"><span class="mg-k">' + (b.refunded ? '이용 종료' : expired ? '종료일' : '이용 종료일') + '</span>'
+      +         '<span class="mg-v' + (b.refunded || expired ? ' warn' : '') + '">'
+      +           (b.refunded ? fmt(today) + ' 환불로 종료' : fmt(b.periodEnd)) + '</span></div>'
+      +       '<div class="mg-cell"><span class="mg-k">결제 금액</span>'
+      +         '<span class="mg-v">' + won(b.amount) + (b.refunded ? ' <span style="color:#C15A18;">환불</span>' : '') + '</span></div>'
+      +       '<div class="mg-cell"><span class="mg-k">다음 결제일</span>' + nextChargeHtml + '</div>'
+      +     '</div>'
+      +   '</div>'
+      +   recentHtml
+      + '</section>';
+
+    /* ===== 2. 해지 · 취소 — 가능한 액션만 버튼으로 =====
+       불가 사유는 적지 않는다. 상태는 위 카드에서 읽히고 예외는 고객센터가 받는다. */
+    var acts = [];
+
+    // 정기결제 해지 (약관 제4항)
+    if (b.isRecurring && !b.refunded) {
+      acts.push(b.canceled
+        ? { id: 'mg-resume', cls: 'ghost', btn: '해지 취소',
+            t: '자동결제 해지됨',
+            d: '다음 회차 청구가 중단됐어요. ' + fmt(b.periodEnd) + '까지 이용할 수 있고, 그 전에 되돌리면 자동결제가 이어집니다.' }
+        : { id: 'mg-cancel', cls: 'ghost', btn: '해지하기',
+            t: '자동결제 해지',
+            d: '다음 회차부터 청구되지 않아요. 이미 결제한 이용기간은 ' + fmt(b.periodEnd) + '까지 그대로 유지됩니다.' });
+    }
+
+    // 미사용 전액 환불 (약관 제1항)
+    if (el.ok) {
+      acts.push({ id: 'mg-refund', cls: 'ghost', btn: '취소하기',
+        t: '결제 취소',
+        d: '사용 이력이 없어 ' + md(b.refundDeadline) + '까지 취소할 수 있어요.' });
+    }
+
+    var actionPanel = !acts.length ? '' : ''
+      + '<section class="mg-panel">'
+      +   '<div class="mg-panel-head"><h2>해지 · 취소</h2></div>'
+      +   acts.map(function (a) {
+            return '<div class="mg-act">'
+              + '<div class="mg-act-l">'
+              +   '<div class="mg-act-t">' + a.t + '</div>'
+              +   '<div class="mg-act-d">' + a.d + '</div>'
+              + '</div>'
+              + '<button type="button" class="mg-btn ' + a.cls + '" id="' + a.id + '">' + a.btn + '</button>'
+              + '</div>';
+          }).join('')
+      + '</section>';
+
+    var csLine = '<p class="mg-cs">문의가 있으면 고객센터로 연락해 주세요.'
+      + '<span class="mg-cs-sep">·</span><a href="tel:' + sup.tel.replace(/-/g, '') + '">' + sup.tel + '</a>'
+      + '<span class="mg-cs-sep">·</span><a href="mailto:' + sup.email + '">' + sup.email + '</a>'
+      + '<span class="mg-cs-sep">·</span>' + sup.hours
+      + (b.refunded ? ' <button type="button" class="mg-reset" id="mg-reset">데모 초기화</button>' : '')
+      + '</p>';
+
+    root.innerHTML = statusPanel + actionPanel + csLine;
+
+    /* ===== 모달 ===== */
+    var modal = document.getElementById('mg-modal');
+    function closeModal() { modal.hidden = true; document.body.style.overflow = ''; }
+    function openModal(o) {
+      var icHost = document.getElementById('mg-modal-ic');
+      icHost.className = 'mg-modal-ic ' + (o.tone || '');
+      icHost.innerHTML = ic(o.icon, 26);
+      document.getElementById('mg-modal-t').textContent = o.title;
+      document.getElementById('mg-modal-b').innerHTML = o.body;
+      var acts = document.getElementById('mg-modal-a');
+      acts.innerHTML = o.actions.map(function (a, i) {
+        return '<button type="button" class="mg-btn ' + a.cls + '" data-mg-act="' + i + '">' + a.label + '</button>';
+      }).join('');
+      acts.querySelectorAll('[data-mg-act]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = o.actions[Number(btn.getAttribute('data-mg-act'))];
+          if (act.run) act.run(); else closeModal();
+        });
+      });
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+    modal.querySelectorAll('[data-mg-close]').forEach(function (x) {
+      x.addEventListener('click', closeModal);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
+
+    /* ===== 액션 ===== */
+    var refundBtn = document.getElementById('mg-refund');
+    if (refundBtn) refundBtn.addEventListener('click', function () {
+      openModal({
+        icon: 'i-alert', tone: 'danger',
+        title: '결제를 취소할까요?',
+        body: '취소하면 이용이 즉시 종료되고 되돌릴 수 없습니다.'
+          + '<div class="mg-modal-sum">'
+          +   '<div class="r"><span class="k">환불 금액</span><span class="v">' + won(b.amount) + '</span></div>'
+          +   '<div class="r"><span class="k">환불 방식</span><span class="v">' + pmName + ' ' + (pmMeta ? pmMeta.verb : '환불') + '</span></div>'
+          +   '<div class="r"><span class="k">이용 종료</span><span class="v">즉시 · FREE 전환</span></div>'
+          + '</div>',
+        actions: [
+          { label: '돌아가기', cls: 'ghost' },
+          { label: '취소하고 환불', cls: 'danger', run: function () {
+            // 버튼을 잠가 연타로 중복 취소가 나가지 않게 한다 (서버 멱등키와 이중 방어)
+            var acts = document.getElementById('mg-modal-a');
+            acts.querySelectorAll('.mg-btn').forEach(function (x) { x.setAttribute('disabled', ''); });
+            acts.querySelectorAll('.mg-btn')[1].textContent = '취소 요청 중…';
+
+            window.cancelPayment({
+              paymentKey: b.paymentKey,
+              cancelReason: '회원 요청 · 미사용 7일 이내 전액 취소 (약관 제5조 1항)',
+              cancelAmount: b.amount
+            }).then(function (payment) {
+              var c = (payment.cancels && payment.cancels[0]) || {};
+              window.applyRefund();
+              openModal({
+                icon: 'i-check-circle', tone: 'ok',
+                title: '결제가 취소됐어요',
+                body: won(c.cancelAmount != null ? c.cancelAmount : b.amount) + ' 취소가 접수됐어요. '
+                  + (pmMeta ? pmMeta.notice : '')
+                  + (c.transactionKey ? '<div class="mg-modal-sum"><div class="r"><span class="k">취소 거래번호</span>'
+                      + '<span class="v">' + c.transactionKey + '</span></div></div>' : ''),
+                actions: [{ label: '확인', cls: 'primary', run: function () { location.reload(); } }]
+              });
+            }).catch(function (err) {
+              openModal({
+                icon: 'i-alert', tone: 'danger',
+                title: '취소하지 못했어요',
+                body: (err && err.message ? err.message : '결제 취소에 실패했습니다.')
+                  + ' 결제는 그대로 유지됩니다. 계속 안 되면 고객센터 ' + sup.tel + '로 연락해 주세요.',
+                actions: [{ label: '확인', cls: 'ghost' }]
+              });
+            });
+          } }
+        ]
+      });
+    });
+
+    var cancelBtn = document.getElementById('mg-cancel');
+    if (cancelBtn) cancelBtn.addEventListener('click', function () {
+      openModal({
+        icon: 'i-alert', tone: 'danger',
+        title: '자동결제를 해지할까요?',
+        body: '이미 결제한 이용기간은 그대로 유지됩니다.'
+          + '<div class="mg-modal-sum">'
+          +   '<div class="r"><span class="k">다음 회차 청구</span><span class="v">중단</span></div>'
+          +   '<div class="r"><span class="k">이용 가능 기한</span><span class="v">' + fmt(b.periodEnd) + '</span></div>'
+          +   '<div class="r"><span class="k">이후 플랜</span><span class="v">FREE</span></div>'
+          + '</div>',
+        actions: [
+          { label: '돌아가기', cls: 'ghost' },
+          { label: '해지하기', cls: 'ghost-danger', run: function () {
+            window.cancelAutoRenew();
+            openModal({
+              icon: 'i-check-circle', tone: 'ok',
+              title: '자동결제가 해지됐어요',
+              body: fmt(b.periodEnd) + '까지 이용할 수 있습니다. 기한 전에는 해지를 취소할 수 있어요.',
+              actions: [{ label: '확인', cls: 'primary', run: function () { location.reload(); } }]
+            });
+          } }
+        ]
+      });
+    });
+
+    var resumeBtn = document.getElementById('mg-resume');
+    if (resumeBtn) resumeBtn.addEventListener('click', function () {
+      window.resumeAutoRenew();
+      location.reload();
+    });
+
+    var resetBtn = document.getElementById('mg-reset');
+    if (resetBtn) resetBtn.addEventListener('click', function () {
+      window.resetBillingDemo();
+      location.reload();
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -28,10 +28,10 @@
 
   /* ===== 플랜 카드 3열 ===== */
   .cE .pl-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
-  .cE .pl-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px 24px; display: flex; flex-direction: column; box-shadow: var(--sh-1); position: relative; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-  .cE .pl-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
-  .cE .pl-card.cur { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,0.12), var(--sh-1); }
-  .cE .pl-card.cur.expired { border-color: #C92238; box-shadow: 0 0 0 3px rgba(201,34,56,0.12), var(--sh-1); }
+  .cE .pl-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 26px 24px; display: flex; flex-direction: column; position: relative; transition: border-color .2s ease; }
+  .cE .pl-card:hover { border-color: var(--brand); }
+  .cE .pl-card.cur { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(66,186,255,0.12); }
+  .cE .pl-card.cur.expired { border-color: #C92238; box-shadow: 0 0 0 3px rgba(201,34,56,0.12); }
   .cE .pl-card.cur.expired::before { content: '만료됨'; position: absolute; top: -12px; right: 20px; background: #C92238; color: #fff; font-size: var(--fs-option); font-weight: 800; padding: 5px 12px; border-radius: var(--r-pill); letter-spacing: 0.02em; }
   .cE .pl-card-tag { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; letter-spacing: 0.05em; }
   .cE .pl-card-name { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 4px 0 2px; }
@@ -53,7 +53,7 @@
   .cE .pl-feat li .fl b { font-weight: 800; }
   .cE .pl-feat li .fn { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin-top: 2px; }
   .cE .pl-card-cta { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 48px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 800; cursor: pointer; border: 1px solid transparent; letter-spacing: -0.01em; transition: filter .15s ease, background-color .15s ease, border-color .15s ease, color .15s ease; }
-  .cE .pl-card-cta.primary { background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }
+  .cE .pl-card-cta.primary { border: none; background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }
   .cE .pl-card-cta.primary:hover { filter: brightness(1.05); }
   .cE .pl-card-cta.ghost { background: #fff; color: var(--ink-2); border-color: var(--line-strong); }
   .cE .pl-card-cta.ghost:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
@@ -61,7 +61,7 @@
   .cE .pl-card-cta.cur-cta:hover { filter: none; }
 
   /* ===== 비교표 ===== */
-  .cE .pl-cmp { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 24px; box-shadow: var(--sh-1); }
+  .cE .pl-cmp { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 24px; }
   .cE .pl-cmp-head { padding: 20px 24px 20px; }
   .cE .pl-cmp-head h2 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
   .cE .pl-cmp-head p { font-size: var(--fs-option); color: var(--ink-3); margin: 4px 0 0; }

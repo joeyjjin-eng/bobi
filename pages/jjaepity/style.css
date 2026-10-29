@@ -421,7 +421,7 @@ html, body { margin: 0; background: #fff; }
 .cE .hist-delete-btn b { font-weight: 800; }
 
 /* danger 컨펌 버튼 */
-.sm-confirm-btn.danger { background: #E14848; color: #fff; border: 1px solid transparent; box-shadow: 0 6px 16px rgba(225, 72, 72, 0.24); }
+.sm-confirm-btn.danger { background: #E14848; color: #fff; border: none; box-shadow: 0 6px 16px rgba(225, 72, 72, 0.24); }
 .sm-confirm-btn.danger:hover { background: #C92238; box-shadow: 0 8px 20px rgba(225, 72, 72, 0.32); }
 .cE .sm-thead { background: var(--bg-soft); border-bottom: 1px solid var(--line); }
 .cE .sm-th { padding: 12px 16px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); }
@@ -479,7 +479,7 @@ html, body { margin: 0; background: #fff; }
 .sm-confirm-btn { flex: 1; padding: 13px 12px; border-radius: 12px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; transition: background-color .15s ease, color .15s ease, border-color .15s ease, box-shadow .18s ease; }
 .sm-confirm-btn.ghost { background: #fff; color: var(--ink-3); border: 1px solid var(--line-strong); }
 .sm-confirm-btn.ghost:hover { color: var(--ink); border-color: var(--ink-4); background: var(--bg-soft); }
-.sm-confirm-btn.primary { background: var(--brand-grad); color: #fff; border: 1px solid transparent; box-shadow: var(--sh-brand); }
+.sm-confirm-btn.primary { background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); }
 .sm-confirm-btn.primary:hover { filter: brightness(1.05); }
 /* 복수 병력 블록 */
 .sm-modal-history-multi { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; }
