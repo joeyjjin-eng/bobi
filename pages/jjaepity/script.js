@@ -34,6 +34,55 @@
         "이측성 질환의 경우 이측 수술 후 심사 가능"
       ]}
     ],
+    // 골절 케이스 예외질환 — 해당 부위를 부담보로 조건부 인수하는 상품
+    exceptMany: [
+      { insurer: "메리츠화재",     name: "(무)메리츠통합간편건강보험(3.0.5) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능", "고정용 금속물 제거 후 6개월 경과"] },
+      { insurer: "메리츠화재",     name: "(무)메리츠통합간편건강보험(3.1.5) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "메리츠화재",     name: "(무)메리츠통합간편건강보험(3.5.5) · 골절 부담보", notes: null },
+      { insurer: "메리츠화재",     name: "(무)메리츠간편31건강보험 · 하지 부담보", notes: ["후유장해 · 재골절 없을 것"] },
+      { insurer: "메리츠화재",     name: "(무)메리츠유병력자실손의료비", notes: ["최근 1년 내 입원 이력 없을 것"] },
+      { insurer: "삼성화재",       name: "(무)삼성 간편건강보험(3.0.5) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "삼성화재",       name: "(무)삼성 간편건강보험(3.5.5) · 골절 부담보", notes: null },
+      { insurer: "삼성화재",       name: "(무)삼성 간편건강보험(3.10.5) · 골절 부담보", notes: null },
+      { insurer: "삼성화재",       name: "(무)삼성 실손의료보험(간편심사형)", notes: ["수술 후 6개월 경과 시 심사 가능"] },
+      { insurer: "삼성화재",       name: "(무)삼성 유병력자 간편심사보험", notes: ["재활치료 종결 후 심사 가능"] },
+      { insurer: "현대해상",       name: "굿앤굿 간편건강보험(3.0.5) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능", "핀 · 나사 등 고정물 제거 확인 필요"] },
+      { insurer: "현대해상",       name: "굿앤굿 간편건강보험(3.5.5) · 골절 부담보", notes: null },
+      { insurer: "현대해상",       name: "3Q패스 간편건강보험 · 하지 부담보", notes: ["후유장해 없을 것"] },
+      { insurer: "현대해상",       name: "굿앤굿 유병력자 실손의료보험", notes: null },
+      { insurer: "KB손해보험",     name: "KB The간편한 건강보험(3.0.5) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "KB손해보험",     name: "KB The간편한 건강보험(3.5.5) · 골절 부담보", notes: null },
+      { insurer: "KB손해보험",     name: "KB The간편한 건강보험(3.10.5) · 하지 부담보", notes: null },
+      { insurer: "KB손해보험",     name: "KB 골드라이프 간편건강보험", notes: ["만 60세 이상 전용 · 재골절 없을 것"] },
+      { insurer: "DB손해보험",     name: "프로미라이프 간편건강보험(3.0.5) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "DB손해보험",     name: "프로미라이프 간편건강보험(3.5.5) · 골절 부담보", notes: null },
+      { insurer: "DB손해보험",     name: "프로미라이프 간편심사 종합보험 · 하지 부담보", notes: ["수술 후 3개월 경과 시 심사 가능"] },
+      { insurer: "DB손해보험",     name: "프로미 유병력자 실손의료보험", notes: null },
+      { insurer: "한화손해보험",   name: "한화 3N5 더간편건강보험_305 · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "한화손해보험",   name: "한화 3N5 더간편건강보험_325 · 골절 부담보", notes: null },
+      { insurer: "한화손해보험",   name: "한화 311 간편건강보험2601 · 하지 부담보", notes: ["입원 일수 10일 이내일 것"] },
+      { insurer: "한화손해보험",   name: "한화 더 경증 간편건강보험_3.10.5 · 골절 부담보", notes: null },
+      { insurer: "흥국화재",       name: "흥GOOD 든든한 3.0.5 간편종합보험 · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능", "재발 / 합병증 / 후유장해 없을 것"] },
+      { insurer: "흥국화재",       name: "흥GOOD 든든한 3.5.5 간편종합보험 · 골절 부담보", notes: null },
+      { insurer: "흥국화재",       name: "흥GOOD 든든한 325 암만생각해도 간편종합보험 · 하지 부담보", notes: ["이측성 질환의 경우 이측 수술 후 심사 가능"] },
+      { insurer: "흥국화재",       name: "흥Good 고비지 3.10.5 간편종합보험 · 골절 부담보", notes: null },
+      { insurer: "흥국화재",       name: "흥GOOD 유병력자 실손의료보험", notes: ["최근 2년 내 수술 이력 심사 필요"] },
+      { insurer: "NH농협손해보험", name: "NH헤아림355건강보험 · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "NH농협손해보험", name: "NH335굿플러스건강보험 · 하지 부담보", notes: null },
+      { insurer: "NH농협손해보험", name: "간편가입헤아림실손의료비보험", notes: null },
+      { insurer: "롯데손해보험",   name: "let: simple 3.2.5 간편맞춤 건강보험 · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "롯데손해보험",   name: "let: simple 3.5.5 간편맞춤 건강보험 · 골절 부담보", notes: null },
+      { insurer: "롯데손해보험",   name: "let: simple 간편 3.10.10 · 하지 부담보", notes: ["후유장해 없을 것"] },
+      { insurer: "롯데손해보험",   name: "let:care 유병력자 실손의료보험", notes: null },
+      { insurer: "하나손해보험",   name: "(3N5)하나더퍼스트 315 간편건강보험 · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "하나손해보험",   name: "(3N5)하나더퍼스트 355 간편건강보험 · 골절 부담보", notes: null },
+      { insurer: "하나손해보험",   name: "(Grade)하나더퍼스트건강간편보험", notes: ["등급 심사 결과에 따라 부담보 범위 변동"] },
+      { insurer: "라이나손해보험", name: "(무)더핏 간편한 나만의 종합보험(갱신형)2509 1종(325(암)간편심사형) · 골절 부담보", notes: ["골절 부위 치료 종결 후 심사 가능"] },
+      { insurer: "라이나손해보험", name: "(무)더핏 프리미엄 종합보험 1종 · 하지 부담보", notes: null },
+      { insurer: "라이나손해보험", name: "(무)더핏 시니어 종합보험 1종", notes: ["만 65세 이상 · 재골절 없을 것"] },
+      { insurer: "AIG손해보험",    name: "AIG 315플러스 간편건강보험 · 골절 부담보", notes: ["최대 인수 가능 질병 갯수는 AIG의 경우 인수심사로만 알 수 있어요."] },
+      { insurer: "AIG손해보험",    name: "AIG 355플러스 간편건강보험 · 골절 부담보", notes: ["최대 인수 가능 질병 갯수는 AIG의 경우 인수심사로만 알 수 있어요."] }
+    ],
     history: [
       {
         date: "2026.07.06 11:32",
@@ -91,6 +140,17 @@
     return arr;
   })();
 
+  // 인수 가능 · 예외질환 모두 다건으로 나오는 조회 내역 (골절 케이스)
+  DATA.history.unshift({
+    date: "2026.07.08 11:20",
+    disease: "S82 아래다리 골절",
+    cond: "2026.02.03 ~ 03.18 · 일수 9일 · 수술 예",
+    possible: DATA.possibleFracture.length,
+    except: DATA.exceptMany.length,
+    possibleList: DATA.possibleFracture,
+    exceptList: DATA.exceptMany
+  });
+
   var MAX_ENTRIES = 5;
   function newEntry() { return { disease: '', dateStart: '', dateEnd: '', treating: false, hospDays: 0 }; }
   var state = {
@@ -105,7 +165,7 @@
   };
 
   function $(s) { return document.querySelector(s); }
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function label() { return state.disease.trim() || '입력한 병력'; }
 
   // ===== 날짜 유틸 =====
@@ -365,9 +425,145 @@
     box.innerHTML = h;
   }
 
-  function exceptGroupsHTML() {
-    var list = DATA.except;
-    if (!list.length) return '';
+  /* ===== 상품명 묶음 — 같은 시리즈는 한 카드로 모으고 차이나는 코드만 칩으로 ===== */
+  var TOKEN_MARK = '\u0000';
+
+  function maskCodes(name) {
+    var tokens = [];
+    var key = String(name).replace(/\d+(?:\.\d+)*/g, function (m) { tokens.push(m); return TOKEN_MARK; });
+    return { key: key, tokens: tokens };
+  }
+
+  function cleanFamilyName(s) {
+    return s.replace(/\(\s*\)/g, ' ')
+            .replace(/\s{2,}/g, ' ')
+            .replace(/^[\s_·-]+/, '')
+            .replace(/[\s_·-]+$/, '')
+            .trim();
+  }
+
+  // 상품 배열 -> [{ family: 시리즈명, variants: [차이나는 부분] }]
+  function familyGroups(products) {
+    var slots = [];
+    var smap = {};
+    function slot(key, family) {
+      if (!smap[key]) { smap[key] = { family: family, items: [] }; slots.push(smap[key]); }
+      return smap[key];
+    }
+    for (var i = 0; i < products.length; i++) {
+      var nm = products[i].name;
+      var u = nm.indexOf('_');
+      if (u > 0) {
+        // 언더바로 변형을 구분하는 상품명 — 앞부분이 곧 시리즈명
+        var fam = nm.slice(0, u);
+        slot('U:' + fam, fam).items.push({ name: nm, variant: nm.slice(u + 1) });
+      } else {
+        var mk = maskCodes(nm);
+        slot('M:' + mk.key, null).items.push({ name: nm, mask: mk });
+      }
+    }
+
+    var out = [];
+    for (var g = 0; g < slots.length; g++) {
+      var sl = slots[g];
+      if (sl.family !== null) {
+        out.push({
+          family: cleanFamilyName(sl.family),
+          variants: sl.items.map(function (it) { return { label: it.variant, name: it.name }; })
+        });
+        continue;
+      }
+      // 같은 꼴이 하나뿐이면 쪼개지 않고 상품명 그대로 둔다
+      if (sl.items.length < 2) { out.push({ family: sl.items[0].name, variants: [] }); continue; }
+
+      // 숫자 코드 중 실제로 달라지는 자리만 칩으로 뽑는다
+      var base = sl.items[0].mask.tokens;
+      var diff = [];
+      for (var t = 0; t < base.length; t++) {
+        for (var k = 1; k < sl.items.length; k++) {
+          if (sl.items[k].mask.tokens[t] !== base[t]) { diff.push(t); break; }
+        }
+      }
+      if (!diff.length) { out.push({ family: sl.items[0].name, variants: [] }); continue; }
+
+      var variants = sl.items.map(function (it) {
+        return { label: diff.map(function (d) { return it.mask.tokens[d]; }).join(' · '), name: it.name };
+      });
+      // 한 글자 차이는 담보 코드가 아니라 상품명의 일부(2Q패스, 1종 등) — 묶지 않는다
+      var tooShort = false;
+      for (var v = 0; v < variants.length; v++) { if (variants[v].label.length < 2) { tooShort = true; break; } }
+      if (tooShort) {
+        for (var q = 0; q < sl.items.length; q++) out.push({ family: sl.items[q].name, variants: [] });
+        continue;
+      }
+
+      var parts = sl.items[0].mask.key.split(TOKEN_MARK);
+      var family = parts[0];
+      for (var p = 0; p < base.length; p++) {
+        family += (diff.indexOf(p) >= 0 ? '' : base[p]) + parts[p + 1];
+      }
+      out.push({ family: cleanFamilyName(family), variants: variants });
+    }
+    return out;
+  }
+
+  function familyListHTML(products) {
+    var fams = familyGroups(products);
+    var h = '<div class="sm-fam-list">';
+    for (var i = 0; i < fams.length; i++) {
+      var vs = fams[i].variants;
+      h += '<div class="sm-fam">'
+        +    '<div class="sm-fam-head">'
+        +      '<div class="sm-fam-name">' + esc(fams[i].family) + '</div>'
+        +      (vs.length ? '<div class="sm-fam-meta">세부 유형 ' + vs.length + '종</div>' : '')
+        +    '</div>';
+      if (vs.length) {
+        h += '<div class="sm-fam-chips">';
+        for (var v = 0; v < vs.length; v++) {
+          // 칩은 다른 부분만 보여주므로 전체 상품명은 툴팁으로 확인한다
+          h += '<span class="sm-chip" title="' + esc(vs[v].name) + '">' + esc(vs[v].label) + '</span>';
+        }
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    return h + '</div>';
+  }
+
+  var GRP_CHEV = '<svg class="ic-svg" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // 보험사 로고 — assets 공통 파일(pages/claim/_data.js와 같은 파일)을 쓴다
+  var INSURER_LOGO = {
+    '메리츠화재':     'icn_blogo_mz_s.png',
+    '흥국화재':       'icn_carinsu_hk_s.png',
+    'NH농협손해보험': 'icn_blogo_nh_s.png',
+    '라이나손해보험': 'icn_blogo_lina_s.png',
+    '롯데손해보험':   'icn_blogo_lt_s.png',
+    '하나손해보험':   'icn_blogo_hnsh_s.png',
+    '한화손해보험':   'icn_carinsu_hh_s.png',
+    '삼성화재':       'icn_blogo_ss_s.png',
+    'KB손해보험':     'icn_blogo_kb_s.png',
+    '현대해상':       'icn_blogo_hd_s.png',
+    'DB손해보험':     'icn_blogo_db_s.png',
+    'AIG손해보험':    'icn_blogo_aig_s.png',
+    'AXA손해보험':    'icn_blogo_axa_s.png',
+    'MG손해보험':     'icn_blogo_yb_s.png'
+  };
+
+  // 로고 파일이 없는 보험사(캐롯)는 기본 이미지로 대신한다
+  function insurerLogoHTML(insurer) {
+    var file = INSURER_LOGO[insurer];
+    if (file) {
+      return '<img class="sm-grp-logo" src="../../assets/' + file + '" alt="" loading="lazy" />';
+    }
+    return '<span class="sm-grp-logo sm-grp-logo-def" aria-hidden="true">'
+         +   '<svg class="ic-svg" width="14" height="14"><use href="#i-shield"/></svg>'
+         + '</span>';
+  }
+
+  // 보험사별 상품 그룹 목록 — variant: 'chip'(인수 가능) / 'detail'(예외질환, 특이조건 표시)
+  function insurerGroupsHTML(list, variant) {
+    if (!list || !list.length) return '';
     var groups = [];
     var gmap = {};
     for (var i = 0; i < list.length; i++) {
@@ -375,7 +571,6 @@
       if (!gmap[p.insurer]) { gmap[p.insurer] = { insurer: p.insurer, products: [] }; groups.push(gmap[p.insurer]); }
       gmap[p.insurer].products.push(p);
     }
-    var CHEV = '<svg class="ic-svg" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var h = '<div class="sm-grp-actions">'
           +   '<span class="sm-grp-summary">' + groups.length + '개 회사 · ' + list.length + '건</span>'
           +   '<button type="button" class="sm-grp-toggle-all" data-action="expand">모두 펼치기</button>'
@@ -385,23 +580,28 @@
       var grp = groups[g];
       h += '<div class="sm-grp" data-open="0">'
         +    '<button class="sm-grp-head" type="button">'
+        +      insurerLogoHTML(grp.insurer)
         +      '<span class="sm-grp-name">' + esc(grp.insurer) + '</span>'
         +      '<span class="sm-grp-count">' + grp.products.length + '건</span>'
-        +      '<span class="sm-grp-arrow" aria-hidden="true">' + CHEV + '</span>'
+        +      '<span class="sm-grp-arrow" aria-hidden="true">' + GRP_CHEV + '</span>'
         +    '</button>'
         +    '<div class="sm-grp-body">';
-      for (var k = 0; k < grp.products.length; k++) {
-        var pr = grp.products[k];
-        h += '<div class="sm-ex-item">'
-          +    '<div class="sm-ex-name">' + esc(pr.name) + '</div>';
-        if (pr.notes && pr.notes.length) {
-          h += '<div class="sm-ex-notes"><div class="sm-ex-notes-t">특이조건</div>';
-          for (var j = 0; j < pr.notes.length; j++) {
-            h += '<div class="sm-ex-line"><span>·</span><span>' + esc(pr.notes[j]) + '</span></div>';
+      if (variant === 'chip') {
+        h += familyListHTML(grp.products);
+      } else {
+        for (var n = 0; n < grp.products.length; n++) {
+          var pr = grp.products[n];
+          h += '<div class="sm-ex-item">'
+            +    '<div class="sm-ex-name">' + esc(pr.name) + '</div>';
+          if (pr.notes && pr.notes.length) {
+            h += '<div class="sm-ex-notes"><div class="sm-ex-notes-t">특이조건</div>';
+            for (var j = 0; j < pr.notes.length; j++) {
+              h += '<div class="sm-ex-line"><span>·</span><span>' + esc(pr.notes[j]) + '</span></div>';
+            }
+            h += '</div>';
           }
           h += '</div>';
         }
-        h += '</div>';
       }
       h += '</div></div>';
     }
@@ -410,7 +610,7 @@
   }
 
   function renderExcept() {
-    $('#exceptList').innerHTML = exceptGroupsHTML();
+    $('#exceptList').innerHTML = insurerGroupsHTML(DATA.except, 'detail');
   }
 
   function parseHistoryDate(s) {
@@ -525,10 +725,6 @@
     return out;
   }
 
-  function exceptListHTML() {
-    return exceptGroupsHTML();
-  }
-
   function openHistoryModal(idx) {
     var item = state.history[idx];
     if (!item) return;
@@ -593,13 +789,15 @@
       + '</div></div>';
     r += '<div class="sm-insight-caveat" style="margin: 0 0 20px;">ⓘ 예상 가이드이며, 실제 인수 여부는 보험사 심사 결과에 따라 다를 수 있어요.</div>';
     r += '<div class="sm-sec"><svg class="ic-svg" width="16" height="16" style="color:var(--brand-deep)"><use href="#i-check-circle"/></svg><h4>인수 가능 상품 <span class="cnt">(' + item.possible + '건)</span></h4></div>';
-    if (item.possible === 0) {
+    if (item.possibleList && item.possibleList.length) {
+      r += insurerGroupsHTML(item.possibleList, 'chip');
+    } else if (item.possible === 0) {
       r += '<div class="sm-empty-line">해당 조건으로 인수 가능성이 높은 상품이 없어요.</div>';
     } else {
       r += '<div class="sm-empty-line">인수 가능 상품 ' + item.possible + '건이 확인되었어요.</div>';
     }
     r += '<div class="sm-sec mt"><svg class="ic-svg" width="16" height="16" style="color:var(--ink-2)"><use href="#i-alert"/></svg><h4>예외질환 인수 가능 상품 <span class="cnt">(' + item.except + '건)</span></h4></div>';
-    r += exceptListHTML();
+    r += insurerGroupsHTML(item.exceptList || DATA.except, 'detail');
 
     $('#histModalResults').innerHTML = r;
 
@@ -697,37 +895,7 @@
       if (possibleCount === 0) {
         pWrap.innerHTML = '<div class="sm-empty-line">해당 조건으로 인수 가능한 상품이 없습니다.</div>';
       } else {
-        // 회사별 그룹핑 (등장 순서 보존)
-        var groups = [];
-        var gmap = {};
-        for (var i = 0; i < possible.length; i++) {
-          var p = possible[i];
-          if (!gmap[p.insurer]) { gmap[p.insurer] = { insurer: p.insurer, products: [] }; groups.push(gmap[p.insurer]); }
-          gmap[p.insurer].products.push(p);
-        }
-        var h = '<div class="sm-grp-actions">'
-              +   '<span class="sm-grp-summary">' + groups.length + '개 회사 · ' + possibleCount + '건</span>'
-              +   '<button type="button" class="sm-grp-toggle-all" data-action="expand">모두 펼치기</button>'
-              + '</div>'
-              + '<div class="sm-grp-list">';
-        var CHEV = '<svg class="ic-svg" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9 L12 15 L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        for (var g = 0; g < groups.length; g++) {
-          var grp = groups[g];
-          h += '<div class="sm-grp" data-open="0">'
-            +    '<button class="sm-grp-head" type="button">'
-            +      '<span class="sm-grp-name">' + esc(grp.insurer) + '</span>'
-            +      '<span class="sm-grp-count">' + grp.products.length + '건</span>'
-            +      '<span class="sm-grp-arrow" aria-hidden="true">' + CHEV + '</span>'
-            +    '</button>'
-            +    '<div class="sm-grp-body">'
-            +      '<div class="sm-chip-list">';
-          for (var k = 0; k < grp.products.length; k++) {
-            h += '<span class="sm-chip">' + esc(grp.products[k].name) + '</span>';
-          }
-          h += '</div></div></div>';
-        }
-        h += '</div>';
-        pWrap.innerHTML = h;
+        pWrap.innerHTML = insurerGroupsHTML(possible, 'chip');
       }
     }
 
