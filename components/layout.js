@@ -106,7 +106,8 @@
       remaining: { report: 50, unclaimed: 50, jjaepity: 20, claim: 10 },
       usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
       payment: { type: 'virtual' },
-      billing: { paymentKey: 'tgen_20260808_bobi_jung_0001', method: 'once', paidAt: '2026-08-08', periodEnd: '2026-09-07', amount: 5900 },
+      billing: { paymentKey: 'tgen_20260808_bobi_jung_0001', method: 'once', paidAt: '2026-08-08', periodEnd: '2026-09-07', amount: 5900,
+                 deposit: { status: 'DONE', at: '2026-08-08' } },
       usedSince: { report: 0, unclaimed: 0, jjaepity: 0, claim: 0 },
       payments: [ { date: '2026-08-08', kind: 'plan', amount: 5900, status: 'paid' } ] },
 
@@ -122,13 +123,24 @@
         { date: '2026-08-03', kind: 'extra', amount: 500,   status: 'paid' }
       ] },
 
+    // 일반결제(가상계좌) · 입금 대기 — 발급만 받고 미입금. 아직 이용 권한이 없다(약관 제3조 6항)
+    { id: 'oh',    name: '오대기', initial: '오', org: '흥국생명',       role: 'FC',   plan: 'basic',
+      remaining: { report: 0,  unclaimed: 0,  jjaepity: 0,  claim: 0  },
+      usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
+      payment: { type: 'virtual' },
+      billing: { paymentKey: 'tgen_20260810_bobi_oh_0001', method: 'once', paidAt: '2026-08-10', periodEnd: '2026-09-09', amount: 5900,
+                 deposit: { status: 'WAITING', dueDate: '2026-08-12T23:59', bank: '국민은행', accountNumber: '123456-78-901234' } },
+      usedSince: { report: 0, unclaimed: 0, jjaepity: 0, claim: 0 },
+      payments: [ { date: '2026-08-10', kind: 'plan', amount: 5900, status: 'ready' } ] },
+
     // 일반결제 · 만료 — 해지 X / 취소 X
     { id: 'park',  name: '박만료', initial: '박', org: 'DB손해보험',     role: 'FC',   plan: 'basic', expired: true,
       remaining: { report: 0,  unclaimed: 0,  jjaepity: 0,  claim: 0  },
       usage30: { report: 0,  unclaimed: 0,  jjaepity: 0 },
       payment: { type: 'virtual' },
       expiredAt: '2026-06-05',
-      billing: { paymentKey: 'tgen_20260506_bobi_park_0001', method: 'once', paidAt: '2026-05-06', periodEnd: '2026-06-05', amount: 5900 },
+      billing: { paymentKey: 'tgen_20260506_bobi_park_0001', method: 'once', paidAt: '2026-05-06', periodEnd: '2026-06-05', amount: 5900,
+                 deposit: { status: 'DONE', at: '2026-05-06' } },
       usedSince: { report: 12, unclaimed: 5, jjaepity: 2, claim: 0 },
       payments: [ { date: '2026-05-06', kind: 'plan', amount: 5900, status: 'paid' } ] }
   ];
@@ -238,6 +250,10 @@
   window.getRefundWindowDays = function () { return REFUND_WINDOW_DAYS; };
   window.getSupport = function () { return SUPPORT; };
   window.getBillingLabel = function (m) { return BILLING_LABEL[m] || m; };
+  window.fmtDateTime = function (d) {
+    return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 '
+      + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  };
 
   function dayDiff(from, to) {
     var a = new Date(from.getFullYear(), from.getMonth(), from.getDate());
@@ -262,8 +278,11 @@
     try { refunded = localStorage.getItem(refundKey(a.id)) === '1'; } catch (e) {}
     var paidAt = new Date(b.paidAt);
     var elapsed = dayDiff(paidAt, TODAY);
+    var dep = b.deposit || null;
     return {
       paymentKey: b.paymentKey,
+      deposit: dep,
+      depositWaiting: !!(dep && dep.status === 'WAITING'),
       method: b.method,
       methodLabel: BILLING_LABEL[b.method],
       planLabel: PLANS[a.plan].label,   // 결제 당시 플랜 (환불 후 FREE 전환과 무관)
@@ -460,6 +479,7 @@
   function agentSituation(a) {
     if (!a.billing) return 'FREE';
     var abbr = { auto: '정기결제', once: '일반결제' }[a.billing.method];
+    if (a.billing.deposit && a.billing.deposit.status === 'WAITING') return abbr + ' · 입금대기';
     if (a.expired) return abbr + ' · 만료';
     var used = 0;
     ['report', 'unclaimed', 'jjaepity', 'claim'].forEach(function (f) {

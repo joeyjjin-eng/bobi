@@ -59,6 +59,7 @@
   .cE .ph-status.paid { background: #E6F7EE; color: #1E9552; }
   .cE .ph-status.refund { background: #FEF0E6; color: #C15A18; }
   .cE .ph-status.fail { background: #FEF0F1; color: #C92238; }
+  .cE .ph-status.ready { background: #FFF4E0; color: #B4710F; }
 
   .cE .ph-title-acts { display: flex; align-items: center; gap: 8px; }
   .cE .ph-refundable { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; font-size: var(--fs-option); font-weight: 700; color: #1E9552; background: #E6F7EE; border-radius: var(--r-pill); padding: 3px 9px; text-decoration: none; line-height: 1.4; white-space: nowrap; }
@@ -187,7 +188,7 @@
 
     cntEl.innerHTML = '총 <b>' + pays.length + '</b>건';
 
-    var statusLabel = { paid: '결제완료', refund: '환불', fail: '실패' };
+    var statusLabel = { paid: '결제완료', refund: '환불', fail: '실패', ready: '입금대기' };
     body.innerHTML = pays.map(function (p) {
       var badge = p.refundable
         ? '<a class="ph-refundable" href="manage.html">환불 가능 D-' + el.daysLeft + '</a>'

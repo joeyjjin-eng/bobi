@@ -84,6 +84,13 @@
   .cE .mg-reset { background: none; border: none; padding: 0; font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--ink-4); text-decoration: underline; cursor: pointer; line-height: 1.4; }
   .cE .mg-reset:hover { color: var(--ink-3); }
 
+  /* ===== 가상계좌 입금 대기 ===== */
+  .cE .mg-dep { margin-top: 16px; padding: 16px 18px; background: #FFF8EC; border: 1px solid #F5D9A8; border-radius: var(--r-md); }
+  .cE .mg-dep-t { font-size: var(--fs-body); font-weight: 700; color: #B4710F; line-height: 1.4; letter-spacing: -0.01em; }
+  .cE .mg-dep-d { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin-top: 4px; }
+  .cE .mg-dep-acc { font-size: var(--fs-body); color: var(--ink); font-weight: 500; line-height: 1.4; margin-top: 10px; }
+  .cE .mg-dep-acc b { font-weight: 700; letter-spacing: -0.01em; }
+
   /* ===== 카드 안 소제목 ===== */
   .cE .mg-sub { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px 12px; border-top: 1px solid var(--line); }
   .cE .mg-sub h3 { font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); margin: 0; line-height: 1.4; letter-spacing: -0.01em; }
@@ -99,6 +106,7 @@
   .cE .mg-pay-s { font-size: var(--fs-option); font-weight: 700; line-height: 1.4; text-align: right; color: var(--ink-3); }
   .cE .mg-pay-s.refund { color: #C15A18; }
   .cE .mg-pay-s.fail { color: #C92238; }
+  .cE .mg-pay-s.ready { color: #B4710F; }
 
   /* ===== 빈 상태 (FREE) ===== */
   .cE .mg-empty { padding: 80px 20px; text-align: center; }
@@ -218,14 +226,25 @@
     var expired = window.isExpired() || b.periodEnd < today;
     var nextCharge = new Date(b.periodEnd.getFullYear(), b.periodEnd.getMonth(), b.periodEnd.getDate() + 1);
     var pmMeta  = pm ? window.getPayMethod(pm.type) : null;
+    // 가상계좌는 '다음 결제일' 대신 입금 상태를 보여준다
+    var dep = b.deposit;
+    var fourthLabel = dep ? (b.depositWaiting ? '입금 기한' : '입금 확인') : '다음 결제일';
+    var fourthHtml;
+    if (dep) {
+      fourthHtml = b.depositWaiting
+        ? '<span class="mg-v warn">' + window.fmtDateTime(new Date(dep.dueDate)) + '까지</span>'
+        : '<span class="mg-v">' + fmt(new Date(dep.at)) + '</span>';
+    }
+
     var nextChargeHtml = (!b.isRecurring || b.refunded)
       ? '<span class="mg-v muted">없음</span>'
       : b.canceled ? '<span class="mg-v warn">청구 중단됨</span>'
                    : '<span class="mg-v">' + fmt(nextCharge) + '</span>';
+    if (!dep) fourthHtml = nextChargeHtml;
     var pmName  = pmMeta ? pmMeta.label : '결제수단';
 
     /* ===== 1. 현재 이용 상태 — 결제일 · 결제수단 · 최근 결제를 한 카드에 ===== */
-    var payStatus = { paid: '결제완료', refund: '환불', fail: '실패' };
+    var payStatus = { paid: '결제완료', refund: '환불', fail: '실패', ready: '입금대기' };
     var recent = window.getPayments().slice(0, 3);
     var recentHtml = recent.length
       ? '<div class="mg-sub"><h3>최근 결제</h3>'
@@ -241,7 +260,8 @@
       : '';
 
     var stTag;
-    if (b.refunded)      stTag = '<span class="mg-tag warn">환불 완료 · 이용 종료</span>';
+    if (b.depositWaiting) stTag = '<span class="mg-tag warn">입금 대기</span>';
+    else if (b.refunded) stTag = '<span class="mg-tag warn">환불 완료 · 이용 종료</span>';
     else if (expired)    stTag = '<span class="mg-tag warn">만료됨</span>';
     else if (b.canceled) stTag = '<span class="mg-tag warn">해지 예약됨</span>';
     else                 stTag = '<span class="mg-tag live">이용중</span>';
@@ -257,12 +277,22 @@
       +     '<div class="mg-grid">'
       +       '<div class="mg-cell"><span class="mg-k">결제일</span><span class="mg-v">' + fmt(b.paidAt) + '</span></div>'
       +       '<div class="mg-cell"><span class="mg-k">' + (b.refunded ? '이용 종료' : expired ? '종료일' : '이용 종료일') + '</span>'
-      +         '<span class="mg-v' + (b.refunded || expired ? ' warn' : '') + '">'
-      +           (b.refunded ? fmt(today) + ' 환불로 종료' : fmt(b.periodEnd)) + '</span></div>'
+      +         '<span class="mg-v' + (b.refunded || expired || b.depositWaiting ? ' warn' : '') + '">'
+      +           (b.depositWaiting ? '입금 후 시작'
+                   : b.refunded ? fmt(today) + ' 환불로 종료'
+                   : fmt(b.periodEnd)) + '</span></div>'
       +       '<div class="mg-cell"><span class="mg-k">결제 금액</span>'
       +         '<span class="mg-v">' + won(b.amount) + (b.refunded ? ' <span style="color:#C15A18;">환불</span>' : '') + '</span></div>'
-      +       '<div class="mg-cell"><span class="mg-k">다음 결제일</span>' + nextChargeHtml + '</div>'
+      +       '<div class="mg-cell"><span class="mg-k">' + fourthLabel + '</span>' + fourthHtml + '</div>'
       +     '</div>'
+      +     (b.depositWaiting
+             ? '<div class="mg-dep">'
+               + '<div class="mg-dep-t">아직 입금이 확인되지 않았어요</div>'
+               + '<div class="mg-dep-d">아래 계좌로 입금하시면 바로 이용할 수 있어요. '
+               + '기한이 지나면 발급된 계좌가 만료됩니다.</div>'
+               + '<div class="mg-dep-acc">' + dep.bank + ' <b>' + dep.accountNumber + '</b></div>'
+               + '</div>'
+             : '')
       +   '</div>'
       +   recentHtml
       + '</section>';
@@ -270,9 +300,10 @@
     /* ===== 2. 해지 · 취소 — 가능한 액션만 버튼으로 =====
        불가 사유는 적지 않는다. 상태는 위 카드에서 읽히고 예외는 고객센터가 받는다. */
     var acts = [];
+    // 입금 전이면 아직 결제가 성립하지 않아 해지·취소할 대상이 없다
 
     // 정기결제 해지 (약관 제4항)
-    if (b.isRecurring && !b.refunded) {
+    if (b.isRecurring && !b.refunded && !b.depositWaiting) {
       acts.push(b.canceled
         ? { id: 'mg-resume', cls: 'ghost', btn: '해지 취소',
             t: '자동결제 해지됨',
@@ -283,7 +314,7 @@
     }
 
     // 미사용 전액 환불 (약관 제1항)
-    if (el.ok) {
+    if (el.ok && !b.depositWaiting) {
       acts.push({ id: 'mg-refund', cls: 'ghost', btn: '취소하기',
         t: '결제 취소',
         d: '사용 이력이 없어 ' + md(b.refundDeadline) + '까지 취소할 수 있어요.' });
