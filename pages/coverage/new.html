@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 새롭게 보장분석 작성하기</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/detail-mobile.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; background: var(--bg-soft); }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; background: var(--bg-soft); }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 타이틀 ===== */
+  .cE .nr-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: -28px -36px 28px; padding: 22px 0; background: #fff; border-bottom: 1px solid var(--line); }
+  .cE .nr-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 22px; }
+  .cE .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); text-decoration: none; font-weight: 600; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease; cursor: pointer; font-family: inherit; }
+  .cE .back-btn:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
+  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; }
+  .cE .nr-title-row .sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
+  .cE .nr-title-info { display: flex; flex-direction: column; }
+
+  /* ===== 스텝 ===== */
+  .cE .step-dots { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 14px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); }
+  .cE .step { display: inline-flex; align-items: center; gap: 8px; }
+  .cE .step .num { width: 22px; height: 22px; border-radius: 50%; background: var(--line); color: var(--ink-3); display: grid; place-items: center; font-size: var(--fs-option); font-weight: 700; }
+  .cE .step .lbl { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); letter-spacing: -0.01em; }
+  .cE .step.on .num { background: var(--brand); color: #fff; }
+  .cE .step.on .lbl { color: var(--ink); font-weight: 700; }
+  .cE .step.done .num { background: var(--brand); color: #fff; }
+  .cE .step.done .lbl { color: var(--ink-2); font-weight: 700; }
+  .cE .step-line { flex: 0 0 32px; height: 1px; background: var(--line); }
+  .step-pane[hidden] { display: none; }
+
+  /* ===== Step 1: 고객 선택 ===== */
+  .cE .nr-search { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 18px; display: flex; align-items: center; gap: 12px; transition: border-color .15s ease; margin-bottom: 16px; }
+  .cE .nr-search:focus-within { border-color: var(--brand); }
+  .cE .nr-search svg { color: var(--ink-4); flex: none; }
+  .cE .nr-search input { flex: 1; border: none; outline: none; font-size: var(--fs-body); color: var(--ink); background: transparent; font-family: inherit; }
+  .cE .nr-search input::placeholder { color: var(--ink-4); }
+
+  .cE .cust-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .cE .cust-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--line); background: #fff; }
+  .cE .cust-panel-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 8px; }
+  .cE .cust-panel-title .cnt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+  .cE .cust-panel-title .cnt b { color: var(--brand-deep); font-weight: 800; }
+  .cE .cust-thead { display: grid; grid-template-columns: 1.5fr 1.1fr 1fr 0.9fr 152px; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .cE .cust-thead span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; }
+  .cE .cust-row { display: grid; grid-template-columns: 1.5fr 1.1fr 1fr 0.9fr 152px; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--line); cursor: pointer; transition: background-color .12s ease; }
+  .cE .cust-row:last-child { border-bottom: none; }
+  .cE .cust-row:hover { background: var(--bg-warm); }
+  .cE .cust-cell-name { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .cE .cust-av { width: 36px; height: 36px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; font-weight: 800; font-size: var(--fs-body); flex: none; }
+  .cE .cust-nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .gender-chip { font-size: var(--fs-option); font-weight: 700; padding: 2px 9px; border-radius: var(--r-pill); display: inline-block; }
+  .cE .gender-chip.f { background: #FEF0F0; color: #D96060; }
+  .cE .gender-chip.m { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .cust-text { font-size: var(--fs-body); color: var(--ink-2); }
+  .cE .cust-meta { font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .cust-action { display: flex; justify-content: flex-end; }
+  .cE .go-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-pale); color: var(--brand-deep); border: 1px solid var(--brand-soft); border-radius: var(--r-pill); padding: 8px 16px; font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; transition: background-color .15s ease, color .15s ease, box-shadow .2s ease; }
+  .cE .cust-row:hover .go-btn { background: var(--brand); color: #fff; border-color: var(--brand); box-shadow: var(--sh-brand); }
+  .cE .cust-foot { display: flex; align-items: center; justify-content: center; padding: 14px 24px; border-top: 1px solid var(--line); }
+  .cE .cust-pages { display: inline-flex; gap: 4px; align-items: center; }
+  .cE .cust-pg-btn { min-width: 32px; height: 32px; padding: 0 9px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 600; border-radius: 8px; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .cust-pg-btn:hover:not(.on) { background: var(--bg-soft); border-color: var(--line-strong); }
+  .cE .cust-pg-btn.on { background: var(--brand); border-color: var(--brand); color: #fff; cursor: default; }
+  .cE .empty-cust { padding: 60px 20px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
+
+  /* ===== Step 2: 파일 등록 ===== */
+  .cE .upload-card { width: 100%; max-width: 640px; margin: 0 auto; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 32px 26px; box-shadow: var(--sh-1); box-sizing: border-box; }
+  .cE .upload-head { display: flex; align-items: center; gap: 14px; padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .cE .upload-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; font-weight: 800; font-size: var(--fs-h2); flex: none; }
+  .cE .upload-name { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .cE .upload-meta { font-size: var(--fs-option); color: var(--ink-3); margin-top: 3px; }
+  .cE .upload-hint { display: flex; gap: 8px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-md); padding: 12px 16px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.5; margin-bottom: 18px; }
+  .cE .upload-hint svg { color: var(--brand-deep); flex: none; margin-top: 1px; }
+  .cE .upload-hint b { color: var(--brand-deep); font-weight: 700; }
+  .cE .dropzone { border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); padding: 34px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; cursor: pointer; transition: border-color .2s ease, background-color .2s ease; }
+  .cE .dropzone:hover, .cE .dropzone.drag { border-color: var(--brand); background: var(--brand-pale); }
+  .cE .dropzone svg { color: var(--ink-3); }
+  .cE .dropzone .dz-t { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .dropzone .dz-s { font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .upload-filelist { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .cE .upload-file-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-soft); border-radius: var(--r-sm); }
+  .cE .upload-file-row .fic { color: var(--brand-deep); flex: none; }
+  .cE .upload-file-row .fn { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cE .upload-file-row .frm { background: none; border: none; color: var(--ink-4); cursor: pointer; padding: 4px; border-radius: 6px; display: inline-flex; flex: none; transition: color .15s ease, background-color .15s ease; }
+  .cE .upload-file-row .frm:hover { color: #C92238; background: #FFF0F1; }
+  .cE .upload-cta { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .cE .upload-cta .btn-secondary { background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 12px 22px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .upload-cta .btn-secondary:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
+  .cE .upload-cta .btn-primary { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); letter-spacing: -0.01em; transition: filter .2s ease; }
+  .cE .upload-cta .btn-primary:hover:not(:disabled) { filter: brightness(1.05); }
+  .cE .upload-cta .btn-primary:disabled { background: var(--line); color: var(--ink-4); box-shadow: none; cursor: not-allowed; }
+
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+    html, body { background: var(--bg-soft); }
+    .cE .emain { flex: 1; min-height: calc(100vh - 54px); padding: 12px 16px 32px !important; }
+    .m-topbar { background: #fff; }
+    .cE .nr-title-row { display: none !important; }
+
+    .cE .step-dots { padding: 12px 14px; gap: 6px; margin-bottom: 12px; border-radius: var(--r-sm); }
+    .cE .step { gap: 6px; }
+    .cE .step .num { width: 22px; height: 22px; font-size: var(--fs-option); }
+    .cE .step .lbl { font-size: var(--fs-option); letter-spacing: -0.02em; }
+    .cE .step-line { flex: 1; }
+
+    .cE .nr-search { padding: 10px 14px; gap: 10px; margin-bottom: 12px; border-radius: var(--r-sm); }
+    .cE .nr-search input { font-size: var(--fs-body); }
+
+    .cE .cust-panel { border-radius: var(--r-md); }
+    .cE .cust-panel-head { padding: 14px 16px; }
+    .cE .cust-panel-title { font-size: var(--fs-body); gap: 8px; }
+
+    .cE .cust-thead { display: none !important; }
+    .cE .cust-row {
+      display: grid !important;
+      grid-template-columns: 44px 1fr auto;
+      grid-template-rows: auto auto auto;
+      column-gap: 12px; row-gap: 3px;
+      padding: 14px 32px 14px 16px !important;
+      position: relative;
+    }
+    .cE .cust-row::after {
+      content: ''; position: absolute; top: 50%; right: 14px; width: 8px; height: 8px; margin-top: -4px;
+      border-right: 1.5px solid var(--ink-4); border-top: 1.5px solid var(--ink-4); transform: rotate(45deg); opacity: .55;
+    }
+    .cE .cust-row .cust-cell-name { display: contents; }
+    .cE .cust-row .cust-av { grid-column: 1; grid-row: 1 / span 3; width: 42px !important; height: 42px !important; align-self: start; margin-top: 2px; }
+    .cE .cust-row .cust-nm { grid-column: 2; grid-row: 1; font-size: var(--fs-body) !important; }
+    .cE .cust-row .cust-cell-name > .gender-chip { grid-column: 3; grid-row: 1; align-self: center; justify-self: end; }
+    .cE .cust-row > span.cust-text:nth-of-type(1) { grid-column: 2 / -1; grid-row: 2; font-size: var(--fs-option) !important; color: var(--ink-3) !important; }
+    .cE .cust-row > span.cust-meta { grid-column: 2 / -1; grid-row: 3; font-size: var(--fs-option) !important; color: var(--ink-3) !important; }
+    .cE .cust-row .cust-action { display: none !important; }
+
+    .cE .cust-foot { padding: 12px 16px; }
+    .cE .cust-pg-btn { min-width: 32px; height: 32px; font-size: var(--fs-option); }
+
+    .cE .upload-card { max-width: none; border-radius: var(--r-md); padding: 20px 18px 18px; }
+    .cE .upload-head { padding-bottom: 16px; margin-bottom: 16px; gap: 12px; }
+    .cE .upload-avatar { width: 42px; height: 42px; font-size: var(--fs-body); }
+    .cE .dropzone { padding: 26px 16px; }
+    .cE .upload-cta { flex-direction: column; gap: 8px; }
+    .cE .upload-cta .btn-secondary, .cE .upload-cta .btn-primary { width: 100%; padding: 12px 18px; font-size: var(--fs-body); justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <div class="nr-title-row">
+      <div class="nr-title-inner">
+        <a class="back-btn" href="history.html" id="back-link">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>
+          뒤로
+        </a>
+        <div class="nr-title-info">
+          <h1>새롭게 보장분석 작성하기</h1>
+          <div class="sub">고객을 선택하고 보장분석 파일을 등록하면 보유계약을 분석해드려요</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-dots" id="step-dots">
+      <div class="step on" data-step="1"><span class="num">1</span><span class="lbl">고객 선택</span></div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2"><span class="num">2</span><span class="lbl">파일 등록</span></div>
+    </div>
+
+    <!-- Step 1: 고객 선택 -->
+    <div class="step-pane" id="pane-select">
+      <div class="nr-search">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg>
+        <input type="text" id="cust-search" placeholder="고객 이름 또는 연락처로 검색" />
+      </div>
+
+      <div class="cust-panel">
+        <div class="cust-panel-head">
+          <h2 class="cust-panel-title">
+            고객 목록
+            <span class="cnt" id="cust-count">총 <b>0명</b></span>
+          </h2>
+        </div>
+        <div class="cust-thead">
+          <span>고객명</span>
+          <span>연락처</span>
+          <span>보유계약</span>
+          <span>등록일</span>
+          <span></span>
+        </div>
+        <div id="cust-tbody"></div>
+        <div class="cust-foot">
+          <nav class="cust-pages" aria-label="페이지 이동">
+            <button class="cust-pg-btn on" type="button">1</button>
+            <button class="cust-pg-btn" type="button">2</button>
+            <button class="cust-pg-btn" type="button">3</button>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: 파일 등록 -->
+    <div class="step-pane" id="pane-upload" hidden>
+      <div class="upload-card">
+        <div class="upload-head">
+          <div class="upload-avatar" id="up-avatar">홍</div>
+          <div>
+            <div class="upload-name" id="up-name">홍길동님</div>
+            <div class="upload-meta" id="up-meta">010-1234-5678</div>
+          </div>
+        </div>
+
+        <div class="upload-hint">
+          <svg class="ic-svg" width="15" height="15"><use href="#i-help-circle"/></svg>
+          <span>보험사·신용정보원에서 발급한 <b>보장분석 제안서(PDF)</b>를 올려주세요.</span>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <svg class="ic-svg" width="30" height="30"><use href="#i-file-text"/></svg>
+          <div class="dz-t">파일을 끌어놓거나 클릭해서 선택하세요</div>
+          <div class="dz-s">PDF 1개</div>
+        </div>
+        <input type="file" id="file-input" accept="application/pdf" hidden />
+
+        <div class="upload-filelist" id="file-list"></div>
+
+        <div class="upload-cta">
+          <button type="button" class="btn-secondary" id="upload-back">이전</button>
+          <button type="button" class="btn-primary" id="analyze-btn" disabled>
+            <svg class="ic-svg" width="15" height="15"><use href="#i-search-check"/></svg>
+            분석 시작하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script>
+(function () {
+  var CUSTOMERS = [
+    { name:'홍길동', phone:'010-9876-5432', gender:'남', contracts:9,  reg:'2026.06.09' },
+    { name:'박민호', phone:'010-9876-5432', gender:'남', contracts:3,  reg:'2026.05.20' },
+    { name:'장숙영', phone:'010-7715-2230', gender:'여', contracts:6,  reg:'2026.06.08' },
+    { name:'오미자', phone:'010-3456-7890', gender:'여', contracts:5,  reg:'2026.05.17' },
+    { name:'김정운', phone:'010-4567-8901', gender:'여', contracts:7,  reg:'2026.05.15' },
+    { name:'황정연', phone:'010-5678-9012', gender:'여', contracts:4,  reg:'2026.05.14' },
+    { name:'최부명', phone:'010-6789-0123', gender:'남', contracts:8,  reg:'2026.05.12' },
+    { name:'이성환', phone:'010-7890-1234', gender:'남', contracts:2,  reg:'2026.05.11' },
+    { name:'정하윤', phone:'010-8901-2345', gender:'여', contracts:5,  reg:'2026.05.09' },
+    { name:'송민재', phone:'010-3392-7741', gender:'남', contracts:11, reg:'2026.06.09' }
+  ];
+
+  var state = { query: '', step: 1, selected: null, files: [] };
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  function filterCustomers() {
+    var q = state.query.replace(/-/g, '');
+    if (!q) return CUSTOMERS;
+    return CUSTOMERS.filter(function (c) {
+      return c.name.indexOf(state.query) !== -1 || c.phone.replace(/-/g, '').indexOf(q) !== -1;
+    });
+  }
+
+  function renderCustList() {
+    var list = filterCustomers();
+    var tbody = document.getElementById('cust-tbody');
+    document.getElementById('cust-count').innerHTML = '총 <b>' + list.length + '명</b>';
+
+    if (list.length === 0) {
+      tbody.innerHTML = '<div class="empty-cust">검색 결과가 없어요</div>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(function (c, i) {
+      return ''
+        + '<div class="cust-row" data-idx="' + CUSTOMERS.indexOf(c) + '">'
+        +   '<div class="cust-cell-name">'
+        +     '<div class="cust-av">' + escapeHTML(c.name[0]) + '</div>'
+        +     '<span class="cust-nm">' + escapeHTML(c.name) + '</span>'
+        +     '<span class="gender-chip ' + (c.gender === '여' ? 'f' : 'm') + '">' + c.gender + '</span>'
+        +   '</div>'
+        +   '<span class="cust-text">' + c.phone + '</span>'
+        +   '<span class="cust-meta">' + c.contracts + '건</span>'
+        +   '<span class="cust-meta">' + c.reg + '</span>'
+        +   '<div class="cust-action">'
+        +     '<button class="go-btn" type="button">'
+        +       '선택하기'
+        +       '<svg class="ic-svg" width="13" height="13"><use href="#i-chevron-right"/></svg>'
+        +     '</button>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+
+    tbody.querySelectorAll('.cust-row').forEach(function (row) {
+      row.addEventListener('click', function () {
+        selectCustomer(CUSTOMERS[parseInt(row.dataset.idx, 10)]);
+      });
+    });
+  }
+
+  function selectCustomer(c) {
+    state.selected = c;
+    state.step = 2;
+    state.files = [];
+    document.getElementById('up-avatar').textContent = c.name[0];
+    document.getElementById('up-name').textContent = c.name + '님';
+    document.getElementById('up-meta').textContent = c.phone + ' · 기존 보유계약 ' + c.contracts + '건';
+    refreshUI();
+  }
+
+  function refreshUI() {
+    document.getElementById('pane-select').hidden = state.step !== 1;
+    document.getElementById('pane-upload').hidden = state.step !== 2;
+    document.querySelectorAll('#step-dots .step').forEach(function (el) {
+      var s = parseInt(el.dataset.step, 10);
+      el.classList.remove('on', 'done');
+      if (state.step === 1 && s === 1) el.classList.add('on');
+      else if (state.step === 2 && s === 1) el.classList.add('done');
+      else if (state.step === 2 && s === 2) el.classList.add('on');
+    });
+    var backLink = document.getElementById('back-link');
+    if (state.step === 1) {
+      backLink.href = 'history.html';
+      backLink.onclick = null;
+    } else {
+      backLink.href = '#';
+      backLink.onclick = function (e) { e.preventDefault(); state.step = 1; refreshUI(); };
+    }
+    renderFileList();
+  }
+
+  function renderFileList() {
+    var box = document.getElementById('file-list');
+    box.innerHTML = state.files.map(function (f, i) {
+      return '<div class="upload-file-row">'
+        + '<svg class="ic-svg fic" width="16" height="16"><use href="#i-file-text"/></svg>'
+        + '<span class="fn">' + escapeHTML(f) + '</span>'
+        + '<button class="frm" type="button" data-i="' + i + '" aria-label="삭제"><svg class="ic-svg" width="13" height="13"><use href="#i-x"/></svg></button>'
+        + '</div>';
+    }).join('');
+    document.getElementById('analyze-btn').disabled = state.files.length === 0;
+  }
+
+  function addFiles(fileListObj) {
+    var f = fileListObj[0];
+    if (f && f.name.toLowerCase().endsWith('.pdf')) state.files = [f.name];
+    renderFileList();
+  }
+
+  document.getElementById('cust-search').addEventListener('input', function (e) {
+    state.query = e.target.value.trim();
+    renderCustList();
+  });
+
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('file-input');
+  dropzone.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () { addFiles(fileInput.files); fileInput.value = ''; });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    dropzone.addEventListener(evt, function (e) { e.preventDefault(); dropzone.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    dropzone.addEventListener(evt, function (e) { e.preventDefault(); dropzone.classList.remove('drag'); });
+  });
+  dropzone.addEventListener('drop', function (e) {
+    if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+  });
+
+  document.getElementById('file-list').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-i]');
+    if (!btn) return;
+    state.files.splice(parseInt(btn.dataset.i, 10), 1);
+    renderFileList();
+  });
+
+  document.getElementById('upload-back').addEventListener('click', function () {
+    state.step = 1;
+    refreshUI();
+  });
+
+  document.getElementById('analyze-btn').addEventListener('click', function () {
+    if (!state.files.length) return;
+    window.location.href = 'result.html';
+  });
+
+  renderCustList();
+  refreshUI();
+
+  // ===== URL 파라미터 ?customer=이름 → 파일 등록 단계로 바로 진입 =====
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var target = params.get('customer');
+    if (!target) return;
+    var matched = CUSTOMERS.filter(function (c) { return c.name === target; })[0];
+    if (matched) selectCustomer(matched);
+  })();
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('coverage');</script>
+</body>
+</html>

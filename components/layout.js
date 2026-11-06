@@ -19,7 +19,7 @@
      <script>injectShell('report');</script>
    </body>
 
-   active 키: 'home' | 'customer' | 'report' | 'unclaimed' | 'claim' | 'jjaepity' | 'notice' | 'planner' | 'mypage'
+   active 키: 'home' | 'customer' | 'report' | 'unclaimed' | 'coverage' | 'claim' | 'jjaepity' | 'notice' | 'planner' | 'mypage'
    ============================================================ */
 (function () {
   // 스크립트가 로드된 경로에서 프로젝트 루트의 상대경로 추출
@@ -471,6 +471,7 @@
       +     navItem('customer', BASE + 'pages/customer/list.html',      'i-users',        '내고객')
       +     navItem('report',   BASE + 'pages/report/history.html',     'i-file-text',    '진료기록 리포트')
       +     navItem('unclaimed', BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="beta-tag">BETA</span>')
+      +     navItem('coverage', BASE + 'pages/coverage/history.html',   'i-shield',       '보장분석')
       +     navItem('claim',    BASE + 'pages/claim/list.html',         'i-won',          '보험금청구')
       +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
       +     navItem('consult',  BASE + 'pages/consult/index.html',      'i-trending-up',  '재무상담')
@@ -547,6 +548,7 @@
       +       drawerItem('customer', BASE + 'pages/customer/list.html',     'i-users',        '내고객')
       +       drawerItem('report',    BASE + 'pages/report/history.html',    'i-file-text',    '진료기록 리포트')
       +       drawerItem('unclaimed', BASE + 'pages/unclaimed/history.html', 'i-search-check', '미청구보험금', '<span class="m-drawer-beta">BETA</span>')
+      +       drawerItem('coverage',  BASE + 'pages/coverage/history.html',  'i-shield',       '보장분석')
       +       drawerItem('claim',     BASE + 'pages/claim/list.html',        'i-won',          '보험금청구')
       +       drawerItem('jjaepity',  BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
       +       drawerItem('consult',   BASE + 'pages/consult/index.html',     'i-trending-up',  '재무상담')

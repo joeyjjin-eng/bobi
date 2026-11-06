@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 보장분석</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 ===== */
+  .cE .hist-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px 28px; padding: 0 0 22px; border-bottom: 1px solid var(--line); }
+  .cE .hist-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .cE .ht-l { display: flex; align-items: center; gap: 14px; }
+  .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .new-cov-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); text-decoration: none; flex: none; letter-spacing: -0.01em; transition: filter .2s ease; }
+  .cE .new-cov-btn:hover { filter: brightness(1.05); }
+
+  /* ===== 검색바 ===== */
+  .cE .search-bar { background: #fff; border-radius: var(--r-md); border: 1px solid var(--line); padding: 14px 22px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .cE .search-bar > .si-ic { color: var(--ink-4); flex: none; display: flex; }
+  .cE .search-bar input { flex: 1; border: none; outline: none; font-size: var(--fs-body); color: var(--ink); background: transparent; font-family: inherit; }
+  .cE .search-bar input::placeholder { color: var(--ink-4); }
+
+  /* ===== 리스트 패널 ===== */
+  .cE .list-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
+  .cE .table-head, .cE .table-row { display: grid; grid-template-columns: 100px 110px 100px minmax(0, 1fr) 90px 140px 28px; column-gap: 12px; align-items: center; }
+  .cE .table-head { padding: 16px 28px; border-bottom: 1px solid var(--line); background: var(--bg-soft); flex-shrink: 0; }
+  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; text-align: center; }
+  .cE .table-head span.h-name { text-align: center; }
+  .cE .table-head span.h-file { text-align: left; }
+  .cE .table-head span.h-amt { text-align: right; padding-right: 4px; }
+  .cE .table-body { flex: 1; }
+  .cE .table-row { padding: 18px 28px; cursor: pointer; transition: background-color 0.12s ease; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .cE .table-row:last-child { border-bottom: none; }
+  .cE .table-row:hover { background: var(--bg-warm); }
+  .cE .tr-date { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; text-align: center; }
+  .cE .tr-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; text-align: center; }
+  .cE .tr-agent { font-size: var(--fs-body); color: var(--ink-2); text-align: center; }
+  .cE .tr-file { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+  .cE .tr-file svg { color: var(--ink-4); flex: none; }
+  .cE .tr-file span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cE .tr-cnt { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .cE .tr-amt { font-size: var(--fs-body); font-weight: 700; color: var(--ink); text-align: right; padding-right: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .cE .tr-go { color: var(--ink-4); display: flex; align-items: center; justify-content: center; transition: color .12s ease, transform .12s ease; }
+  .cE .table-row:hover .tr-go { color: var(--brand); transform: translateX(2px); }
+  .cE .empty-list { padding: 60px 20px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
+
+  /* ===== 페이지네이션 ===== */
+  .cE .pagination { border-top: 1px solid var(--line); padding: 20px 28px; display: flex; justify-content: center; gap: 6px; flex-shrink: 0; }
+  .cE .pg-btn { min-width: 36px; height: 36px; padding: 0 11px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .pg-btn:hover:not(.on):not(.dots) { background: var(--bg-soft); border-color: var(--line-strong); color: var(--ink); }
+  .cE .pg-btn.on { background: var(--brand); color: #fff; border-color: var(--brand); cursor: default; }
+  .cE .pg-btn.dots { border: none; cursor: default; background: transparent; color: var(--ink-4); min-width: 24px; padding: 0; }
+
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+    .cE .hist-title-row { width: 100% !important; max-width: none !important; margin: 0 0 16px !important; padding: 0 0 14px !important; }
+    .cE .hist-title-inner { flex-direction: column; align-items: stretch; gap: 12px; padding: 0; }
+    .cE .ht-l { gap: 12px; }
+    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
+    .cE .ht-l h1 { font-size: var(--fs-h2); }
+    .cE .new-cov-btn { width: 100%; justify-content: center; padding: 12px 18px; font-size: var(--fs-body); }
+
+    .cE .search-bar { padding: 10px 14px; gap: 8px; border-radius: var(--r-sm); }
+    .cE .search-bar input { font-size: var(--fs-option); }
+
+    /* 리스트 → 카드 */
+    .cE .list-panel { border-radius: var(--r-md); }
+    .cE .table-head { display: none; }
+    .cE .table-row { display: block; padding: 14px 40px 14px 16px; position: relative; }
+    .cE .table-row .tr-go { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); }
+    .cE .table-row .tr-date { display: block; text-align: left; margin-bottom: 6px; }
+    .cE .table-row .tr-name { display: inline-block; text-align: left; margin-right: 8px; }
+    .cE .table-row .tr-agent { display: inline-block; text-align: left; font-size: var(--fs-option); color: var(--ink-3); }
+    .cE .table-row .tr-file { margin-top: 6px; }
+    .cE .table-row .tr-cnt { display: inline-block; text-align: left; font-size: var(--fs-option); color: var(--ink-3); margin-top: 6px; margin-right: 10px; }
+    .cE .table-row .tr-amt { display: block; text-align: left; margin-top: 4px; padding-right: 0; }
+
+    .cE .pagination { padding: 14px 16px; gap: 4px; flex-wrap: wrap; }
+    .cE .pg-btn { min-width: 32px; height: 32px; font-size: var(--fs-option); }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- ===== 타이틀 ===== -->
+    <div class="hist-title-row">
+      <div class="hist-title-inner">
+        <div class="ht-l">
+          <div class="ht-ic">
+            <svg class="ic-svg" width="22" height="22"><use href="#i-shield"/></svg>
+          </div>
+          <div>
+            <h1>보장분석</h1>
+            <div class="ht-sub">고객의 보장분석 파일을 등록하면 보유계약을 분석해드려요</div>
+          </div>
+        </div>
+        <a class="new-cov-btn" href="new.html">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
+          새롭게 작성하기
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 검색바 ===== -->
+    <div class="search-bar">
+      <span class="si-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg></span>
+      <input type="text" id="search-input" placeholder="고객 이름 또는 담당 설계사로 검색" />
+    </div>
+
+    <!-- ===== 리스트 ===== -->
+    <div class="list-panel">
+      <div class="table-head">
+        <span>등록일</span>
+        <span class="h-name">고객명</span>
+        <span>담당 설계사</span>
+        <span class="h-file">첨부파일</span>
+        <span>정상계약</span>
+        <span class="h-amt">월보험료</span>
+        <span></span>
+      </div>
+      <div class="table-body" id="tbl-body"></div>
+      <div class="pagination">
+        <button class="pg-btn on" type="button">1</button>
+        <button class="pg-btn" type="button">2</button>
+        <button class="pg-btn" type="button">3</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script>
+(function () {
+  var ALL = [
+    { date:'2026.08.11', name:'홍길동', agent:'최신규', contracts:9, premium:721791, file:'20260811_홍길동님_보장분석.pdf' },
+    { date:'2026.08.09', name:'장숙영', agent:'홍길동', contracts:6, premium:215430, file:'20260809_장숙영님_보장분석.pdf' },
+    { date:'2026.08.08', name:'오미자', agent:'이보험', contracts:5, premium:178220, file:'20260808_오미자님_보장분석.pdf' },
+    { date:'2026.08.08', name:'김정운', agent:'정미연', contracts:7, premium:302150, file:'20260808_김정운님_보장분석.pdf' },
+    { date:'2026.08.07', name:'황정연', agent:'최신규', contracts:4, premium:142800, file:'20260807_황정연님_보장분석.pdf' },
+    { date:'2026.08.06', name:'최부명', agent:'김미래', contracts:8, premium:398760, file:'20260806_최부명님_보장분석.pdf' },
+    { date:'2026.08.05', name:'이성환', agent:'홍길동', contracts:2, premium:54900,  file:'20260805_이성환님_보장분석.pdf' },
+    { date:'2026.05.20', name:'박민호', agent:'김미래', contracts:3, premium:86310,  file:'20260520_박민호님_보장분석.pdf' }
+  ];
+
+  var query = '';
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+  function won(n) { return n.toLocaleString('ko-KR'); }
+
+  function filterList() {
+    return ALL.filter(function (p) {
+      return !query || p.name.indexOf(query) !== -1 || p.agent.indexOf(query) !== -1;
+    });
+  }
+
+  function renderTable() {
+    var list = filterList();
+    var body = document.getElementById('tbl-body');
+
+    if (list.length === 0) {
+      body.innerHTML = '<div class="empty-list">조건에 맞는 보장분석 내역이 없어요</div>';
+      return;
+    }
+
+    body.innerHTML = list.map(function (p) {
+      return ''
+        + '<a class="table-row" href="result.html">'
+        +   '<span class="tr-date">' + p.date + '</span>'
+        +   '<span class="tr-name">' + escapeHTML(p.name) + '</span>'
+        +   '<span class="tr-agent">' + escapeHTML(p.agent) + '</span>'
+        +   '<span class="tr-file" title="' + escapeHTML(p.file) + '"><svg class="ic-svg" width="13" height="13"><use href="#i-file-text"/></svg><span>' + escapeHTML(p.file) + '</span></span>'
+        +   '<span class="tr-cnt">' + p.contracts + '건</span>'
+        +   '<span class="tr-amt">' + won(p.premium) + '원</span>'
+        +   '<span class="tr-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>'
+        + '</a>';
+    }).join('');
+  }
+
+  document.getElementById('search-input').addEventListener('input', function (e) {
+    query = e.target.value.trim();
+    renderTable();
+  });
+
+  renderTable();
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('coverage');</script>
+</body>
+</html>
