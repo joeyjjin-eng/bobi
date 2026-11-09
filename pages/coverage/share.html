@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 보장분석 결과 공유</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 (coverage/result.html과 동일) ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 920px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 920px; margin: 0 auto; }
+
+  /* ===== 상단 헤더 (customer/detail.html의 back-btn + cust-rep-head와 동일한 높이) ===== */
+  .cE .shr-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 0 32px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .cE .shr-head-l { display: flex; align-items: center; gap: 16px; }
+  .cE .shr-head-l .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; color: #fff; flex: none; font-family: inherit; font-size: 26px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
+  .cE .shr-head h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .shr-head-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin-top: 4px; }
+
+  /* 공유 버튼 + 드롭다운 (인쇄하기 / PDF 전송) */
+  .cE .shr-head .menu-popover { position: relative; }
+  .cE .shr-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; cursor: pointer; white-space: nowrap; transition: filter .15s ease; }
+  .cE .shr-share-btn:hover { filter: brightness(1.05); }
+  .cE .shr-share-btn svg { color: currentColor; flex: none; }
+  .cE .shr-head .menu-list { right: 0; }
+
+  /* ===== 섹션 제목 ===== */
+  .cE .shr-section { margin-bottom: 36px; }
+  .cE .shr-section-title { display: flex; align-items: center; gap: 8px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0 0 16px; }
+  .cE .shr-section-title svg { color: var(--brand-deep); }
+
+  /* ===== 보장 카테고리 카드 ===== */
+  .cE .shr-cat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 24px; margin-top: 16px; }
+  .cE .shr-cat-card:first-child { margin-top: 0; }
+  .cE .shr-cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .cE .shr-cat-ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); display: grid; place-items: center; font-size: 19px; line-height: 1; }
+  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; }
+
+  .cE .shr-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: var(--fs-body); line-height: 1.4; }
+  .cE .shr-row:last-of-type { border-bottom: none; }
+  .cE .shr-row-l { color: var(--ink-2); font-weight: 500; }
+  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .shr-row-v small { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-left: 3px; }
+
+  .cE .shr-empty { margin: 0; padding: 2px 0 4px; font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+
+  .cE .shr-missing { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .cE .shr-missing-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; line-height: 1.4; }
+  .cE .shr-chip { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill); background: #FFF0F1; color: #C92238; line-height: 1.4; }
+
+  .cE .shr-tip { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 12px 14px; background: var(--brand-pale); border-radius: var(--r-sm); }
+  .cE .shr-tip-ic { flex: none; line-height: 1.4; }
+  .cE .shr-tip-txt { font-size: var(--fs-option); color: var(--ink); font-weight: 600; line-height: 1.4; }
+  .cE .shr-tip-src { display: block; margin-top: 3px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+
+  /* ===== 지금 가지고 있는 보험 ===== */
+  .cE .shr-sum-tiles { display: flex; gap: 12px; margin-bottom: 20px; }
+  .cE .shr-sum-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
+  .cE .shr-sum-l { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; line-height: 1.4; }
+  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1.4; }
+
+  .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+  .cE .shr-policy-row { padding: 18px 24px; border-bottom: 1px solid var(--line); }
+  .cE .shr-policy-row:last-child { border-bottom: none; }
+  .cE .shr-policy-top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .cE .shr-policy-name { font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; line-height: 1.4; }
+  .cE .shr-policy-name b { font-weight: 700; color: var(--ink); margin-right: 6px; }
+  .cE .shr-policy-amt { font-size: var(--fs-body); font-weight: 700; color: var(--ink); white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .shr-policy-amt.na { color: var(--ink-3); font-weight: 500; }
+  .cE .shr-policy-prog { margin-top: 10px; }
+  .cE .shr-prog-bar { height: 7px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+  .cE .shr-prog-fill { display: block; height: 100%; background: var(--brand); border-radius: 4px; }
+  .cE .shr-prog-txt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+  .cE .shr-prog-txt b { color: var(--ink-2); font-weight: 700; }
+
+  .cE .shr-disclaim { margin: 24px 4px 40px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+
+  /* ===== 인쇄 ===== */
+  @media print {
+    .shr-topnav, .shr-head .menu-popover, .shr-toast { display: none !important; }
+  }
+
+  @media (max-width: 960px) {
+    .layout { min-width: 0; }
+    .cE .shr-head { flex-direction: column; align-items: flex-start; gap: 14px; padding: 16px 0 18px; margin-bottom: 20px; }
+    .cE .shr-share-btn { align-self: flex-start; height: 40px; padding: 0 16px; font-size: var(--fs-option); }
+    .cE .shr-sum-tiles { flex-direction: column; }
+    .cE .shr-policy-top { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .cE .shr-cat-card { padding: 18px 16px; }
+  }
+
+  /* ===== 공유 완료 토스트 ===== */
+  .shr-toast { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%) translateY(8px); background: var(--ink); color: #fff; font-size: var(--fs-option); font-weight: 600; padding: 12px 20px; border-radius: var(--r-pill); box-shadow: var(--sh-2); opacity: 0; transition: opacity .2s ease, transform .2s ease; z-index: 100; pointer-events: none; }
+  .shr-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <div class="shr-topnav">
+      <a class="back-btn" href="result.html">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg>
+        돌아가기
+      </a>
+    </div>
+
+    <div class="shr-head">
+      <div class="shr-head-l">
+        <div class="patient-avatar" data-name="홍길동"></div>
+        <div>
+          <h1>홍길동님의 보장분석 결과</h1>
+          <div class="shr-head-sub">2026.11.09 · 담당설계사 최신규</div>
+        </div>
+      </div>
+      <div class="menu-popover">
+        <button class="shr-share-btn" type="button" id="shr-share-btn" aria-expanded="false" aria-haspopup="true">
+          <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+          공유
+        </button>
+        <div class="menu-list" id="shr-share-menu" hidden role="menu">
+          <button class="menu-item" type="button" role="menuitem" id="shr-print-action">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+            인쇄하기
+          </button>
+          <button class="menu-item" type="button" role="menuitem" id="shr-pdf-action">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
+            PDF 전송
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="shr-section">
+      <h2 class="shr-section-title">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-won"/></svg>
+        지금 가지고 있는 보험
+      </h2>
+      <div class="shr-sum-tiles" id="shr-sum-tiles"></div>
+      <div class="shr-policy-list" id="shr-policy-list"></div>
+    </div>
+
+    <div class="shr-section">
+      <h2 class="shr-section-title">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>
+        무슨 일이 생기면, 얼마를 받나요?
+      </h2>
+      <div id="shr-cats"></div>
+    </div>
+
+    <p class="shr-disclaim">이 안내는 현재 보유하신 계약 내용을 바탕으로 정리한 참고 자료이며, 실제 지급 금액과 조건은 약관과 심사 결과에 따라 달라질 수 있습니다.</p>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script>
+(function () {
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var won = function (n) {
+    n = Math.round(n);
+    if (n === 0) return '0원';
+    var man = Math.round(n / 10000);
+    var eok = Math.floor(man / 10000), rest = man % 10000;
+    if (eok && rest) return eok + '억 ' + rest.toLocaleString('ko-KR') + '만원';
+    if (eok) return eok + '억원';
+    return rest.toLocaleString('ko-KR') + '만원';
+  };
+
+  // 보유 담보 금액 — pages/coverage/result.html의 G(담보별 상품 매트릭스) 합계와 동일한 값
+  var AMT = {
+    '상해사망': 96000000, '질병사망': 45000000, '상해80%미만후유장해': 90000000, '질병80%미만후유장해': 60000000,
+    '일반암': 105000000, '유사암': 12000000,
+    '뇌혈관질환': 15000000, '허혈성심장질환': 15000000,
+    '질병입원의료비': 30000000, '질병통원의료비': 300000,
+    '상해수술비': 2000000, '암수술비': 4000000, '질병입원일당': 40000,
+    '벌금(대인/스쿨존/대물)': 50000000, '교통사고처리지원금': 300000000, '변호사선임비용': 80000000
+  };
+
+  // 카테고리 — 보장 점수·의견(SCORE_CATS)과 동일한 7개 분류, 고객이 읽기 쉬운 순서로 재배열
+  var CATS = [
+    { title: '사망·후유장해', icon: '🛡️',
+      items: [
+        { name: '상해사망', label: '사고로 사망하면 가족에게' },
+        { name: '질병사망', label: '병으로 사망하면 가족에게' },
+        { name: '상해80%미만후유장해', label: '후유장해가 남으면' },
+        { name: '질병80%미만후유장해', label: '후유장해가 남으면' }
+      ],
+      tip: { text: '3대 사망원인은 암·심장질환·폐렴으로 전체 사망의 42.6%를 차지합니다.', src: '통계청 「2024년 사망원인통계」' } },
+    { title: '치매·간병', icon: '🧠',
+      items: [
+        { name: '장기요양간병비', label: '장기요양이 필요하면' },
+        { name: '경증치매진단', label: '치매 진단을 받으면' },
+        { name: '간병인/간호간병상해일당', label: '상해로 간병이 필요하면' },
+        { name: '간병인/간호간병질병일당', label: '질병으로 간병이 필요하면' }
+      ],
+      tip: { text: '치매환자는 2026년 100만 명을 넘을 것으로 전망되며, 1인당 연간 관리비용은 약 2,639만 원입니다.', src: '보건복지부·중앙치매센터 「2023년 치매역학조사」' } },
+    { title: '암 진단', icon: '🩺',
+      items: [
+        { name: '일반암', label: '암 진단을 받으면' },
+        { name: '유사암', label: '갑상선암 등 비교적 가벼운 암이면' },
+        { name: '고액암', label: '고액암(뇌·혈액암 등) 진단을 받으면' },
+        { name: '고액(표적)항암치료비', label: '고액(표적) 항암치료를 받으면' }
+      ],
+      tip: { text: '기대수명까지 생존 시 암에 걸릴 확률은 남자 44.6%(2명 중 1명), 여자 38.2%(3명 중 1명)입니다. 5년 상대생존율은 72.9%로 높아졌습니다.', src: '보건복지부·중앙암등록본부 「2023년 국가암등록통계」' } },
+    { title: '뇌·심장 진단', icon: '❤️',
+      items: [
+        { name: '뇌혈관질환', label: '뇌혈관질환 진단을 받으면' },
+        { name: '뇌졸중', label: '뇌졸중 진단을 받으면' },
+        { name: '뇌출혈', label: '뇌출혈 진단을 받으면' },
+        { name: '허혈성심장질환', label: '허혈성심장질환 진단을 받으면' },
+        { name: '급성심근경색증', label: '급성심근경색증 진단을 받으면' }
+      ],
+      tip: { text: '심장질환·뇌혈관질환은 암에 이어 사망원인 2위·4위로, 진단 즉시 지급되는 정액형 보장이 중요합니다.', src: '통계청 「2024년 사망원인통계」' } },
+    { title: '실손의료비', icon: '🏥',
+      items: [
+        { name: '질병입원의료비', label: '질병으로 입원 치료를 받으면' },
+        { name: '질병통원의료비', label: '질병으로 통원 치료를 받으면' },
+        { name: '상해입원의료비', label: '상해로 입원 치료를 받으면' },
+        { name: '상해통원의료비', label: '상해로 통원 치료를 받으면' },
+        { name: '3대비급여실손', label: '도수치료 등 비급여 치료를 받으면' }
+      ],
+      tip: { text: '실손의료보험 가입자는 약 4,000만명으로, 국민 대다수가 가입한 "제2의 건강보험"입니다.', src: '금융감독원' } },
+    { title: '수술/입원', icon: '🩹',
+      items: [
+        { name: '상해수술비', label: '다쳐서 수술을 받으면' },
+        { name: '질병수술비', label: '병으로 수술을 받으면' },
+        { name: '암수술비', label: '암 수술을 받으면' },
+        { name: '뇌혈관질환수술비', label: '뇌혈관질환으로 수술을 받으면' },
+        { name: '허혈성심장질환수술비', label: '허혈성심장질환으로 수술을 받으면' },
+        { name: '질병입원일당', label: '병으로 입원하면' },
+        { name: '상해입원일당', label: '다쳐서 입원하면' }
+      ],
+      tip: { text: '국내 평균 입원일수는 OECD 평균보다 길어, 입원일당 보장의 공백이 클수록 실제 부담으로 이어집니다.', src: 'OECD Health Statistics' } },
+    { title: '운전자/기타', icon: '🚗',
+      items: [
+        { name: '벌금(대인/스쿨존/대물)', label: '교통사고로 벌금을 내야 하면' },
+        { name: '교통사고처리지원금', label: '교통사고 합의금이 필요하면' },
+        { name: '변호사선임비용', label: '변호사를 선임하면' },
+        { name: '자동차사고부상', label: '자동차 사고로 다치면' },
+        { name: '골절진단비', label: '골절 진단을 받으면' },
+        { name: '보철치료비', label: '보철 치료를 받으면' },
+        { name: '가족/일상/자녀배상', label: '일상생활 중 배상할 일이 생기면' },
+        { name: '화재벌금', label: '화재로 벌금을 내야 하면' }
+      ],
+      tip: { text: '교통사고 발생 시 형사합의금·벌금 부담이 적지 않아, 운전자보험으로 별도 대비가 필요합니다.', src: '도로교통공단 교통사고분석시스템(TAAS)' } }
+  ];
+
+  function catCard(cat) {
+    var held = [], missing = [];
+    cat.items.forEach(function (it) {
+      var amt = AMT[it.name] || 0;
+      if (amt > 0) held.push({ it: it, amt: amt }); else missing.push(it.name);
+    });
+
+    var bodyHtml = held.length
+      ? held.map(function (h) {
+          var daily = h.it.name.indexOf('일당') > -1;
+          return '<div class="shr-row"><span class="shr-row-l">' + esc(h.it.label) + '</span>'
+            + '<span class="shr-row-v">' + won(h.amt) + (daily ? '<small>(1일당)</small>' : '') + '</span></div>';
+        }).join('')
+      : '<p class="shr-empty">이 분야는 지금 준비된 보장이 없어요.</p>';
+
+    var missingHtml = missing.length
+      ? '<div class="shr-missing"><span class="shr-missing-l">⚠️ 아직 없는 담보</span>'
+        + missing.map(function (n) { return '<span class="shr-chip">' + esc(n) + '</span>'; }).join('')
+        + '</div>'
+      : '';
+
+    var tipHtml = cat.tip
+      ? '<div class="shr-tip"><span class="shr-tip-ic">💡</span><span>'
+        + '<span class="shr-tip-txt">' + esc(cat.tip.text) + '</span>'
+        + '<span class="shr-tip-src">' + esc(cat.tip.src) + '</span>'
+        + '</span></div>'
+      : '';
+
+    return '<article class="shr-cat-card">'
+      + '<div class="shr-cat-head"><span class="shr-cat-ic">' + cat.icon + '</span><h3>' + esc(cat.title) + '</h3></div>'
+      + bodyHtml + missingHtml + tipHtml
+      + '</article>';
+  }
+
+  document.getElementById('shr-cats').innerHTML = CATS.map(catCard).join('');
+
+  // ===== 지금 가지고 있는 보험 — pages/coverage/result.html의 계약 상세(C)와 동일한 9건 =====
+  var C = [
+    ['메리츠화재', '(무) 메리츠 운전자보험M-Drive1804', '2018.06.29', '20년납 / 80세', '25,800원', 99, 240, '2,554,200원', '3,637,800원'],
+    ['메리츠화재', '(무) 메리츠 운전자 상해종합보험2507', '2025.08.18', '20년납 / 55세', '14,960원', 13, 240, '194,480원', '3,395,920원'],
+    ['현대해상', 'Hicar 다이렉트(CM형) 개인용자동차보험', '2025.10.18', '— / 36세', '미제공', 0, 0, '—', '—'],
+    ['KB손보', '(무)LIG생활보장보험', '2009.09.11', '20년납 / 100세', '50,000원', 204, 240, '10,200,000원', '1,800,000원'],
+    ['푸본현대생명', '현대라이프 ZERO 5대성인병보험 무배당', '2014.09.05', '20년납 / 44세', '10,200원', 144, 240, '1,468,800원', '979,200원'],
+    ['푸본현대생명', '현대라이프 ZERO 암보험무배당', '2014.10.13', '1년납 / 44세', '99,450원', 12, 12, '1,193,400원', '—'],
+    ['DB생명', '(무) 유니버셜 더블종신보험(1604)', '2016.09.13', '10년납 / 종신', '103,447원', 120, 120, '12,413,640원', '—'],
+    ['메리츠화재', '(무) 메리츠 Mom편한 어린이보험2007', '2020.08.10', '20년납 / 100세', '97,710원', 73, 240, '7,132,830원', '16,317,570원'],
+    ['한화손보', '무배당 실속더한 든든보장보험1806', '2018.10.05', '20년납 / 100세', '141,645원', 95, 240, '13,456,275원', '20,538,525원']
+  ];
+
+  function term(c) { var s = String(c[3]).split('/'); return [s[0].trim() || '—', (s[1] || '').trim() || '—']; }
+
+  function policyRow(c) {
+    var t = term(c);
+    var noPrem = c[4] === '미제공';
+    var amtHtml = noPrem
+      ? '<span class="shr-policy-amt na">보험료 정보 없음</span>'
+      : '<span class="shr-policy-amt">' + c[4] + '</span>';
+    var w = (!noPrem && c[6]) ? Math.round(c[5] / c[6] * 100) : null;
+    var progHtml = w == null
+      ? '<span class="shr-prog-txt">' + esc(t[1]) + '까지 보장</span>'
+      : '<div class="shr-prog-bar"><span class="shr-prog-fill" style="width:' + w + '%"></span></div>'
+        + '<span class="shr-prog-txt">' + c[6] + '번 중 <b>' + c[5] + '번</b> 냈어요 · ' + esc(t[1]) + '까지 보장</span>';
+    return '<div class="shr-policy-row">'
+      + '<div class="shr-policy-top"><span class="shr-policy-name"><b>' + esc(c[0]) + '</b>' + esc(c[1]) + '</span>' + amtHtml + '</div>'
+      + '<div class="shr-policy-prog">' + progHtml + '</div>'
+      + '</div>';
+  }
+
+  document.getElementById('shr-policy-list').innerHTML = C.map(policyRow).join('');
+
+  var totalPremium = C.reduce(function (sum, c) {
+    if (c[4] === '미제공') return sum;
+    return sum + parseInt(c[4].replace(/[^0-9]/g, ''), 10);
+  }, 0);
+  document.getElementById('shr-sum-tiles').innerHTML =
+    '<div class="shr-sum-tile"><span class="shr-sum-l">유지하고 있는 보험</span><span class="shr-sum-v">' + C.length + '개</span></div>'
+    + '<div class="shr-sum-tile"><span class="shr-sum-l">매달 내는 보험료</span><span class="shr-sum-v">' + totalPremium.toLocaleString('ko-KR') + '원</span></div>';
+
+  // ===== 공유 메뉴 (인쇄하기 / PDF 전송) =====
+  (function () {
+    var btn = document.getElementById('shr-share-btn');
+    var menu = document.getElementById('shr-share-menu');
+    var popover = btn.closest('.menu-popover');
+    function openMenu() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? openMenu() : closeMenu(); });
+    document.addEventListener('click', function (e) { if (!menu.hidden && !popover.contains(e.target)) closeMenu(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
+
+    function toast(msg) {
+      var t = document.createElement('div');
+      t.className = 'shr-toast';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      requestAnimationFrame(function () { t.classList.add('show'); });
+      setTimeout(function () {
+        t.classList.remove('show');
+        setTimeout(function () { t.remove(); }, 250);
+      }, 2200);
+    }
+
+    document.getElementById('shr-print-action').addEventListener('click', function () {
+      closeMenu();
+      window.print();
+    });
+    document.getElementById('shr-pdf-action').addEventListener('click', function () {
+      closeMenu();
+      toast('PDF가 고객에게 전송되었습니다.');
+    });
+  })();
+})();
+</script>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('coverage');</script>
+</body>
+</html>

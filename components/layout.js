@@ -434,6 +434,7 @@
     // 정보 / 메시지 / 위치
     + '<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>'
     + '<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>'
+    + '<symbol id="i-umbrella" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 3v1"/><path d="M12 12v7a2 2 0 0 1-4 0"/></symbol>'
     + '<symbol id="i-won" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7.5 9l1.6 6 2.9-5.5L14.9 15l1.6-6"/><path d="M7 12.5h10"/></symbol>'
     + '<symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>'
     + '<symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2Z"/></symbol>'
