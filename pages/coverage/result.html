@@ -173,6 +173,77 @@
   .cE .cov-item-row + .cov-item-row { border-top: 1px solid var(--line); margin-top: 2px; padding-top: 6px; }
   .cE .cov-item-amt { font-weight: 800; white-space: nowrap; text-align: right; }
 
+  /* ===== 수정 모드 ===== */
+  .cE .edit-toggle { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; white-space: nowrap; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .edit-toggle:hover { border-color: var(--ink-3); }
+  .cE .edit-toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-4); transition: background-color .15s ease; }
+  .cE .edit-toggle[aria-pressed="true"] { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
+  .cE .edit-toggle[aria-pressed="true"] .edit-toggle-dot { background: var(--brand); }
+
+  .cE .edt-only { display: none; }
+  .cE.is-editing .edt-only { display: block; }
+  .cE.is-editing .emain { background: var(--bg-soft); }
+  .cE.is-editing .card-pad { background: #fff; }
+  .cE.is-editing .report-viewseg { display: none; }
+  /* 수정 불가능한 뷰(계약 상세, 상세 보장분석표)는 수정 모드에서 숨긴다 */
+  .cE.is-editing #cov-contract-detail,
+  .cE.is-editing .card-pad:has(.cov-matrix-wrap) { display: none; }
+  .cE.is-editing .cov-score-notes { display: none; }
+  .cE .edt-opinions { display: none; }
+  .cE.is-editing .edt-opinions { display: flex; flex-direction: column; margin-top: var(--s5); }
+
+  .cE .edt-hint { margin: 0 0 16px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
+
+  .cE .edt-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
+  .cE .edt-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .cE .edt-table th.amt { text-align: right; }
+  .cE .edt-table td { padding: 6px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+  .cE .edt-table tbody tr:last-child td { border-bottom: none; }
+  .cE .edt-table td.cat { color: var(--ink-3); font-weight: 600; }
+  .cE .edt-table td.orig { text-align: right; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .cE .edt-table td.excl { text-align: center; }
+  .cE .edt-table tr.excluded td { opacity: .45; }
+  .cE .edt-table tr.excluded td.excl { opacity: 1; }
+  .cE .edt-table input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--brand); cursor: pointer; }
+
+  .cE .edt-input { width: 100%; min-width: 90px; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-option); color: var(--ink); text-align: right; }
+  .cE .edt-input:focus { outline: none; background: #fff; border-color: var(--brand); }
+  .cE .edt-input.txt { text-align: left; min-width: 140px; }
+
+  .cE .edt-add-row-btn { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: var(--r-pill); border: 1px dashed var(--line-strong); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; }
+  .cE .edt-add-row-btn:hover { background: var(--bg-soft); border-color: var(--ink-3); }
+
+  .cE .cov-score-score { display: none; align-items: baseline; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; margin-bottom: 16px; }
+  .cE.is-editing .cov-score-score { display: flex; }
+  .cE .cov-score-score .edt-input { width: 90px; min-width: 0; height: 40px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); text-align: center; }
+  .cE .cov-score-score .u { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .cov-score-score .ref { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+
+  .cE .edt-opinion-row { display: flex; gap: 10px; align-items: flex-start; }
+  .cE .edt-opinion-row + .edt-opinion-row { margin-top: 10px; }
+  .cE .edt-opinion-label { flex: none; width: 110px; padding-top: 9px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
+  .cE .edt-opinion-text { flex: 1; min-height: 44px; padding: 9px 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-option); color: var(--ink); line-height: 1.5; resize: none; overflow: hidden; }
+  .cE .edt-opinion-text:focus { outline: none; background: #fff; border-color: var(--brand); }
+  .cE .edt-opinion-del { flex: none; width: 36px; height: 36px; margin-top: 4px; border: 1px solid var(--line-strong); background: #fff; border-radius: 50%; color: var(--ink-3); cursor: pointer; display: grid; place-items: center; }
+  .cE .edt-opinion-del:hover { background: #FFF0F1; color: #C92238; }
+  .cE .edt-add-opinion-btn { display: none; margin-top: 12px; }
+  .cE.is-editing .edt-add-opinion-btn { display: inline-flex; }
+
+  .cE .edt-history-row { padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.6; }
+  .cE .edt-history-row + .edt-history-row { margin-top: 8px; }
+  .cE .edt-history-row .ts { font-weight: 700; color: var(--ink); }
+  .cE .edt-history-row ul { margin: 4px 0 0; padding-left: 18px; }
+
+  /* ===== 수정 모드 — 헤더에 저장·초기화, 헤더 자체를 스크롤 고정 ===== */
+  .cE.is-editing .cov-rep-head { position: sticky; top: 0; z-index: 10; background: var(--bg-soft); border: none !important; border-radius: 0 !important; box-shadow: none !important; }
+  .cE .edit-toggle[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .cE .edit-toggle[aria-pressed="true"] .edit-toggle-dot { background: #fff; }
+  .cE.is-editing #edt-reset-btn { display: inline-flex; }
+  .cE.is-editing #cov-more-popover { display: none; }
+
+  .edt-save-toast { position: fixed; left: 50%; top: 20px; transform: translateX(-50%) translateY(-8px); background: var(--ink); color: #fff; font-size: var(--fs-option); font-weight: 600; padding: 12px 20px; border-radius: var(--r-pill); box-shadow: var(--sh-2); opacity: 0; transition: opacity .2s ease, transform .2s ease; z-index: 70; pointer-events: none; }
+  .edt-save-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
   @media (max-width: 960px) {
     .layout { min-width: 0; }
     .cE .cov-tiles { gap: 8px; }
@@ -264,7 +335,14 @@
         </div>
       </div>
       <div class="cov-rep-right">
-        <div class="menu-popover">
+        <button type="button" class="edit-toggle" id="edit-mode-btn" aria-pressed="false">
+          <span class="edit-toggle-dot"></span>
+          <span id="edit-mode-label">수정</span>
+        </button>
+        <button type="button" class="menu-trigger edt-only" id="edt-reset-btn" aria-label="초기화" title="초기화">
+          <svg class="ic-svg" width="20" height="20"><use href="#i-rotate-ccw"/></svg>
+        </button>
+        <div class="menu-popover" id="cov-more-popover">
           <button class="menu-trigger" type="button" id="cov-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
             <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
           </button>
@@ -342,8 +420,15 @@
     <!-- ===== 패널 B: 상세 ===== -->
     <div id="cov-panelB" role="tabpanel" aria-labelledby="cov-tabB" hidden>
 
-      <div class="card-pad">
+      <div class="card-pad edt-editable">
         <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장 점수·의견<span class="h-sub">기본형 37담보 권장금액 기준 · 설계사용, 고객용에는 점수를 넣지 않습니다</span></h2>
+
+        <div class="cov-score-score">
+          <input class="edt-input" type="number" id="edt-score-input" />
+          <span class="u">점</span>
+          <span class="ref">(규칙 계산값 <span id="edt-score-ref">—</span>점)</span>
+        </div>
+
         <div class="cov-tiles" id="cov-score-tiles"></div>
         <div class="cov-score-card" style="overflow-x:auto">
           <table class="cov-score-table" id="cov-score-table" style="min-width:680px">
@@ -355,6 +440,35 @@
           </table>
         </div>
         <div class="cov-score-notes" id="cov-score-notes"></div>
+        <div class="edt-opinions" id="edt-opinions"></div>
+        <button type="button" class="edt-add-row-btn edt-add-opinion-btn" id="edt-add-opinion-btn">+ 의견 추가</button>
+      </div>
+
+      <div class="card-pad edt-only" id="edt-cov-card">
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>담보</h2>
+        <p class="edt-hint">문서에서 읽은 금액이에요. 고치면 원본은 그대로 남고 수정 내역이 함께 표시돼요. 금액을 손으로 고치면 그 담보의 계약별 내역은 더 이상 맞지 않아 지워져요.</p>
+        <div style="overflow-x:auto">
+          <table class="edt-table" id="edt-cov-table">
+            <thead>
+              <tr><th>담보</th><th>분류</th><th class="amt">원본 가입</th><th>가입금액(만원)</th><th class="amt">원본 권장</th><th>권장금액(만원)</th><th>제외</th></tr>
+            </thead>
+            <tbody id="edt-cov-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card-pad edt-only" id="edt-add-card">
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>담보 추가</h2>
+        <p class="edt-hint">증권에는 있는데 분석표에 빠진 담보를 직접 넣을 수 있어요.</p>
+        <div style="overflow-x:auto">
+          <table class="edt-table" id="edt-add-table">
+            <thead>
+              <tr><th>담보명</th><th>분류</th><th class="amt">가입(만원)</th><th class="amt">권장(만원)</th><th>메모</th></tr>
+            </thead>
+            <tbody id="edt-add-tbody"></tbody>
+          </table>
+        </div>
+        <button type="button" class="edt-add-row-btn" id="edt-add-row-btn">+ 행 추가</button>
       </div>
 
       <div class="card-pad" id="cov-contract-detail">
@@ -370,6 +484,24 @@
             <tbody id="cov-contract-tbody"></tbody>
           </table>
         </div>
+      </div>
+
+      <div class="card-pad edt-only" id="edt-contract-card">
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약</h2>
+        <p class="edt-hint">문서에 없는 정보(갱신형 여부 등)를 채우거나 잘못 읽은 값을 고칠 수 있어요.</p>
+        <div style="overflow-x:auto">
+          <table class="edt-table" id="edt-contract-table">
+            <thead>
+              <tr><th>#</th><th>보험사</th><th>상품명</th><th>만기</th><th>납입(년)</th><th class="amt">월보험료(원)</th><th>갱신형</th><th>메모</th></tr>
+            </thead>
+            <tbody id="edt-contract-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card-pad edt-only" id="edt-history-card">
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>수정 이력</h2>
+        <div id="edt-history-list"></div>
       </div>
 
       <div class="card-pad">
@@ -388,6 +520,10 @@
 
 <script>
 (function () {
+  // ===== 수정 모드에서 쓸 전역 상태 =====
+  var OPINIONS = [];
+  var EDT_SCORE_REF = 0;
+
   // ===== 데이터 (단위: 원) =====
   var C = [
     ['메리츠화재', '(무) 메리츠 운전자보험M-Drive1804', '2018.06.29', '20년납 / 80세', '25,800원', 99, 240, '2,554,200원', '3,637,800원'],
@@ -614,11 +750,19 @@
     if (top3.length) {
       notes.push('<p>부족액이 큰 보장은 ' + top3.map(function (m) { return esc(m.name) + '(' + won(m.gap) + ' 부족)'; }).join(', ') + ' 순입니다.</p>');
     }
-    if (SCORE_MISSING.length) {
-      var zero = SCORE_MISSING.filter(function (m) { return m.held === 0; });
-      if (zero.length) notes.push('<p>미가입 보장은 ' + zero.map(function (m) { return esc(m.name); }).join(', ') + ' 입니다.</p>');
-    }
+    var zero = SCORE_MISSING.filter(function (m) { return m.held === 0; });
+    if (zero.length) notes.push('<p>미가입 보장은 ' + zero.map(function (m) { return esc(m.name); }).join(', ') + ' 입니다.</p>');
     document.getElementById('cov-score-notes').innerHTML = notes.join('');
+
+    // ===== 수정 모드 — 의견(숫자에서 만든 초안, 문장으로 직접 수정 가능) =====
+    OPINIONS.push({ label: '보장 점수', text: '종합 보장점수는 ' + SCORE_TOTAL + '점(100점 만점)으로, 기본형 37담보 권장금액 대비 충족 ' + full + '건 · 부족 ' + part + '건 · 미가입 ' + none + '건입니다.' });
+    if (top3.length) {
+      OPINIONS.push({ label: '부족액이 큰 보장', text: top3.map(function (m) { return m.name + ': 가입 ' + won(m.held) + ' / 권장 ' + won(m.bench) + ' (부족 ' + won(m.gap) + ')'; }).join(' · ') });
+    }
+    if (zero.length) {
+      OPINIONS.push({ label: '미가입 보장', text: '가입금액이 없는 보장이 ' + zero.length + '건입니다: ' + zero.map(function (m) { return m.name; }).join(', ') });
+    }
+    EDT_SCORE_REF = SCORE_TOTAL;
   })();
 
   // ===== 계약 상세 (요약/납입 통합) =====
@@ -866,6 +1010,157 @@
     document.addEventListener('click', function (e) { if (!menu.hidden && !popover.contains(e.target)) closeMenu(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
     document.getElementById('cov-print-btn').addEventListener('click', function () { closeMenu(); window.print(); });
+  })();
+
+  // ===== 수정 모드 =====
+  (function () {
+    var root = document.querySelector('.cE');
+    var toggleBtn = document.getElementById('edit-mode-btn');
+    var editLabel = document.getElementById('edit-mode-label');
+    toggleBtn.addEventListener('click', function () {
+      var on = !root.classList.contains('is-editing');
+      if (!on) doSave(); // 수정 모드에서 다시 누르면 "저장"
+      root.classList.toggle('is-editing', on);
+      toggleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      editLabel.textContent = on ? '저장' : '수정';
+      // 수정할 내용은 상세 탭에 있으므로, 수정 모드를 켜면 상세 탭으로 전환
+      if (on) {
+        document.getElementById('cov-tabB').click();
+        // display:none 상태에서 계산된 textarea 높이는 부정확하므로, 보이게 된 시점에 다시 맞춘다
+        document.querySelectorAll('.edt-opinion-text').forEach(autoGrow);
+      }
+    });
+
+    // ----- 보장 점수 입력 -----
+    var scoreInput = document.getElementById('edt-score-input');
+    function renderScore() { scoreInput.value = SCORE_TOTAL; }
+    document.getElementById('edt-score-ref').textContent = EDT_SCORE_REF;
+    renderScore();
+
+    // ----- 의견 -----
+    var OPINIONS_INITIAL = OPINIONS.map(function (o) { return { label: o.label, text: o.text }; });
+    var opinionsEl = document.getElementById('edt-opinions');
+    function autoGrow(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+    function renderOpinions() {
+      opinionsEl.innerHTML = OPINIONS.map(function (o, i) {
+        return '<div class="edt-opinion-row" data-i="' + i + '">'
+          + '<span class="edt-opinion-label">' + esc(o.label) + '</span>'
+          + '<textarea class="edt-opinion-text" rows="1">' + esc(o.text) + '</textarea>'
+          + '<button type="button" class="edt-opinion-del" aria-label="의견 삭제"><svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg></button>'
+          + '</div>';
+      }).join('');
+      opinionsEl.querySelectorAll('.edt-opinion-text').forEach(autoGrow);
+    }
+    renderOpinions();
+    opinionsEl.addEventListener('input', function (e) {
+      if (e.target.classList.contains('edt-opinion-text')) autoGrow(e.target);
+    });
+    opinionsEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.edt-opinion-del');
+      if (!btn) return;
+      var row = btn.closest('.edt-opinion-row');
+      OPINIONS.splice(Number(row.getAttribute('data-i')), 1);
+      renderOpinions();
+    });
+    document.getElementById('edt-add-opinion-btn').addEventListener('click', function () {
+      OPINIONS.push({ label: '의견', text: '' });
+      renderOpinions();
+    });
+
+    // ----- 담보 (가입금액·권장금액 보정, 제외) -----
+    function catOf(name) {
+      var c = SCORE_CATS.filter(function (x) { return x.items.indexOf(name) > -1; })[0];
+      return c ? c.label : '기타';
+    }
+    var covTbody = document.getElementById('edt-cov-tbody');
+    function renderCovTable() {
+      covTbody.innerHTML = Object.keys(BENCH).map(function (name) {
+        var held = Math.round(rowSum(name) / 10000);
+        var bench = Math.round(BENCH[name] / 10000);
+        return '<tr>'
+          + '<td>' + esc(name) + '</td>'
+          + '<td class="cat">' + esc(catOf(name)) + '</td>'
+          + '<td class="orig">' + held.toLocaleString('ko-KR') + '</td>'
+          + '<td><input class="edt-input" type="number" value="' + held + '"></td>'
+          + '<td class="orig">' + bench.toLocaleString('ko-KR') + '</td>'
+          + '<td><input class="edt-input" type="number" value="' + bench + '"></td>'
+          + '<td class="excl"><input type="checkbox"></td>'
+          + '</tr>';
+      }).join('');
+    }
+    renderCovTable();
+    covTbody.addEventListener('change', function (e) {
+      if (e.target.type !== 'checkbox') return;
+      e.target.closest('tr').classList.toggle('excluded', e.target.checked);
+    });
+
+    // ----- 담보 추가 -----
+    var addTbody = document.getElementById('edt-add-tbody');
+    function addRow() {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><input class="edt-input txt" type="text" placeholder="담보명"></td>'
+        + '<td><input class="edt-input txt" type="text" placeholder="분류"></td>'
+        + '<td><input class="edt-input" type="number" placeholder="0"></td>'
+        + '<td><input class="edt-input" type="number" placeholder="0"></td>'
+        + '<td><input class="edt-input txt" type="text" placeholder="메모"></td>';
+      addTbody.appendChild(tr);
+    }
+    document.getElementById('edt-add-row-btn').addEventListener('click', addRow);
+
+    // ----- 계약 보정 -----
+    var contractTbody = document.getElementById('edt-contract-tbody');
+    function renderContractTable() {
+      contractTbody.innerHTML = C.map(function (c, i) {
+        var t = term(c);
+        var years = parseInt(t[0], 10);
+        var premium = c[4] === '미제공' ? '' : c[4].replace(/[^0-9]/g, '');
+        return '<tr>'
+          + '<td>' + (i + 1) + '</td>'
+          + '<td>' + esc(c[0]) + '</td>'
+          + '<td>' + esc(c[1]) + '</td>'
+          + '<td>' + esc(t[1]) + '</td>'
+          + '<td><input class="edt-input" type="number" value="' + (isNaN(years) ? '' : years) + '"></td>'
+          + '<td><input class="edt-input" type="number" value="' + premium + '"></td>'
+          + '<td><input class="edt-input txt" type="text" placeholder="비갱신형"></td>'
+          + '<td><input class="edt-input txt" type="text" placeholder="메모"></td>'
+          + '</tr>';
+      }).join('');
+    }
+    renderContractTable();
+
+    // ----- 수정 이력 -----
+    var historyEl = document.getElementById('edt-history-list');
+    historyEl.innerHTML =
+      '<div class="edt-history-row"><span class="ts">2026.11.09 · 최신규</span><ul><li>보장분석 데이터 최초 생성</li></ul></div>';
+
+    // ----- 저장 · 초기화 -----
+    function toast(msg) {
+      var t = document.createElement('div');
+      t.className = 'edt-save-toast';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      requestAnimationFrame(function () { t.classList.add('show'); });
+      setTimeout(function () {
+        t.classList.remove('show');
+        setTimeout(function () { t.remove(); }, 250);
+      }, 2200);
+    }
+    document.getElementById('edt-reset-btn').addEventListener('click', function () {
+      renderScore();
+      OPINIONS = OPINIONS_INITIAL.map(function (o) { return { label: o.label, text: o.text }; });
+      renderOpinions();
+      renderCovTable();
+      addTbody.innerHTML = '';
+      renderContractTable();
+      toast('수정 내용을 초기화했어요.');
+    });
+    function doSave() {
+      var row = document.createElement('div');
+      row.className = 'edt-history-row';
+      row.innerHTML = '<span class="ts">2026.11.09 · 최신규</span><ul><li>보장분석 데이터 수정 저장</li></ul>';
+      historyEl.insertBefore(row, historyEl.firstChild);
+      toast('저장했어요.');
+    }
   })();
 
   // ===== 고객 정보 토글 (모바일) =====
