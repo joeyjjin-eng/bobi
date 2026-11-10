@@ -113,8 +113,8 @@ html, body { margin: 0; background: #fff; }
 /* ===== 가이드 화면 — 좌우 그리드 ===== */
 .cE .sm-grid { display: grid; grid-template-columns: 440px 1fr; gap: 24px; align-items: start; }
 
-/* 좌측 — 병력 입력 폼 */
-.cE .sm-form { border: 1px solid var(--line); border-radius: var(--r-md); background: #fff; padding: 20px 24px 28px; min-height: 640px; box-shadow: var(--sh-1); }
+/* 좌측 — 병력 입력 폼 (결과가 길어져도 스크롤을 따라다니도록 sticky) */
+.cE .sm-form { border: 1px solid var(--line); border-radius: var(--r-md); background: #fff; padding: 20px 24px 28px; min-height: 640px; box-shadow: var(--sh-1); position: sticky; top: 92px; }
 .cE .sm-form-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .cE .sm-form-head h3 { font-size: var(--fs-h2); font-weight: 800; margin: 0; display: inline-flex; align-items: center; gap: 6px; color: var(--ink); }
 .cE .sm-form-head h3 svg { color: var(--ink-3); }
