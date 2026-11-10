@@ -320,10 +320,12 @@
       ? '<span class="shr-policy-amt na">보험료 정보 없음</span>'
       : '<span class="shr-policy-amt">' + c[4] + '</span>';
     var w = (!noPrem && c[6]) ? Math.round(c[5] / c[6] * 100) : null;
+    var termTxt = (t[0] && t[0] !== '—') ? esc(t[0]) + ' · ' : '';
+    var dateTxt = ' · 계약일 ' + esc(c[2]);
     var progHtml = w == null
-      ? '<span class="shr-prog-txt">' + esc(t[1]) + '까지 보장</span>'
+      ? '<span class="shr-prog-txt">' + termTxt + esc(t[1]) + '까지 보장' + dateTxt + '</span>'
       : '<div class="shr-prog-bar"><span class="shr-prog-fill" style="width:' + w + '%"></span></div>'
-        + '<span class="shr-prog-txt">' + c[6] + '번 중 <b>' + c[5] + '번</b> 냈어요 · ' + esc(t[1]) + '까지 보장</span>';
+        + '<span class="shr-prog-txt">' + termTxt + c[6] + '번 중 <b>' + c[5] + '번</b> 냈어요 · ' + esc(t[1]) + '까지 보장' + dateTxt + '</span>';
     return '<div class="shr-policy-row">'
       + '<div class="shr-policy-top"><span class="shr-policy-name"><b>' + esc(c[0]) + '</b>' + esc(c[1]) + '</span>' + amtHtml + '</div>'
       + '<div class="shr-policy-prog">' + progHtml + '</div>'

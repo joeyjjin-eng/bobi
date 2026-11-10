@@ -117,8 +117,6 @@
   .cE .cov-tag { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 700; padding: 2px 7px; border-radius: 5px; background: var(--bg-soft); color: var(--ink-2); }
 
   /* ===== 보험사 필터 칩 — 로고 + 테두리로만 on/off 구분 (sort-chip 전역 스타일 대신 이 섹션만 오버라이드) ===== */
-  /* 제목→칩, 칩→표 간격을 20px로 동일하게 맞춘다 */
-  .cE .card-pad:has(#cov-co-filter) h2 { margin-bottom: 20px; }
   .cE #cov-co-filter.sort-chips { gap: 10px; margin: 0 0 20px; }
   .cE #cov-co-filter .sort-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px 7px 10px; font-weight: 700; background: #fff; border: 1px solid var(--line); color: var(--ink-3); }
   .cE #cov-co-filter .sort-chip .cov-co-logo { width: 18px; height: 18px; opacity: .5; transition: opacity .2s ease; }
@@ -130,12 +128,14 @@
   /* ===== 상세: 보장분석표 (담보 × 상품 매트릭스) ===== */
   .cE .cov-matrix-wrap { overflow-x: auto; cursor: grab; }
   .cE .cov-matrix-wrap.dragging { cursor: grabbing; user-select: none; }
-  .cE .cov-matrix { border-collapse: collapse; width: 100%; }
+  .cE .cov-matrix { border-collapse: collapse; width: 100%; table-layout: fixed; }
   .cE .cov-matrix th, .cE .cov-matrix td { padding: 3px 16px; white-space: nowrap; border-right: 1px solid var(--line); }
   .cE .cov-matrix th:last-child, .cE .cov-matrix td:last-child { border-right: none; }
-  .cE .cov-matrix thead th { background: #fff; border-bottom: 2px solid var(--ink); text-align: center; vertical-align: top; font-size: var(--fs-body); font-weight: 700; color: var(--ink); min-width: 110px; padding-top: 16px; padding-bottom: 16px; }
-  .cE .cov-matrix thead th.hname { text-align: left; min-width: 200px; }
-  .cE .cov-matrix thead th.hsum { min-width: 130px; }
+  .cE .cov-matrix thead th { background: #fff; border-bottom: 2px solid var(--ink); text-align: center; vertical-align: top; font-size: var(--fs-body); font-weight: 700; color: var(--ink); padding-top: 16px; padding-bottom: 16px; }
+  /* 담보·합계는 폭 고정, 보험사 칼럼은 width를 주지 않아 table-layout:fixed가 남는 폭을 균등하게 나눠 갖는다(유동) */
+  .cE .cov-matrix thead th:not(.hname):not(.hsum) { min-width: 110px; }
+  .cE .cov-matrix thead th.hname { text-align: left; width: 200px; }
+  .cE .cov-matrix thead th.hsum { width: 130px; }
   .cE .cov-matrix thead th .pname { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep); letter-spacing: -0.01em; }
   .cE .cov-co-logo { width: 16px; height: 16px; object-fit: contain; flex: none; border-radius: 3px; }
   .cE .cov-matrix thead th .pprem { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; margin-top: 3px; }
@@ -156,10 +156,43 @@
   .cE .cov-matrix tr.tip .tip-txt { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
   .cE .cov-matrix tr.tip .tip-src { display: block; margin-top: 3px; font-size: var(--fs-option); color: var(--ink-3); }
 
+  /* ===== 상세 보장분석표 / 보험사별 상세 — 대분류 탭 (박스 없이 밑줄로만 구분, 다른 섹션 h2와 같은 폰트 레벨) ===== */
+  /* 카드 패딩(28px)을 좌우로 빼서 페이지 최대폭(1192px)까지 꽉 채운다 — 다른 카드처럼 안쪽으로 들어간 폭이 아니라 테이블 자체가 1192*/
+  .cE .card-pad:has(#cov-view-toggle) { border-color: transparent; padding-left: 0; padding-right: 0; }
+  .cE .cov-subtabs { display: flex; align-items: stretch; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .cE .cov-subtab { position: relative; padding: 2px 1px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; }
+  .cE .cov-subtab::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent; border-radius: 2px 2px 0 0; transition: background-color .2s ease; }
+  .cE .cov-subtab:hover { color: var(--ink); }
+  .cE .cov-subtab.on { color: var(--brand-deep); }
+  .cE .cov-subtab.on::after { background: var(--brand); }
+
+  /* ===== 상세 보장분석표 — 보험사별 상세 ===== */
+  .cE .cov-co-select-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+  .cE .cov-co-select { height: 46px; padding: 0 40px 0 14px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: #fff; font-family: inherit; font-size: var(--fs-body); font-weight: 700; color: var(--ink); cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; min-width: 220px; transition: border-color .15s ease; }
+  .cE .cov-co-select:hover { border-color: var(--ink-3); }
+  .cE .cov-co-select:focus { outline: none; border-color: var(--brand); }
+  .cE .cov-co-select-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .cov-co-product { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+  .cE .cov-co-product + .cov-co-product { margin-top: 20px; }
+  .cE .cov-co-product-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .cE .cov-co-product-name { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .cov-co-product-cnt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; white-space: nowrap; }
+  .cE .cov-detail-table { width: 100%; border-collapse: collapse; }
+  .cE .cov-detail-table th { text-align: left; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); background: #fff; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  .cE .cov-detail-table th.amt { text-align: right; }
+  .cE .cov-detail-table td { padding: 13px 20px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); vertical-align: middle; }
+  .cE .cov-detail-table tbody tr:last-child td { border-bottom: none; }
+  .cE .cov-detail-table td.cov { font-weight: 700; color: var(--ink); }
+  .cE .cov-detail-table td.detail { color: var(--ink-2); }
+  .cE .cov-detail-table td.amt { text-align: right; font-weight: 700; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
+
   /* ===== 요약: 보장분석표 (담보별 카드 — 회사·상품·세부담보명) ===== */
-  .cE .cov-cat-label { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); margin: var(--s6) 0 0; letter-spacing: 0.01em; }
-  .cE .cov-cat-label:first-child { margin-top: 0; }
-  .cE .cov-group { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s5) var(--s6); margin-top: var(--s4); overflow-x: auto; }
+  /* 첫 카테고리도 48px를 그대로 둔다 — h2("보장분석표")→카테고리 라벨 간격이 라벨→그룹(24px)보다 넓어야 한다 */
+  .cE .cov-cat-label { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); margin: var(--s9) 0 0; letter-spacing: 0.01em; }
+  /* 박스 없이 그대로 노출 — 담보 제목 밑줄(cov-group-head)만으로 구분, 그룹 사이는 48px로 넉넉히 */
+  .cE .cov-group { margin-top: var(--s9); }
+  /* 카테고리 라벨 바로 다음 그룹은 라벨과 한 묶음으로 보이도록 그룹 간 간격의 절반만 띄운다(카테고리 자체 상단 간격은 48px 그대로) */
+  .cE .cov-cat-label + .cov-group { margin-top: var(--s6); }
   .cE .cov-group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
   .cE .cov-group-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; }
   .cE .cov-group-total { font-size: 22px; font-weight: 800; color: var(--brand-deep); letter-spacing: -0.02em; white-space: nowrap; }
@@ -252,7 +285,8 @@
     .cE .cov-cards { grid-template-columns: 1fr; gap: 12px; }
     .cE .cov-card { padding: 18px 18px; }
     .cE .cov-amt { font-size: 26px; }
-    .cE .cov-group { padding: 16px 16px; }
+    .cE .cov-group { margin-top: var(--s7); }
+    .cE .cov-cat-label + .cov-group { margin-top: var(--s4); }
     .cE .cov-co-block { grid-template-columns: 1fr; min-width: 0; }
     .cE .cov-co-name { padding-bottom: 2px; }
 
@@ -302,6 +336,13 @@
     .cE .report-viewseg-btn { font-size: var(--fs-body); padding: 10px 14px 12px; gap: 6px; }
     .cE .cov-share-btn { order: 1; width: 100%; justify-content: center; margin-bottom: 4px; }
     .cE .report-viewseg-tabs { order: 2; }
+
+    .cE .cov-subtabs { gap: 18px; }
+    .cE .cov-subtab { font-size: var(--fs-option); padding: 2px 1px 12px; }
+    .cE .cov-co-select-row { width: 100%; }
+    .cE .cov-co-select { width: 100%; }
+    .cE .cov-co-product-head { flex-wrap: wrap; gap: 6px; padding: 14px 16px; }
+    .cE .cov-detail-table th, .cE .cov-detail-table td { padding: 11px 16px; }
   }
 </style>
 </head>
@@ -505,10 +546,24 @@
       </div>
 
       <div class="card-pad">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-layers"/></svg>상세 보장분석표</h2>
-        <div class="sort-chips" id="cov-co-filter" role="group" aria-label="보험사 필터"></div>
-        <div class="cov-matrix-wrap" id="cov-matrix-wrap">
-          <table class="cov-matrix" id="cov-matrix"></table>
+        <div class="cov-subtabs" id="cov-view-toggle" role="tablist" aria-label="상세 보장분석표 / 보험사별 상세">
+          <button type="button" class="cov-subtab on" role="tab" aria-selected="true" data-view="matrix">상세 보장분석표</button>
+          <button type="button" class="cov-subtab" role="tab" aria-selected="false" data-view="bycompany">보험사별 상세</button>
+        </div>
+
+        <div id="cov-view-matrix">
+          <div class="sort-chips" id="cov-co-filter" role="group" aria-label="보험사 필터"></div>
+          <div class="cov-matrix-wrap" id="cov-matrix-wrap">
+            <table class="cov-matrix" id="cov-matrix"></table>
+          </div>
+        </div>
+
+        <div id="cov-view-bycompany" hidden>
+          <div class="cov-co-select-row">
+            <select class="cov-co-select" id="cov-co-select"></select>
+            <span class="cov-co-select-meta" id="cov-co-select-meta"></span>
+          </div>
+          <div id="cov-co-products"></div>
         </div>
       </div>
     </div>
@@ -955,6 +1010,79 @@
       if (!chip) return;
       chip.classList.toggle('on');
       apply();
+    });
+  })();
+
+  // ===== 상세: 보장분석표 — 보험사별 상세 (매트릭스와 같은 G에서 회사 → 상품 → 담보로 역방향 집계) =====
+  (function () {
+    var CAT_SHORT = {
+      '사망·후유장해': '사망', '암 진단': '암', '뇌/심장 진단': '뇌/심장',
+      '실손의료비': '실손', '수술/입원': '수술', '운전자/기타': '운전자'
+    };
+
+    var BY_CO = {};
+    var CO_ORDER = [];
+    PRODUCTS_LIST.forEach(function (p) {
+      var co = p[0], pr = p[1];
+      if (!BY_CO[co]) { BY_CO[co] = { order: [], products: {} }; CO_ORDER.push(co); }
+      if (!BY_CO[co].products[pr]) { BY_CO[co].products[pr] = []; BY_CO[co].order.push(pr); }
+    });
+    CAT_ORDER.forEach(function (cat) {
+      G.filter(function (g) { return g[1] === cat; }).forEach(function (g) {
+        g[2].forEach(function (entry) {
+          var co = entry[0][0], pr = entry[0][1];
+          BY_CO[co].products[pr].push({ cat: cat, cov: g[0], detail: entry[1], amt: entry[2] });
+        });
+      });
+    });
+
+    function coCount(co) {
+      return BY_CO[co].order.reduce(function (sum, pr) { return sum + BY_CO[co].products[pr].length; }, 0);
+    }
+
+    var selectEl = document.getElementById('cov-co-select');
+    selectEl.innerHTML = CO_ORDER.map(function (co) {
+      return '<option value="' + esc(co) + '">' + esc(co) + ' (' + coCount(co) + ')</option>';
+    }).join('');
+
+    function renderCoDetail(co) {
+      var data = BY_CO[co];
+      document.getElementById('cov-co-select-meta').textContent = '상품 ' + data.order.length + '개 · 담보 ' + coCount(co) + '건';
+      document.getElementById('cov-co-products').innerHTML = data.order.map(function (pr) {
+        var items = data.products[pr];
+        var rows = items.length
+          ? items.map(function (it) {
+              return '<tr><td><span class="cov-tag">' + esc(CAT_SHORT[it.cat] || it.cat) + '</span></td>'
+                + '<td class="cov">' + esc(it.cov) + '</td>'
+                + '<td class="detail">' + esc(it.detail) + '</td>'
+                + '<td class="amt">' + won(it.amt) + '</td></tr>';
+            }).join('')
+          : '<tr><td colspan="4" style="text-align:center;color:var(--ink-3);padding:24px 20px;">등록된 담보 정보가 없어요</td></tr>';
+        return '<div class="cov-co-product">'
+          + '<div class="cov-co-product-head"><span class="cov-co-product-name">' + esc(pr) + '</span><span class="cov-co-product-cnt">담보 ' + items.length + '건</span></div>'
+          + '<table class="cov-detail-table"><thead><tr><th>구분</th><th>담보</th><th>세부담보명</th><th class="amt">가입금액</th></tr></thead><tbody>' + rows + '</tbody></table>'
+          + '</div>';
+      }).join('');
+    }
+
+    selectEl.addEventListener('change', function () { renderCoDetail(selectEl.value); });
+    if (CO_ORDER.length) renderCoDetail(CO_ORDER[0]);
+
+    // ===== 탭 전환: 상세 보장분석표 ↔ 보험사별 상세 =====
+    var toggleEl = document.getElementById('cov-view-toggle');
+    var viewMatrix = document.getElementById('cov-view-matrix');
+    var viewByCo = document.getElementById('cov-view-bycompany');
+    toggleEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.cov-subtab');
+      if (!btn) return;
+      var view = btn.getAttribute('data-view');
+      Array.prototype.forEach.call(toggleEl.querySelectorAll('.cov-subtab'), function (b) {
+        var on = b === btn;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      viewMatrix.hidden = view !== 'matrix';
+      viewByCo.hidden = view !== 'bycompany';
     });
   })();
 
