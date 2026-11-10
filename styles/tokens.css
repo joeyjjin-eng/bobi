@@ -64,10 +64,10 @@
   --fs-option:  13px;  /* 옵션 — 캡션·라벨·메타·칩 */
 
   /* 기존 토큰 별칭 (호환용, 4단계로 매핑) */
-  --fs-display: var(--fs-h1);    /* 24 */
-  --fs-title:   var(--fs-h2);    /* 20 */
-  --fs-sub:     var(--fs-body);  /* 16 */
-  --fs-label:   var(--fs-option);/* 14 */
+  --fs-display: var(--fs-h1);
+  --fs-title:   var(--fs-h2);
+  --fs-sub:     var(--fs-body);
+  --fs-label:   var(--fs-option);
 
   /* ===== 라운드 ===== */
   --r-sm: 10px;

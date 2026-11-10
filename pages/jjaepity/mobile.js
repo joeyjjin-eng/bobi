@@ -170,9 +170,9 @@
     return m ? (m[1] + '.' + m[2] + '.' + m[3]) : '';
   }
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
-  // 오늘 (데모 기준일 2026-07-09) — 데스크탑 script.js와 동일
+  // 오늘 (데모 기준일 2026-11-10) — 데스크탑 script.js와 동일
   function todayIso() {
-    var d = new Date(2026, 6, 9);
+    var d = new Date(2026, 10, 10);
     return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
   }
   function readPeriodForm() {
@@ -211,8 +211,8 @@
   }
 
   // ===== 입원 일수 폼 =====
-  // 데모 기준일 (desktop과 동일: 2026.07.09)
-  function demoToday() { return new Date(2026, 6, 9); }
+  // 데모 기준일 (desktop과 동일: 2026.11.10)
+  function demoToday() { return new Date(2026, 10, 10); }
   // 치료 기간(periodForm)으로부터 입원 가능 최대 일수 계산
   function maxHospDaysFromForm() {
     var pf = state.periodForm;
@@ -475,8 +475,8 @@
     return new Date(+m[1], +m[2] - 1, +m[3]);
   }
   function periodCutoff(p) {
-    // 데모 기준일: 2026.07.09 (desktop과 동일)
-    var d = new Date(2026, 6, 9);
+    // 데모 기준일: 2026.11.10 (desktop과 동일)
+    var d = new Date(2026, 10, 10);
     var y = d.getFullYear(), mo = d.getMonth(), da = d.getDate();
     if (p === '1m') return new Date(y, mo - 1, da);
     if (p === '6m') return new Date(y, mo - 6, da);

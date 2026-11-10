@@ -180,7 +180,7 @@
     return dt;
   }
   // 데모 기준일 (샘플 데이터가 2026년 7월 기준). 실 배포 시 new Date()로 교체.
-  function todayStart() { return new Date(2026, 6, 9); }
+  function todayStart() { return new Date(2026, 10, 10); }
   function digitsToDate(s) {
     s = String(s || '').replace(/\D/g, '').slice(0, 8);
     if (s.length <= 4) return s;
@@ -1124,6 +1124,7 @@
   });
 
   $('#submitBtn').addEventListener('click', function () {
+    this.blur();
     if (state.phase === 'results') {
       if (!state.saved) {
         openUnsavedModal();
@@ -1138,7 +1139,11 @@
     state.phase = 'loading'; render();
     var bar = $('#loadBar'); bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
     var resultEl = document.querySelector('.sm-result');
-    if (resultEl) resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (resultEl) {
+      var r = resultEl.getBoundingClientRect();
+      var fullyVisible = r.top >= 0 && r.bottom <= window.innerHeight;
+      if (!fullyVisible) resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     clearTimeout(window.__t);
     window.__t = setTimeout(function () { state.phase = 'results'; state.saved = false; render(); }, 2100);
   });

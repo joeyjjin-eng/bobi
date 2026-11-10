@@ -33,6 +33,31 @@
   .cE .shr-share-btn svg { color: currentColor; flex: none; }
   .cE .shr-head .menu-list { right: 0; }
 
+  /* ===== 폼 요소 (PDF 전송 모달용) ===== */
+  .cE .field { display: flex; flex-direction: column; gap: 8px; }
+  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: -0.01em; padding-left: 2px; }
+  .cE .input-box { width: 100%; height: 46px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 0 14px; font-size: var(--fs-body); color: var(--ink); font-family: inherit; outline: none; background: #fff; transition: border-color .15s ease; box-sizing: border-box; }
+  .cE .input-box:hover { border-color: var(--ink-3); }
+  .cE .input-box:focus { border-color: var(--brand); }
+
+  /* ===== PDF 전송 모달 ===== */
+  .nr-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
+  .nr-modal[hidden] { display: none; }
+  .nr-modal-card { background: #fff; border-radius: 18px; padding: 0; max-width: 420px; width: 100%; box-shadow: var(--sh-2); overflow: hidden; }
+  .nr-modal-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .nr-modal-head-l { display: flex; align-items: center; gap: 12px; }
+  .nr-modal-head-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); color: #fff; display: grid; place-items: center; flex: none; }
+  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .nr-modal-head .desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
+  .nr-modal-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
+  .nr-modal-close:hover { background: var(--line); color: var(--ink); }
+  .nr-modal-body { padding: 22px 26px; display: flex; flex-direction: column; gap: 16px; }
+  .nr-modal-hint { display: flex; gap: 8px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-sm); padding: 10px 14px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.4; }
+  .nr-modal-hint svg { color: var(--brand-deep); flex: none; margin-top: 1px; }
+  .nr-modal-actions { padding: 16px 26px 22px; border-top: 1px solid var(--line); display: flex; gap: 10px; }
+  @keyframes nrPop { from { opacity: 0; transform: scale(0.96) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .nr-pop { animation: nrPop 0.22s cubic-bezier(0.16,1,0.3,1) both; }
+
   /* ===== 섹션 제목 ===== */
   .cE .shr-section { margin-bottom: 36px; }
   .cE .shr-section-title { display: flex; align-items: center; gap: 8px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0 0 16px; }
@@ -68,19 +93,23 @@
   .cE .shr-sum-l { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; line-height: 1.4; }
   .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1.4; }
 
-  .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
-  .cE .shr-policy-row { padding: 18px 24px; border-bottom: 1px solid var(--line); }
-  .cE .shr-policy-row:last-child { border-bottom: none; }
-  .cE .shr-policy-top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .cE .shr-policy-name { font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; line-height: 1.4; }
-  .cE .shr-policy-name b { font-weight: 700; color: var(--ink); margin-right: 6px; }
-  .cE .shr-policy-amt { font-size: var(--fs-body); font-weight: 700; color: var(--ink); white-space: nowrap; letter-spacing: -0.01em; }
-  .cE .shr-policy-amt.na { color: var(--ink-3); font-weight: 500; }
-  .cE .shr-policy-prog { margin-top: 10px; }
-  .cE .shr-prog-bar { height: 7px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
-  .cE .shr-prog-fill { display: block; height: 100%; background: var(--brand); border-radius: 4px; }
-  .cE .shr-prog-txt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
-  .cE .shr-prog-txt b { color: var(--ink-2); font-weight: 700; }
+  .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow-x: auto; }
+  .cE .shr-contract-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
+  .cE .shr-contract-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .cE .shr-contract-table th.amt { text-align: right; }
+  .cE .shr-contract-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); white-space: nowrap; vertical-align: middle; }
+  .cE .shr-contract-table tbody tr:last-child td { border-bottom: none; }
+  .cE .shr-contract-table tbody tr:hover { background: var(--bg-warm); }
+  .cE .shr-contract-table td.num { color: var(--ink-3); }
+  .cE .shr-contract-table td.co { font-weight: 700; color: var(--ink-2); }
+  .cE .shr-contract-table td.pname { white-space: normal; }
+  .cE .shr-contract-table td.amt { text-align: right; font-weight: 700; color: var(--ink); }
+  .cE .shr-contract-table td.amt.na { color: var(--ink-3); font-weight: 500; }
+  .cE .shr-prog { min-width: 150px; }
+  .cE .shr-prog-bar { height: 7px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
+  .cE .shr-prog-bar i { display: block; height: 100%; background: var(--brand); border-radius: 4px; }
+  .cE .shr-prog-txt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .shr-prog-txt.na { color: var(--ink-4); }
 
   .cE .shr-disclaim { margin: 24px 4px 40px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
 
@@ -94,8 +123,17 @@
     .cE .shr-head { flex-direction: column; align-items: flex-start; gap: 14px; padding: 16px 0 18px; margin-bottom: 20px; }
     .cE .shr-share-btn { align-self: flex-start; height: 40px; padding: 0 16px; font-size: var(--fs-option); }
     .cE .shr-sum-tiles { flex-direction: column; }
-    .cE .shr-policy-top { flex-direction: column; align-items: flex-start; gap: 4px; }
     .cE .shr-cat-card { padding: 18px 16px; }
+
+    .nr-modal { padding: 12px; }
+    .nr-modal-card { max-width: 100%; border-radius: 16px; }
+    .nr-modal-head { padding: 18px 20px 14px; gap: 12px; }
+    .nr-modal-head-ic { width: 36px; height: 36px; border-radius: 10px; }
+    .nr-modal-head h3 { font-size: var(--fs-body); }
+    .nr-modal-head .desc { font-size: var(--fs-option); }
+    .nr-modal-body { padding: 18px 20px; gap: 14px; }
+    .nr-modal-actions { padding: 14px 20px 20px; flex-direction: column; gap: 8px; }
+    .nr-modal-actions > button { width: 100% !important; padding: 12px 18px !important; justify-content: center !important; }
   }
 
   /* ===== 공유 완료 토스트 ===== */
@@ -152,7 +190,17 @@
         지금 가지고 있는 보험
       </h2>
       <div class="shr-sum-tiles" id="shr-sum-tiles"></div>
-      <div class="shr-policy-list" id="shr-policy-list"></div>
+      <div class="shr-policy-list">
+        <table class="shr-contract-table" style="min-width:860px">
+          <thead>
+            <tr>
+              <th>#</th><th>보험사</th><th>상품명</th><th>계약일</th><th>납입/만기</th>
+              <th class="amt">월보험료</th><th>납입 진행</th>
+            </tr>
+          </thead>
+          <tbody id="shr-policy-tbody"></tbody>
+        </table>
+      </div>
     </div>
 
     <div class="shr-section">
@@ -166,6 +214,41 @@
     <p class="shr-disclaim">이 안내는 현재 보유하신 계약 내용을 바탕으로 정리한 참고 자료이며, 실제 지급 금액과 조건은 약관과 심사 결과에 따라 달라질 수 있습니다.</p>
 
   </main>
+
+  <!-- PDF 전송 모달 -->
+  <div class="nr-modal" id="pdf-send-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pdf-send-title">
+    <div class="nr-modal-card nr-pop">
+      <div class="nr-modal-head">
+        <div class="nr-modal-head-l">
+          <div class="nr-modal-head-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-send"/></svg></div>
+          <div>
+            <h3 id="pdf-send-title">PDF 전송</h3>
+            <div class="desc">전송할 고객 연락처를 확인해주세요</div>
+          </div>
+        </div>
+        <button class="nr-modal-close" type="button" id="pdf-send-close" aria-label="닫기">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <div class="nr-modal-body">
+        <div class="field">
+          <label class="field-l" for="pdf-send-phone">고객 연락처</label>
+          <input class="input-box" type="tel" id="pdf-send-phone" placeholder="010-0000-0000" inputmode="numeric" />
+        </div>
+        <div class="nr-modal-hint">
+          <svg class="ic-svg" width="15" height="15"><use href="#i-help-circle"/></svg>
+          <span>번호가 다르면 고쳐서 보내도 돼요. 문자로 PDF 링크가 발송돼요.</span>
+        </div>
+      </div>
+      <div class="nr-modal-actions">
+        <button class="btn-secondary" type="button" id="pdf-send-cancel" style="background:#fff;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:12px 22px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;">취소</button>
+        <button class="btn-primary" type="button" id="pdf-send-confirm" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand-grad);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 24px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;box-shadow:var(--sh-brand);letter-spacing:-0.01em;">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>
+          전송하기
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <div id="footer-host"></div>
 </div>
@@ -313,26 +396,24 @@
 
   function term(c) { var s = String(c[3]).split('/'); return [s[0].trim() || '—', (s[1] || '').trim() || '—']; }
 
-  function policyRow(c) {
+  document.getElementById('shr-policy-tbody').innerHTML = C.map(function (c, i) {
     var t = term(c);
     var noPrem = c[4] === '미제공';
-    var amtHtml = noPrem
-      ? '<span class="shr-policy-amt na">보험료 정보 없음</span>'
-      : '<span class="shr-policy-amt">' + c[4] + '</span>';
+    var amtHtml = noPrem ? '<span class="na">정보 없음</span>' : c[4];
     var w = (!noPrem && c[6]) ? Math.round(c[5] / c[6] * 100) : null;
-    var termTxt = (t[0] && t[0] !== '—') ? esc(t[0]) + ' · ' : '';
-    var dateTxt = ' · 계약일 ' + esc(c[2]);
     var progHtml = w == null
-      ? '<span class="shr-prog-txt">' + termTxt + esc(t[1]) + '까지 보장' + dateTxt + '</span>'
-      : '<div class="shr-prog-bar"><span class="shr-prog-fill" style="width:' + w + '%"></span></div>'
-        + '<span class="shr-prog-txt">' + termTxt + c[6] + '번 중 <b>' + c[5] + '번</b> 냈어요 · ' + esc(t[1]) + '까지 보장' + dateTxt + '</span>';
-    return '<div class="shr-policy-row">'
-      + '<div class="shr-policy-top"><span class="shr-policy-name"><b>' + esc(c[0]) + '</b>' + esc(c[1]) + '</span>' + amtHtml + '</div>'
-      + '<div class="shr-policy-prog">' + progHtml + '</div>'
-      + '</div>';
-  }
-
-  document.getElementById('shr-policy-list').innerHTML = C.map(policyRow).join('');
+      ? '<span class="shr-prog-txt na">산출 불가</span>'
+      : '<div class="shr-prog"><div class="shr-prog-bar"><i style="width:' + w + '%"></i></div><span class="shr-prog-txt">' + c[5] + '/' + c[6] + '회</span></div>';
+    return '<tr>'
+      + '<td class="num">' + (i + 1) + '</td>'
+      + '<td class="co">' + esc(c[0]) + '</td>'
+      + '<td class="pname">' + esc(c[1]) + '</td>'
+      + '<td>' + esc(c[2]) + '</td>'
+      + '<td>' + esc(t[0]) + ' / ' + esc(t[1]) + '</td>'
+      + '<td class="amt' + (noPrem ? ' na' : '') + '">' + amtHtml + '</td>'
+      + '<td>' + progHtml + '</td>'
+      + '</tr>';
+  }).join('');
 
   var totalPremium = C.reduce(function (sum, c) {
     if (c[4] === '미제공') return sum;
@@ -369,9 +450,26 @@
       closeMenu();
       window.print();
     });
+
+    // ===== PDF 전송 모달 — 보내기 전에 고객 연락처를 확인·수정할 수 있게 =====
+    var sendModal = document.getElementById('pdf-send-modal');
+    var sendPhone = document.getElementById('pdf-send-phone');
+    var CUSTOMER_PHONE = '010-9876-5432';
+
     document.getElementById('shr-pdf-action').addEventListener('click', function () {
       closeMenu();
-      toast('PDF가 고객에게 전송되었습니다.');
+      sendPhone.value = CUSTOMER_PHONE;
+      sendModal.hidden = false;
+      sendPhone.focus();
+    });
+    document.getElementById('pdf-send-close').addEventListener('click', function () { sendModal.hidden = true; });
+    document.getElementById('pdf-send-cancel').addEventListener('click', function () { sendModal.hidden = true; });
+    sendModal.addEventListener('click', function (e) { if (e.target === sendModal) sendModal.hidden = true; });
+    document.getElementById('pdf-send-confirm').addEventListener('click', function () {
+      var phone = sendPhone.value.trim();
+      if (!phone) { sendPhone.focus(); return; }
+      sendModal.hidden = true;
+      toast(phone + '(으)로 PDF가 전송되었습니다.');
     });
   })();
 })();
