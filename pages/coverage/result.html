@@ -311,16 +311,11 @@
   .cE .edt-hint { margin: 0 0 16px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
 
   .cE .edt-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
-  .cE .edt-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .cE .edt-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: none; padding: 10px 12px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
   .cE .edt-table th.amt { text-align: right; }
   .cE .edt-table td { padding: 6px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
   .cE .edt-table tbody tr:last-child td { border-bottom: none; }
-  .cE .edt-table td.cat { color: var(--ink-3); font-weight: 600; }
-  .cE .edt-table td.orig { text-align: right; font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-  .cE .edt-table td.excl { text-align: center; }
-  .cE .edt-table tr.excluded td { opacity: .45; }
-  .cE .edt-table tr.excluded td.excl { opacity: 1; }
-  .cE .edt-table input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--brand); cursor: pointer; }
+  .cE .edt-table td.excl { text-align: center; width: 40px; }
 
   .cE .edt-input { width: 100%; min-width: 90px; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-option); color: var(--ink); text-align: right; }
   .cE .edt-input:focus { outline: none; background: #fff; border-color: var(--brand); }
@@ -329,11 +324,39 @@
   .cE .edt-add-row-btn { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: var(--r-pill); border: 1px dashed var(--line-strong); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; }
   .cE .edt-add-row-btn:hover { background: var(--bg-soft); border-color: var(--ink-3); }
 
-  .cE .cov-score-score { display: none; align-items: baseline; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; margin-bottom: 16px; }
-  .cE.is-editing .cov-score-score { display: flex; }
-  .cE .cov-score-score .edt-input { width: 90px; min-width: 0; height: 40px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); text-align: center; }
-  .cE .cov-score-score .u { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
-  .cE .cov-score-score .ref { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+  /* ===== 계약 — 기본은 요약만, "상세보기"를 눌러야 보험사·상품명부터 담보까지 펼쳐진다 ===== */
+  /* 배경색은 입력칸에만 둔다 — 카드·배지·버튼·표 헤더는 전부 투명, 테두리로만 구분 */
+  .cE .edt-contract-item { border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 14px 18px; margin-top: 15px; }
+  .cE .edt-contract-item:first-child { margin-top: 0; }
+  .cE .edt-contract-head { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+  .cE .edt-contract-head:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+  .cE .edt-contract-no { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--ink-3); color: var(--ink-3); font-size: var(--fs-option); font-weight: 700; display: grid; place-items: center; }
+  .cE .edt-contract-summary { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .cE .edt-contract-summary b { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .edt-contract-summary span.edt-summary-name { font-size: var(--fs-body); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px; }
+  .cE .edt-contract-summary .edt-summary-sub { font-size: var(--fs-option); color: var(--ink-3); white-space: nowrap; }
+  .cE .edt-contract-toggle { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; background: transparent; border: none; font-family: inherit; font-size: var(--fs-option); font-weight: 600; color: var(--brand-deep); cursor: pointer; transition: color .15s ease; }
+  .cE .edt-contract-toggle:hover { color: var(--brand); }
+  .cE .edt-contract-toggle svg { transition: transform .2s ease; }
+  .cE .edt-contract-head[aria-expanded="true"] .edt-contract-toggle svg { transform: rotate(180deg); }
+
+  .cE .edt-contract-body { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
+  .cE .edt-contract-fields { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cE .edt-field { flex: 1 1 130px; min-width: 110px; display: flex; flex-direction: column; gap: 4px; }
+  .cE .edt-field.wide { flex: 2 1 240px; }
+  .cE .edt-field-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; padding-left: 2px; line-height: 1.4; }
+  .cE .edt-field .edt-input { min-width: 0; }
+  .cE .edt-f-co-custom { margin-top: 6px; }
+
+  .cE .edt-contract-covs { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
+  .cE .edt-contract-covs .edt-table { margin-bottom: 10px; }
+  .cE .edt-add-cov-btn { margin-top: 0; height: 34px; padding: 0 14px; font-size: var(--fs-option); }
+
+  /* 보장 점수 표 — "점수" 칸은 평소엔 그냥 숫자처럼 보이다가, 수정 모드에서만 입력 가능한 칸으로 바뀐다 */
+  .cE .score-input { width: 46px; border: none; background: transparent; padding: 0; margin: 0; font-family: inherit; font-size: inherit; font-weight: 800; color: var(--ink); text-align: right; -moz-appearance: textfield; appearance: textfield; }
+  .cE .score-input::-webkit-outer-spin-button, .cE .score-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .cE .score-input:not([readonly]) { background: var(--bg-soft); border: 1px solid var(--line-strong); border-radius: 6px; padding: 4px 8px; cursor: text; }
+  .cE .score-input:not([readonly]):focus { outline: none; border-color: var(--brand); background: #fff; }
 
   .cE .edt-opinion-row { display: flex; gap: 10px; align-items: flex-start; }
   .cE .edt-opinion-row + .edt-opinion-row { margin-top: 10px; }
@@ -372,6 +395,12 @@
     .cE .cov-cat-label + .cov-group { margin-top: var(--s4); }
     .cE .cov-co-block { grid-template-columns: 1fr; min-width: 0; }
     .cE .cov-co-name { padding-bottom: 2px; }
+
+    .cE .edt-contract-item { padding: 12px 14px; }
+    .cE .edt-contract-head { flex-wrap: wrap; }
+    .cE .edt-contract-summary span.edt-summary-name { max-width: 180px; }
+    .cE .edt-field { flex: 1 1 100%; }
+    .cE .edt-field.wide { flex: 1 1 100%; }
 
     /* ===== 고객 헤더 — 컴팩트 + 접기/펼치기 (report/main.html과 동일 패턴) ===== */
     .cE .cov-rep-head {
@@ -559,13 +588,7 @@
     <div id="cov-panelB" role="tabpanel" aria-labelledby="cov-tabB" hidden>
 
       <div class="card-pad edt-editable">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장 점수·의견<span class="h-sub">기본형 37담보 권장금액 기준 · 설계사용, 고객용에는 점수를 넣지 않습니다</span></h2>
-
-        <div class="cov-score-score">
-          <input class="edt-input" type="number" id="edt-score-input" />
-          <span class="u">점</span>
-          <span class="ref">(규칙 계산값 <span id="edt-score-ref">—</span>점)</span>
-        </div>
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장 점수·의견<span class="h-sub">기본형 37담보 권장금액 기준 · 설계사용, 고객용에는 점수를 넣지 않습니다 · 수정 모드에서는 표의 점수 칸을 직접 고칠 수 있어요(100점 만점)</span></h2>
 
         <div class="cov-tiles" id="cov-score-tiles"></div>
         <div class="cov-score-card" style="overflow-x:auto">
@@ -580,33 +603,6 @@
         <div class="cov-score-notes" id="cov-score-notes"></div>
         <div class="edt-opinions" id="edt-opinions"></div>
         <button type="button" class="edt-add-row-btn edt-add-opinion-btn" id="edt-add-opinion-btn">+ 의견 추가</button>
-      </div>
-
-      <div class="card-pad edt-only" id="edt-cov-card">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>담보</h2>
-        <p class="edt-hint">문서에서 읽은 금액이에요. 고치면 원본은 그대로 남고 수정 내역이 함께 표시돼요. 금액을 손으로 고치면 그 담보의 계약별 내역은 더 이상 맞지 않아 지워져요.</p>
-        <div style="overflow-x:auto">
-          <table class="edt-table" id="edt-cov-table">
-            <thead>
-              <tr><th>담보</th><th>분류</th><th class="amt">원본 가입</th><th>가입금액(만원)</th><th class="amt">원본 권장</th><th>권장금액(만원)</th><th>제외</th></tr>
-            </thead>
-            <tbody id="edt-cov-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card-pad edt-only" id="edt-add-card">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>담보 추가</h2>
-        <p class="edt-hint">증권에는 있는데 분석표에 빠진 담보를 직접 넣을 수 있어요.</p>
-        <div style="overflow-x:auto">
-          <table class="edt-table" id="edt-add-table">
-            <thead>
-              <tr><th>담보명</th><th>분류</th><th class="amt">가입(만원)</th><th class="amt">권장(만원)</th><th>메모</th></tr>
-            </thead>
-            <tbody id="edt-add-tbody"></tbody>
-          </table>
-        </div>
-        <button type="button" class="edt-add-row-btn" id="edt-add-row-btn">+ 행 추가</button>
       </div>
 
       <div class="card-pad" id="cov-contract-detail">
@@ -625,16 +621,10 @@
       </div>
 
       <div class="card-pad edt-only" id="edt-contract-card">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약</h2>
-        <p class="edt-hint">문서에 없는 정보(갱신형 여부 등)를 채우거나 잘못 읽은 값을 고칠 수 있어요.</p>
-        <div style="overflow-x:auto">
-          <table class="edt-table" id="edt-contract-table">
-            <thead>
-              <tr><th>#</th><th>보험사</th><th>상품명</th><th>만기</th><th>납입(년)</th><th class="amt">월보험료(원)</th><th>갱신형</th><th>메모</th></tr>
-            </thead>
-            <tbody id="edt-contract-tbody"></tbody>
-          </table>
-        </div>
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약<span class="h-sub"></span></h2>
+        <p class="edt-hint">문서에서 읽은 계약과 담보예요. 계약·담보를 직접 수정할 수 있어요.</p>
+        <div id="edt-contract-list"></div>
+        <button type="button" class="edt-add-row-btn" id="edt-add-contract-btn">+ 계약 추가</button>
       </div>
 
       <div class="card-pad edt-only" id="edt-history-card">
@@ -765,7 +755,12 @@
 (function () {
   // ===== 수정 모드에서 쓸 전역 상태 =====
   var OPINIONS = [];
-  var EDT_SCORE_REF = 0;
+  var scoreOpinionsSeeded = false;
+  // renderPage()가 매번 다시 채우는 값 중, 수정 모드(아래) 쪽에서도 최신값을 읽어야 하는 것만 바깥 스코프에 미리 선언해둔다
+  var SCORE_ROWS;
+  // 저장을 누르면 표에서 손으로 고친 점수를 항목(label)별로 여기 담아둔다 — renderPage()가 다시 돌아도
+  // 규칙 계산값으로 되돌리지 않고 이 값을 그대로 보여준다. "초기화"를 누르면 비운다.
+  var scoreOverrides = {};
 
   // ===== 데이터 (단위: 원) =====
   var C = [
@@ -781,11 +776,22 @@
   ];
 
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
-  // 보험사 로고 — assets 공통 파일(pages/jjaepity/script.js의 INSURER_LOGO)과 같은 파일을 쓴다
+  // 보험사 로고 — assets 공통 파일(pages/jjaepity/script.js의 INSURER_LOGO)과 같은 파일을 쓴다.
+  // 새 계약을 추가할 때도 로고가 맞물리도록, 지금 9건에 없는 보험사도 자산이 있으면 미리 넣어둔다.
   var INSURER_LOGO = {
     '메리츠화재': 'icn_blogo_mz_s.png', '현대해상': 'icn_blogo_hd_s.png', 'KB손보': 'icn_blogo_kb_s.png',
-    'DB생명': 'icn_blogo_db_s.png', '한화손보': 'icn_carinsu_hh_s.png'
+    'DB생명': 'icn_blogo_db_s.png', '한화손보': 'icn_carinsu_hh_s.png',
+    '삼성화재': 'icn_blogo_ss_s.png', '흥국화재': 'icn_carinsu_hk_s.png', 'DB손해보험': 'icn_blogo_db_s.png',
+    'NH농협손해보험': 'icn_blogo_nh_s.png', '라이나손해보험': 'icn_blogo_lina_s.png', '롯데손해보험': 'icn_blogo_lt_s.png',
+    '하나손해보험': 'icn_blogo_hnsh_s.png', 'AIG손해보험': 'icn_blogo_aig_s.png', 'AXA손해보험': 'icn_blogo_axa_s.png',
+    'MG손해보험': 'icn_blogo_yb_s.png'
   };
+  // 계약 수정 화면의 "보험사" 드롭다운 — 뷰어 로고 매칭이 수기입력 오타로 깨지지 않도록, 자유 입력 대신 이 목록에서 고르게 한다
+  var INSURER_OPTIONS = [
+    '메리츠화재', '삼성화재', '현대해상', 'DB손해보험', 'KB손보', '한화손보', '흥국화재',
+    'NH농협손해보험', '라이나손해보험', '롯데손해보험', '하나손해보험', 'AIG손해보험', 'AXA손해보험', 'MG손해보험',
+    '한화생명', '삼성생명', '교보생명', 'DB생명', '푸본현대생명'
+  ];
   function coLogo(co) {
     var file = INSURER_LOGO[co];
     if (file) return '<img class="cov-co-logo" src="../../assets/' + file + '" alt="" loading="lazy">';
@@ -874,41 +880,6 @@
     return g ? gTotal(g) : 0;
   }
 
-  // K: [항목, {amt,sub} 또는 null, cmp[[이름,내금액,평균|null]], src[[담보명, 금액(원) 또는 '미가입'], ...], sc[총,충족,부족,없음,충족률%]|null]
-  // src 라벨은 전부 "담보명"만 쓴다(회사·상품명 섞지 않음) — '중증치매 진단' 행과 통일.
-  // cmp의 benchmark 숫자(200000000, 100000000)는 아래 BENCH['상해사망']/BENCH['일반암']과 같은 값 — 카드 뱃지(부족/적절)가
-  // 보장 점수·의견의 권장금액 기준과 동일한 숫자로 판정되도록 맞춘다.
-  var K = [
-    { label: '사망', amt: rowSum('질병사망'), sub: '질병 기준 · 상해사망 ' + won(rowSum('상해사망')),
-      cmp: [['질병사망', rowSum('질병사망'), null], ['상해사망', rowSum('상해사망'), 200000000]],
-      src: [['상해80%미만후유장해', rowSum('상해80%미만후유장해')], ['질병80%미만후유장해', rowSum('질병80%미만후유장해')]],
-      sc: null },
-    { label: '치매', amt: 0, sub: '',
-      cmp: [['치매 진단비', 0, null]],
-      src: [['장기요양간병비', '미가입'], ['경증치매진단', '미가입'], ['간병인/간호간병상해일당', '미가입'], ['간병인/간호간병질병일당', '미가입']],
-      sc: null },
-    { label: '암', amt: rowSum('일반암'), sub: '일반암 기준 · 유사암 ' + won(rowSum('유사암')),
-      cmp: [['일반암 진단비', rowSum('일반암'), 100000000], ['고액항암 치료비', 0, null]],
-      src: [['유사암', rowSum('유사암')], ['고액암', '미가입'], ['고액(표적)항암치료비', '미가입']],
-      sc: null },
-    { label: '뇌/심장', amt: rowSum('뇌혈관질환') + rowSum('허혈성심장질환'), sub: '',
-      cmp: [],
-      src: [['뇌혈관질환', rowSum('뇌혈관질환')], ['허혈성심장질환', rowSum('허혈성심장질환')], ['뇌졸중', '미가입'], ['뇌출혈', '미가입'], ['급성심근경색증', '미가입']],
-      sc: [9, 2, 5, 2, 22] },
-    { label: '실손', amt: rowSum('질병입원의료비') + rowSum('질병통원의료비'), sub: '',
-      cmp: [],
-      src: [['질병입원의료비', rowSum('질병입원의료비')], ['질병통원의료비', rowSum('질병통원의료비')], ['상해입원의료비', '미가입'], ['상해통원의료비', '미가입'], ['3대비급여실손', '미가입']],
-      sc: [4, 3, 1, 0, 82] },
-    { label: '수술', amt: rowSum('상해수술비') + rowSum('암수술비') + rowSum('질병입원일당'), sub: '',
-      cmp: [],
-      src: [['상해수술비', rowSum('상해수술비')], ['암수술비', rowSum('암수술비')], ['질병입원일당', rowSum('질병입원일당')], ['질병수술비', '미가입'], ['뇌혈관질환수술비', '미가입'], ['허혈성심장질환수술비', '미가입'], ['상해입원일당', '미가입']],
-      sc: [8, 2, 3, 3, 38] },
-    { label: '운전자', amt: rowSum('벌금(대인/스쿨존/대물)') + rowSum('교통사고처리지원금') + rowSum('변호사선임비용'), sub: '',
-      cmp: [],
-      src: [['벌금(대인/스쿨존/대물)', rowSum('벌금(대인/스쿨존/대물)')], ['교통사고처리지원금', rowSum('교통사고처리지원금')], ['변호사선임비용', rowSum('변호사선임비용')], ['자동차사고부상', '미가입'], ['골절진단비', '미가입'], ['보철치료비', '미가입'], ['가족/일상/자녀배상', '미가입'], ['화재벌금', '미가입']],
-      sc: [11, 4, 4, 3, 61] }
-  ];
-
   // ===== 보장 점수·의견 — 권장금액(권장) 기준은 실제 보장분석 제안서(KB손해보험, 기본형 37담보)의
   // "전체 담보 진단 현황" 표를 그대로 사용한다. 가입금액은 위 G/K(본 고객의 실제 보유 내역)를 그대로 읽는다.
   var BENCH = {
@@ -930,7 +901,11 @@
     { label: '운전자/기타', weight: 5, items: ['벌금(대인/스쿨존/대물)', '교통사고처리지원금', '변호사선임비용', '자동차사고부상', '골절진단비', '보철치료비', '가족/일상/자녀배상', '화재벌금'] }
   ];
   function heldAmt(name) { return rowSum(name); }
-  var SCORE_ROWS = SCORE_CATS.map(function (cat) {
+  function term(c) { var s = String(c[3]).split('/'); return [s[0].trim() || '—', (s[1] || '').trim() || '—']; }
+
+  // ===== renderPage() — C/G가 바뀔 때마다(계약 수정 저장 시) 다시 불러서 요약/상세/고객용을 전부 새로 그린다 =====
+  function renderPage() {
+  SCORE_ROWS = SCORE_CATS.map(function (cat) {
     var full = 0, part = 0, none = 0, rateSum = 0;
     cat.items.forEach(function (name) {
       var held = heldAmt(name), bench = BENCH[name];
@@ -958,9 +933,15 @@
     SCORE_ROWS.forEach(function (r) { full += r.full; part += r.part; none += r.none; });
     document.getElementById('cov-tile-uncovered').textContent = none + '개';
 
+    // 저장으로 남겨둔 점수 보정값이 있으면 규칙 계산값 대신 그 값을 보여주고, 합계도 그 값들로 다시 더한다
+    var displayScores = SCORE_ROWS.map(function (r) {
+      return scoreOverrides.hasOwnProperty(r.label) ? scoreOverrides[r.label] : r.score;
+    });
+    var displayTotal = displayScores.reduce(function (a, s) { return a + s; }, 0);
+
     var top = SCORE_MISSING[0];
     document.getElementById('cov-score-tiles').innerHTML = [
-      { l: '종합 보장점수', v: SCORE_TOTAL + '점', cls: ' score' },
+      { l: '종합 보장점수', v: displayTotal + '점', cls: ' score', id: 'cov-score-tile-total' },
       { l: '충족 담보', v: full + '개' },
       { l: '부족 담보', v: part + '개' },
       { l: '미가입 담보', v: none + '개' },
@@ -968,12 +949,12 @@
     ].map(function (t) {
       return '<div class="cov-tile" style="flex:1 1 180px;">'
         + '<span class="cov-tile-l">' + t.l + '</span>'
-        + '<span class="cov-tile-v' + (t.cls || '') + '">' + t.v + '</span>'
+        + '<span class="cov-tile-v' + (t.cls || '') + '"' + (t.id ? ' id="' + t.id + '"' : '') + '>' + t.v + '</span>'
         + (t.sub ? '<span class="cov-tile-l">' + t.sub + '</span>' : '')
         + '</div>';
     }).join('');
 
-    document.getElementById('cov-score-tbody').innerHTML = SCORE_ROWS.map(function (r) {
+    document.getElementById('cov-score-tbody').innerHTML = SCORE_ROWS.map(function (r, idx) {
       var note = r.none === 0 && r.part === 0
         ? '기본형 ' + r.total + '담보 전부 권장금액 이상 충족'
         : '충족 ' + r.full + ' · 부족 ' + r.part + ' · 미가입 ' + r.none + ' (기본형 ' + r.total + '담보 중)';
@@ -981,11 +962,27 @@
         + '<td class="name">' + esc(r.label) + '</td>'
         + '<td class="amt">' + r.weight + '</td>'
         + '<td class="amt">' + Math.round(r.fillRate * 100) + '%</td>'
-        + '<td class="amt">' + r.score + '</td>'
+        + '<td class="amt"><input class="score-input" type="number" min="0" max="' + r.weight + '" value="' + displayScores[idx] + '" readonly></td>'
         + '<td class="note">' + note + '</td>'
         + '</tr>';
     }).join('');
-    document.getElementById('cov-score-total').textContent = SCORE_TOTAL + '점';
+    document.getElementById('cov-score-total').textContent = displayTotal + '점';
+
+    // 수정 모드에서 세부 점수(배점 한도 내)를 고치면 표의 합계뿐 아니라 위쪽 "종합 보장점수" 타일도 같이 다시 더한다
+    // (onInput= 할당 — renderPage()가 반복 호출돼도 같은 tbody에 리스너가 중복으로 쌓이지 않도록)
+    document.getElementById('cov-score-tbody').oninput = function (e) {
+      if (!e.target.classList.contains('score-input')) return;
+      var max = parseInt(e.target.max, 10);
+      var val = parseInt(e.target.value, 10);
+      if (isNaN(val)) val = 0;
+      val = Math.max(0, Math.min(max, val));
+      if (String(val) !== e.target.value) e.target.value = val;
+      var total = 0;
+      document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp) { total += parseInt(inp.value, 10) || 0; });
+      document.getElementById('cov-score-total').textContent = total + '점';
+      var tile = document.getElementById('cov-score-tile-total');
+      if (tile) tile.textContent = total + '점';
+    };
 
     var top3 = SCORE_MISSING.slice(0, 3);
     var notes = [];
@@ -997,19 +994,21 @@
     if (zero.length) notes.push('<p>미가입 보장은 ' + zero.map(function (m) { return esc(m.name); }).join(', ') + ' 입니다.</p>');
     document.getElementById('cov-score-notes').innerHTML = notes.join('');
 
-    // ===== 수정 모드 — 의견(숫자에서 만든 초안, 문장으로 직접 수정 가능) =====
-    OPINIONS.push({ label: '보장 점수', text: '종합 보장점수는 ' + SCORE_TOTAL + '점(100점 만점)으로, 기본형 37담보 권장금액 대비 충족 ' + full + '건 · 부족 ' + part + '건 · 미가입 ' + none + '건입니다.' });
-    if (top3.length) {
-      OPINIONS.push({ label: '부족액이 큰 보장', text: top3.map(function (m) { return m.name + ': 가입 ' + won(m.held) + ' / 권장 ' + won(m.bench) + ' (부족 ' + won(m.gap) + ')'; }).join(' · ') });
+    // ===== 의견(숫자에서 만든 초안, 문장으로 직접 수정 가능) — 처음 한 번만 만들고, 이후 저장으로 다시 그릴 때는
+    // 사용자가 이미 고쳤을 수 있는 의견 목록을 건드리지 않는다 =====
+    if (!scoreOpinionsSeeded) {
+      OPINIONS.push({ label: '보장 점수', text: '종합 보장점수는 ' + SCORE_TOTAL + '점(100점 만점)으로, 기본형 37담보 권장금액 대비 충족 ' + full + '건 · 부족 ' + part + '건 · 미가입 ' + none + '건입니다.' });
+      if (top3.length) {
+        OPINIONS.push({ label: '부족액이 큰 보장', text: top3.map(function (m) { return m.name + ': 가입 ' + won(m.held) + ' / 권장 ' + won(m.bench) + ' (부족 ' + won(m.gap) + ')'; }).join(' · ') });
+      }
+      if (zero.length) {
+        OPINIONS.push({ label: '미가입 보장', text: '가입금액이 없는 보장이 ' + zero.length + '건입니다: ' + zero.map(function (m) { return m.name; }).join(', ') });
+      }
+      scoreOpinionsSeeded = true;
     }
-    if (zero.length) {
-      OPINIONS.push({ label: '미가입 보장', text: '가입금액이 없는 보장이 ' + zero.length + '건입니다: ' + zero.map(function (m) { return m.name; }).join(', ') });
-    }
-    EDT_SCORE_REF = SCORE_TOTAL;
   })();
 
   // ===== 계약 상세 (요약/납입 통합) =====
-  function term(c) { var s = String(c[3]).split('/'); return [s[0].trim() || '—', (s[1] || '').trim() || '—']; }
   document.getElementById('cov-contract-tbody').innerHTML = C.map(function (c, i) {
     var t = term(c);
     var w = c[6] ? Math.round(c[5] / c[6] * 100) : null;
@@ -1144,11 +1143,46 @@
   function judge(m, a) { if (m === 0) return '없음'; if (m == null || a == null) return null; var r = m / a; return r < 0.8 ? '부족' : r > 1.2 ? '초과' : '적절'; }
   function bdg(t, cls) { return '<span class="cov-badge ' + (cls || BC[t]) + '">' + t + '</span>'; }
 
+  // K: [항목, {amt,sub} 또는 null, cmp[[이름,내금액,평균|null]], src[[담보명, 금액(원) 또는 '미가입'], ...], sc[총,충족,부족,없음,충족률%]|null]
+  // src 라벨은 전부 "담보명"만 쓴다(회사·상품명 섞지 않음) — '중증치매 진단' 행과 통일.
+  // cmp의 benchmark 숫자(200000000, 100000000)는 BENCH['상해사망']/BENCH['일반암']과 같은 값 — 카드 뱃지(부족/적절)가
+  // 보장 점수·의견의 권장금액 기준과 동일한 숫자로 판정되도록 맞춘다.
+  // 카드마다 보험금을 제각각 다른 문구(질병 기준·일반암 기준 등)로 설명하던 걸 "권장금액 대비 N% 준비"로 통일한다.
+  // 권장금액(BENCH)은 보장 점수·의견 표와 같은 기준을 쓰므로, 담보 금액을 고치면 이 비율도 같이 바뀐다.
+  function pctOf(names) {
+    var amt = 0, bench = 0;
+    names.forEach(function (n) { amt += rowSum(n); bench += BENCH[n] || 0; });
+    return bench ? Math.round(amt / bench * 100) : 0;
+  }
+  var K = [
+    { label: '사망', amt: rowSum('질병사망') + rowSum('상해사망'),
+      src: [['상해80%미만후유장해', rowSum('상해80%미만후유장해')], ['질병80%미만후유장해', rowSum('질병80%미만후유장해')]],
+      sc: [0, 0, 0, 0, pctOf(['질병사망', '상해사망'])] },
+    { label: '치매', amt: 0,
+      src: [['장기요양간병비', '미가입'], ['경증치매진단', '미가입'], ['간병인/간호간병상해일당', '미가입'], ['간병인/간호간병질병일당', '미가입']],
+      sc: [0, 0, 0, 0, 0] },
+    { label: '암', amt: rowSum('일반암'),
+      src: [['유사암', rowSum('유사암')], ['고액암', '미가입'], ['고액(표적)항암치료비', '미가입']],
+      sc: [0, 0, 0, 0, pctOf(['일반암'])] },
+    { label: '뇌/심장', amt: rowSum('뇌혈관질환') + rowSum('허혈성심장질환'),
+      src: [['뇌혈관질환', rowSum('뇌혈관질환')], ['허혈성심장질환', rowSum('허혈성심장질환')], ['뇌졸중', '미가입'], ['뇌출혈', '미가입'], ['급성심근경색증', '미가입']],
+      sc: [0, 0, 0, 0, pctOf(['뇌혈관질환', '허혈성심장질환'])] },
+    { label: '실손', amt: rowSum('질병입원의료비') + rowSum('질병통원의료비'),
+      src: [['질병입원의료비', rowSum('질병입원의료비')], ['질병통원의료비', rowSum('질병통원의료비')], ['상해입원의료비', '미가입'], ['상해통원의료비', '미가입'], ['3대비급여실손', '미가입']],
+      sc: [0, 0, 0, 0, pctOf(['질병입원의료비', '질병통원의료비'])] },
+    { label: '수술', amt: rowSum('상해수술비') + rowSum('암수술비') + rowSum('질병입원일당'),
+      src: [['상해수술비', rowSum('상해수술비')], ['암수술비', rowSum('암수술비')], ['질병입원일당', rowSum('질병입원일당')], ['질병수술비', '미가입'], ['뇌혈관질환수술비', '미가입'], ['허혈성심장질환수술비', '미가입'], ['상해입원일당', '미가입']],
+      sc: [0, 0, 0, 0, pctOf(['상해수술비', '암수술비', '질병입원일당'])] },
+    { label: '운전자', amt: rowSum('벌금(대인/스쿨존/대물)') + rowSum('교통사고처리지원금') + rowSum('변호사선임비용'),
+      src: [['벌금(대인/스쿨존/대물)', rowSum('벌금(대인/스쿨존/대물)')], ['교통사고처리지원금', rowSum('교통사고처리지원금')], ['변호사선임비용', rowSum('변호사선임비용')], ['자동차사고부상', '미가입'], ['골절진단비', '미가입'], ['보철치료비', '미가입'], ['가족/일상/자녀배상', '미가입'], ['화재벌금', '미가입']],
+      sc: [0, 0, 0, 0, pctOf(['벌금(대인/스쿨존/대물)', '교통사고처리지원금', '변호사선임비용'])] }
+  ];
+
   document.getElementById('cov-cards').innerHTML = K.map(function (k) {
     var sub = k.sub, badge = '';
     if (k.sc) {
       var rate = k.sc[4];
-      var word = rate >= 80 ? '적절' : '부족';
+      var word = rate === 0 ? '없음' : rate >= 80 ? '적절' : '부족';
       badge = bdg(word);
       sub = '권장금액 대비 ' + rate + '% 준비';
     } else {
@@ -1179,8 +1213,8 @@
       + amtHtml + (sub ? '<p class="cov-sub">' + sub + '</p>' : '') + '</div>' + srcHtml + '</article>';
   }).join('');
 
-  // ===== 보험금 카드 — 담보 더보기/접기 =====
-  document.getElementById('cov-cards').addEventListener('click', function (e) {
+  // ===== 보험금 카드 — 담보 더보기/접기 (onclick= 할당 — renderPage()가 반복 호출돼도 리스너가 중복으로 쌓이지 않도록) =====
+  document.getElementById('cov-cards').onclick = function (e) {
     var btn = e.target.closest('.cov-src-toggle');
     if (!btn) return;
     var card = btn.closest('.cov-card');
@@ -1193,7 +1227,7 @@
       moreEls.forEach(function (el) { el.hidden = true; });
       btn.textContent = '더보기 (+' + (moreEls.length / 2) + ')';
     }
-  });
+  };
 
   // ===== 요약: 보장분석표 (담보별 카드) =====
   function cluster(rows) {
@@ -1308,12 +1342,13 @@
     }
     apply();
 
-    filterEl.addEventListener('click', function (e) {
+    // onclick= 할당 — renderPage()가 반복 호출돼도 같은 filterEl에 리스너가 중복으로 쌓이지 않도록
+    filterEl.onclick = function (e) {
       var chip = e.target.closest('.sort-chip');
       if (!chip) return;
       chip.classList.toggle('on');
       apply();
-    });
+    };
   })();
 
   // ===== 상세: 보장분석표 — 보험사별 상세 (매트릭스와 같은 G에서 회사 → 상품 → 담보로 역방향 집계) =====
@@ -1380,10 +1415,16 @@
       }).join('');
     }
 
-    selectEl.addEventListener('change', function () { renderCoDetail(selectEl.value); });
+    // onchange= 할당 — renderPage()가 반복 호출돼도 같은 selectEl에 리스너가 중복으로 쌓이지 않도록
+    selectEl.onchange = function () { renderCoDetail(selectEl.value); };
     if (CO_ORDER.length) renderCoDetail(CO_ORDER[0]);
+  })();
+  } // ===== renderPage() 끝 =====
 
-    // ===== 탭 전환: 상세 보장분석표 ↔ 보험사별 상세 =====
+  renderPage();
+
+  // ===== 탭 전환: 상세 보장분석표 ↔ 보험사별 상세 — 데이터와 무관한 고정 UI라 한 번만 연결한다 =====
+  (function () {
     var toggleEl = document.getElementById('cov-view-toggle');
     var viewMatrix = document.getElementById('cov-view-matrix');
     var viewByCo = document.getElementById('cov-view-bycompany');
@@ -1527,6 +1568,7 @@
       root.classList.toggle('is-editing', on);
       toggleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
       editLabel.textContent = on ? '저장' : '수정';
+      document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp) { inp.readOnly = !on; });
       // 수정할 내용은 상세 탭에 있으므로, 수정 모드를 켜면 상세 탭으로 전환
       if (on) {
         document.getElementById('cov-tabB').click();
@@ -1556,11 +1598,19 @@
       if (root.classList.contains('is-editing')) exitEdit(true);
     });
 
-    // ----- 보장 점수 입력 -----
-    var scoreInput = document.getElementById('edt-score-input');
-    function renderScore() { scoreInput.value = SCORE_TOTAL; }
-    document.getElementById('edt-score-ref').textContent = EDT_SCORE_REF;
-    renderScore();
+    // ----- 보장 점수 — 표의 "점수" 칸을 규칙 계산값으로 되돌리고 합계도 다시 더한다 -----
+    function renderScore() {
+      scoreOverrides = {};
+      var total = 0;
+      SCORE_ROWS.forEach(function (r, idx) {
+        var inp = document.querySelectorAll('#cov-score-tbody .score-input')[idx];
+        inp.value = r.score;
+        total += r.score;
+      });
+      document.getElementById('cov-score-total').textContent = total + '점';
+      var tile = document.getElementById('cov-score-tile-total');
+      if (tile) tile.textContent = total + '점';
+    }
 
     // ----- 의견 -----
     var OPINIONS_INITIAL = OPINIONS.map(function (o) { return { label: o.label, text: o.text }; });
@@ -1592,66 +1642,185 @@
       renderOpinions();
     });
 
-    // ----- 담보 (가입금액·권장금액 보정, 제외) -----
-    function catOf(name) {
-      var c = SCORE_CATS.filter(function (x) { return x.items.indexOf(name) > -1; })[0];
-      return c ? c.label : '기타';
+    // ----- 계약 — 보험사·상품명부터 담보·세부담보·가입금액까지 -----
+    // 계약별 담보 목록은 G(담보명, [[상품, 세부담보명, 금액], ...])에서 이 계약(PRODUCTS_LIST[i])을
+    // 가리키는 항목만 걸러서 만든다. 수정 모드의 다른 표들과 마찬가지로 입력값은 화면에만 반영되고,
+    // "초기화"를 누르면 C/G 원본에서 다시 그려 전부 되돌아간다.
+    function contractCovs(i) {
+      var prod = PRODUCTS_LIST[i];
+      var list = [];
+      G.forEach(function (g) {
+        g[2].forEach(function (entry) {
+          if (entry[0] === prod) list.push([g[0], entry[1], entry[2]]);
+        });
+      });
+      return list;
     }
-    var covTbody = document.getElementById('edt-cov-tbody');
-    function renderCovTable() {
-      covTbody.innerHTML = Object.keys(BENCH).map(function (name) {
-        var held = Math.round(rowSum(name) / 10000);
-        var bench = Math.round(BENCH[name] / 10000);
-        return '<tr>'
-          + '<td>' + esc(name) + '</td>'
-          + '<td class="cat">' + esc(catOf(name)) + '</td>'
-          + '<td class="orig">' + held.toLocaleString('ko-KR') + '</td>'
-          + '<td><input class="edt-input" type="number" value="' + held + '"></td>'
-          + '<td class="orig">' + bench.toLocaleString('ko-KR') + '</td>'
-          + '<td><input class="edt-input" type="number" value="' + bench + '"></td>'
-          + '<td class="excl"><input type="checkbox"></td>'
-          + '</tr>';
-      }).join('');
+    function covRowCells(cov, detail, amtWon) {
+      var man = amtWon ? Math.round(amtWon / 10000) : '';
+      return '<td><input class="edt-input txt edt-cov-name" type="text" value="' + esc(cov || '') + '" placeholder="담보명"></td>'
+        + '<td><input class="edt-input txt edt-cov-detail" type="text" value="' + esc(detail || '') + '" placeholder="세부담보명"></td>'
+        + '<td><input class="edt-input edt-cov-amt" type="number" value="' + man + '" placeholder="0"></td>';
     }
-    renderCovTable();
-    covTbody.addEventListener('change', function (e) {
-      if (e.target.type !== 'checkbox') return;
-      e.target.closest('tr').classList.toggle('excluded', e.target.checked);
-    });
-
-    // ----- 담보 추가 -----
-    var addTbody = document.getElementById('edt-add-tbody');
-    function addRow() {
-      var tr = document.createElement('tr');
-      tr.innerHTML = '<td><input class="edt-input txt" type="text" placeholder="담보명"></td>'
-        + '<td><input class="edt-input txt" type="text" placeholder="분류"></td>'
-        + '<td><input class="edt-input" type="number" placeholder="0"></td>'
-        + '<td><input class="edt-input" type="number" placeholder="0"></td>'
-        + '<td><input class="edt-input txt" type="text" placeholder="메모"></td>';
-      addTbody.appendChild(tr);
+    // 보험사 선택 — 목록에 있으면 드롭다운에서 고른 값 그대로, 목록에 없는 기존 값이면 "직접 입력"에 펼쳐서 보여준다
+    function insurerFieldHtml(co) {
+      var known = INSURER_OPTIONS.indexOf(co) > -1;
+      var showCustom = !!co && !known;
+      var opts = '<option value=""' + (co ? '' : ' selected') + ' disabled>보험사 선택</option>'
+        + INSURER_OPTIONS.map(function (name) {
+            return '<option value="' + esc(name) + '"' + (co === name ? ' selected' : '') + '>' + esc(name) + '</option>';
+          }).join('')
+        + '<option value="__custom__"' + (showCustom ? ' selected' : '') + '>직접 입력</option>';
+      return '<select class="edt-input txt edt-f-co">' + opts + '</select>'
+        + '<input class="edt-input txt edt-f-co-custom" type="text" value="' + (showCustom ? esc(co) : '') + '" placeholder="보험사명 입력"' + (showCustom ? '' : ' hidden') + '>';
     }
-    document.getElementById('edt-add-row-btn').addEventListener('click', addRow);
-
-    // ----- 계약 보정 -----
-    var contractTbody = document.getElementById('edt-contract-tbody');
+    function summaryText(co, name, premium, covCount) {
+      return {
+        co: co || '보험사 입력',
+        name: name || '상품명 입력',
+        sub: (premium ? '월 ' + Number(premium).toLocaleString('ko-KR') + '원' : '월보험료 입력') + ' · 담보 ' + covCount + '개'
+      };
+    }
+    function contractItemHtml(c, i) {
+      var t = term(c);
+      var years = parseInt(t[0], 10);
+      var premium = c[4] === '미제공' ? '' : String(c[4]).replace(/[^0-9]/g, '');
+      var covList = contractCovs(i);
+      var covRows = covList.map(function (r) { return '<tr>' + covRowCells(r[0], r[1], r[2]) + '</tr>'; }).join('');
+      var s = summaryText(c[0], c[1], premium, covList.length);
+      return '<div class="edt-contract-item">'
+        + '<div class="edt-contract-head" role="button" tabindex="0" aria-expanded="false">'
+        +   '<span class="edt-contract-no">' + (i + 1) + '</span>'
+        +   '<div class="edt-contract-summary">'
+        +     '<b class="edt-summary-co">' + esc(s.co) + '</b>'
+        +     '<span class="edt-summary-name">' + esc(s.name) + '</span>'
+        +     '<span class="edt-summary-sub">' + esc(s.sub) + '</span>'
+        +   '</div>'
+        +   '<span class="edt-contract-toggle">'
+        +     '상세보기<svg class="ic-svg" width="14" height="14"><use href="#i-chevron-down"/></svg>'
+        +   '</span>'
+        + '</div>'
+        + '<div class="edt-contract-body" hidden>'
+        +   '<div class="edt-contract-fields">'
+        +     '<div class="edt-field"><span class="edt-field-l">보험사</span>' + insurerFieldHtml(c[0]) + '</div>'
+        +     '<div class="edt-field wide"><span class="edt-field-l">상품명</span><input class="edt-input txt edt-f-name" type="text" value="' + esc(c[1]) + '" placeholder="상품명"></div>'
+        +     '<div class="edt-field"><span class="edt-field-l">만기</span><input class="edt-input txt edt-f-maturity" type="text" value="' + esc(t[1]) + '" placeholder="만기"></div>'
+        +     '<div class="edt-field"><span class="edt-field-l">납입(년)</span><input class="edt-input edt-f-years" type="number" value="' + (isNaN(years) ? '' : years) + '" placeholder="0"></div>'
+        +     '<div class="edt-field"><span class="edt-field-l">월보험료(원)</span><input class="edt-input edt-f-premium" type="number" value="' + premium + '" placeholder="0"></div>'
+        +     '<div class="edt-field"><span class="edt-field-l">갱신형</span><input class="edt-input txt" type="text" placeholder="비갱신형"></div>'
+        +   '</div>'
+        +   '<div class="edt-contract-covs">'
+        +     '<table class="edt-table">'
+        +       '<thead><tr><th>담보</th><th>세부담보</th><th class="amt">가입금액(만원)</th></tr></thead>'
+        +       '<tbody>' + covRows + '</tbody>'
+        +     '</table>'
+        +     '<button type="button" class="edt-add-row-btn edt-add-cov-btn">+ 담보 추가</button>'
+        +   '</div>'
+        + '</div>'
+        + '</div>';
+    }
+    var contractListEl = document.getElementById('edt-contract-list');
     function renderContractTable() {
-      contractTbody.innerHTML = C.map(function (c, i) {
-        var t = term(c);
-        var years = parseInt(t[0], 10);
-        var premium = c[4] === '미제공' ? '' : c[4].replace(/[^0-9]/g, '');
-        return '<tr>'
-          + '<td>' + (i + 1) + '</td>'
-          + '<td>' + esc(c[0]) + '</td>'
-          + '<td>' + esc(c[1]) + '</td>'
-          + '<td>' + esc(t[1]) + '</td>'
-          + '<td><input class="edt-input" type="number" value="' + (isNaN(years) ? '' : years) + '"></td>'
-          + '<td><input class="edt-input" type="number" value="' + premium + '"></td>'
-          + '<td><input class="edt-input txt" type="text" placeholder="비갱신형"></td>'
-          + '<td><input class="edt-input txt" type="text" placeholder="메모"></td>'
-          + '</tr>';
-      }).join('');
+      contractListEl.innerHTML = C.map(function (c, i) { return contractItemHtml(c, i); }).join('');
     }
     renderContractTable();
+    function coValue(item) {
+      var sel = item.querySelector('.edt-f-co');
+      return sel.value === '__custom__' ? item.querySelector('.edt-f-co-custom').value.trim() : sel.value;
+    }
+    // 저장 시 편집 화면의 입력값을 그대로 C/G로 바꿔 넣는다 — 계약일·납입회차처럼 이 화면에 없는 값은
+    // 기존 계약이면 원래 값을 유지하고, 새로 추가한 계약이면 "—"/0으로 둔다(해당 항목은 편집 UI에 없음).
+    function collectContractsFromForm() {
+      var items = Array.prototype.slice.call(contractListEl.querySelectorAll('.edt-contract-item'));
+      var newC = [];
+      var newProducts = [];
+      var gMap = {};
+      items.forEach(function (item, i) {
+        var co = coValue(item);
+        var name = item.querySelector('.edt-f-name').value.trim();
+        var maturity = item.querySelector('.edt-f-maturity').value.trim();
+        var years = item.querySelector('.edt-f-years').value.trim();
+        var premiumNum = parseInt(item.querySelector('.edt-f-premium').value, 10);
+        var premium = premiumNum ? premiumNum.toLocaleString('ko-KR') + '원' : '미제공';
+        var termStr = (years ? years + '년납' : '—') + ' / ' + (maturity || '—');
+        var prod = [co, name];
+        newProducts.push(prod);
+
+        var old = C[i];
+        newC.push([co, name, old ? old[2] : '—', termStr, premium, old ? old[5] : 0, old ? old[6] : 0, old ? old[7] : '—', old ? old[8] : '—']);
+
+        var rows = item.querySelectorAll('.edt-contract-covs tbody tr');
+        Array.prototype.forEach.call(rows, function (tr) {
+          var covName = tr.querySelector('.edt-cov-name').value.trim();
+          var detailName = tr.querySelector('.edt-cov-detail').value.trim();
+          var amtMan = parseInt(tr.querySelector('.edt-cov-amt').value, 10);
+          if (!covName || !detailName || !amtMan) return;
+          if (!gMap[covName]) {
+            var catEntry = SCORE_CATS.filter(function (c) { return c.items.indexOf(covName) > -1; })[0];
+            gMap[covName] = [covName, catEntry ? catEntry.label : '운전자/기타', []];
+          }
+          gMap[covName][2].push([prod, detailName, amtMan * 10000]);
+        });
+      });
+      return { C: newC, G: Object.keys(gMap).map(function (k) { return gMap[k]; }), PRODUCTS: newProducts };
+    }
+    function updateSummary(item) {
+      var co = coValue(item);
+      var name = item.querySelector('.edt-f-name').value.trim();
+      var premium = item.querySelector('.edt-f-premium').value.trim();
+      var covCount = item.querySelectorAll('.edt-contract-covs tbody tr').length;
+      var s = summaryText(co, name, premium, covCount);
+      item.querySelector('.edt-summary-co').textContent = s.co;
+      item.querySelector('.edt-summary-name').textContent = s.name;
+      item.querySelector('.edt-summary-sub').textContent = s.sub;
+    }
+    function toggleContract(head) {
+      var toggle = head.querySelector('.edt-contract-toggle');
+      var body = head.closest('.edt-contract-item').querySelector('.edt-contract-body');
+      var open = body.hidden;
+      body.hidden = !open;
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.firstChild.textContent = open ? '접기' : '상세보기';
+    }
+    contractListEl.addEventListener('click', function (e) {
+      if (e.target.classList.contains('edt-add-cov-btn')) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = covRowCells('', '', 0);
+        e.target.closest('.edt-contract-covs').querySelector('tbody').appendChild(tr);
+        updateSummary(e.target.closest('.edt-contract-item'));
+      } else if (e.target.closest('.edt-contract-head')) {
+        toggleContract(e.target.closest('.edt-contract-head'));
+      }
+    });
+    contractListEl.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('edt-contract-head')) {
+        e.preventDefault();
+        toggleContract(e.target);
+      }
+    });
+    contractListEl.addEventListener('input', function (e) {
+      if (e.target.classList.contains('edt-f-co-custom') || e.target.classList.contains('edt-f-name') || e.target.classList.contains('edt-f-premium')) {
+        updateSummary(e.target.closest('.edt-contract-item'));
+      }
+    });
+    contractListEl.addEventListener('change', function (e) {
+      if (!e.target.classList.contains('edt-f-co')) return;
+      var item = e.target.closest('.edt-contract-item');
+      var custom = item.querySelector('.edt-f-co-custom');
+      var isCustom = e.target.value === '__custom__';
+      custom.hidden = !isCustom;
+      if (isCustom) custom.focus();
+      updateSummary(item);
+    });
+    document.getElementById('edt-add-contract-btn').addEventListener('click', function () {
+      var idx = contractListEl.children.length;
+      var blank = ['', '', '', '', '', 0, 0, '', ''];
+      var wrap = document.createElement('div');
+      wrap.innerHTML = contractItemHtml(blank, idx);
+      var item = wrap.firstChild;
+      contractListEl.appendChild(item);
+      toggleContract(item.querySelector('.edt-contract-head'));
+    });
 
     // ----- 수정 이력 -----
     var historyEl = document.getElementById('edt-history-list');
@@ -1674,12 +1843,23 @@
       renderScore();
       OPINIONS = OPINIONS_INITIAL.map(function (o) { return { label: o.label, text: o.text }; });
       renderOpinions();
-      renderCovTable();
-      addTbody.innerHTML = '';
       renderContractTable();
       toast('수정 내용을 초기화했어요.');
     });
     function doSave() {
+      // 표에서 손으로 고친 점수를 항목별로 기억해둔다 — renderPage()가 다시 돌아도 규칙 계산값으로 안 돌아가고 이 값을 보여준다
+      document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp, idx) {
+        scoreOverrides[SCORE_ROWS[idx].label] = parseInt(inp.value, 10) || 0;
+      });
+
+      // 편집 화면의 계약·담보 입력값을 C/G에 반영하고, 요약/상세/고객용을 전부 다시 그린다
+      var collected = collectContractsFromForm();
+      C = collected.C;
+      G = collected.G;
+      PRODUCTS_LIST = collected.PRODUCTS;
+      renderPage();
+      renderContractTable();
+
       var row = document.createElement('div');
       row.className = 'edt-history-row';
       row.innerHTML = '<span class="ts">2026.11.09 · 최신규</span><ul><li>보장분석 데이터 수정 저장</li></ul>';
