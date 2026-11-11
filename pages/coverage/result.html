@@ -33,12 +33,9 @@
   .cE .rep-id a.patient-avatar:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(20,120,200,.2); }
 
   /* ===== 탭 (report-viewseg 패턴 재사용) — 스크롤 시 상단 고정 ===== */
-  .cE .report-viewseg { display: flex; align-items: stretch; justify-content: space-between; gap: 12px; margin: 8px 0 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; background: #fff; }
+  .cE .report-viewseg { display: flex; align-items: stretch; margin: 8px 0 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; background: #fff; }
   .cE .report-viewseg-tabs { display: flex; align-items: stretch; gap: 4px; }
-  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
-  .cE .cov-share-btn { align-self: center; display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; background: var(--brand-pale); color: var(--brand-deep); border: 1px solid var(--brand-soft); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-option); font-weight: 700; line-height: 1; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; transition: background-color .15s ease, border-color .15s ease; }
-  .cE .cov-share-btn:hover { background: var(--brand-soft); border-color: var(--brand); }
-  .cE .cov-share-btn svg { color: currentColor; flex: none; }
+  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); text-decoration: none; cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
   .cE .report-viewseg-btn::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 3px; background: transparent; border-radius: 3px 3px 0 0; transition: background-color .2s ease; }
   .cE .report-viewseg-btn:hover { color: var(--ink); }
   .cE .report-viewseg-btn svg { color: currentColor; }
@@ -49,6 +46,7 @@
   .cE .card-pad h2 { display: flex; align-items: center; gap: 8px; }
   .cE .card-pad h2 svg { color: var(--brand-deep); }
   .cE .card-pad h2 .h-sub { margin-left: auto; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+  .cE .card-pad h2 .h-sub b { color: var(--ink); font-weight: 700; }
 
   /* ===== 계약 요약 — 타일 3개 ===== */
   .cE .cov-tiles { display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; }
@@ -164,8 +162,7 @@
   /* ===== 상세 보장분석표 / 보험사별 상세 — 대분류 탭 (박스 없이 밑줄로만 구분, 다른 섹션 h2와 같은 폰트 레벨) ===== */
   /* 카드 패딩(28px)을 좌우로 빼서 페이지 최대폭(1192px)까지 꽉 채운다 — 다른 카드처럼 안쪽으로 들어간 폭이 아니라 테이블 자체가 1192*/
   .cE .card-pad:has(#cov-view-toggle) { border-color: transparent; padding-left: 0; padding-right: 0; }
-  /* scroll-margin-top — 전환 시 scrollIntoView가 상단 sticky 탭(report-viewseg)에 가리지 않게 여유를 둔다 */
-  .cE .cov-subtabs { display: flex; align-items: stretch; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 20px; scroll-margin-top: 76px; }
+  .cE .cov-subtabs { display: flex; align-items: stretch; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
   .cE .cov-subtab { position: relative; padding: 2px 1px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; }
   .cE .cov-subtab::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent; border-radius: 2px 2px 0 0; transition: background-color .2s ease; }
   .cE .cov-subtab:hover { color: var(--ink); }
@@ -182,8 +179,10 @@
   .cE .cov-co-select-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
   .cE .cov-co-product { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
   .cE .cov-co-product + .cov-co-product { margin-top: 20px; }
-  .cE .cov-co-product-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .cE .cov-co-product-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .cE .cov-co-product-left { display: flex; align-items: baseline; gap: 8px; }
   .cE .cov-co-product-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .cov-co-product-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; white-space: nowrap; text-align: right; }
   .cE .cov-co-product-cnt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; white-space: nowrap; }
   .cE .cov-detail-table { width: 100%; border-collapse: collapse; }
   .cE .cov-detail-table th { text-align: left; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); background: #fff; padding: 12px 20px; border-bottom: 1px solid var(--line); }
@@ -191,8 +190,84 @@
   .cE .cov-detail-table td { padding: 13px 20px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); vertical-align: middle; }
   .cE .cov-detail-table tbody tr:last-child td { border-bottom: none; }
   .cE .cov-detail-table td.cov { font-weight: 700; color: var(--ink); }
-  .cE .cov-detail-table td.detail { color: var(--ink-2); }
-  .cE .cov-detail-table td.amt { text-align: right; font-weight: 700; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
+  .cE .cov-detail-table td.detail { font-weight: 700; color: var(--ink); }
+  .cE .cov-detail-table td.amt { text-align: right; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* ===== 고객용 미리보기 (share.html과 같은 수치를 설계사 화면 안에서 그대로 보여준다) ===== */
+  .cE .cov-preview-head { background: var(--brand-pale); border-radius: var(--r-md); padding: 28px 32px; margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .cE .cov-preview-head-l { min-width: 0; }
+  .cE .cov-preview-head h2 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .cE .cov-preview-head-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin: 4px 0 0; }
+
+  /* 고객용 공유 버튼 + 드롭다운 (인쇄하기 / PDF로 저장 / PDF 전송) */
+  .cE .cov-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; cursor: pointer; white-space: nowrap; flex: none; transition: filter .15s ease; }
+  .cE .cov-share-btn:hover { filter: brightness(1.05); }
+  .cE .cov-share-btn svg { color: currentColor; flex: none; }
+  .cE #cov-share-popover .menu-list { right: 0; }
+
+  /* ===== 폼 요소 (PDF 전송 모달용) ===== */
+  .cE .field { display: flex; flex-direction: column; gap: 8px; }
+  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: -0.01em; padding-left: 2px; }
+  .cE .input-box { width: 100%; height: 46px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 0 14px; font-size: var(--fs-body); color: var(--ink); font-family: inherit; outline: none; background: #fff; transition: border-color .15s ease; box-sizing: border-box; }
+  .cE .input-box:hover { border-color: var(--ink-3); }
+  .cE .input-box:focus { border-color: var(--brand); }
+
+  /* ===== PDF 전송 모달 ===== */
+  .nr-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
+  .nr-modal[hidden] { display: none; }
+  .nr-modal-card { background: #fff; border-radius: 18px; padding: 0; max-width: 420px; width: 100%; box-shadow: var(--sh-2); overflow: hidden; }
+  .nr-modal-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .nr-modal-head-l { display: flex; align-items: center; gap: 12px; }
+  .nr-modal-head-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); color: #fff; display: grid; place-items: center; flex: none; }
+  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .nr-modal-head .desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
+  .nr-modal-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
+  .nr-modal-close:hover { background: var(--line); color: var(--ink); }
+  .nr-modal-body { padding: 22px 26px; display: flex; flex-direction: column; gap: 16px; }
+  .nr-modal-hint { display: flex; gap: 8px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-sm); padding: 10px 14px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.4; }
+  .nr-modal-hint svg { color: var(--brand-deep); flex: none; margin-top: 1px; }
+  .nr-modal-actions { padding: 16px 26px 22px; border-top: 1px solid var(--line); display: flex; gap: 10px; }
+  @keyframes nrPop { from { opacity: 0; transform: scale(0.96) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .nr-pop { animation: nrPop 0.22s cubic-bezier(0.16,1,0.3,1) both; }
+  .cE .shr-sum-tiles { display: flex; gap: 12px; margin-bottom: 20px; }
+  .cE .shr-sum-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
+  .cE .shr-sum-l { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow-x: auto; }
+  .cE .shr-contract-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
+  .cE .shr-contract-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .cE .shr-contract-table th.amt { text-align: right; }
+  .cE .shr-contract-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); white-space: nowrap; vertical-align: middle; }
+  .cE .shr-contract-table tbody tr:last-child td { border-bottom: none; }
+  .cE .shr-contract-table td.num { color: var(--ink-3); }
+  .cE .shr-contract-table td.co { font-weight: 700; color: var(--ink-2); }
+  .cE .shr-contract-table td.pname { white-space: normal; }
+  .cE .shr-contract-table td.amt { text-align: right; font-weight: 700; color: var(--ink); }
+  .cE .shr-contract-table td.amt.na { color: var(--ink-3); font-weight: 500; }
+  .cE .shr-prog { min-width: 150px; }
+  .cE .shr-prog-bar { height: 7px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
+  .cE .shr-prog-bar i { display: block; height: 100%; background: var(--brand); border-radius: 4px; }
+  .cE .shr-prog-txt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .shr-prog-txt.na { color: var(--ink-4); }
+  .cE .shr-cat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 24px; margin-top: 16px; }
+  .cE .shr-cat-card:first-child { margin-top: 0; }
+  .cE .shr-cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .cE .shr-cat-ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); display: grid; place-items: center; font-size: 19px; line-height: 1; }
+  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .cE .shr-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: var(--fs-body); }
+  .cE .shr-row:last-of-type { border-bottom: none; }
+  .cE .shr-row-l { color: var(--ink-2); font-weight: 500; }
+  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .shr-row-v small { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-left: 3px; }
+  .cE .shr-empty { margin: 0; padding: 2px 0 4px; font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; }
+  .cE .shr-missing { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .cE .shr-missing-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
+  .cE .shr-chip { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill); background: #FFF0F1; color: #C92238; }
+  .cE .shr-tip { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 12px 14px; background: var(--brand-pale); border-radius: var(--r-sm); }
+  .cE .shr-tip-ic { flex: none; line-height: 1.4; }
+  .cE .shr-tip-txt { font-size: var(--fs-option); color: var(--ink); font-weight: 600; }
+  .cE .shr-tip-src { display: block; margin-top: 3px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
+  .cE .shr-disclaim { margin: 24px 4px 0; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
 
   /* ===== 요약: 보장분석표 (담보별 카드 — 회사·상품·세부담보명) ===== */
   /* 첫 카테고리도 48px를 그대로 둔다 — h2("보장분석표")→카테고리 라벨 간격이 라벨→그룹(24px)보다 넓어야 한다 */
@@ -339,11 +414,9 @@
     .cE .cov-rep-right { display: contents; }
     .cE .cov-rep-head .menu-popover { position: absolute; top: 0; right: 0; }
 
-    /* 탭 — 아이콘 축소, 고객 공유 버튼은 아래 줄로 */
-    .cE .report-viewseg { flex-wrap: wrap; row-gap: 10px; }
+    /* 탭 — 아이콘 축소 */
+    .cE .report-viewseg-tabs { flex-wrap: wrap; row-gap: 8px; }
     .cE .report-viewseg-btn { font-size: var(--fs-body); padding: 10px 14px 12px; gap: 6px; }
-    .cE .cov-share-btn { order: 1; width: 100%; justify-content: center; margin-bottom: 4px; }
-    .cE .report-viewseg-tabs { order: 2; }
 
     .cE .cov-subtabs { gap: 18px; }
     .cE .cov-subtab { font-size: var(--fs-option); padding: 2px 1px 12px; }
@@ -351,6 +424,23 @@
     .cE .cov-co-select { width: 100%; }
     .cE .cov-co-product-head { flex-wrap: wrap; gap: 6px; padding: 14px 16px; }
     .cE .cov-detail-table th, .cE .cov-detail-table td { padding: 11px 16px; }
+
+    .cE .cov-preview-head { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px 20px; }
+    .cE .cov-share-btn { align-self: flex-start; height: 40px; padding: 0 16px; font-size: var(--fs-option); }
+
+    .nr-modal { padding: 12px; }
+    .nr-modal-card { max-width: 100%; border-radius: 16px; }
+    .nr-modal-head { padding: 18px 20px 14px; gap: 12px; }
+    .nr-modal-head-ic { width: 36px; height: 36px; border-radius: 10px; }
+    .nr-modal-head h3 { font-size: var(--fs-body); }
+    .nr-modal-head .desc { font-size: var(--fs-option); }
+    .nr-modal-body { padding: 18px 20px; gap: 14px; }
+    .nr-modal-actions { padding: 14px 20px 20px; flex-direction: column; gap: 8px; }
+    .nr-modal-actions > button { width: 100% !important; padding: 12px 18px !important; justify-content: center !important; }
+  }
+
+  @media print {
+    .report-viewseg, .cov-rep-head, .cov-preview-head .menu-popover { display: none !important; }
   }
 </style>
 </head>
@@ -416,11 +506,10 @@
           <svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>
           상세
         </button>
+        <button class="report-viewseg-btn" type="button" role="tab" id="cov-tabC" aria-selected="false" aria-controls="cov-panelC">
+          고객용
+        </button>
       </div>
-      <a class="cov-share-btn" href="share.html">
-        <svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>
-        고객용
-      </a>
     </div>
 
     <!-- ===== 패널 A: 보장분석 ===== -->
@@ -521,7 +610,7 @@
       </div>
 
       <div class="card-pad" id="cov-contract-detail">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 상세</h2>
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 상세<span class="h-sub">총 월 보험료(완납 제외) <b id="cov-contract-total-amt">—</b></span></h2>
         <div style="overflow-x:auto">
           <table class="cov-contract-table" style="min-width:980px">
             <thead>
@@ -579,7 +668,95 @@
       </div>
     </div>
 
+    <!-- ===== 패널 C: 고객용 미리보기 ===== -->
+    <div id="cov-panelC" role="tabpanel" aria-labelledby="cov-tabC" hidden>
+      <div class="cov-preview-head">
+        <div class="cov-preview-head-l">
+          <h2>홍길동님의 보장분석 리포트입니다</h2>
+          <p class="cov-preview-head-sub">2026.11.10 · 담당설계사 최신규</p>
+        </div>
+        <div class="menu-popover" id="cov-share-popover">
+          <button class="cov-share-btn" type="button" id="cov-share-btn" aria-expanded="false" aria-haspopup="true">
+            <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+            공유
+          </button>
+          <div class="menu-list" id="cov-share-menu" hidden role="menu">
+            <button class="menu-item" type="button" role="menuitem" id="cov-share-print">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+              인쇄하기
+            </button>
+            <button class="menu-item" type="button" role="menuitem" id="cov-share-savepdf">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
+              PDF로 저장
+            </button>
+            <button class="menu-item" type="button" role="menuitem" id="cov-share-sendpdf">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+              PDF 전송
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-pad">
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-won"/></svg>지금 가지고 있는 보험</h2>
+        <div class="shr-sum-tiles" id="shr-sum-tiles"></div>
+        <div class="shr-policy-list">
+          <table class="shr-contract-table" style="min-width:860px">
+            <thead>
+              <tr>
+                <th>#</th><th>보험사</th><th>상품명</th><th>계약일</th><th>납입/만기</th>
+                <th class="amt">월보험료</th><th>납입 진행</th>
+              </tr>
+            </thead>
+            <tbody id="shr-policy-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card-pad">
+        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>무슨 일이 생기면, 얼마를 받나요?</h2>
+        <div id="shr-cats"></div>
+      </div>
+
+      <p class="shr-disclaim">이 안내는 현재 보유하신 계약 내용을 바탕으로 정리한 참고 자료이며, 실제 지급 금액과 조건은 약관과 심사 결과에 따라 달라질 수 있습니다.</p>
+    </div>
+
   </main>
+
+  <!-- PDF 전송 모달 -->
+  <div class="nr-modal" id="pdf-send-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pdf-send-title">
+    <div class="nr-modal-card nr-pop">
+      <div class="nr-modal-head">
+        <div class="nr-modal-head-l">
+          <div class="nr-modal-head-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-send"/></svg></div>
+          <div>
+            <h3 id="pdf-send-title">PDF 전송</h3>
+            <div class="desc">전송할 고객 연락처를 확인해주세요</div>
+          </div>
+        </div>
+        <button class="nr-modal-close" type="button" id="pdf-send-close" aria-label="닫기">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <div class="nr-modal-body">
+        <div class="field">
+          <label class="field-l" for="pdf-send-phone">고객 연락처</label>
+          <input class="input-box" type="tel" id="pdf-send-phone" placeholder="010-0000-0000" inputmode="numeric" />
+        </div>
+        <div class="nr-modal-hint">
+          <svg class="ic-svg" width="15" height="15"><use href="#i-help-circle"/></svg>
+          <span>번호가 다르면 고쳐서 보내도 돼요. 문자로 PDF 링크가 발송돼요.</span>
+        </div>
+      </div>
+      <div class="nr-modal-actions">
+        <button class="btn-secondary" type="button" id="pdf-send-cancel" style="background:#fff;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:12px 22px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;">취소</button>
+        <button class="btn-primary" type="button" id="pdf-send-confirm" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand-grad);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 24px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;box-shadow:var(--sh-brand);letter-spacing:-0.01em;">
+          <svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>
+          전송하기
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 <div id="footer-host"></div>
 </div>
@@ -852,6 +1029,116 @@
       + '</tr>';
   }).join('');
 
+  // 완납(납입 진행 100%) 계약은 제외하고 월보험료 합계를 낸다 — "미제공" 등 숫자가 아닌 값은 parseInt에서 자연히 걸러진다
+  var contractTotal = C.reduce(function (sum, c) {
+    var paidOff = c[6] > 0 && c[5] === c[6];
+    var prem = parseInt(String(c[4]).replace(/[^0-9]/g, ''), 10);
+    return paidOff || isNaN(prem) ? sum : sum + prem;
+  }, 0);
+  document.getElementById('cov-contract-total-amt').textContent = contractTotal.toLocaleString('ko-KR') + '원';
+
+  // ===== 고객용 미리보기 (share.html과 같은 문구·구성, 수치는 G/C를 그대로 재사용) =====
+  (function () {
+    document.getElementById('shr-sum-tiles').innerHTML =
+      '<div class="shr-sum-tile"><span class="shr-sum-l">유지하고 있는 보험</span><span class="shr-sum-v">' + C.length + '개</span></div>'
+      + '<div class="shr-sum-tile"><span class="shr-sum-l">매달 내는 보험료</span><span class="shr-sum-v">' + contractTotal.toLocaleString('ko-KR') + '원</span></div>';
+
+    document.getElementById('shr-policy-tbody').innerHTML = C.map(function (c, i) {
+      var t = term(c);
+      var noPrem = c[4] === '미제공';
+      var amtHtml = noPrem ? '<span class="na">정보 없음</span>' : c[4];
+      var w = (!noPrem && c[6]) ? Math.round(c[5] / c[6] * 100) : null;
+      var progHtml = w == null
+        ? '<span class="shr-prog-txt na">산출 불가</span>'
+        : '<div class="shr-prog"><div class="shr-prog-bar"><i style="width:' + w + '%"></i></div><span class="shr-prog-txt">' + c[5] + '/' + c[6] + '회</span></div>';
+      return '<tr>'
+        + '<td class="num">' + (i + 1) + '</td>'
+        + '<td class="co">' + esc(c[0]) + '</td>'
+        + '<td class="pname">' + esc(c[1]) + '</td>'
+        + '<td>' + esc(c[2]) + '</td>'
+        + '<td>' + esc(t[0]) + ' / ' + esc(t[1]) + '</td>'
+        + '<td class="amt' + (noPrem ? ' na' : '') + '">' + amtHtml + '</td>'
+        + '<td>' + progHtml + '</td>'
+        + '</tr>';
+    }).join('');
+
+    // 카테고리·문항 구성은 share.html의 고객용 카피를 그대로 가져온다 — 금액은 G 기반 rowSum()에서 읽어 결과 탭과 항상 같은 값을 보장한다
+    var CATS = [
+      { title: '사망·후유장해', icon: '🛡️',
+        items: [
+          { name: '상해사망', label: '사고로 사망하면 가족에게' },
+          { name: '질병사망', label: '병으로 사망하면 가족에게' },
+          { name: '상해80%미만후유장해', label: '후유장해가 남으면' },
+          { name: '질병80%미만후유장해', label: '후유장해가 남으면' }
+        ],
+        tip: { text: '3대 사망원인은 암·심장질환·폐렴으로 전체 사망의 42.6%를 차지합니다.', src: '통계청 「2024년 사망원인통계」' } },
+      { title: '암 진단', icon: '🩺',
+        items: [
+          { name: '일반암', label: '암 진단을 받으면' },
+          { name: '유사암', label: '갑상선암 등 비교적 가벼운 암이면' }
+        ],
+        tip: { text: '기대수명까지 생존 시 암에 걸릴 확률은 남자 44.6%(2명 중 1명), 여자 38.2%(3명 중 1명)입니다. 5년 상대생존율은 72.9%로 높아졌습니다.', src: '보건복지부·중앙암등록본부 「2023년 국가암등록통계」' } },
+      { title: '뇌·심장 진단', icon: '❤️',
+        items: [
+          { name: '뇌혈관질환', label: '뇌혈관질환 진단을 받으면' },
+          { name: '허혈성심장질환', label: '허혈성심장질환 진단을 받으면' }
+        ],
+        tip: { text: '심장질환·뇌혈관질환은 암에 이어 사망원인 2위·4위로, 진단 즉시 지급되는 정액형 보장이 중요합니다.', src: '통계청 「2024년 사망원인통계」' } },
+      { title: '실손의료비', icon: '🏥',
+        items: [
+          { name: '질병입원의료비', label: '질병으로 입원 치료를 받으면' },
+          { name: '질병통원의료비', label: '질병으로 통원 치료를 받으면' }
+        ],
+        tip: { text: '실손의료보험 가입자는 약 4,000만명으로, 국민 대다수가 가입한 "제2의 건강보험"입니다.', src: '금융감독원' } },
+      { title: '수술/입원', icon: '🩹',
+        items: [
+          { name: '상해수술비', label: '다쳐서 수술을 받으면' },
+          { name: '암수술비', label: '암 수술을 받으면' },
+          { name: '질병입원일당', label: '병으로 입원하면' }
+        ],
+        tip: { text: '국내 평균 입원일수는 OECD 평균보다 길어, 입원일당 보장의 공백이 클수록 실제 부담으로 이어집니다.', src: 'OECD Health Statistics' } },
+      { title: '운전자/기타', icon: '🚗',
+        items: [
+          { name: '벌금(대인/스쿨존/대물)', label: '교통사고로 벌금을 내야 하면' },
+          { name: '교통사고처리지원금', label: '교통사고 합의금이 필요하면' },
+          { name: '변호사선임비용', label: '변호사를 선임하면' }
+        ],
+        tip: { text: '교통사고 발생 시 형사합의금·벌금 부담이 적지 않아, 운전자보험으로 별도 대비가 필요합니다.', src: '도로교통공단 교통사고분석시스템(TAAS)' } }
+    ];
+
+    function catCard(cat) {
+      var held = [], missing = [];
+      cat.items.forEach(function (it) {
+        var amt = rowSum(it.name);
+        if (amt > 0) held.push({ it: it, amt: amt }); else missing.push(it.name);
+      });
+      var bodyHtml = held.length
+        ? held.map(function (h) {
+            var daily = h.it.name.indexOf('일당') > -1;
+            return '<div class="shr-row"><span class="shr-row-l">' + esc(h.it.label) + '</span>'
+              + '<span class="shr-row-v">' + won(h.amt) + (daily ? '<small>(1일당)</small>' : '') + '</span></div>';
+          }).join('')
+        : '<p class="shr-empty">이 분야는 지금 준비된 보장이 없어요.</p>';
+      var missingHtml = missing.length
+        ? '<div class="shr-missing"><span class="shr-missing-l">⚠️ 아직 없는 담보</span>'
+          + missing.map(function (n) { return '<span class="shr-chip">' + esc(n) + '</span>'; }).join('')
+          + '</div>'
+        : '';
+      var tipHtml = cat.tip
+        ? '<div class="shr-tip"><span class="shr-tip-ic">💡</span><span>'
+          + '<span class="shr-tip-txt">' + esc(cat.tip.text) + '</span>'
+          + '<span class="shr-tip-src">' + esc(cat.tip.src) + '</span>'
+          + '</span></div>'
+        : '';
+      return '<article class="shr-cat-card">'
+        + '<div class="shr-cat-head"><span class="shr-cat-ic">' + cat.icon + '</span><h3>' + esc(cat.title) + '</h3></div>'
+        + bodyHtml + missingHtml + tipHtml
+        + '</article>';
+    }
+
+    document.getElementById('shr-cats').innerHTML = CATS.map(catCard).join('');
+  })();
+
   // ===== 보험금 카드 =====
   var BC = { '적절': 'ok', '초과': 'over', '부족': 'low', '없음': 'low' };
   function judge(m, a) { if (m === 0) return '없음'; if (m == null || a == null) return null; var r = m / a; return r < 0.8 ? '부족' : r > 1.2 ? '초과' : '적절'; }
@@ -1036,6 +1323,10 @@
       '실손의료비': '실손', '수술/입원': '수술', '운전자/기타': '운전자'
     };
 
+    // 상품명으로 계약 상세(C)의 계약일·납입/만기·월보험료를 찾아 상품 헤더에 같이 보여준다
+    var CO_PR_MAP = {};
+    C.forEach(function (c) { CO_PR_MAP[c[0] + '||' + c[1]] = c; });
+
     var BY_CO = {};
     var CO_ORDER = [];
     PRODUCTS_LIST.forEach(function (p) {
@@ -1075,8 +1366,15 @@
                 + '<td class="amt">' + won(it.amt) + '</td></tr>';
             }).join('')
           : '<tr><td colspan="4" style="text-align:center;color:var(--ink-3);padding:24px 20px;">등록된 담보 정보가 없어요</td></tr>';
+        var cRow = CO_PR_MAP[co + '||' + pr];
+        var metaHtml = '';
+        if (cRow) {
+          var t = term(cRow);
+          var metaParts = ['가입일 ' + esc(cRow[2]), esc(t[0]), esc(t[1]), '월보험료 ' + esc(cRow[4])];
+          metaHtml = '<span class="cov-co-product-meta">' + metaParts.join(' | ') + '</span>';
+        }
         return '<div class="cov-co-product">'
-          + '<div class="cov-co-product-head"><span class="cov-co-product-name">' + esc(pr) + '</span><span class="cov-co-product-cnt">담보 ' + items.length + '건</span></div>'
+          + '<div class="cov-co-product-head"><span class="cov-co-product-left"><span class="cov-co-product-name">' + esc(pr) + '</span><span class="cov-co-product-cnt">담보 ' + items.length + '건</span></span>' + metaHtml + '</div>'
           + '<table class="cov-detail-table"><thead><tr><th>구분</th><th>담보</th><th>세부담보명</th><th class="amt">가입금액</th></tr></thead><tbody>' + rows + '</tbody></table>'
           + '</div>';
       }).join('');
@@ -1100,9 +1398,6 @@
       });
       viewMatrix.hidden = view !== 'matrix';
       viewByCo.hidden = view !== 'bycompany';
-      // 두 뷰의 콘텐츠 높이 차이가 커서, 스크롤이 아래쪽에 있을 때 전환하면 브라우저가 스크롤 위치를
-      // 강제로 보정하면서 sticky GNB가 출렁여 보인다 — 전환 직후 탭 위치로 스크롤을 고정해 방지한다.
-      toggleEl.scrollIntoView({ block: 'start' });
     });
   })();
 
@@ -1128,21 +1423,28 @@
     });
   })();
 
-  // ===== 탭 전환 =====
+  // ===== 탭 전환 (요약 / 상세 / 고객용 3-way) =====
   (function () {
-    var tA = document.getElementById('cov-tabA'), tB = document.getElementById('cov-tabB');
-    var pA = document.getElementById('cov-panelA'), pB = document.getElementById('cov-panelB');
-    function tab(b) {
-      tA.classList.toggle('on', !b); tB.classList.toggle('on', b);
-      tA.setAttribute('aria-selected', !b); tB.setAttribute('aria-selected', b);
-      pA.hidden = b; pB.hidden = !b;
+    var tabs = [
+      { btn: document.getElementById('cov-tabA'), panel: document.getElementById('cov-panelA') },
+      { btn: document.getElementById('cov-tabB'), panel: document.getElementById('cov-panelB') },
+      { btn: document.getElementById('cov-tabC'), panel: document.getElementById('cov-panelC') }
+    ];
+    function tab(i) {
+      tabs.forEach(function (t, idx) {
+        var on = idx === i;
+        t.btn.classList.toggle('on', on);
+        t.btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.panel.hidden = !on;
+      });
     }
-    tA.addEventListener('click', function () { tab(false); window.scrollTo(0, 0); });
-    tB.addEventListener('click', function () { tab(true); window.scrollTo(0, 0); });
+    tabs.forEach(function (t, idx) {
+      t.btn.addEventListener('click', function () { tab(idx); window.scrollTo(0, 0); });
+    });
 
     // 계약 요약 → "계약 상세보기" 버튼: 상세 탭으로 전환 후 계약 상세 섹션으로 스크롤
     document.getElementById('cov-goto-detail').addEventListener('click', function () {
-      tab(true);
+      tab(1);
       document.getElementById('cov-contract-detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   })();
@@ -1160,14 +1462,68 @@
     document.getElementById('cov-print-btn').addEventListener('click', function () { closeMenu(); window.print(); });
   })();
 
+  // ===== 고객용 공유 메뉴 (인쇄하기 / PDF로 저장 / PDF 전송) =====
+  (function () {
+    var btn = document.getElementById('cov-share-btn');
+    var menu = document.getElementById('cov-share-menu');
+    var popover = btn.closest('.menu-popover');
+    function openMenu() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    function closeMenu() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? openMenu() : closeMenu(); });
+    document.addEventListener('click', function (e) { if (!menu.hidden && !popover.contains(e.target)) closeMenu(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
+
+    function toast(msg) {
+      var t = document.createElement('div');
+      t.className = 'edt-save-toast';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      requestAnimationFrame(function () { t.classList.add('show'); });
+      setTimeout(function () {
+        t.classList.remove('show');
+        setTimeout(function () { t.remove(); }, 250);
+      }, 2200);
+    }
+
+    document.getElementById('cov-share-print').addEventListener('click', function () {
+      closeMenu();
+      window.print();
+    });
+    // PDF로 저장 — 별도 변환 서버 없이, 브라우저 인쇄창에서 "PDF로 저장"을 destination으로 고르면 된다
+    document.getElementById('cov-share-savepdf').addEventListener('click', function () {
+      closeMenu();
+      window.print();
+    });
+
+    // ===== PDF 전송 모달 — 보내기 전에 고객 연락처를 확인·수정할 수 있게 =====
+    var sendModal = document.getElementById('pdf-send-modal');
+    var sendPhone = document.getElementById('pdf-send-phone');
+    var CUSTOMER_PHONE = '010-9876-5432';
+
+    document.getElementById('cov-share-sendpdf').addEventListener('click', function () {
+      closeMenu();
+      sendPhone.value = CUSTOMER_PHONE;
+      sendModal.hidden = false;
+      sendPhone.focus();
+    });
+    document.getElementById('pdf-send-close').addEventListener('click', function () { sendModal.hidden = true; });
+    document.getElementById('pdf-send-cancel').addEventListener('click', function () { sendModal.hidden = true; });
+    sendModal.addEventListener('click', function (e) { if (e.target === sendModal) sendModal.hidden = true; });
+    document.getElementById('pdf-send-confirm').addEventListener('click', function () {
+      var phone = sendPhone.value.trim();
+      if (!phone) { sendPhone.focus(); return; }
+      sendModal.hidden = true;
+      toast(phone + '(으)로 PDF가 전송되었습니다.');
+    });
+  })();
+
   // ===== 수정 모드 =====
   (function () {
     var root = document.querySelector('.cE');
     var toggleBtn = document.getElementById('edit-mode-btn');
     var editLabel = document.getElementById('edit-mode-label');
-    toggleBtn.addEventListener('click', function () {
-      var on = !root.classList.contains('is-editing');
-      if (!on) doSave(); // 수정 모드에서 다시 누르면 "저장"
+
+    function applyEditState(on) {
       root.classList.toggle('is-editing', on);
       toggleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
       editLabel.textContent = on ? '저장' : '수정';
@@ -1177,6 +1533,27 @@
         // display:none 상태에서 계산된 textarea 높이는 부정확하므로, 보이게 된 시점에 다시 맞춘다
         document.querySelectorAll('.edt-opinion-text').forEach(autoGrow);
       }
+    }
+
+    // 수정 모드 진입 시 history에 상태를 쌓아, 뒤로가기(브라우저/모바일 스와이프)를 누르면
+    // 리스트 화면까지 나가버리지 않고 수정 모드만 먼저 빠져나오도록 한다.
+    function enterEdit() {
+      history.pushState({ covEdit: true }, '', location.href);
+      applyEditState(true);
+    }
+    function exitEdit(fromPopstate) {
+      applyEditState(false);
+      doSave();
+      if (!fromPopstate) history.back(); // 쌓아둔 수정 모드 상태를 소비해 다음 뒤로가기가 바로 리스트로 가게 한다
+    }
+
+    toggleBtn.addEventListener('click', function () {
+      if (root.classList.contains('is-editing')) exitEdit(false);
+      else enterEdit();
+    });
+
+    window.addEventListener('popstate', function () {
+      if (root.classList.contains('is-editing')) exitEdit(true);
     });
 
     // ----- 보장 점수 입력 -----
