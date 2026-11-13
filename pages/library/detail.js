@@ -9,7 +9,9 @@
       { id: 'c1', name: '보험회사 콜센터 번호', docs: 12, kids: [
         { id: 'c1a', name: '생명보험사', docs: 4 },
         { id: 'c1b', name: '손해보험사', docs: 5 },
-        { id: 'c1c', name: '공제·기타', docs: 0 }
+        { id: 'c1c', name: '공제·기타', docs: 0 },
+        { id: 'c1d', name: '재보험사', docs: 3 },
+        { id: 'c1e', name: 'GA·법인대리점', docs: 6 }
       ]},
       { id: 'c2', name: '홈페이지 주소', docs: 6 },
       { id: 'c3', name: '설계사 전산 주소', docs: 9, kids: [
