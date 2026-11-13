@@ -443,7 +443,10 @@
     + '<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/><path d="m3 18 9 5 9-5"/></symbol>'
     // 사용자 (단일 / 다중)
     + '<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M6.5 17.5h11"/></symbol>'
-    + '<symbol id="i-user-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>';
+    + '<symbol id="i-user-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>'
+    // 자료실
+    + '<symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 10.5h18"/></symbol>'
+    + '<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>';
 
   // ===== GNB 템플릿 (데스크탑) =====
   function gnbHTML(active) {
@@ -476,6 +479,7 @@
       +     navItem('claim',    BASE + 'pages/claim/list.html',         'i-won',          '보험금청구')
       +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
       +     navItem('consult',  BASE + 'pages/consult/index.html',      'i-trending-up',  '재무상담')
+      +     navItem('library',  BASE + 'pages/library/index.html',      'i-folder',       '자료실', '<span class="beta-tag">NEW</span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +     navItem('planner',  BASE + 'pages/admin/planner/list.html', 'i-user-2',       '설계사관리')
       +   '</nav>'
@@ -553,6 +557,7 @@
       +       drawerItem('claim',     BASE + 'pages/claim/list.html',        'i-won',          '보험금청구')
       +       drawerItem('jjaepity',  BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
       +       drawerItem('consult',   BASE + 'pages/consult/index.html',     'i-trending-up',  '재무상담')
+      +       drawerItem('library',   BASE + 'pages/library/index.html',     'i-folder',       '자료실', '<span class="m-drawer-beta">NEW</span>')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +       drawerItem('planner',  BASE + 'pages/admin/planner/list.html','i-user-2',       '설계사관리')
       +     '</div>'

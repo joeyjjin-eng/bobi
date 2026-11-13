@@ -1,0 +1,146 @@
+.<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 자료실</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 ===== */
+  .cE .lib-title-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+  .cE .ht-l { display: flex; align-items: center; gap: 14px; }
+  .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
+  .cE .ht-sub b { color: var(--ink); font-weight: 700; }
+
+  /* ===== 검색바 ===== */
+  .cE .lib-search { flex: 0 1 360px; min-width: 240px; display: flex; align-items: center; gap: 8px; height: 44px; box-sizing: border-box; padding: 0 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .cE .lib-search svg { color: var(--ink-4); flex: none; }
+  .cE .lib-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); color: var(--ink); }
+  .cE .lib-search input::placeholder { color: var(--ink-4); }
+
+  /* ===== 카테고리 카드 ===== */
+  .cE .lib-grid { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+  .cE .lib-card { min-width: 0; display: flex; flex-direction: column; background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .cE .lib-card-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px; }
+  .cE .lib-chip { width: 28px; height: 28px; border-radius: var(--r-sm); color: #fff; display: grid; place-items: center; flex: none; }
+  .cE .lib-chip.med { background: var(--c-med); }
+  .cE .lib-chip.in { background: var(--c-in); }
+  .cE .lib-chip.surg { background: var(--c-surg); }
+  .cE .lib-chip.off { background: var(--ink); }
+  .cE .lib-card-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+  .cE .lib-count { margin-left: auto; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); }
+  .cE .lib-list { flex: 1; margin: 0 6px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 6px; }
+  .cE .lib-row { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: var(--r-sm); text-decoration: none; color: var(--ink); transition: background-color .15s ease; }
+  .cE .lib-row:hover { background: var(--bg-warm); }
+  .cE .lib-row:hover .lib-go { color: var(--brand-deep); }
+  .cE .lib-row:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .cE .lib-row-ic { flex: none; fill: currentColor; fill-opacity: .3; }
+  .cE .lib-row-ic.med { color: var(--c-med); }
+  .cE .lib-row-ic.in { color: var(--c-in); }
+  .cE .lib-row-ic.surg { color: var(--c-surg); }
+  .cE .lib-row-ic.off { color: var(--ink-3); fill-opacity: 0; }
+  .cE .lib-row span.name { font-size: var(--fs-body); font-weight: 500; }
+  .cE .lib-go { margin-left: auto; color: var(--ink-4); flex: none; }
+  .cE .lib-more-row { margin-top: 4px; padding-top: 10px; border-top: 1px dashed var(--line); border-radius: 0 0 var(--r-sm) var(--r-sm); }
+  .cE .lib-foot { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; }
+  .cE .lib-foot span { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+  .cE .lib-more { font-size: var(--fs-option); font-weight: 600; color: var(--ink-2); text-decoration: none; }
+  .cE .lib-more:hover { color: var(--brand-deep); }
+
+  @media (max-width: 960px) {
+    .cE .lib-title-row { padding-bottom: 14px; }
+    .cE .ht-l h1 { font-size: var(--fs-h2); }
+    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
+    .cE .lib-search { flex: 1 1 100%; min-width: 0; }
+    .cE .lib-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 640px) {
+    .layout { min-width: 0; }
+    .cE .lib-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- ===== 페이지 타이틀 ===== -->
+    <div class="lib-title-row">
+      <div class="ht-l">
+        <div class="ht-ic">
+          <svg class="ic-svg" width="22" height="22"><use href="#i-folder"/></svg>
+        </div>
+        <div>
+          <h1>자료실</h1>
+          <div class="ht-sub">카테고리 <b>4</b>개 · 하위 폴더 <b>9</b>개</div>
+        </div>
+      </div>
+      <div class="lib-search">
+        <label for="lib-search" class="sr-only">자료 검색</label>
+        <svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg>
+        <input id="lib-search" type="search" placeholder="보험사, 서류 이름으로 검색" />
+      </div>
+    </div>
+
+    <!-- ===== 카테고리 카드 ===== -->
+    <div class="lib-grid">
+
+      <section class="lib-card" aria-labelledby="cat1"><header class="lib-card-head"><span class="lib-chip med" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-folder"/></svg></span><h2 id="cat1">보험사 자료</h2><span class="lib-count"># 4</span></header><div class="lib-list">
+        <a href="detail.html?folder=c1" class="lib-row"><svg class="ic-svg lib-row-ic med" width="18" height="18"><use href="#i-folder"/></svg><span class="name">보험회사 콜센터 번호</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=c2" class="lib-row"><svg class="ic-svg lib-row-ic med" width="18" height="18"><use href="#i-folder"/></svg><span class="name">홈페이지 주소</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=c3" class="lib-row"><svg class="ic-svg lib-row-ic med" width="18" height="18"><use href="#i-folder"/></svg><span class="name">설계사 전산 주소</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=c4" class="lib-row"><svg class="ic-svg lib-row-ic med" width="18" height="18"><use href="#i-folder"/></svg><span class="name">모니터링 인콜 번호</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+      </div><footer class="lib-foot"><span>하위 폴더 4개</span><a href="detail.html?folder=a" class="lib-more">전체보기 ›</a></footer></section>
+
+      <section class="lib-card" aria-labelledby="cat2"><header class="lib-card-head"><span class="lib-chip in" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-folder"/></svg></span><h2 id="cat2">계약 및 청약 관리</h2><span class="lib-count"># 2</span></header><div class="lib-list">
+        <a href="detail.html?folder=b1" class="lib-row"><svg class="ic-svg lib-row-ic in" width="18" height="18"><use href="#i-folder"/></svg><span class="name">계약변경, 보험료 납부</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=b2" class="lib-row"><svg class="ic-svg lib-row-ic in" width="18" height="18"><use href="#i-folder"/></svg><span class="name">전자청약</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+      </div><footer class="lib-foot"><span>하위 폴더 2개</span><a href="detail.html?folder=b" class="lib-more">전체보기 ›</a></footer></section>
+
+      <section class="lib-card" aria-labelledby="cat3"><header class="lib-card-head"><span class="lib-chip surg" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-folder"/></svg></span><h2 id="cat3">보험금 청구</h2><span class="lib-count"># 3</span></header><div class="lib-list">
+        <a href="detail.html?folder=d1" class="lib-row"><svg class="ic-svg lib-row-ic surg" width="18" height="18"><use href="#i-folder"/></svg><span class="name">현장조사 대응 방법</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=d2" class="lib-row"><svg class="ic-svg lib-row-ic surg" width="18" height="18"><use href="#i-folder"/></svg><span class="name">보험금 청구서류</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=d3" class="lib-row"><svg class="ic-svg lib-row-ic surg" width="18" height="18"><use href="#i-folder"/></svg><span class="name">보험금 청구 필요서류</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+      </div><footer class="lib-foot"><span>하위 폴더 3개</span><a href="detail.html?folder=d" class="lib-more">전체보기 ›</a></footer></section>
+
+      <section class="lib-card" aria-labelledby="cat4"><header class="lib-card-head"><span class="lib-chip off" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-folder"/></svg></span><h2 id="cat4">자동차 관리</h2><span class="lib-count"># 18</span></header><div class="lib-list">
+        <a href="detail.html?folder=e" class="lib-row"><svg class="ic-svg lib-row-ic off" width="18" height="18"><use href="#i-file"/></svg><span class="name">사고 접수 방법</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=e" class="lib-row"><svg class="ic-svg lib-row-ic off" width="18" height="18"><use href="#i-file"/></svg><span class="name">긴급출동 번호</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=e" class="lib-row"><svg class="ic-svg lib-row-ic off" width="18" height="18"><use href="#i-file"/></svg><span class="name">갱신·할인 특약</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+        <a href="detail.html?folder=e" class="lib-row"><svg class="ic-svg lib-row-ic off" width="18" height="18"><use href="#i-file"/></svg><span class="name">렌터카·대차 안내</span><svg class="ic-svg lib-go" width="16" height="16"><use href="#i-chevron-right"/></svg></a>
+      </div><footer class="lib-foot"><span>자료 18개</span><a href="detail.html?folder=e" class="lib-more">전체보기 ›</a></footer></section>
+
+    </div>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('library');</script>
+</body>
+</html>

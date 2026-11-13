@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>자료실 상세 · BoBi</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 경로(breadcrumb) ===== */
+  .cE .lib-crumbs { position: relative; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-bottom: 20px; }
+  .cE .lib-crumbs .sep { color: var(--line-strong); }
+  .cE .crumb-root { padding: 6px 4px; color: var(--ink-2); text-decoration: none; font-weight: 600; }
+  .cE .crumb-root:hover { color: var(--brand-deep); text-decoration: underline; }
+  .cE .crumb-wrap { position: relative; display: inline-flex; }
+  .cE .lib-crumb { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 8px 0 10px; border: 1px solid transparent; border-radius: var(--r-sm); background: transparent; font-family: inherit; font-size: var(--fs-option); font-weight: 500; color: var(--ink-2); cursor: pointer; }
+  .cE .lib-crumb.cur { border-color: var(--line); background: #fff; font-weight: 700; color: var(--ink); }
+  .cE .lib-crumb.open { border-color: var(--brand); background: var(--brand-pale); }
+  .cE .lib-crumb svg { transition: transform .15s ease; }
+  .cE .lib-crumb.open svg { transform: rotate(180deg); }
+  .cE .lib-dd-menu { position: absolute; left: 0; top: calc(100% + 6px); min-width: 240px; max-height: 320px; overflow-y: auto; margin: 0; padding: 6px; list-style: none; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-2); }
+  .cE .lib-dd-label { padding: 6px 10px 8px; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); }
+  .cE .lib-dd-opt { width: 100%; display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 10px; border: 0; border-radius: var(--r-sm); background: transparent; cursor: pointer; font-family: inherit; text-align: left; font-size: var(--fs-body); font-weight: 500; color: var(--ink-2); }
+  .cE .lib-dd-opt:hover { background: var(--bg-soft); }
+  .cE .lib-dd-opt.cur { background: var(--brand-pale); font-weight: 700; color: var(--brand-deep); }
+  .cE .lib-dd-opt svg.ic { flex: none; }
+  .cE .lib-dd-opt .nm { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cE .lib-dd-opt .cnt { flex: none; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+  .cE .lib-dd-opt .chk { flex: none; color: var(--brand-deep); }
+
+  /* ===== 현재 폴더 타이틀 + 검색 ===== */
+  .cE .lib-detail-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .cE .ht-l { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+  .cE .ht-l h1 { margin: 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .ht-sub { margin-top: 2px; font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .lib-search { flex: 0 1 320px; min-width: 220px; display: flex; align-items: center; gap: 8px; height: 42px; box-sizing: border-box; padding: 0 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-sm); }
+  .cE .lib-search svg { color: var(--ink-4); flex: none; }
+  .cE .lib-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); color: var(--ink); }
+  .cE .lib-search input::placeholder { color: var(--ink-4); }
+
+  /* ===== 하위 폴더 그리드 ===== */
+  .cE .lib-sub-head { margin: 0 0 10px; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); }
+  .cE .lib-sub-head span { color: var(--ink-3); font-weight: 500; }
+  .cE .lib-fold-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  .cE .doc-folder {
+    --shell: #ebebef; --face: #f7f7f9; --dot: #82828c; --meta: #82828c;
+    position: relative; display: block; width: min(100%, 260px); height: 226px; padding: 0;
+    border: 1px solid rgba(255,255,255,.9); border-radius: 22px; overflow: hidden;
+    background: var(--shell); box-shadow: 0 4px 14px rgba(17,17,17,.08);
+    cursor: pointer; text-align: left; font-family: 'Pretendard', sans-serif; color: #111;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .cE .doc-folder:hover,
+  .cE .doc-folder:focus-visible { --shell: #42baff; --face: #8cd4ff; --dot: #42baff; --meta: #2b2b2e; border-color: rgba(255,255,255,.6); box-shadow: 0 10px 30px rgba(66,186,255,.32); }
+  .cE .doc-folder:hover { transform: translateY(-3px); }
+  .cE .doc-folder:focus-visible { outline: 2px solid #2187be; outline-offset: 3px; }
+  .cE .df-doc { position: absolute; height: 120px; box-sizing: border-box; padding: 12px 14px; border-radius: 8px; display: flex; flex-direction: column; transition: transform .25s ease; }
+  .cE .df-doc--back { left: 34%; right: 16px; top: 16px; gap: 5px; background: #f7f7f9; box-shadow: 0 1px 3px rgba(17,17,17,.12); transform: rotate(4deg); }
+  .cE .df-doc--front { left: 20px; right: 30%; top: 10px; gap: 6px; background: #fff; box-shadow: 0 2px 6px rgba(17,17,17,.14); transform: rotate(-2deg); }
+  .cE .doc-folder:hover .df-doc--back { transform: translateY(-5px) rotate(4deg); }
+  .cE .doc-folder:hover .df-doc--front { transform: translateY(-8px) rotate(-2deg); }
+  .cE .df-row { display: flex; align-items: center; gap: 6px; }
+  .cE .df-dot { width: 10px; height: 10px; border-radius: 3px; flex: none; background: var(--dot); }
+  .cE .df-line { display: block; height: 4px; border-radius: 3px; background: #e3e3e8; }
+  .cE .df-line--head { height: 5px; background: #cbcbd2; }
+  .cE .df-tab { position: absolute; left: 0; top: 48px; width: 46%; height: 30px; border-radius: 20px 20px 0 0; background: var(--face); }
+  .cE .df-body { position: absolute; left: 0; right: 0; top: 62px; bottom: 0; border-radius: 0 20px 22px 22px; background: var(--face); }
+  .cE .df-content { position: absolute; z-index: 2; left: 24px; right: 20px; bottom: 22px; display: flex; flex-direction: column; }
+  .cE .lib-fold-name { display: block; font-size: 22px; line-height: 1.3; font-weight: 800; letter-spacing: -.02em; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cE .lib-fold-meta { display: block; margin-top: 8px; font-size: 13px; line-height: 1.45; font-weight: 500; color: var(--meta); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cE .doc-folder,
+    .cE .df-doc { transition: none; }
+    .cE .doc-folder:hover { transform: none; }
+    .cE .doc-folder:hover .df-doc--back { transform: rotate(4deg); }
+    .cE .doc-folder:hover .df-doc--front { transform: rotate(-2deg); }
+  }
+
+  /* ===== 카테고리 색 (드롭다운 아이콘에만 사용) ===== */
+  .cE .tone-med  .lib-dd-opt .ic { background: var(--c-med-bg);  color: var(--c-med); }
+  .cE .tone-in   .lib-dd-opt .ic { background: var(--c-in-bg);   color: var(--c-in); }
+  .cE .tone-surg .lib-dd-opt .ic { background: var(--c-surg-bg); color: var(--c-surg); }
+  .cE .tone-off  .lib-dd-opt .ic { background: var(--bg-soft);   color: var(--ink-2); }
+  .cE .ht-ic.tone-med  { background: var(--c-med-bg);  color: var(--c-med); }
+  .cE .ht-ic.tone-in   { background: var(--c-in-bg);   color: var(--c-in); }
+  .cE .ht-ic.tone-surg { background: var(--c-surg-bg); color: var(--c-surg); }
+  .cE .ht-ic.tone-off  { background: var(--bg-soft);   color: var(--ink-2); }
+  .cE .lib-dd-opt.root .ic { color: #fff; }
+  .cE .lib-dd-opt.root.tone-med  .ic { background: var(--c-med); }
+  .cE .lib-dd-opt.root.tone-in   .ic { background: var(--c-in); }
+  .cE .lib-dd-opt.root.tone-surg .ic { background: var(--c-surg); }
+  .cE .lib-dd-opt.root.tone-off  .ic { background: var(--ink); }
+
+  /* ===== 자료 목록 ===== */
+  .cE .lib-doc-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .cE .lib-doc-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
+  .cE .lib-doc-toolbar span { color: var(--ink-3); font-weight: 500; }
+  .cE .lib-doc-sort { height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; font-family: inherit; font-size: var(--fs-option); color: var(--ink-2); }
+  .cE .lib-doc-panel table { width: 100%; min-width: 560px; }
+  .cE .lib-type-badge { flex: none; min-width: 40px; box-sizing: border-box; padding: 2px 6px; border-radius: 4px; font-size: var(--fs-option); line-height: 1.4; font-weight: 800; text-align: center; }
+  .cE .lib-type-badge.pdf  { background: #FFF0F1; color: #E0445A; }
+  .cE .lib-type-badge.xls  { background: var(--c-in-bg);   color: var(--c-in); }
+  .cE .lib-type-badge.link { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .lib-type-badge.img  { background: var(--c-surg-bg); color: var(--c-surg); }
+  .cE .lib-new-badge { flex: none; padding: 1px 6px; border-radius: 4px; background: var(--brand-pale); color: var(--brand-deep); font-size: var(--fs-option); line-height: 1.4; font-weight: 800; }
+  .cE .lib-doc-t { min-width: 0; font-weight: 600; color: var(--ink); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cE .lib-doc-t:hover { color: var(--brand-deep); }
+  .cE .lib-doc-row:hover .lib-doc-t { color: var(--brand-deep); }
+  .cE .lib-doc-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .cE .lib-icon-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: var(--r-sm); background: transparent; color: var(--ink-3); cursor: pointer; }
+  .cE .lib-icon-btn:hover { background: var(--bg-soft); color: var(--ink); }
+
+  /* ===== 하위 폴더 없음 ===== */
+  .cE .lib-empty { margin: 0; background: #fff; border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: 40px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: var(--ink-4); }
+  .cE .lib-empty p { margin: 0; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
+  .cE .lib-empty p.sub { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+
+  /* ===== 페이지네이션 ===== */
+  .cE .pagination { display: flex; justify-content: center; gap: 6px; padding: 20px; border-top: 1px solid var(--line); }
+  .cE .pg-btn { min-width: 34px; height: 34px; padding: 0 11px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 600; border-radius: var(--r-sm); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+  .cE .pg-btn:hover:not(.on) { background: var(--bg-soft); border-color: var(--line-strong); color: var(--ink); }
+  .cE .pg-btn.on { background: var(--brand); color: #fff; border-color: var(--brand); cursor: default; }
+
+  @media (max-width: 960px) {
+    .cE .ht-l h1 { font-size: var(--fs-h2); }
+    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
+    .cE .lib-search { flex: 1 1 100%; min-width: 0; }
+    .cE .lib-fold-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 640px) {
+    .cE .lib-fold-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+    <div>
+
+      <!-- 경로 -->
+      <nav aria-label="현재 위치" class="lib-crumbs">
+        <a href="index.html" class="crumb-root">자료실</a>
+        <span id="crumbs" style="display: contents"></span>
+      </nav>
+
+      <!-- 폴더 제목 + 폴더 안 검색 -->
+      <div class="lib-detail-head">
+        <div class="ht-l">
+          <span id="cur-chip" class="ht-ic" aria-hidden="true">
+            <svg class="ic-svg" width="22" height="22"><use href="#i-folder"/></svg>
+          </span>
+          <div style="min-width: 0">
+            <h1 id="cur-name"></h1>
+            <div id="cur-summary" class="ht-sub"></div>
+          </div>
+        </div>
+        <div class="lib-search">
+          <label for="in-folder-search" class="sr-only">이 폴더에서 검색</label>
+          <svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg>
+          <input id="in-folder-search" type="search" placeholder="이 폴더에서 검색" />
+        </div>
+      </div>
+
+      <!-- 하위 폴더가 있을 때: 폴더만 -->
+      <div id="folders" hidden>
+        <h2 class="lib-sub-head">폴더 <span id="kid-count"></span></h2>
+        <div id="kid-grid" class="lib-fold-grid"></div>
+      </div>
+
+      <!-- 하위 폴더가 없을 때: 자료 목록만 -->
+      <div id="docs" hidden>
+        <div class="lib-doc-panel">
+          <div class="lib-doc-toolbar">
+            <h2 style="margin: 0; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2)">자료 <span id="doc-count"></span></h2>
+            <div>
+              <label for="doc-sort" class="sr-only">정렬</label>
+              <select id="doc-sort" class="lib-doc-sort">
+                <option>최신순</option>
+                <option>조회순</option>
+                <option>이름순</option>
+              </select>
+            </div>
+          </div>
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">제목</th>
+                  <th scope="col" style="width: 96px">등록일</th>
+                  <th scope="col" class="ctr" style="width: 64px">조회</th>
+                  <th scope="col" style="width: 44px"><span class="sr-only">내려받기</span></th>
+                </tr>
+              </thead>
+              <tbody id="doc-rows"></tbody>
+            </table>
+          </div>
+          <nav aria-label="페이지" class="pagination">
+            <button type="button" class="pg-btn" aria-label="이전 페이지">‹</button>
+            <button type="button" class="pg-btn on" aria-current="page">1</button>
+            <button type="button" class="pg-btn">2</button>
+            <button type="button" class="pg-btn">3</button>
+            <button type="button" class="pg-btn" aria-label="다음 페이지">›</button>
+          </nav>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('library');</script>
+<script src="detail.js"></script>
+</body>
+</html>
