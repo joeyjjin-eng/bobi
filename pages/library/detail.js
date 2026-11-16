@@ -1,4 +1,4 @@
-/* 보비 자료실 상세 — 폴더 탐색 (하위 폴더가 있으면 폴더만, 없으면 자료 목록만) */
+/* 보비 자료실 상세 — 리스트형 (폴더 탐색 + 자료 리스트) */
 (function () {
   // 루트 카테고리를 index.html과 동일한 4색 체계(med/in/surg/off)에 매핑
   var TONE = ['med', 'in', 'surg', 'off'];
@@ -34,18 +34,20 @@
     { id: 'e', name: '자동차 관리', docs: 18 }
   ];
 
-  // 자료 목록 (예시 · 실제로는 폴더 id로 API 조회)
+  // 자료 목록 (예시 · 실제로는 폴더 id로 API 조회) — gallery.html · doc.html 과 동일한 데이터를 사용
   var DOCS = [
-    ['PDF', '생명보험사 고객센터 대표번호 (11월 기준)', '2026.11.12', 128, true],
-    ['XLS', '손해보험사 고객센터·사고접수 번호표', '2026.11.10', 96, true],
-    ['링크', '보험사별 고객센터 운영시간 안내', '2026.11.06', 74],
-    ['이미지', '고객 안내용 콜센터 번호 카드 이미지', '2026.11.03', 61],
-    ['PDF', '외국계 보험사 고객센터 번호 모음', '2026.10.29', 45],
-    ['XLS', '공제회 고객센터 번호표', '2026.10.24', 33],
-    ['링크', '고객센터 연결이 안 될 때 대체 연락처', '2026.10.20', 29],
-    ['PDF', 'ARS 단축번호 정리표', '2026.10.15', 22]
+    { id: 'doc1', type: 'PDF',  title: '생명보험사 고객센터 대표번호 (11월 기준)', date: '2026.11.12', views: 128, isNew: true,  thumb: '../../assets/img/library/doc-01.jpg' },
+    { id: 'doc2', type: 'XLS',  title: '손해보험사 고객센터·사고접수 번호표',       date: '2026.11.10', views: 96,  isNew: true,  thumb: '../../assets/img/library/doc-02.jpg' },
+    { id: 'doc3', type: '링크', title: '보험사별 고객센터 운영시간 안내',           date: '2026.11.06', views: 74,  isNew: false, thumb: '../../assets/img/library/doc-03.jpg' },
+    { id: 'doc4', type: '이미지', title: '고객 안내용 콜센터 번호 카드 이미지',     date: '2026.11.03', views: 61,  isNew: false, thumb: '../../assets/img/library/doc-04.jpg' },
+    { id: 'doc5', type: 'PDF',  title: '외국계 보험사 고객센터 번호 모음',         date: '2026.10.29', views: 45,  isNew: false, thumb: '../../assets/img/library/doc-05.jpg' },
+    { id: 'doc6', type: 'XLS',  title: '공제회 고객센터 번호표',                  date: '2026.10.24', views: 33,  isNew: false, thumb: '../../assets/img/library/doc-06.png' },
+    { id: 'doc7', type: '링크', title: '고객센터 연결이 안 될 때 대체 연락처',     date: '2026.10.20', views: 29,  isNew: false, thumb: '../../assets/img/library/doc-07.jpg' },
+    { id: 'doc8', type: 'PDF',  title: 'ARS 단축번호 정리표',                    date: '2026.10.15', views: 22,  isNew: false, thumb: '../../assets/img/library/doc-08.jpg' }
   ];
-  var TYPE_CLASS = { 'PDF': 'pdf', 'XLS': 'xls', '링크': 'link', '이미지': 'img' };
+
+  // 리스트형이 아닌 갤러리형으로 보여줄 폴더 — 해당 폴더는 gallery.html 쪽으로 넘긴다
+  var GALLERY_VIEW = { b1: true };
 
   var byId = {}, parent = {}, rootIdx = {};
   (function walk(nodes, p, root) {
@@ -128,20 +130,20 @@
           '<span class="lib-fold-meta">자료 ' + k.docs + '개</span></span>' +
           '</button>';
       }).join('');
+    } else if (GALLERY_VIEW[cur.id]) {
+      location.replace('gallery.html?folder=' + cur.id);
     } else {
       folders.hidden = true; docs.hidden = false;
       document.getElementById('doc-count').textContent = cur.docs;
+
       document.getElementById('doc-rows').innerHTML = DOCS.map(function (d) {
-        return '<tr class="lib-doc-row">' +
-          '<td><span class="lib-doc-cell">' +
-          '<span class="lib-type-badge ' + TYPE_CLASS[d[0]] + '">' + d[0] + '</span>' +
-          '<a href="#" class="lib-doc-t">' + esc(d[1]) + '</a>' +
-          (d[4] ? '<span class="lib-new-badge">NEW</span>' : '') +
-          '</span></td>' +
-          '<td>' + d[2] + '</td>' +
-          '<td class="ctr">' + d[3] + '</td>' +
-          '<td><button type="button" class="lib-icon-btn" aria-label="내려받기"><svg class="ic-svg" width="17" height="17"><use href="#i-download"/></svg></button></td>' +
-          '</tr>';
+        return '<a class="table-row" href="doc.html?folder=' + cur.id + '&doc=' + d.id + '">' +
+          '<span class="lib-doc-t"><span class="t">' + esc(d.title) + '</span>' +
+          (d.isNew ? '<span class="lib-new-badge">NEW</span>' : '') +
+          '</span>' +
+          '<span class="tr-meta">' + d.date + '</span>' +
+          '<span class="tr-meta">' + d.views + '</span>' +
+          '</a>';
       }).join('');
     }
   }
