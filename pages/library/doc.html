@@ -20,55 +20,46 @@
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
-  /* ===== 경로(breadcrumb, 단순 트레일) ===== */
-  .cE .lib-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-bottom: 18px; }
-  .cE .lib-crumbs .sep { color: var(--line-strong); }
-  .cE .lib-crumbs a { color: var(--ink-3); text-decoration: none; }
-  .cE .lib-crumbs a:hover { color: var(--brand-deep); text-decoration: underline; }
-  .cE .lib-crumbs .cur { color: var(--ink-2); font-weight: 700; }
+  /* ===== 뒤로가기 ===== */
+  .cE .doc-backlink { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); text-decoration: none; margin-bottom: 18px; }
+  .cE .doc-backlink:hover { color: var(--brand-deep); }
 
   /* ===== 문서 헤더 ===== */
-  .cE .doc-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 24px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
-  .cE .doc-head-l { display: flex; align-items: flex-start; gap: 16px; min-width: 0; }
-  .cE .doc-ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; flex: none; }
-  .cE .doc-ic.pdf  { background: #FFF0F1; color: #E0445A; }
-  .cE .doc-ic.xls  { background: var(--c-in-bg);   color: var(--c-in); }
-  .cE .doc-ic.link { background: var(--brand-pale); color: var(--brand-deep); }
-  .cE .doc-ic.img  { background: var(--c-surg-bg); color: var(--c-surg); }
-  .cE .doc-top-row { display: flex; align-items: center; gap: 8px; }
-  .cE .doc-head h1 { margin: 10px 0 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .doc-head { display: flex; align-items: flex-start; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .cE .doc-ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; flex: none; background: var(--bg-soft); color: var(--ink-3); }
+  .cE .doc-head h1 { margin: 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; color: var(--ink); display: flex; align-items: center; gap: 10px; }
   .cE .doc-meta { margin-top: 6px; font-size: var(--fs-option); color: var(--ink-3); }
-  .cE .doc-actions { display: flex; align-items: center; gap: 10px; flex: none; }
-  .cE .doc-back { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 700; text-decoration: none; }
-  .cE .doc-back:hover { background: var(--bg-soft); border-color: var(--line-strong); }
-
-  .cE .lib-type-badge { flex: none; display: inline-block; min-width: 0; box-sizing: border-box; padding: 4px 10px; border-radius: var(--r-pill); font-size: var(--fs-option); line-height: 1.4; font-weight: 700; text-align: center; }
-  .cE .lib-type-badge.pdf  { background: #FFF0F1; color: #E0445A; }
-  .cE .lib-type-badge.xls  { background: var(--c-in-bg);   color: var(--c-in); }
-  .cE .lib-type-badge.link { background: var(--brand-pale); color: var(--brand-deep); }
-  .cE .lib-type-badge.img  { background: var(--c-surg-bg); color: var(--c-surg); }
   .cE .lib-new-badge { flex: none; padding: 1px 6px; border-radius: 4px; background: var(--brand-pale); color: var(--brand-deep); font-size: var(--fs-option); line-height: 1.4; font-weight: 800; }
 
+  /* ===== 첨부파일 (선 아래, 본문 위 — 0개면 자리 자체가 없고, 여러 개면 칩이 옆으로 늘어난다) ===== */
+  .cE .doc-attachments { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+  .cE .doc-attach-item { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; padding: 8px 14px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); text-decoration: none; }
+  .cE .doc-attach-item:hover { border-color: var(--brand); color: var(--brand-deep); }
+  .cE .doc-attach-item svg { color: var(--brand-deep); flex: none; }
+  .cE .doc-attach-item .fn { min-width: 0; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
   /* ===== 미리보기 패널 ===== */
-  .cE .card-pad { background: #fff; }
-  .cE .doc-preview-img { width: 100%; border-radius: var(--r-md); display: block; }
-  .cE .doc-preview-blank { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 56px 20px; border-radius: var(--r-md); text-align: center; }
-  .cE .doc-preview-blank .pv-ic { width: 72px; height: 72px; border-radius: 20px; display: grid; place-items: center; }
-  .cE .doc-preview-blank .pv-ic.pdf  { background: #FFF0F1; color: #E0445A; }
-  .cE .doc-preview-blank .pv-ic.xls  { background: var(--c-in-bg);   color: var(--c-in); }
-  .cE .doc-preview-blank .pv-ic.link { background: var(--brand-pale); color: var(--brand-deep); }
-  .cE .doc-preview-blank .pv-ic.img  { background: var(--c-surg-bg); color: var(--c-surg); }
-  .cE .doc-preview-blank p { margin: 0; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
-  .cE .doc-preview-blank p.sub { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+
+  /* ===== 본문 콘텐츠 (글 + 이미지 + 표) ===== */
+  .cE .doc-body { display: flex; flex-direction: column; gap: 24px; }
+  .cE .doc-body p { margin: 0; font-size: var(--fs-body); line-height: 1.5; color: var(--ink-2); }
+  .cE .doc-body .blk-h { margin: 0; font-size: var(--fs-h2); font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .doc-body .blk-sub { font-weight: 700; color: var(--ink); }
+  .cE .doc-body .blk-fig { margin: 0; }
+  .cE .doc-body .blk-img { width: 100%; border-radius: var(--r-md); display: block; box-shadow: var(--sh-1); }
+  .cE .doc-body figcaption { margin-top: 8px; font-size: var(--fs-option); color: var(--ink-3); text-align: center; }
+  .cE .doc-body .blk-table-wrap { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+  .cE .doc-body table { width: 100%; border-collapse: collapse; }
+  .cE .doc-body th { background: var(--bg-soft); color: var(--ink-2); font-size: var(--fs-option); font-weight: 700; text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .cE .doc-body td { font-size: var(--fs-body); color: var(--ink); padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .cE .doc-body tr:last-child td { border-bottom: 0; }
+  .cE .doc-body td.amt { text-align: right; font-variant-numeric: tabular-nums; }
 
   @media (max-width: 960px) {
     .cE .doc-head h1 { font-size: var(--fs-h2); }
   }
   @media (max-width: 640px) {
     .layout { min-width: 0; }
-    .cE .doc-head { flex-direction: column; }
-    .cE .doc-actions { width: 100%; }
-    .cE .doc-actions .smart-cta { flex: 1; justify-content: center; }
   }
 </style>
 </head>
@@ -83,36 +74,27 @@
   <main class="emain">
     <div>
 
-      <!-- 경로 -->
-      <nav aria-label="현재 위치" class="lib-crumbs" id="crumbs"></nav>
+      <!-- 뒤로가기 -->
+      <a id="doc-back" class="doc-backlink" href="detail.html">
+        <svg class="ic-svg" width="15" height="15"><use href="#i-chevron-left"/></svg>뒤로가기
+      </a>
 
       <!-- 문서 헤더 -->
       <div class="doc-head">
-        <div class="doc-head-l">
-          <span id="doc-ic" class="doc-ic" aria-hidden="true">
-            <svg class="ic-svg" width="22" height="22"><use href="#i-file"/></svg>
-          </span>
-          <div style="min-width: 0">
-            <div class="doc-top-row">
-              <span id="doc-badge" class="lib-type-badge"></span>
-              <span id="doc-new" class="lib-new-badge" hidden>NEW</span>
-            </div>
-            <h1 id="doc-title"></h1>
-            <div id="doc-meta" class="doc-meta"></div>
-          </div>
-        </div>
-        <div class="doc-actions">
-          <a id="doc-back" class="doc-back" href="detail.html">
-            <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>목록으로
-          </a>
-          <a id="doc-download" class="smart-cta" href="#" download>
-            <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>다운로드
-          </a>
+        <span id="doc-ic" class="doc-ic" aria-hidden="true">
+          <svg class="ic-svg" width="22" height="22"><use href="#i-note"/></svg>
+        </span>
+        <div style="min-width: 0">
+          <h1 id="doc-title"><span id="doc-title-text"></span><span id="doc-new" class="lib-new-badge" hidden>NEW</span></h1>
+          <div id="doc-meta" class="doc-meta"></div>
         </div>
       </div>
 
+      <!-- 첨부파일 (있을 때만, 0~N개) -->
+      <div id="doc-attachments" class="doc-attachments" hidden></div>
+
       <!-- 미리보기 -->
-      <div class="card-pad" id="doc-preview"></div>
+      <div id="doc-preview"></div>
 
     </div>
   </main>
