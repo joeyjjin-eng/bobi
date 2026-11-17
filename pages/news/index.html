@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 보험소식지</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — GNB 좌측 고정, 콘텐츠 화면 센터 정렬 ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 페이지 타이틀 — 콘텐츠는 1192px 컬럼. 구분선은 아래 탭 줄이 갖는다 ===== */
+  .cE .ns-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px 32px; padding: 0; }
+  .cE .ns-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+  .cE .ht-l { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
+  .cE .ht-l h1 { margin: 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .ht-sub { margin-top: 4px; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-3); }
+  .cE .ht-sub b { color: var(--ink); font-weight: 700; }
+
+  /* ===== 하위 메뉴 탭 — 밑줄형. 항목 수가 늘어도 왼쪽부터 쌓이고, 넘치면 가로로 밀린다 ===== */
+  .cE .ns-tabs-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px; padding: 0; border-bottom: 1px solid var(--line); }
+  .cE .ns-tabs { max-width: 1192px; margin: 0 auto; display: flex; align-items: stretch; gap: 28px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .cE .ns-tabs::-webkit-scrollbar { display: none; }
+  .cE .ns-tab { position: relative; flex: none; height: 52px; display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 600; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink-3); text-decoration: none; white-space: nowrap; cursor: pointer; transition: color .2s ease; }
+  /* 활성 표시 바 — 진료기록 리포트 탭(.report-viewseg-btn)과 같은 3px·윗모서리 라운드 */
+  .cE .ns-tab::after { content: ''; position: absolute; left: -2px; right: -2px; bottom: 0; height: 3px; background: transparent; border-radius: 3px 3px 0 0; transition: background-color .2s ease; }
+  .cE .ns-tab:hover { color: var(--ink); }
+  .cE .ns-tab.on { color: var(--brand-deep); font-weight: 800; }
+  .cE .ns-tab.on::after { background: var(--brand); }
+
+  /* ===== 섹션 — 묶음 안은 20px, 묶음 사이는 48px ===== */
+  .cE .ns-sec { margin-top: 48px; }
+  .cE .ns-sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+  .cE .ns-sec-head h2 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: var(--fs-h2); font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .ns-sec-ic { width: 28px; height: 28px; border-radius: var(--r-sm); display: grid; place-items: center; flex: none; }
+  .cE .ns-sec-ic.today { background: var(--brand); color: #fff; }
+  .cE .ns-sec-ic.prod { background: var(--c-in-bg); color: var(--c-in); }
+  .cE .ns-sec-ic.topic { background: var(--bg-soft); color: var(--ink-2); }
+  .cE .ns-sec-meta { font-size: var(--fs-option); line-height: 1.4; color: var(--ink-3); }
+  .cE .ns-link { background: none; border: 0; padding: 0; font-family: inherit; font-size: var(--fs-body); font-weight: 600; line-height: 1.4; color: var(--ink-2); cursor: pointer; }
+  .cE .ns-link:hover { color: var(--brand-deep); }
+
+  /* ===== 오늘의 헤드라인 — 영역 전체에 옅은 쿨그레이 띠. 안쪽 글은 본문 칸(1192px)에 맞춘다 ===== */
+  .cE .ns-today { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px; padding: 40px 0; background: var(--bg-soft); }
+  .cE .ns-today > * { padding-left: max(36px, calc((100% - 1192px) / 2)); padding-right: max(36px, calc((100% - 1192px) / 2)); }
+
+  /* ===== 상품·보장 소식 — 오른쪽 화면 끝까지 흘려서 다음 카드가 걸치게 ===== */
+  .cE .ns-prod { width: calc(100% + 72px) !important; max-width: none !important; margin: 48px -36px 0; }
+  .cE .ns-prod .ns-sec-head { padding-left: max(36px, calc((100% - 1192px) / 2)); padding-right: max(36px, calc((100% - 1192px) / 2)); }
+  .cE .ns-track { display: flex; gap: 28px; overflow-x: auto; padding-left: max(36px, calc((100% - 1192px) / 2)); padding-right: 36px; scrollbar-width: none; -ms-overflow-style: none; }
+  .cE .ns-track::-webkit-scrollbar { display: none; }
+  .cE .ns-track .ns-card { width: 344px; flex: none; gap: 0; background: var(--bg-soft); border-radius: var(--r-lg); overflow: hidden; }
+  .cE .ns-track .ns-thumb { border-radius: 0; }
+  .cE .ns-pbody { display: flex; flex-direction: column; gap: 10px; padding: 30px; }
+
+  /* ===== 기사 카드 3열 ===== */
+  .cE .ns-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 32px; row-gap: 32px; align-items: start; }
+  .cE .ns-card { min-width: 0; display: flex; flex-direction: column; gap: 10px; text-align: left; padding: 0; background: transparent; border: 0; font-family: inherit; cursor: pointer; }
+  .cE .ns-card:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: var(--r-sm); }
+  /* 썸네일과 뱃지줄 사이는 글끼리(10px)보다 넉넉하게 — 합쳐서 20px */
+  .cE .ns-grid .ns-thumb { margin-bottom: 10px; }
+  /* 썸네일 — 이미지가 없는 자료는 같은 자리에 회색 판으로 대체 */
+  .cE .ns-thumb { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r-md); background: var(--bg-soft); }
+  .cE .ns-thumb.none { display: grid; place-items: center; color: var(--ink-4); }
+
+  /* 주제·기관 뱃지 — 주제는 색으로, 기관은 회색으로 구분 */
+  .cE .ns-badge { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; line-height: 1.4; white-space: nowrap; }
+  .cE .ns-badge.product { background: var(--c-med-bg); color: var(--brand-deep); }
+  .cE .ns-badge.industry { background: var(--c-surg-bg); color: var(--c-surg); }
+  .cE .ns-badge.consumer { background: var(--c-out-bg); color: #C0392B; }
+  .cE .ns-badge.org { background: #fff; border: 1px solid var(--line); color: var(--ink-2); }
+  .cE .ns-meta-dt { font-size: var(--fs-option); font-weight: 600; line-height: 1.4; color: var(--ink-3); }
+
+  .cE .ns-card .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -2px; }
+  .cE .ns-card .tt { font-size: var(--fs-h2); font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .ns-card:hover .tt { color: var(--brand-deep); }
+  .cE .ns-card .ex { font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* ===== 주제 칩 ===== */
+  .cE .ns-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cE .ns-chip { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 18px; background: #fff; border: 1px solid var(--line-strong); border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 600; line-height: 1.4; color: var(--ink-3); cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+  .cE .ns-chip:hover { color: var(--ink-2); border-color: var(--ink-4); }
+  .cE .ns-chip.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .cE .ns-chip .cnt { font-weight: 700; color: var(--ink-4); font-variant-numeric: tabular-nums; }
+  .cE .ns-chip.on .cnt { color: rgba(255,255,255,.75); }
+
+  /* ===== 필터바 (한 줄 카드) — 진료기록 조회 내역(.filter-bar)과 같은 모양 ===== */
+  .cE .ns-filter { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px 22px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .cE .ns-search { flex: 1; min-width: 220px; display: flex; align-items: center; gap: 8px; }
+  .cE .ns-search svg { color: var(--ink-4); flex: none; }
+  .cE .ns-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); line-height: 1.4; color: var(--ink); }
+  .cE .ns-search input::placeholder { color: var(--ink-4); }
+  .cE .fb-divider { width: 1px; height: 20px; background: var(--line-strong); flex: none; }
+  .cE .ns-fg { display: flex; align-items: center; gap: 10px; }
+  .cE .fg-l { font-size: var(--fs-option); font-weight: 700; line-height: 1.4; color: var(--ink-3); white-space: nowrap; }
+  .cE .ns-sel { height: 40px; max-width: 200px; padding: 0 30px 0 12px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: #fff no-repeat right 10px center; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); font-family: inherit; font-size: var(--fs-body); font-weight: 600; line-height: 1.4; color: var(--ink); cursor: pointer; appearance: none; text-overflow: ellipsis; }
+  .cE .ns-sel:hover { border-color: var(--ink-4); }
+  .cE .ns-count { margin-left: auto; font-size: var(--fs-option); font-weight: 600; line-height: 1.4; color: var(--ink-3); white-space: nowrap; }
+  .cE .ns-count b { color: var(--ink); font-weight: 800; }
+
+  /* ===== 목록 ===== */
+  .cE .ns-panel { margin-top: 20px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .cE .ns-row { width: 100%; display: grid; grid-template-columns: 96px 1fr 128px 24px; column-gap: 20px; align-items: start; padding: 20px 28px; border: 0; border-bottom: 1px solid var(--line); background: #fff; font-family: inherit; text-align: left; cursor: pointer; transition: background-color .12s ease; }
+  .cE .ns-row:last-child { border-bottom: 0; }
+  .cE .ns-row:hover { background: var(--bg-warm); }
+  .cE .ns-row:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+  .cE .ns-row .dt { font-size: var(--fs-option); font-weight: 600; line-height: 1.4; color: var(--ink-3); font-variant-numeric: tabular-nums; padding-top: 2px; }
+  /* 뱃지(메타)는 떼고, 제목+요약은 한 덩어리로 붙인다 — 뱃지↔제목 12px / 제목↔요약 6px */
+  .cE .ns-row .bd { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .cE .ns-row .bd .tt { margin-top: 6px; }
+  .cE .ns-row .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -2px; }
+  .cE .ns-row .tt { font-size: var(--fs-h2); font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .ns-row:hover .tt { color: var(--brand-deep); }
+  .cE .ns-row .ex { font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .cE .ns-row .ns-thumb { width: 128px; border-radius: var(--r-sm); align-self: center; justify-self: center; }
+  .cE .ns-row .go { align-self: center; color: var(--ink-4); display: flex; transition: color .12s ease, transform .12s ease; }
+  .cE .ns-row:hover .go { color: var(--brand); transform: translateX(2px); }
+
+  .cE .pager:empty { display: none; }
+
+  .cE .ns-empty { margin-top: 20px; background: #fff; border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: 48px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+  .cE .ns-empty b { font-size: var(--fs-body); font-weight: 700; line-height: 1.4; color: var(--ink-2); }
+  .cE .ns-empty p { margin: 0; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-3); }
+
+  /* ===== 기사 상세 창 ===== */
+  /* .bobi 바깥에 있어 폰트를 직접 지정 (layout.js 의 .sm-modal 과 동일) */
+  .ns-modal { position: fixed; inset: 0; z-index: 1200; background: rgba(15,23,42,.5); display: flex; align-items: flex-start; justify-content: center; padding: 48px 24px; overflow-y: auto; font-family: 'Pretendard', system-ui, sans-serif; letter-spacing: -0.01em; font-feature-settings: "ss01","ss02"; }
+  .ns-modal[hidden] { display: none; }
+  .ns-sheet { position: relative; width: 100%; max-width: 720px; background: #fff; border-radius: var(--r-lg); box-shadow: 0 24px 60px rgba(0,0,0,.25); padding: 36px 40px 32px; box-sizing: border-box; animation: nsPop .24s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes nsPop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .ns-sheet-close { position: absolute; top: 16px; right: 16px; background: none; border: 0; padding: 8px; border-radius: var(--r-sm); color: var(--ink-3); cursor: pointer; display: inline-flex; }
+  .ns-sheet-close:hover { background: var(--bg-soft); color: var(--ink); }
+  .ns-doc .kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -2px; }
+  .ns-doc h2 { margin: 8px 0 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .ns-doc .art { margin: 20px 0 0; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--r-md); background: var(--bg-soft); }
+  .ns-doc section { margin-top: 48px; }
+  .ns-doc h3 { margin: 0 0 20px; font-size: var(--fs-h2); font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .ns-doc p.body { margin: 0 0 12px; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); }
+  .ns-doc p.body:last-child { margin-bottom: 0; }
+  .ns-doc dl { margin: 0; display: grid; grid-template-columns: 136px 1fr; }
+  .ns-doc dt { padding: 12px 0; border-top: 1px solid var(--line); font-size: var(--fs-option); font-weight: 700; line-height: 1.4; color: var(--ink-3); }
+  .ns-doc dd { margin: 0; padding: 12px 0; border-top: 1px solid var(--line); font-size: var(--fs-body); line-height: 1.4; color: var(--ink); }
+  .ns-doc .src-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-grad); color: #fff; border-radius: var(--r-pill); padding: 12px 24px; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; text-decoration: none; box-shadow: var(--sh-brand); transition: filter .2s ease; }
+  .ns-doc .src-btn:hover { filter: brightness(1.05); }
+  .ns-doc .src-url { margin: 12px 0 0; font-size: var(--fs-option); line-height: 1.4; color: var(--ink-4); word-break: break-all; }
+
+  @media (max-width: 1320px) {
+    .cE .ns-row { grid-template-columns: 84px 1fr 104px 24px; column-gap: 16px; padding: 20px; }
+    .cE .ns-row .ns-thumb { width: 104px; }
+    .cE .ns-filter { gap: 14px; padding: 14px 18px; }
+  }
+
+  @media (max-width: 960px) {
+    .cE .ns-title-row { width: calc(100% + 32px) !important; margin: 0 -16px 32px; padding: 0; }
+    .cE .ns-title-inner { padding: 0 16px; }
+    .cE .ns-tabs-row { width: calc(100% + 32px) !important; margin: 0 -16px; }
+    .cE .ns-tabs { gap: 20px; padding: 0 16px; }
+    .cE .ns-today { width: calc(100% + 32px) !important; margin: 0 -16px; padding: 28px 0; }
+    .cE .ns-today > * { padding-left: 16px; padding-right: 16px; }
+    .cE .ns-prod { width: calc(100% + 32px) !important; margin: 48px -16px 0; }
+    .cE .ns-prod .ns-sec-head { padding-left: 16px; padding-right: 16px; }
+    .cE .ns-track { padding-left: 16px; padding-right: 16px; }
+    .cE .ns-track .ns-card { width: 290px; }
+    .cE .ht-l h1 { font-size: var(--fs-h2); }
+    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
+    .cE .ns-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ns-sheet { padding: 28px 22px 24px; }
+  }
+
+  @media (max-width: 640px) {
+    .layout { min-width: 0; }
+    .cE .ns-grid { grid-template-columns: 1fr; }
+    .cE .ns-row { grid-template-columns: 1fr 88px 24px; }
+    .cE .ns-row .dt { grid-column: 1 / -1; padding-top: 0; }
+    .cE .ns-row .ns-thumb { width: 88px; }
+    .ns-doc dl { grid-template-columns: 1fr; }
+    .ns-doc dt { padding-bottom: 0; border-top: 1px solid var(--line); }
+    .ns-doc dd { padding-top: 4px; border-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+
+    <!-- ===== 페이지 타이틀 ===== -->
+    <div class="ns-title-row">
+      <div class="ns-title-inner">
+        <div class="ht-l">
+          <div class="ht-ic">
+            <svg class="ic-svg" width="22" height="22"><use href="#i-newspaper"/></svg>
+          </div>
+          <div>
+            <h1>보험소식지</h1>
+            <div class="ht-sub">업계 뉴스와 기관의 제도·절차, 법원 판례를 나누어 봅니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 하위 메뉴 ===== -->
+    <div class="ns-tabs-row">
+      <nav class="ns-tabs" aria-label="보험소식지 하위 메뉴">
+        <a class="ns-tab on" href="index.html" aria-current="page">오늘의 뉴스</a>
+        <span class="ns-tab">보험과 제도</span>
+        <span class="ns-tab">판례노트</span>
+      </nav>
+    </div>
+
+    <!-- ===== 오늘의 보험 헤드라인 ===== -->
+    <section class="ns-sec ns-today" aria-labelledby="ns-hl-t">
+      <div class="ns-sec-head">
+        <h2 id="ns-hl-t">
+          <span class="ns-sec-ic today" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg></span>
+          오늘의 보험 헤드라인
+        </h2>
+        <span class="ns-sec-meta" id="ns-hl-meta"></span>
+      </div>
+      <div class="ns-grid" id="ns-headlines"></div>
+    </section>
+
+    <!-- ===== 상품·보장 소식 ===== -->
+    <section class="ns-sec ns-prod" aria-labelledby="ns-pd-t">
+      <div class="ns-sec-head">
+        <h2 id="ns-pd-t">
+          <span class="ns-sec-ic prod" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-shield"/></svg></span>
+          상품·보장 소식
+        </h2>
+        <button type="button" class="ns-link" id="ns-all-product">상품 소식 모두 보기 ›</button>
+      </div>
+      <div class="ns-track" id="ns-products"></div>
+    </section>
+
+    <!-- ===== 주제별 뉴스 — 칩 · 필터 · 목록 ===== -->
+    <section class="ns-sec" id="ns-browse" aria-labelledby="ns-br-t">
+      <div class="ns-sec-head">
+        <h2 id="ns-br-t">
+          <span class="ns-sec-ic topic" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-layers"/></svg></span>
+          주제별 뉴스
+        </h2>
+      </div>
+
+      <div class="ns-chips" id="ns-chips" role="group" aria-label="주제 선택"></div>
+
+      <div class="ns-filter">
+        <label class="ns-search">
+          <svg class="ic-svg" width="18" height="18" aria-hidden="true"><use href="#i-search"/></svg>
+          <span class="sr-only">기사 검색</span>
+          <input type="search" id="ns-q" placeholder="제목·기관·내용" autocomplete="off" />
+        </label>
+        <span class="fb-divider" aria-hidden="true"></span>
+        <div class="ns-fg">
+          <label class="fg-l" for="ns-kind">뉴스 분류</label>
+          <select class="ns-sel" id="ns-kind"></select>
+        </div>
+        <div class="ns-fg">
+          <label class="fg-l" for="ns-view">보기 방식</label>
+          <select class="ns-sel" id="ns-view">
+            <option value="latest">최신순</option>
+            <option value="group">분류별</option>
+          </select>
+        </div>
+        <span class="ns-count" id="ns-count" role="status" aria-live="polite"></span>
+      </div>
+
+      <div id="ns-results"></div>
+      <div class="pager" id="ns-pager"></div>
+    </section>
+
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<!-- ===== 기사 상세 ===== -->
+<div class="ns-modal" id="ns-modal" hidden>
+  <div class="ns-sheet" role="dialog" aria-modal="true" aria-labelledby="ns-doc-title">
+    <button type="button" class="ns-sheet-close" id="ns-close" aria-label="닫기">
+      <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+    </button>
+    <div id="ns-sheet-body"></div>
+  </div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('news');</script>
+<script src="_data.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

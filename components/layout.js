@@ -19,7 +19,7 @@
      <script>injectShell('report');</script>
    </body>
 
-   active 키: 'home' | 'customer' | 'report' | 'unclaimed' | 'coverage' | 'claim' | 'jjaepity' | 'notice' | 'planner' | 'mypage'
+   active 키: 'home' | 'customer' | 'report' | 'unclaimed' | 'coverage' | 'claim' | 'jjaepity' | 'consult' | 'library' | 'news' | 'notice' | 'planner' | 'mypage'
    ============================================================ */
 (function () {
   // 스크립트가 로드된 경로에서 프로젝트 루트의 상대경로 추출
@@ -395,6 +395,7 @@
     + '<symbol id="i-search-check" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="m8.5 11 2 2 3.5-3.7"/></symbol>'
     + '<symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z"/><path d="M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></symbol>'
     + '<symbol id="i-wing" viewBox="0 0 24 24"><path d="M4 20.5C4 12 10 5 20 3.5C19 12 13 20 4 20.5Z"/><path d="M8 18C11 15 14 12 17 9"/></symbol>'
+    + '<symbol id="i-newspaper" viewBox="0 0 24 24"><rect x="3" y="5" width="14" height="15" rx="2"/><path d="M17 9h2.5A1.5 1.5 0 0 1 21 10.5v7a2.5 2.5 0 0 1-2.5 2.5"/><path d="M6.5 9h7M6.5 12.5h7M6.5 16h4"/></symbol>'
     + '<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>'
     + '<symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 16 4-4-4-4M20 12H9"/></symbol>'
     // chevron / arrows
@@ -483,6 +484,7 @@
       +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
       +     navItem('consult',  BASE + 'pages/consult/index.html',      'i-trending-up',  '재무상담')
       +     navItem('library',  BASE + 'pages/library/index.html',      'i-folder',       '자료실', '<span class="beta-tag">NEW</span>')
+      +     navItem('news',     BASE + 'pages/news/index.html',        'i-newspaper',    '보험소식지', '<span class="beta-tag">NEW</span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +     navItem('planner',  BASE + 'pages/admin/planner/list.html', 'i-user-2',       '설계사관리')
       +   '</nav>'
@@ -561,6 +563,7 @@
       +       drawerItem('jjaepity',  BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
       +       drawerItem('consult',   BASE + 'pages/consult/index.html',     'i-trending-up',  '재무상담')
       +       drawerItem('library',   BASE + 'pages/library/index.html',     'i-folder',       '자료실', '<span class="m-drawer-beta">NEW</span>')
+      +       drawerItem('news',     BASE + 'pages/news/index.html',       'i-newspaper',    '보험소식지', '<span class="m-drawer-beta">NEW</span>')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +       drawerItem('planner',  BASE + 'pages/admin/planner/list.html','i-user-2',       '설계사관리')
       +     '</div>'
