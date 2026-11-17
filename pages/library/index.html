@@ -1,4 +1,4 @@
-.<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
@@ -20,19 +20,14 @@
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
 
-  /* ===== 페이지 타이틀 ===== */
-  .cE .lib-title-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+  /* ===== 페이지 타이틀 — 콘텐츠는 1192px 컬럼, 하단 구분선만 화면 꽉차게 ===== */
+  .cE .lib-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px 28px; padding: 0 0 22px; border-bottom: 1px solid var(--line); }
+  .cE .lib-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
   .cE .ht-l { display: flex; align-items: center; gap: 14px; }
   .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
-  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
   .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
   .cE .ht-sub b { color: var(--ink); font-weight: 700; }
-
-  /* ===== 검색바 ===== */
-  .cE .lib-search { flex: 0 1 360px; min-width: 240px; display: flex; align-items: center; gap: 8px; height: 44px; box-sizing: border-box; padding: 0 14px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-sm); }
-  .cE .lib-search svg { color: var(--ink-4); flex: none; }
-  .cE .lib-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font-family: inherit; font-size: var(--fs-body); color: var(--ink); }
-  .cE .lib-search input::placeholder { color: var(--ink-4); }
 
   /* ===== 카테고리 카드 ===== */
   .cE .lib-grid { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
@@ -64,10 +59,10 @@
   .cE .lib-more:hover { color: var(--brand-deep); }
 
   @media (max-width: 960px) {
-    .cE .lib-title-row { padding-bottom: 14px; }
+    .cE .lib-title-row { width: calc(100% + 32px) !important; margin: 0 -16px 16px !important; padding: 0 0 18px !important; }
+    .cE .lib-title-inner { padding: 0 16px; flex-wrap: wrap; gap: 12px; }
     .cE .ht-l h1 { font-size: var(--fs-h2); }
     .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
-    .cE .lib-search { flex: 1 1 100%; min-width: 0; }
     .cE .lib-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
@@ -89,19 +84,16 @@
 
     <!-- ===== 페이지 타이틀 ===== -->
     <div class="lib-title-row">
-      <div class="ht-l">
-        <div class="ht-ic">
-          <svg class="ic-svg" width="22" height="22"><use href="#i-folder"/></svg>
+      <div class="lib-title-inner">
+        <div class="ht-l">
+          <div class="ht-ic">
+            <svg class="ic-svg" width="22" height="22"><use href="#i-folder"/></svg>
+          </div>
+          <div>
+            <h1>자료실</h1>
+            <div class="ht-sub">카테고리 <b>4</b>개 · 하위 폴더 <b>13</b>개</div>
+          </div>
         </div>
-        <div>
-          <h1>자료실</h1>
-          <div class="ht-sub">카테고리 <b>4</b>개 · 하위 폴더 <b>13</b>개</div>
-        </div>
-      </div>
-      <div class="lib-search">
-        <label for="lib-search" class="sr-only">자료 검색</label>
-        <svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg>
-        <input id="lib-search" type="search" placeholder="보험사, 서류 이름으로 검색" />
       </div>
     </div>
 

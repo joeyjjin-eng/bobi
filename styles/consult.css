@@ -25,12 +25,14 @@
 .cE .ct { line-height: 1.4; }
 .cE .num { font-variant-numeric: tabular-nums; }
 
-/* ===== 섹션 타이틀 (재무상담 / 혜택·보조금) ===== */
-.cE .ct-title-row { display: flex; align-items: center; gap: 16px; padding: 4px 0 28px; margin-bottom: 28px; border-bottom: 1px solid var(--line); }
+/* ===== 섹션 타이틀 (재무상담 / 혜택·보조금) — 콘텐츠는 1192px 컬럼, 하단 구분선만 화면 꽉차게 ===== */
+.cE .ct-title-row { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px 28px; padding: 0 0 22px; border-bottom: 1px solid var(--line); }
+.cE .ct-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.cE .ct-title-l { display: flex; align-items: center; gap: 14px; }
 .cE .ct-title-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
 .cE .ct-title-txt { display: flex; flex-direction: column; }
-.cE .ct-title-row h1 { font-size: var(--fs-h1); font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
-.cE .ct-title-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; font-weight: 500; }
+.cE .ct-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+.cE .ct-title-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
 .cE .ct-title-sub b { color: var(--ink); font-weight: 700; }
 .cE .ct-title-act { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; flex: none; }
 
@@ -858,7 +860,9 @@
   .cE .table-row { grid-template-columns: 1fr auto; row-gap: 6px; padding: 14px 16px; justify-items: start; }
   .cE .tr-go { margin: -14px 0; }
   .cE .row-sub { padding: 0 16px 10px; }
-  .cE .ct-title-row { padding-bottom: 16px; margin-bottom: 16px; }
+  .cE .ct-title-row { width: calc(100% + 32px) !important; margin: 0 -16px 16px !important; padding: 0 0 18px !important; }
+  .cE .ct-title-inner { padding: 0 16px; flex-wrap: wrap; gap: 12px; }
+  .cE .ct-title-l { gap: 12px; flex: 1; min-width: 0; }
   .cE .ct-title-ic { width: 38px; height: 38px; }
   .cE .ct-head { flex-direction: column; align-items: flex-start; gap: 14px; }
   .cE .ct-act { width: 100%; flex-wrap: wrap; }
