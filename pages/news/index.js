@@ -78,6 +78,25 @@
     }).join('');
   }
 
+  // ===== 상품 소식 좌우 넘기기 =====
+  function bindTrack() {
+    var track = el('ns-products'), prev = el('ns-prod-prev'), next = el('ns-prod-next');
+    if (!track || !prev || !next) return;
+    function update() {
+      prev.disabled = track.scrollLeft < 2;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+    }
+    function step(dir) {
+      var smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      track.scrollBy({ left: dir * track.clientWidth * 0.85, behavior: smooth ? 'smooth' : 'instant' });
+    }
+    prev.addEventListener('click', function () { step(-1); });
+    next.addEventListener('click', function () { step(1); });
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
   // ===== 목록 =====
   function filtered() {
     var q = st.q.trim().toLowerCase();
@@ -143,56 +162,10 @@
       + ' aria-label="' + label + '"><svg class="ic-svg" width="16" height="16"><use href="#' + icon + '"/></svg></button>';
   }
 
-  // ===== 기사 상세 =====
-  // 문장 두 개씩 한 문단 — 받은 화면과 같은 규칙
-  function paragraphs(text) {
-    var sentences = String(text || '').split(/(?<=[다요][.!?])\s+/);
-    var out = [];
-    for (var i = 0; i < sentences.length; i += 2) {
-      var p = sentences.slice(i, i + 2).join(' ').trim();
-      if (p) out.push('<p class="body">' + esc(p) + '</p>');
-    }
-    return out.join('');
-  }
-
-  var modal = el('ns-modal');
-
-  function openDoc(no) {
-    var it = byNo[no];
-    if (!it) return;
-    el('ns-sheet-body').innerHTML = ''
-      + '<article class="ns-doc">'
-      +   '<div class="kicker">' + badge(it.kind, it.topic) + badge(it.org, 'org')
-      +     '<span class="ns-meta-dt">' + esc(it.date) + '</span></div>'
-      +   '<h2 id="ns-doc-title">' + esc(it.title) + '</h2>'
-      +   (it.thumb ? '<img class="art" src="' + esc(it.thumb) + '" alt="" />' : '')
-      +   '<section><h3>주요 내용</h3>' + paragraphs(it.brief) + '</section>'
-      +   '<section><h3>날짜·진행 상태</h3><dl>'
-      +     '<dt>기사 게시·확인일</dt><dd>' + esc(it.date) + '</dd>'
-      +     '<dt>발표일</dt><dd>' + esc(dots(it.announced) || '별도 기재 없음') + '</dd>'
-      +     '<dt>시행일</dt><dd>' + esc(dots(it.effective) || '별도 기재 없음') + '</dd>'
-      +     '<dt>상태</dt><dd>' + esc(it.status) + '</dd>'
-      +   '</dl></section>'
-      +   '<section><h3>원문</h3>'
-      +     '<a class="src-btn" href="' + esc(it.url) + '" target="_blank" rel="noopener">원문에서 자세히 보기 ↗</a>'
-      +     '<p class="src-url">' + esc(it.url) + '</p>'
-      +   '</section>'
-      + '</article>';
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    el('ns-close').focus();
-  }
-
-  function closeDoc() {
-    modal.hidden = true;
-    el('ns-sheet-body').innerHTML = '';
-    document.body.style.overflow = '';
-  }
-
   // ===== 이벤트 =====
   document.addEventListener('click', function (e) {
     var card = e.target.closest('[data-no]');
-    if (card) { openDoc(+card.dataset.no); return; }
+    if (card) { location.href = 'detail.html?no=' + card.dataset.no; return; }
 
     var chip = e.target.closest('[data-topic]');
     if (chip) {
@@ -220,11 +193,6 @@
       return;
     }
 
-    if (e.target === modal || e.target.closest('#ns-close')) closeDoc();
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !modal.hidden) closeDoc();
   });
 
   el('ns-all-product').addEventListener('click', function () {
@@ -248,5 +216,6 @@
   });
 
   renderHead();
+  bindTrack();
   drawList();
 })();

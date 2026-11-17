@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 보험소식지</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<style>
+  html, body { margin: 0; background: #fff; }
+  .ic-svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  /* ===== 페이지 레이아웃 오버라이드 — 읽는 화면이라 본문 칸은 920px ===== */
+  .layout { width: 100%; min-width: 1100px; }
+  .cE { width: 100%; }
+  .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  .cE .emain > * { width: 100%; max-width: 920px; margin-left: 0; margin-right: 0; }
+  .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
+  .ft-inner { max-width: 1192px; margin: 0 auto; }
+
+  /* ===== 뒤로가기 ===== */
+  .cE .nd-back { display: inline-flex; align-self: flex-start; align-items: center; gap: 4px; width: auto; font-size: var(--fs-body); font-weight: 600; line-height: 1.4; color: var(--ink-3); text-decoration: none; margin-bottom: 20px; }
+  .cE .nd-back:hover { color: var(--brand-deep); }
+
+  /* ===== 기사 머리 ===== */
+  .cE .nd-head { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .cE .nd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -2px; }
+  .cE .ns-badge { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; line-height: 1.4; white-space: nowrap; }
+  .cE .ns-badge.product { background: var(--c-med-bg); color: var(--brand-deep); }
+  .cE .ns-badge.industry { background: var(--c-surg-bg); color: var(--c-surg); }
+  .cE .ns-badge.consumer { background: var(--c-out-bg); color: #C0392B; }
+  .cE .ns-badge.org { background: #fff; border: 1px solid var(--line); color: var(--ink-2); }
+  .cE .ns-meta-dt { font-size: var(--fs-option); font-weight: 600; line-height: 1.4; color: var(--ink-3); }
+  .cE .nd-head h1 { margin: 12px 0 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+
+  /* ===== 삽화 ===== */
+  .cE .nd-art { margin: 20px 0 0; }
+  .cE .nd-art img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r-md); background: var(--bg-soft); }
+  .cE .nd-art figcaption { margin-top: 8px; font-size: var(--fs-option); line-height: 1.4; color: var(--ink-3); }
+
+  /* ===== 본문 — 묶음 안은 20px, 묶음 사이는 48px ===== */
+  .cE .nd-sec { margin-top: 48px; }
+  .cE .nd-sec h2 { margin: 0 0 20px; font-size: var(--fs-h2); font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .nd-sec p { margin: 0 0 12px; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); }
+  .cE .nd-sec p:last-child { margin-bottom: 0; }
+
+  /* ===== 날짜·진행 상태 ===== */
+  .cE .nd-dl { margin: 0; display: grid; grid-template-columns: 160px 1fr; }
+  .cE .nd-dl dt { padding: 14px 0; border-top: 1px solid var(--line); font-size: var(--fs-option); font-weight: 700; line-height: 1.4; color: var(--ink-3); }
+  .cE .nd-dl dd { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); font-size: var(--fs-body); line-height: 1.4; color: var(--ink); }
+  .cE .nd-dl dd.none { color: var(--ink-4); }
+
+  /* ===== 원문 ===== */
+  .cE .nd-src { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-grad); color: #fff; border-radius: var(--r-pill); padding: 13px 26px; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; text-decoration: none; box-shadow: var(--sh-brand); transition: filter .2s ease; }
+  .cE .nd-src:hover { filter: brightness(1.05); }
+
+  /* ===== 같은 주제 기사 ===== */
+  .cE .nd-more { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+  .cE .nd-more-row { display: grid; grid-template-columns: 96px 1fr 24px; column-gap: 20px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
+  .cE .nd-more-row:hover .t { color: var(--brand-deep); }
+  .cE .nd-more-row .d { font-size: var(--fs-option); font-weight: 600; line-height: 1.4; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .cE .nd-more-row .t { min-width: 0; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cE .nd-more-row .g { color: var(--ink-4); display: flex; }
+  .cE .nd-more-row:hover .g { color: var(--brand); }
+
+  /* ===== 없는 기사 ===== */
+  .cE .nd-empty { margin-top: 48px; border: 1px dashed var(--line-strong); border-radius: var(--r-md); padding: 48px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+  .cE .nd-empty b { font-size: var(--fs-body); font-weight: 700; line-height: 1.4; color: var(--ink-2); }
+  .cE .nd-empty p { margin: 0; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-3); }
+
+  @media (max-width: 960px) {
+    .cE .nd-head h1 { font-size: var(--fs-h2); }
+    .cE .nd-dl { grid-template-columns: 1fr; }
+    .cE .nd-dl dt { padding-bottom: 0; }
+    .cE .nd-dl dd { padding-top: 4px; border-top: 0; }
+    .cE .nd-more-row { grid-template-columns: 1fr 24px; row-gap: 4px; }
+    .cE .nd-more-row .d { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 640px) {
+    .layout { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="icons-host"></div>
+
+<div class="layout">
+<div class="cA cE bobi">
+  <div id="gnb-host"></div>
+
+  <main class="emain">
+    <a class="nd-back" href="index.html">
+      <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>
+      오늘의 뉴스
+    </a>
+    <div id="nd-body"></div>
+  </main>
+</div>
+<div id="footer-host"></div>
+</div>
+
+<script src="../../components/layout.js"></script>
+<script>injectShell('news');</script>
+<script src="_data.js"></script>
+<script src="detail.js"></script>
+</body>
+</html>
