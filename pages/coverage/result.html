@@ -19,6 +19,7 @@
   .layout { width: 100%; min-width: 1100px; }
   .cE { width: 100%; }
   .cE .emain { display: flex; flex-direction: column; align-items: center; }
+  /* 콘텐츠 폭 1192px — 전 화면 공통. 재무상담 2단과 같이, 왼쪽 네비게이터도 이 폭 안에서 나눠 쓴다 */
   .cE .emain > * { width: 100%; max-width: 1192px; margin-left: 0; margin-right: 0; }
   .ft { padding-left: calc(248px + 36px); padding-right: 36px; }
   .ft-inner { max-width: 1192px; margin: 0 auto; }
@@ -33,7 +34,7 @@
   .cE .rep-id a.patient-avatar:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(20,120,200,.2); }
 
   /* ===== 탭 (report-viewseg 패턴 재사용) — 스크롤 시 상단 고정 ===== */
-  .cE .report-viewseg { display: flex; align-items: stretch; margin: 8px 0 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; background: #fff; }
+  .cE .report-viewseg { display: flex; align-items: stretch; margin: 8px 0 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 6; background: #fff; }
   .cE .report-viewseg-tabs { display: flex; align-items: stretch; gap: 4px; }
   .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); text-decoration: none; cursor: pointer; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
   .cE .report-viewseg-btn::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 3px; background: transparent; border-radius: 3px 3px 0 0; transition: background-color .2s ease; }
@@ -42,126 +43,178 @@
   .cE .report-viewseg-btn.on { color: var(--brand-deep); }
   .cE .report-viewseg-btn.on::after { background: var(--brand); }
 
+  /* ===== 네비게이터 패널 + 본문 2단 ===== */
+  /* 창을 줄이면 2단을 접지 않고 왼쪽 네비게이터만 좁아진다 (셸 최소폭 1100px 구간 대응) */
+  .cE .cov-layout { display: grid; grid-template-columns: clamp(140px, 13.5vw, 196px) minmax(0, 1fr); column-gap: 24px; align-items: start; }
+  .cE .cov-nav { position: sticky; top: 72px; align-self: start; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-1); padding: 12px 10px; }
+  .cE .cov-nav-group { display: flex; flex-direction: column; gap: 2px; }
+  .cE .cov-nav-group[hidden] { display: none; }
+  .cE .cov-nav-item { display: block; padding: 10px; border-radius: var(--r-sm); font-size: var(--fs-body); font-weight: 500; line-height: 1.4; color: var(--ink-2); text-decoration: none; transition: background-color .15s ease, color .15s ease; }
+  .cE .cov-nav-item:hover { background: var(--bg-soft); color: var(--ink); }
+  .cE .cov-nav-item.on { background: var(--brand-pale); color: var(--brand-deep); font-weight: 700; }
+  .cE .cov-nav-note { margin: 12px 0 2px; padding: 12px 10px 0; border-top: 1px solid var(--line); font-size: var(--fs-option); color: var(--ink-3); line-height: 1.4; }
+  .cE .cov-sec { scroll-margin-top: 86px; }
+  .cE [role="tabpanel"] > .cov-sec:first-child > .card-pad,
+  .cE .cov-preview-head + .cov-sec > .card-pad { margin-top: 0; }
+
   /* ===== 섹션 헤더 공통 ===== */
+  .cE .card-pad { box-shadow: var(--sh-1); }
   .cE .card-pad h2 { display: flex; align-items: center; gap: 8px; }
   .cE .card-pad h2 svg { color: var(--brand-deep); }
   .cE .card-pad h2 .h-sub { margin-left: auto; font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
-  .cE .card-pad h2 .h-sub b { color: var(--ink); font-weight: 700; }
+  .cE .card-pad h2 .h-sub b { color: var(--ink); font-weight: 600; }
+  .cE .sec-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+  .cE .sec-head h2 { margin: 0; flex: 1; min-width: 0; }
+  .cE .sec-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+  .cE .btn-ghost { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border: 1px solid var(--line-strong); border-radius: var(--r-pill); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; transition: border-color .15s ease, color .15s ease; }
+  .cE .btn-ghost:hover { border-color: var(--ink-3); color: var(--ink); }
+  .cE .btn-solid { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 20px; border: none; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); transition: filter .15s ease; }
+  .cE .btn-solid:hover { filter: brightness(1.05); }
 
-  /* ===== 계약 요약 — 타일 3개 ===== */
+  /* ===== 계약 요약 — 타일 ===== */
   .cE .cov-tiles { display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; }
-  .cE .cov-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  .cE .cov-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; display: flex; flex-direction: column; justify-content: center; gap: 9px; }
   .cE .cov-tile-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; }
-  .cE .cov-tile-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .cov-tile-l { font-size: var(--fs-body); color: var(--ink-2); font-weight: 600; }
+  .cE .cov-tile-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
   .cE .cov-tile-v { font-size: var(--fs-h1); font-weight: 800; }
-  .cE .cov-bar { display: flex; width: 100%; height: 26px; border-radius: 7px; overflow: hidden; font-size: var(--fs-option); font-weight: 700; }
+  .cE .cov-bar { display: flex; width: 100%; height: 26px; border-radius: 7px; overflow: hidden; font-size: var(--fs-option); font-weight: 600; }
   .cE .cov-bar span { display: flex; align-items: center; padding: 0 10px; color: var(--ink); white-space: nowrap; }
-  .cE .cov-legend { display: flex; justify-content: space-between; width: 100%; font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .cov-legend { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; width: 100%; font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .cov-legend > span { white-space: nowrap; }
   .cE .cov-legend b { color: var(--brand-deep); }
 
-  .cE .cov-goto-detail { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; background: none; border: none; padding: 0; font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); cursor: pointer; text-decoration: none; }
-  .cE .cov-goto-detail:hover { text-decoration: underline; }
+  /* 계약 요약은 바깥 카드가 그룹 역할을 하므로 내부는 구분선만 사용한다 */
+  .cE #cov-sum-tiles { gap: 0; }
+  .cE #cov-sum-tiles .cov-tile { border: 0; border-radius: 0; padding: 10px 24px; }
+  .cE #cov-sum-tiles .cov-tile:first-child { padding-left: 0; }
+  .cE #cov-sum-tiles .cov-tile:last-child { padding-right: 0; }
+  .cE #cov-sum-tiles .cov-tile + .cov-tile { border-left: 1px solid var(--line-strong); }
 
-  /* ===== 상세: 보장 점수·의견 ===== */
-  .cE #cov-score-tiles { margin-bottom: var(--s6); }
+
+  /* ===== 보장 점수 ===== */
+  .cE #cov-score-tiles { margin-bottom: var(--s6); gap: 0; }
+  .cE #cov-score-tiles .cov-tile { border: 0; border-radius: 0; padding: 10px 22px; }
+  .cE #cov-score-tiles .cov-tile:first-child { padding-left: 0; }
+  .cE #cov-score-tiles .cov-tile:last-child { padding-right: 0; }
+  .cE #cov-score-tiles .cov-tile + .cov-tile { border-left: 1px solid var(--line-strong); }
   .cE .cov-tile-v.score { color: var(--brand-deep); }
   .cE .cov-score-card { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
-  .cE .cov-score-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
-  .cE .cov-score-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .cE .cov-score-table { width: 100%; border-collapse: collapse; font-size: var(--fs-body); }
+  .cE .cov-score-table th { text-align: left; font-weight: 600; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; border-bottom: 1px solid var(--line); }
   .cE .cov-score-table th.amt { text-align: right; }
   .cE .cov-score-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); vertical-align: middle; }
   .cE .cov-score-table tbody tr:last-child td { border-bottom: none; }
-  .cE .cov-score-table td.amt { text-align: right; font-weight: 700; }
+  .cE .cov-score-table td.amt { text-align: right; font-weight: 600; }
   .cE .cov-score-table td.name { font-weight: 600; color: var(--ink-2); }
-  .cE .cov-score-table td.note { color: var(--ink-3); font-size: var(--fs-option); white-space: normal; }
-  .cE .cov-score-table tfoot td { padding: 13px 16px; font-weight: 800; color: var(--ink); background: var(--bg-soft); border-bottom: none; }
+  .cE .cov-score-table td.note { color: var(--ink-2); white-space: normal; }
+  .cE .cov-score-table tfoot td { padding: 13px 16px; font-weight: 700; color: var(--ink); background: var(--bg-soft); border-bottom: none; }
   .cE .cov-score-table tfoot td.amt { text-align: right; color: var(--brand-deep); font-size: var(--fs-h2); }
-  .cE .cov-score-notes { margin-top: var(--s5); display: flex; flex-direction: column; gap: var(--s2); font-size: var(--fs-option); color: var(--ink-2); line-height: 1.4; }
-  .cE .cov-score-notes p { margin: 0; }
-  .cE .cov-score-notes b { color: var(--brand-deep); font-weight: 700; }
 
-  /* ===== 상세: 계약 상세 ===== */
-  .cE .cov-contract-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
-  .cE .cov-contract-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; white-space: nowrap; border-bottom: 1px solid var(--line); }
-  .cE .cov-contract-table th.amt { text-align: right; }
-  .cE .cov-contract-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); white-space: nowrap; vertical-align: middle; }
-  .cE .cov-contract-table tbody tr:last-child td { border-bottom: none; }
-  .cE .cov-contract-table tbody tr:hover { background: var(--bg-warm); }
-  .cE .cov-contract-table td.num { color: var(--ink-3); }
-  .cE .cov-contract-table td.co { font-weight: 700; color: var(--ink-2); }
-  .cE .cov-contract-table td.pname { white-space: normal; }
-  .cE .cov-prog { min-width: 150px; }
-  .cE .cov-prog-bar { height: 7px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
-  .cE .cov-prog-bar i { display: block; height: 100%; background: var(--brand); border-radius: 4px; }
-  .cE .cov-prog-txt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
-  .cE .cov-prog-txt.na { color: var(--ink-4); }
+  /* 점수 칸은 평소엔 숫자처럼 보이고, 손을 올리거나 커서를 두면 입력칸으로 바뀐다 */
+  .cE .score-input { width: 52px; border: 1px solid transparent; background: transparent; padding: 4px 8px; margin: 0; font-family: inherit; font-size: inherit; font-weight: 700; color: var(--ink); text-align: right; border-radius: 6px; -moz-appearance: textfield; appearance: textfield; transition: background-color .15s ease, border-color .15s ease; }
+  .cE .score-input::-webkit-outer-spin-button, .cE .score-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .cE .score-input:hover { background: var(--bg-soft); border-color: var(--line-strong); cursor: text; }
+  .cE .score-input:focus { outline: none; background: #fff; border-color: var(--brand); }
+
+  /* ===== 설계사 의견 ===== */
+  .cE .edt-opinions { display: flex; flex-direction: column; margin-top: var(--s5); }
+  .cE .edt-opinion-row { display: flex; gap: 10px; align-items: flex-start; }
+  .cE .edt-opinion-row + .edt-opinion-row { margin-top: 10px; }
+  .cE .edt-opinion-label { flex: none; width: 120px; padding-top: 10px; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
+  .cE .edt-opinion-text { flex: 1; min-height: 44px; padding: 9px 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-body); color: var(--ink); line-height: 1.4; resize: none; overflow: hidden; }
+  .cE .edt-opinion-text:focus { outline: none; background: #fff; border-color: var(--brand); }
+  .cE .edt-opinion-del { flex: none; width: 36px; height: 36px; margin-top: 4px; border: 1px solid var(--line-strong); background: #fff; border-radius: 50%; color: var(--ink-3); cursor: pointer; display: grid; place-items: center; }
+  .cE .edt-opinion-del:hover { background: #FFF0F1; color: #C92238; }
 
   /* ===== 보험금 카드 ===== */
-  .cE .cov-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--s4); }
-  .cE .cov-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s6); display: flex; flex-direction: column; gap: var(--s5); }
+  .cE .cov-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+  .cE .cov-card { background: #fff; border: 0; border-radius: 0; padding: 24px 28px; display: flex; flex-direction: column; gap: var(--s5); }
+  .cE .cov-card:not(:nth-child(3n + 1)) { border-left: 1px solid var(--line-strong); }
+  .cE .cov-card:nth-child(n + 4) { border-top: 1px solid var(--line-strong); }
   .cE .cov-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
   .cE .cov-card-l { font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
-  .cE .cov-amt { font-size: 32px; font-weight: 800; margin: 0; }
-  .cE .cov-amt.ok { color: var(--success); }
-  .cE .cov-amt.low { color: #C92238; }
-  .cE .cov-sub { font-size: var(--fs-option); color: var(--ink-3); margin: 4px 0 0; }
-  .cE .cov-badge { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 700; padding: 3px 9px; border-radius: 6px; white-space: nowrap; flex: none; }
+  .cE .cov-amt { font-size: 32px; font-weight: 800; margin: 8px 0 0; }
+  .cE .cov-sub { font-size: var(--fs-body); color: var(--ink-2); margin: 8px 0 0; }
+  .cE .cov-badge { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 600; padding: 3px 9px; border-radius: 6px; white-space: nowrap; flex: none; }
   .cE .cov-badge.ok { background: #E7FAF6; color: #15967F; }
   .cE .cov-badge.over { background: var(--brand-pale); color: var(--brand-deep); }
   .cE .cov-badge.low { background: #FFF0F1; color: #C92238; }
-  .cE .cov-src { display: grid; grid-template-columns: 1fr auto; row-gap: var(--s2); column-gap: var(--s4); font-size: var(--fs-option); padding-top: var(--s4); border-top: 1px solid var(--line); }
+  .cE .cov-src { display: grid; grid-template-columns: 1fr auto; row-gap: var(--s3); column-gap: var(--s4); font-size: var(--fs-body); padding-top: var(--s4); border-top: 1px solid var(--line-strong); }
   .cE .cov-src[hidden] { display: none; }
   .cE .cov-src .sn { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--ink-2); }
-  .cE .cov-src .sa { font-weight: 700; color: var(--ink); text-align: right; }
+  .cE .cov-src .sa { font-weight: 600; color: var(--ink); text-align: right; }
   .cE .cov-src .sa.none { color: var(--ink-4); font-weight: 600; }
-  .cE .cov-src-toggle { display: block; margin-top: var(--s3); background: none; border: none; padding: 0; font-family: inherit; font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); cursor: pointer; }
+  .cE .cov-src-toggle { display: block; margin-top: var(--s3); background: none; border: none; padding: 0; font-family: inherit; font-size: var(--fs-body); font-weight: 700; color: var(--brand-deep); cursor: pointer; }
   .cE .cov-src-toggle:hover { text-decoration: underline; }
-  .cE .cov-tag { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 700; padding: 2px 7px; border-radius: 5px; background: var(--bg-soft); color: var(--ink-2); }
+  .cE .cov-tag { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 600; padding: 2px 7px; border-radius: 5px; background: var(--bg-soft); color: var(--ink-2); }
 
-  /* ===== 보험사 필터 칩 — 로고 + 테두리로만 on/off 구분 (sort-chip 전역 스타일 대신 이 섹션만 오버라이드) ===== */
+  /* ===== 요약 보장분석표 (담보별 카드 — 회사·상품·세부담보명) ===== */
+  .cE .cov-cat-label { font-size: var(--fs-body); font-weight: 700; color: var(--brand-deep); margin: var(--s9) 0 0; }
+  .cE .cov-group { margin-top: var(--s9); }
+  .cE .cov-cat-label + .cov-group { margin-top: var(--s6); }
+  .cE .cov-group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+  .cE .cov-group-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; }
+  .cE .cov-group-total { font-size: 22px; font-weight: 700; color: var(--brand-deep); white-space: nowrap; }
+  .cE .cov-co-block { display: grid; grid-template-columns: 110px minmax(0, 1fr); column-gap: 16px; align-items: start; border-bottom: 1px solid var(--line); }
+  .cE .cov-co-block:last-child { border-bottom: none; }
+  .cE .cov-co-name { display: flex; align-items: center; gap: 6px; padding: 12px 0; font-weight: 600; color: var(--ink-2); font-size: var(--fs-body); }
+  .cE .cov-product { padding: 10px 0; }
+  .cE .cov-product + .cov-product { border-top: 1px dashed var(--line); }
+  .cE .cov-product-name { color: var(--ink-2); font-size: var(--fs-body); line-height: 1.4; margin-bottom: 8px; }
+  .cE .cov-item-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 4px 0; font-size: var(--fs-body); }
+  .cE .cov-item-row + .cov-item-row { border-top: 1px solid var(--line); margin-top: 2px; padding-top: 6px; }
+  .cE .cov-item-amt { font-weight: 700; white-space: nowrap; text-align: right; }
+  .cE .cov-drop-mark { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 600; padding: 1px 6px; border-radius: 5px; background: #FFF0F1; color: #C92238; margin-left: 6px; }
+
+  /* ===== 보험사 필터 칩 — 로고 + 테두리로만 on/off 구분 ===== */
   .cE #cov-co-filter.sort-chips { gap: 10px; margin: 0 0 20px; }
-  .cE #cov-co-filter .sort-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px 7px 10px; font-weight: 700; background: #fff; border: 1px solid var(--line); color: var(--ink-3); }
+  .cE #cov-co-filter .sort-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px 7px 10px; font-weight: 600; background: #fff; border: 1px solid var(--line); color: var(--ink-3); }
   .cE #cov-co-filter .sort-chip .cov-co-logo { width: 18px; height: 18px; opacity: .5; transition: opacity .2s ease; }
   .cE #cov-co-filter .sort-chip:hover { background: #fff; border-color: var(--line-strong); color: var(--ink-2); }
   .cE #cov-co-filter .sort-chip.on,
   .cE #cov-co-filter .sort-chip.on:hover { background: #fff; border-color: currentColor; color: var(--brand-deep); }
   .cE #cov-co-filter .sort-chip.on .cov-co-logo { opacity: 1; }
 
-  /* ===== 상세: 보장분석표 (담보 × 상품 매트릭스) ===== */
+  /* ===== 상세 보장분석표 (담보 × 상품 매트릭스) ===== */
   .cE .cov-matrix-wrap { overflow-x: auto; cursor: grab; }
   .cE .cov-matrix-wrap.dragging { cursor: grabbing; user-select: none; }
   .cE .cov-matrix { border-collapse: collapse; width: 100%; table-layout: fixed; }
-  .cE .cov-matrix th, .cE .cov-matrix td { padding: 3px 16px; white-space: nowrap; border-right: 1px solid var(--line); }
+  .cE .cov-matrix th, .cE .cov-matrix td { padding: 3px 12px; white-space: nowrap; border-right: 1px solid var(--line); }
   .cE .cov-matrix th:last-child, .cE .cov-matrix td:last-child { border-right: none; }
-  .cE .cov-matrix thead th { background: #fff; border-bottom: 2px solid var(--ink); text-align: center; vertical-align: top; font-size: var(--fs-body); font-weight: 700; color: var(--ink); padding-top: 16px; padding-bottom: 16px; }
-  /* 담보·합계는 폭 고정, 보험사 칼럼은 width를 주지 않아 table-layout:fixed가 남는 폭을 균등하게 나눠 갖는다(유동) */
-  .cE .cov-matrix thead th:not(.hname):not(.hsum) { min-width: 110px; }
-  .cE .cov-matrix thead th.hname { text-align: left; width: 200px; }
-  .cE .cov-matrix thead th.hsum { width: 130px; }
-  .cE .cov-matrix thead th .pname { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: var(--fs-option); font-weight: 800; color: var(--ink); }
+  .cE .cov-matrix thead th { background: #fff; border-bottom: 2px solid var(--ink); text-align: center; vertical-align: top; font-size: var(--fs-body); font-weight: 600; color: var(--ink); padding-top: 16px; padding-bottom: 16px; white-space: normal; }
+  .cE .cov-matrix thead th.hname { text-align: left; }
+  .cE .cov-matrix thead th .pname { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: var(--fs-body); font-weight: 700; color: var(--ink); word-break: keep-all; line-height: 1.4; }
   .cE .cov-co-logo { width: 16px; height: 16px; object-fit: contain; flex: none; border-radius: 3px; }
-  .cE .cov-matrix thead th .pprem { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; margin-top: 3px; }
+  .cE .cov-matrix thead th .pprem { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; margin-top: 6px; }
+  .cE .cov-matrix thead th .pdrop { color: #C92238; font-weight: 600; }
+  .cE .cov-matrix thead th .pdrop::before { content: '·'; margin: 0 4px; color: var(--ink-4); }
   .cE .cov-matrix tbody tr { border-bottom: 1px solid var(--line); }
   .cE .cov-matrix tbody tr:last-child { border-bottom: none; }
   .cE .cov-matrix td.name { text-align: left; color: var(--ink); font-size: var(--fs-body); font-weight: 500; white-space: normal; }
-  .cE .cov-matrix td.name.none { color: #C0392B; font-weight: 700; }
-  .cE .cov-matrix td.sum { text-align: right; font-size: var(--fs-body); font-weight: 800; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
-  .cE .cov-matrix td.sum.none { color: var(--ink-4); font-weight: 700; font-size: var(--fs-option); }
-  .cE .cov-matrix td.amt { text-align: right; font-size: var(--fs-body); font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .cE .cov-matrix td.name.none { color: #C0392B; font-weight: 600; }
+  .cE .cov-matrix td.sum { text-align: right; font-size: var(--fs-body); font-weight: 700; color: var(--brand-deep); font-variant-numeric: tabular-nums; }
+  .cE .cov-matrix td.sum.none { color: var(--ink-4); font-weight: 500; }
+  .cE .cov-matrix td.amt { text-align: right; font-size: var(--fs-body); font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
   .cE .cov-matrix td.amt.dash { color: var(--ink-4); font-weight: 400; }
   .cE .cov-matrix th:nth-child(even), .cE .cov-matrix td:nth-child(even) { background: #F7F8FA; }
   .cE .cov-matrix thead th.hsum, .cE .cov-matrix td.sum { background: #EAF4FB; }
   .cE .cov-matrix thead th.hsum { color: #2D4F9F; }
-  .cE .cov-matrix tr.cat td { border-bottom: 1px solid var(--line); border-top: 2px solid var(--line-strong); padding: 11px 16px; font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep); }
+  /* 해지로 표시한 계약의 칼럼 — 머리부터 끝까지 연한 분홍 */
+  .cE .cov-matrix thead th.drop { background: #FFE9EC; }
+  .cE .cov-matrix tbody td.drop { background: #FFF4F5; }
+  .cE .cov-matrix thead th.drop .pname, .cE .cov-matrix thead th.drop .pprem { color: #C92238; }
+  .cE .cov-matrix tbody td.drop.amt { color: #C92238; }
+  .cE .cov-matrix tbody td.drop.amt.dash { color: #E6A9B1; }
+  .cE .cov-matrix tr.cat td { border-bottom: 1px solid var(--line); border-top: 2px solid var(--line-strong); padding: 11px 12px; font-size: var(--fs-body); font-weight: 700; color: var(--brand-deep); }
   .cE .cov-matrix tbody tr:first-child.cat td { border-top: none; }
-  .cE .cov-matrix tr.tip td { background: var(--brand-pale); border-bottom: 1px solid var(--line); padding: 11px 16px; white-space: normal; }
+  .cE .cov-matrix tr.tip td { background: var(--brand-pale); border-bottom: 1px solid var(--line); padding: 11px 12px; white-space: normal; }
   .cE .cov-matrix tr.tip .tip-ic { margin-right: 6px; }
   .cE .cov-matrix tr.tip .tip-txt { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
-  .cE .cov-matrix tr.tip .tip-src { display: block; margin-top: 3px; font-size: var(--fs-option); color: var(--ink-3); }
+  .cE .cov-matrix tr.tip .tip-src { display: block; margin-top: 6px; font-size: var(--fs-option); color: var(--ink-2); }
 
-  /* ===== 상세 보장분석표 / 보험사별 상세 — 대분류 탭 (박스 없이 밑줄로만 구분, 다른 섹션 h2와 같은 폰트 레벨) ===== */
-  /* 카드 패딩(28px)을 좌우로 빼서 페이지 최대폭(1192px)까지 꽉 채운다 — 다른 카드처럼 안쪽으로 들어간 폭이 아니라 테이블 자체가 1192*/
-  .cE .card-pad:has(#cov-view-toggle) { border-color: transparent; padding-left: 0; padding-right: 0; }
+  /* 상세 보장분석표 / 보험사별 상세 — 대분류 탭 */
+  .cE .card-pad:has(#cov-view-toggle) { border-color: transparent; box-shadow: none; padding-left: 0; padding-right: 0; }
   .cE .cov-subtabs { display: flex; align-items: stretch; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
   .cE .cov-subtab { position: relative; padding: 2px 1px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; transition: color .2s ease; margin-bottom: -1px; }
   .cE .cov-subtab::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent; border-radius: 2px 2px 0 0; transition: background-color .2s ease; }
@@ -169,45 +222,173 @@
   .cE .cov-subtab.on { color: var(--brand-deep); }
   .cE .cov-subtab.on::after { background: var(--brand); }
 
-  /* ===== 상세 보장분석표 — 보험사별 상세 ===== */
+  /* ===== 보험사별 상세 ===== */
   .cE .cov-co-select-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
   .cE .cov-co-select-wrap { position: relative; display: inline-flex; align-items: center; }
   .cE .cov-co-select-logo { position: absolute; left: 14px; display: flex; align-items: center; pointer-events: none; }
-  .cE .cov-co-select { height: 46px; padding: 0 40px 0 38px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: #fff; font-family: inherit; font-size: var(--fs-body); font-weight: 700; color: var(--ink); cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; min-width: 220px; transition: border-color .15s ease; }
+  .cE .cov-co-select { height: 46px; padding: 0 40px 0 38px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: #fff; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--ink); cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; min-width: 200px; transition: border-color .15s ease; }
   .cE .cov-co-select:hover { border-color: var(--ink-3); }
   .cE .cov-co-select:focus { outline: none; border-color: var(--brand); }
-  .cE .cov-co-select-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
+  .cE .cov-co-select-meta { font-size: var(--fs-option); color: var(--ink-2); font-weight: 600; }
   .cE .cov-co-product { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
   .cE .cov-co-product + .cov-co-product { margin-top: 20px; }
   .cE .cov-co-product-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
-  .cE .cov-co-product-left { display: flex; align-items: baseline; gap: 8px; }
+  .cE .cov-co-product-left { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
   .cE .cov-co-product-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .cE .cov-co-product-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; white-space: nowrap; text-align: right; }
-  .cE .cov-co-product-cnt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; white-space: nowrap; }
+  .cE .cov-co-product-cnt { font-size: var(--fs-option); color: var(--ink-2); font-weight: 600; white-space: nowrap; }
   .cE .cov-detail-table { width: 100%; border-collapse: collapse; }
-  .cE .cov-detail-table th { text-align: left; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); background: #fff; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  .cE .cov-detail-table th { text-align: left; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); background: #fff; padding: 12px 20px; border-bottom: 1px solid var(--line); }
   .cE .cov-detail-table th.amt { text-align: right; }
   .cE .cov-detail-table td { padding: 13px 20px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); vertical-align: middle; }
   .cE .cov-detail-table tbody tr:last-child td { border-bottom: none; }
-  .cE .cov-detail-table td.cov { font-weight: 700; color: var(--ink); }
-  .cE .cov-detail-table td.detail { font-weight: 700; color: var(--ink); }
+  .cE .cov-detail-table td.cov { font-weight: 600; color: var(--ink); }
+  .cE .cov-detail-table td.detail { font-weight: 400; color: var(--ink-2); }
   .cE .cov-detail-table td.amt { text-align: right; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
 
-  /* ===== 고객용 미리보기 (share.html과 같은 수치를 설계사 화면 안에서 그대로 보여준다) ===== */
+  /* ===== 계약 · 담보 (읽기 + 편집 + 유지/해지 표시가 한 자리에) ===== */
+  .cE .edt-hint { margin: 0 0 16px; font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; line-height: 1.4; }
+
+  .cE .edt-contract-item { border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 12px 16px; margin-top: 12px; transition: border-color .15s ease, background-color .15s ease; }
+  .cE .edt-contract-item:first-child { margin-top: 0; }
+  .cE .edt-contract-item.is-drop { border-color: #F3C9CF; background: #FFF4F5; }  /* 상세 보장분석표의 해지 칼럼과 같은 분홍 */
+  .cE .edt-contract-row { display: grid; grid-template-columns: 24px minmax(72px, 120px) minmax(0, 1fr) 92px 112px 68px; column-gap: 12px; align-items: center; }
+  .cE .edt-contract-no { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--ink-3); color: var(--ink-3); font-size: var(--fs-option); font-weight: 600; display: grid; place-items: center; }
+  .cE .edt-c-co { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
+  .cE .edt-c-co span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cE .edt-c-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-body); color: var(--ink); }
+  .cE .edt-c-prem { font-size: var(--fs-body); font-weight: 700; color: var(--ink); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .cE .edt-contract-item.is-drop .edt-c-name,
+  .cE .edt-contract-item.is-drop .edt-c-prem { color: var(--ink-3); text-decoration: line-through; }
+
+  .cE .edt-status { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--r-pill); overflow: hidden; background: #fff; }
+  .cE .edt-status-btn { flex: 1; height: 32px; padding: 0 10px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-body); font-weight: 500; color: var(--ink-3); cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+  .cE .edt-status-btn:hover { color: var(--ink); }
+  .cE .edt-status-btn[aria-pressed="true"][data-v="keep"] { background: var(--brand-pale); color: var(--brand-deep); font-weight: 700; }
+  .cE .edt-status-btn[aria-pressed="true"][data-v="drop"] { background: #FFF0F1; color: #C92238; font-weight: 700; }
+
+  .cE .edt-contract-toggle { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; padding: 4px 0; background: transparent; border: none; font-family: inherit; font-size: var(--fs-body); font-weight: 600; color: var(--brand-deep); cursor: pointer; transition: color .15s ease; }
+  .cE .edt-contract-toggle:hover { color: var(--brand); }
+  .cE .edt-contract-toggle svg { transition: transform .2s ease; }
+  .cE .edt-contract-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+  .cE .edt-contract-body { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line-strong); }
+  .cE .edt-c-meta { display: flex; flex-wrap: wrap; gap: 7px 18px; margin-bottom: 14px; font-size: var(--fs-body); color: var(--ink-2); line-height: 1.4; }
+  .cE .edt-c-meta b { color: var(--ink-2); font-weight: 600; }
+  .cE .edt-contract-fields { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cE .edt-field { flex: 1 1 130px; min-width: 110px; display: flex; flex-direction: column; gap: 7px; }
+  .cE .edt-field.wide { flex: 2 1 240px; }
+  .cE .edt-field-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; padding-left: 2px; line-height: 1.4; }
+  .cE .edt-field .edt-input { min-width: 0; }
+  .cE .edt-f-co-custom { margin-top: 6px; }
+  .cE .edt-contract-covs { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
+  .cE .edt-contract-covs .edt-table { margin-bottom: 10px; }
+  .cE .edt-add-cov-btn { margin-top: 0; height: 36px; padding: 0 16px; font-size: var(--fs-body); }
+
+  .cE .edt-table { width: 100%; border-collapse: collapse; font-size: var(--fs-body); }
+  .cE .edt-table th { text-align: left; font-weight: 600; color: var(--ink-2); background: none; padding: 10px 12px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
+  .cE .edt-table th.amt { text-align: right; }
+  .cE .edt-table td { padding: 6px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+  .cE .edt-table tbody tr:last-child td { border-bottom: none; }
+
+  .cE .edt-input { width: 100%; min-width: 90px; height: 38px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-body); color: var(--ink); text-align: right; }
+  .cE .edt-input:focus { outline: none; background: #fff; border-color: var(--brand); }
+  .cE .edt-input.txt { text-align: left; min-width: 140px; }
+  .cE select.edt-input { appearance: none; -webkit-appearance: none; -moz-appearance: none; padding-right: 34px; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px 16px; }
+
+  .cE .edt-add-row-btn { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 18px; border-radius: var(--r-pill); border: 1px dashed var(--line-strong); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; }
+  .cE .edt-add-row-btn:hover { background: var(--bg-soft); border-color: var(--ink-3); }
+
+  .cE .edt-history-row { padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-soft); font-size: var(--fs-body); color: var(--ink-2); line-height: 1.4; }
+  .cE .edt-history-row + .edt-history-row { margin-top: 8px; }
+  .cE .edt-history-row .ts { font-weight: 600; color: var(--ink); }
+  .cE .edt-history-row ul { margin: 7px 0 0; padding-left: 18px; }
+
+  .edt-save-toast { position: fixed; left: 50%; top: 20px; transform: translateX(-50%) translateY(-8px); background: var(--ink); color: #fff; font-size: var(--fs-body); font-weight: 600; padding: 12px 20px; border-radius: var(--r-pill); box-shadow: var(--sh-2); opacity: 0; transition: opacity .2s ease, transform .2s ease; z-index: 70; pointer-events: none; }
+  .edt-save-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== 리포트 탭 — 고객용 머리말 ===== */
   .cE .cov-preview-head { background: var(--brand-pale); border-radius: var(--r-md); padding: 28px 32px; margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .cE .cov-preview-head-l { min-width: 0; }
   .cE .cov-preview-head h2 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); margin: 0; }
-  .cE .cov-preview-head-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin: 4px 0 0; }
-
-  /* 고객용 공유 버튼 + 드롭다운 (인쇄하기 / PDF로 저장 / PDF 전송) */
+  .cE .cov-preview-head-sub { font-size: var(--fs-option); color: var(--ink-2); font-weight: 500; margin: 8px 0 0; }
   .cE .cov-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; cursor: pointer; white-space: nowrap; flex: none; transition: filter .15s ease; }
   .cE .cov-share-btn:hover { filter: brightness(1.05); }
   .cE .cov-share-btn svg { color: currentColor; flex: none; }
   .cE #cov-share-popover .menu-list { right: 0; }
 
+  /* ===== 리포트 탭 — BEFORE & AFTER ===== */
+  .cE .ba-compare { display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); align-items: stretch; }
+  .cE .ba-col { border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 20px 22px; }
+  .cE .ba-col.after { border-color: var(--brand); background: var(--brand-pale); }
+  .cE .ba-tag { display: inline-flex; align-items: center; font-size: var(--fs-body); font-weight: 700; color: var(--ink-3); }
+  .cE .ba-col.after .ba-tag { color: var(--brand-deep); }
+  .cE .ba-tag em { font-style: normal; font-weight: 600; color: var(--ink-4); margin-left: 6px; }
+  .cE .ba-col.after .ba-tag em { color: var(--brand-deep); }
+  .cE .ba-main { display: block; margin-top: 12px; font-size: 30px; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cE .ba-rows { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 9px; }
+  .cE .ba-col.after .ba-rows { border-top-color: var(--brand-soft); }
+  .cE .ba-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: var(--fs-body); color: var(--ink-2); }
+  .cE .ba-row b { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .cE .ba-mid { display: grid; place-items: center; color: var(--ink-4); }
+  .cE .ba-delta { margin: 16px 0 0; font-size: var(--fs-body); color: var(--ink); font-weight: 600; }
+  .cE .ba-delta span { font-weight: 500; color: var(--ink-3); margin-left: 6px; }
+
+  .cE .ba-block + .ba-block { margin-top: var(--s9); }
+  .cE .ba-block.after .ba-tag { color: var(--brand-deep); }
+  .cE .ba-block-head { display: flex; align-items: baseline; gap: 10px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 12px; }
+  .cE .ba-block-head .ba-tag { font-size: var(--fs-h2); }
+  .cE .ba-block-sub { font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; }
+  .cE .ba-block-total { margin-left: auto; font-size: var(--fs-body); font-weight: 700; color: var(--brand-deep); white-space: nowrap; }
+  .cE .ba-table-wrap { overflow-x: auto; }
+  .cE .ba-table { width: 100%; border-collapse: collapse; font-size: var(--fs-body); }
+  .cE .ba-table th { text-align: left; font-weight: 600; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .cE .ba-table th.amt { text-align: right; }
+  .cE .ba-table td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); white-space: nowrap; vertical-align: middle; }
+  .cE .ba-table tbody tr:last-child td { border-bottom: none; }
+  .cE .ba-table td.num { color: var(--ink-3); }
+  .cE .ba-table td.co { font-weight: 600; color: var(--ink-2); }
+  .cE .ba-table td.pname { white-space: normal; }
+  .cE .ba-table td.amt { text-align: right; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cE .ba-table td.amt.na { color: var(--ink-3); font-weight: 500; }
+  .cE .ba-table tr.is-drop td { color: var(--ink-3); }
+  .cE .ba-table tr.is-drop td.pname { text-decoration: line-through; }
+  .cE .ba-chip { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 600; padding: 2px 8px; border-radius: 5px; background: #FFF0F1; color: #C92238; }
+  .cE .ba-chip.keep { background: #E7FAF6; color: #15967F; }
+
+  /* ===== 리포트 탭 — 보장 내용 카드 (고객용 카피) ===== */
+  .cE .shr-cat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 24px; margin-top: 16px; }
+  .cE .shr-cat-card:first-child { margin-top: 0; }
+  .cE .shr-cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .cE .shr-cat-ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); display: grid; place-items: center; font-size: 19px; line-height: 1.4; }
+  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); }
+  .cE .shr-row { display: grid; grid-template-columns: minmax(0, 1fr) 120px 20px 120px; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: var(--fs-body); }
+  .cE .shr-row:last-of-type { border-bottom: none; }
+  .cE .shr-row-l { color: var(--ink-2); font-weight: 400; }
+  .cE .shr-row-b { color: var(--ink-2); font-weight: 400; text-align: right; white-space: nowrap; }
+  .cE .shr-row-arrow { display: grid; place-items: center; color: var(--ink-4); }
+  .cE .shr-row-a { color: var(--ink); font-weight: 700; text-align: right; white-space: nowrap; }
+  .cE .shr-row-a.none { color: #C92238; }
+  .cE .shr-row-a small, .cE .shr-row-b small { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-left: 5px; }
+  /* 열 제목 — 카드마다 맨 윗줄에 한 번 */
+  .cE .shr-row.head { padding-top: 0; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .cE .shr-row.head span { font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); text-align: right; }
+  .cE .shr-row.head span.after { color: var(--brand-deep); }
+  .cE .shr-empty { margin: 0; padding: 2px 0 4px; font-size: var(--fs-body); color: var(--ink-2); font-weight: 500; }
+  .cE .shr-missing { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .cE .shr-missing-l { font-size: var(--fs-body); color: var(--ink-2); font-weight: 600; }
+  .cE .shr-chip { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 600; padding: 4px 10px; border-radius: var(--r-pill); background: #FFF0F1; color: #C92238; }
+  .cE .shr-tip { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 12px 14px; background: var(--brand-pale); border-radius: var(--r-sm); }
+  .cE .shr-tip-ic { flex: none; line-height: 1.4; }
+  .cE .shr-tip-txt { font-size: var(--fs-body); color: var(--ink); font-weight: 400; }
+  .cE .shr-tip-src { display: block; margin-top: 6px; font-size: var(--fs-option); color: var(--ink-2); font-weight: 500; }
+  .cE .shr-disclaim { margin: 24px 4px 0; font-size: var(--fs-option); color: var(--ink-2); font-weight: 500; line-height: 1.4; }
+
   /* ===== 폼 요소 (PDF 전송 모달용) ===== */
   .cE .field { display: flex; flex-direction: column; gap: 8px; }
-  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); padding-left: 2px; }
+  .cE .field-l { font-size: var(--fs-option); font-weight: 600; color: var(--ink-2); padding-left: 2px; }
   .cE .input-box { width: 100%; height: 46px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 0 14px; font-size: var(--fs-body); color: var(--ink); font-family: inherit; outline: none; background: #fff; transition: border-color .15s ease; box-sizing: border-box; }
   .cE .input-box:hover { border-color: var(--ink-3); }
   .cE .input-box:focus { border-color: var(--brand); }
@@ -219,192 +400,92 @@
   .nr-modal-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .nr-modal-head-l { display: flex; align-items: center; gap: 12px; }
   .nr-modal-head-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); color: #fff; display: grid; place-items: center; flex: none; }
-  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0; }
-  .nr-modal-head .desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
+  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 700; color: var(--ink); margin: 0; }
+  .nr-modal-head .desc { font-size: var(--fs-body); color: var(--ink-3); margin-top: 7px; }
   .nr-modal-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
   .nr-modal-close:hover { background: var(--line); color: var(--ink); }
   .nr-modal-body { padding: 22px 26px; display: flex; flex-direction: column; gap: 16px; }
-  .nr-modal-hint { display: flex; gap: 8px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-sm); padding: 10px 14px; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.4; }
+  .nr-modal-hint { display: flex; gap: 8px; background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: var(--r-sm); padding: 10px 14px; font-size: var(--fs-body); color: var(--ink-2); line-height: 1.4; }
   .nr-modal-hint svg { color: var(--brand-deep); flex: none; margin-top: 1px; }
   .nr-modal-actions { padding: 16px 26px 22px; border-top: 1px solid var(--line); display: flex; gap: 10px; }
   @keyframes nrPop { from { opacity: 0; transform: scale(0.96) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
   .nr-pop { animation: nrPop 0.22s cubic-bezier(0.16,1,0.3,1) both; }
-  .cE .shr-sum-tiles { display: flex; gap: 12px; margin-bottom: 20px; }
-  .cE .shr-sum-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
-  .cE .shr-sum-l { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
-  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; color: var(--ink); }
-  .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow-x: auto; }
-  .cE .shr-contract-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
-  .cE .shr-contract-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; white-space: nowrap; border-bottom: 1px solid var(--line); }
-  .cE .shr-contract-table th.amt { text-align: right; }
-  .cE .shr-contract-table td { padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: var(--fs-body); white-space: nowrap; vertical-align: middle; }
-  .cE .shr-contract-table tbody tr:last-child td { border-bottom: none; }
-  .cE .shr-contract-table td.num { color: var(--ink-3); }
-  .cE .shr-contract-table td.co { font-weight: 700; color: var(--ink-2); }
-  .cE .shr-contract-table td.pname { white-space: normal; }
-  .cE .shr-contract-table td.amt { text-align: right; font-weight: 700; color: var(--ink); }
-  .cE .shr-contract-table td.amt.na { color: var(--ink-3); font-weight: 500; }
-  .cE .shr-prog { min-width: 150px; }
-  .cE .shr-prog-bar { height: 7px; background: var(--bg-soft); border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
-  .cE .shr-prog-bar i { display: block; height: 100%; background: var(--brand); border-radius: 4px; }
-  .cE .shr-prog-txt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
-  .cE .shr-prog-txt.na { color: var(--ink-4); }
-  .cE .shr-cat-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px 24px; margin-top: 16px; }
-  .cE .shr-cat-card:first-child { margin-top: 0; }
-  .cE .shr-cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .cE .shr-cat-ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); display: grid; place-items: center; font-size: 19px; line-height: 1; }
-  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); }
-  .cE .shr-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: var(--fs-body); }
-  .cE .shr-row:last-of-type { border-bottom: none; }
-  .cE .shr-row-l { color: var(--ink-2); font-weight: 500; }
-  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; }
-  .cE .shr-row-v small { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-left: 3px; }
-  .cE .shr-empty { margin: 0; padding: 2px 0 4px; font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; }
-  .cE .shr-missing { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .cE .shr-missing-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; }
-  .cE .shr-chip { display: inline-flex; align-items: center; font-size: var(--fs-option); font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill); background: #FFF0F1; color: #C92238; }
-  .cE .shr-tip { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; padding: 12px 14px; background: var(--brand-pale); border-radius: var(--r-sm); }
-  .cE .shr-tip-ic { flex: none; line-height: 1.4; }
-  .cE .shr-tip-txt { font-size: var(--fs-option); color: var(--ink); font-weight: 600; }
-  .cE .shr-tip-src { display: block; margin-top: 3px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
-  .cE .shr-disclaim { margin: 24px 4px 0; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
 
-  /* ===== 요약: 보장분석표 (담보별 카드 — 회사·상품·세부담보명) ===== */
-  /* 첫 카테고리도 48px를 그대로 둔다 — h2("보장분석표")→카테고리 라벨 간격이 라벨→그룹(24px)보다 넓어야 한다 */
-  .cE .cov-cat-label { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); margin: var(--s9) 0 0; }
-  /* 박스 없이 그대로 노출 — 담보 제목 밑줄(cov-group-head)만으로 구분, 그룹 사이는 48px로 넉넉히 */
-  .cE .cov-group { margin-top: var(--s9); }
-  /* 카테고리 라벨 바로 다음 그룹은 라벨과 한 묶음으로 보이도록 그룹 간 간격의 절반만 띄운다(카테고리 자체 상단 간격은 48px 그대로) */
-  .cE .cov-cat-label + .cov-group { margin-top: var(--s6); }
-  .cE .cov-group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
-  .cE .cov-group-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; }
-  .cE .cov-group-total { font-size: 22px; font-weight: 800; color: var(--brand-deep); white-space: nowrap; }
-  .cE .cov-co-block { display: grid; grid-template-columns: 110px minmax(0, 1fr); column-gap: 16px; align-items: start; border-bottom: 1px solid var(--line); min-width: 620px; }
-  .cE .cov-co-block:last-child { border-bottom: none; }
-  .cE .cov-co-name { display: flex; align-items: center; gap: 6px; padding: 12px 0; font-weight: 700; color: var(--ink-2); font-size: var(--fs-body); }
-  .cE .cov-product { padding: 10px 0; }
-  .cE .cov-product + .cov-product { border-top: 1px dashed var(--line); }
-  .cE .cov-product-name { color: var(--ink-3); font-size: var(--fs-option); line-height: 1.45; margin-bottom: 4px; }
-  .cE .cov-item-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 4px 0; font-size: var(--fs-body); }
-  .cE .cov-item-row + .cov-item-row { border-top: 1px solid var(--line); margin-top: 2px; padding-top: 6px; }
-  .cE .cov-item-amt { font-weight: 800; white-space: nowrap; text-align: right; }
-
-  /* ===== 수정 모드 ===== */
-  .cE .edit-toggle { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: var(--r-pill); border: 1px solid var(--line-strong); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; white-space: nowrap; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
-  .cE .edit-toggle:hover { border-color: var(--ink-3); }
-  .cE .edit-toggle-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-4); transition: background-color .15s ease; }
-  .cE .edit-toggle[aria-pressed="true"] { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
-  .cE .edit-toggle[aria-pressed="true"] .edit-toggle-dot { background: var(--brand); }
-
-  .cE .edt-only { display: none; }
-  .cE.is-editing .edt-only { display: block; }
-  .cE.is-editing .emain { background: var(--bg-soft); }
-  .cE.is-editing .card-pad { background: #fff; }
-  .cE.is-editing .report-viewseg { display: none; }
-  /* 수정 불가능한 뷰(계약 상세, 상세 보장분석표)는 수정 모드에서 숨긴다 */
-  .cE.is-editing #cov-contract-detail,
-  .cE.is-editing .card-pad:has(.cov-matrix-wrap) { display: none; }
-  .cE.is-editing .cov-score-notes { display: none; }
-  .cE .edt-opinions { display: none; }
-  .cE.is-editing .edt-opinions { display: flex; flex-direction: column; margin-top: var(--s5); }
-
-  .cE .edt-hint { margin: 0 0 16px; font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
-
-  .cE .edt-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
-  .cE .edt-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: none; padding: 10px 12px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
-  .cE .edt-table th.amt { text-align: right; }
-  .cE .edt-table td { padding: 6px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
-  .cE .edt-table tbody tr:last-child td { border-bottom: none; }
-  .cE .edt-table td.excl { text-align: center; width: 40px; }
-
-  .cE .edt-input { width: 100%; min-width: 90px; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-option); color: var(--ink); text-align: right; }
-  .cE .edt-input:focus { outline: none; background: #fff; border-color: var(--brand); }
-  .cE .edt-input.txt { text-align: left; min-width: 140px; }
-  /* 보험사 드롭다운 — 브라우저 기본 화살표는 박스 끝에 바싹 붙어서, 직접 그려 오른쪽에 여백을 둔다 */
-  .cE select.edt-input { appearance: none; -webkit-appearance: none; -moz-appearance: none; padding-right: 34px; cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237C8B97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 10px center; background-size: 16px 16px; }
-
-  .cE .edt-add-row-btn { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: var(--r-pill); border: 1px dashed var(--line-strong); background: #fff; color: var(--ink-2); font-family: inherit; font-size: var(--fs-option); font-weight: 700; cursor: pointer; }
-  .cE .edt-add-row-btn:hover { background: var(--bg-soft); border-color: var(--ink-3); }
-
-  /* ===== 계약 — 기본은 요약만, "수정하기"를 눌러야 보험사·상품명부터 담보까지 펼쳐진다 ===== */
-  /* 배경색은 입력칸에만 둔다 — 카드·배지·버튼·표 헤더는 전부 투명, 테두리로만 구분 */
-  .cE .edt-contract-item { border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 14px 18px; margin-top: 15px; }
-  .cE .edt-contract-item:first-child { margin-top: 0; }
-  .cE .edt-contract-head { display: flex; align-items: center; gap: 14px; cursor: pointer; }
-  .cE .edt-contract-head:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
-  .cE .edt-contract-no { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--ink-3); color: var(--ink-3); font-size: var(--fs-option); font-weight: 700; display: grid; place-items: center; }
-  .cE .edt-contract-summary { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .cE .edt-contract-summary b { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
-  .cE .edt-contract-summary span.edt-summary-name { font-size: var(--fs-body); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 320px; }
-  .cE .edt-contract-summary .edt-summary-sub { font-size: var(--fs-option); color: var(--ink-3); white-space: nowrap; }
-  .cE .edt-contract-toggle { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; background: transparent; border: none; font-family: inherit; font-size: var(--fs-option); font-weight: 600; color: var(--brand-deep); cursor: pointer; transition: color .15s ease; }
-  .cE .edt-contract-toggle:hover { color: var(--brand); }
-  .cE .edt-contract-toggle svg { transition: transform .2s ease; }
-  .cE .edt-contract-head[aria-expanded="true"] .edt-contract-toggle svg { transform: rotate(180deg); }
-
-  .cE .edt-contract-body { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
-  .cE .edt-contract-fields { display: flex; flex-wrap: wrap; gap: 10px; }
-  .cE .edt-field { flex: 1 1 130px; min-width: 110px; display: flex; flex-direction: column; gap: 4px; }
-  .cE .edt-field.wide { flex: 2 1 240px; }
-  .cE .edt-field-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; padding-left: 2px; line-height: 1.4; }
-  .cE .edt-field .edt-input { min-width: 0; }
-  .cE .edt-f-co-custom { margin-top: 6px; }
-
-  .cE .edt-contract-covs { margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
-  .cE .edt-contract-covs .edt-table { margin-bottom: 10px; }
-  .cE .edt-add-cov-btn { margin-top: 0; height: 34px; padding: 0 14px; font-size: var(--fs-option); }
-
-  /* 보장 점수 표 — "점수" 칸은 평소엔 그냥 숫자처럼 보이다가, 수정 모드에서만 입력 가능한 칸으로 바뀐다 */
-  .cE .score-input { width: 46px; border: none; background: transparent; padding: 0; margin: 0; font-family: inherit; font-size: inherit; font-weight: 800; color: var(--ink); text-align: right; -moz-appearance: textfield; appearance: textfield; }
-  .cE .score-input::-webkit-outer-spin-button, .cE .score-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .cE .score-input:not([readonly]) { background: var(--bg-soft); border: 1px solid var(--line-strong); border-radius: 6px; padding: 4px 8px; cursor: text; }
-  .cE .score-input:not([readonly]):focus { outline: none; border-color: var(--brand); background: #fff; }
-
-  .cE .edt-opinion-row { display: flex; gap: 10px; align-items: flex-start; }
-  .cE .edt-opinion-row + .edt-opinion-row { margin-top: 10px; }
-  .cE .edt-opinion-label { flex: none; width: 110px; padding-top: 9px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
-  .cE .edt-opinion-text { flex: 1; min-height: 44px; padding: 9px 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--bg-soft); font-family: inherit; font-size: var(--fs-option); color: var(--ink); line-height: 1.5; resize: none; overflow: hidden; }
-  .cE .edt-opinion-text:focus { outline: none; background: #fff; border-color: var(--brand); }
-  .cE .edt-opinion-del { flex: none; width: 36px; height: 36px; margin-top: 4px; border: 1px solid var(--line-strong); background: #fff; border-radius: 50%; color: var(--ink-3); cursor: pointer; display: grid; place-items: center; }
-  .cE .edt-opinion-del:hover { background: #FFF0F1; color: #C92238; }
-  .cE .edt-add-opinion-btn { display: none; margin-top: 12px; }
-  .cE.is-editing .edt-add-opinion-btn { display: inline-flex; }
-
-  .cE .edt-history-row { padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff; font-size: var(--fs-option); color: var(--ink-2); line-height: 1.6; }
-  .cE .edt-history-row + .edt-history-row { margin-top: 8px; }
-  .cE .edt-history-row .ts { font-weight: 700; color: var(--ink); }
-  .cE .edt-history-row ul { margin: 4px 0 0; padding-left: 18px; }
-
-  /* ===== 수정 모드 — 헤더에 저장·초기화, 헤더 자체를 스크롤 고정 ===== */
-  .cE.is-editing .cov-rep-head { position: sticky; top: 0; z-index: 10; background: var(--bg-soft); border: none !important; border-radius: 0 !important; box-shadow: none !important; }
-  .cE .edit-toggle[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
-  .cE .edit-toggle[aria-pressed="true"] .edit-toggle-dot { background: #fff; }
-  .cE.is-editing #edt-reset-btn { display: inline-flex; }
-  .cE.is-editing #cov-more-popover { display: none; }
-
-  .edt-save-toast { position: fixed; left: 50%; top: 20px; transform: translateX(-50%) translateY(-8px); background: var(--ink); color: #fff; font-size: var(--fs-option); font-weight: 600; padding: 12px 20px; border-radius: var(--r-pill); box-shadow: var(--sh-2); opacity: 0; transition: opacity .2s ease, transform .2s ease; z-index: 70; pointer-events: none; }
-  .edt-save-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  /* ===== 중간 폭 — 2단을 접지 않고 계약 행만 좁힌다 (네비게이터 폭은 위 clamp로 유동) ===== */
+  @media (max-width: 1320px) {
+    .cE .cov-layout { column-gap: 20px; }
+    .cE .cov-nav-item { padding: 8px 8px 8px 12px; }
+    .cE .edt-contract-row { column-gap: 10px; grid-template-columns: 24px minmax(64px, 104px) minmax(0, 1fr) 88px 104px 60px; }
+  }
 
   @media (max-width: 960px) {
     .layout { min-width: 0; }
+
+    /* 네비게이터 — 세로 목차를 가로 스크롤 칩 줄로 바꿔 탭 바로 아래에 붙인다 */
+    .cE .cov-layout { display: block; }
+    .cE .cov-nav { position: sticky; top: 44px; z-index: 5; background: #fff; margin: 0 -16px 14px; padding: 8px 16px 10px; border: none; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+    .cE .cov-nav-group { flex-direction: row; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .cE .cov-nav-group::-webkit-scrollbar { display: none; }
+    .cE .cov-nav-item { flex: none; border-left: none; border: 1px solid var(--line); border-radius: var(--r-pill); padding: 8px 14px; font-size: var(--fs-body); white-space: nowrap; }
+    .cE .cov-nav-item.on { border-color: var(--brand); background: var(--brand-pale); }
+    .cE .cov-nav-note { display: none; }
+    .cE .cov-sec { scroll-margin-top: 104px; }
+
     .cE .cov-tiles { gap: 8px; }
     .cE .cov-tile { flex: 1 1 100%; padding: 14px 16px; }
     .cE .cov-tile-v { font-size: var(--fs-h2); }
-    .cE .cov-cards { grid-template-columns: 1fr; gap: 12px; }
-    .cE .cov-card { padding: 18px 18px; }
+    .cE #cov-sum-tiles { gap: 0; }
+    .cE #cov-sum-tiles .cov-tile,
+    .cE #cov-sum-tiles .cov-tile:first-child,
+    .cE #cov-sum-tiles .cov-tile:last-child { padding: 16px 0; }
+    .cE #cov-sum-tiles .cov-tile:first-child { padding-top: 4px; }
+    .cE #cov-sum-tiles .cov-tile:last-child { padding-bottom: 4px; }
+    .cE #cov-sum-tiles .cov-tile + .cov-tile { border-left: 0; border-top: 1px solid var(--line-strong); }
+    .cE #cov-score-tiles { gap: 0; }
+    .cE #cov-score-tiles .cov-tile,
+    .cE #cov-score-tiles .cov-tile:first-child,
+    .cE #cov-score-tiles .cov-tile:last-child { padding: 16px 0; }
+    .cE #cov-score-tiles .cov-tile:first-child { padding-top: 4px; }
+    .cE #cov-score-tiles .cov-tile:last-child { padding-bottom: 4px; }
+    .cE #cov-score-tiles .cov-tile + .cov-tile { border-left: 0; border-top: 1px solid var(--line-strong); }
+    .cE .cov-cards { grid-template-columns: 1fr; }
+    .cE .cov-card { padding: 20px 0; }
+    .cE .cov-card:not(:nth-child(3n + 1)) { border-left: 0; }
+    .cE .cov-card:nth-child(n + 2) { border-top: 1px solid var(--line-strong); }
     .cE .cov-amt { font-size: 26px; }
     .cE .cov-group { margin-top: var(--s7); }
     .cE .cov-cat-label + .cov-group { margin-top: var(--s4); }
-    .cE .cov-co-block { grid-template-columns: 1fr; min-width: 0; }
+    .cE .cov-co-block { grid-template-columns: 1fr; }
     .cE .cov-co-name { padding-bottom: 2px; }
 
+    .cE .sec-head { flex-direction: column; gap: 12px; }
+    .cE .sec-actions { width: 100%; }
+    .cE .sec-actions > button { flex: 1; justify-content: center; }
+
+    /* 계약 행 — 한 줄 그리드를 접어서 상품명·보험료·상태를 줄바꿈 */
     .cE .edt-contract-item { padding: 12px 14px; }
-    .cE .edt-contract-head { flex-wrap: wrap; }
-    .cE .edt-contract-summary span.edt-summary-name { max-width: 180px; }
+    .cE .edt-contract-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+    .cE .edt-c-co { flex: 0 1 auto; }
+    .cE .edt-c-name { flex: 1 1 100%; order: 3; white-space: normal; }
+    .cE .edt-c-prem { order: 4; text-align: left; }
+    .cE .edt-status { order: 5; }
+    .cE .edt-contract-toggle { order: 6; margin-left: auto; }
     .cE .edt-field { flex: 1 1 100%; }
     .cE .edt-field.wide { flex: 1 1 100%; }
+
+    /* BEFORE & AFTER — 세로 스택, 화살표는 아래 방향 */
+    .cE .shr-row { grid-template-columns: minmax(0, 1fr) 20px auto; grid-template-areas: "label label label" "before arrow after"; gap: 6px 10px; }
+    .cE .shr-row-l { grid-area: label; }
+    .cE .shr-row-b { grid-area: before; text-align: left; }
+    .cE .shr-row-arrow { grid-area: arrow; }
+    .cE .shr-row-a { grid-area: after; }
+    .cE .shr-row.head { grid-template-areas: "before arrow after"; }
+    .cE .shr-row.head span:first-child { display: none; }
+
+    .cE .ba-compare { grid-template-columns: 1fr; row-gap: 10px; }
+    .cE .ba-mid { height: 28px; transform: rotate(90deg); }
+    .cE .ba-main { font-size: var(--fs-h1); }
+    .cE .ba-block + .ba-block { margin-top: var(--s7); }
 
     /* ===== 고객 헤더 — 컴팩트 + 접기/펼치기 (report/main.html과 동일 패턴) ===== */
     .cE .cov-rep-head {
@@ -425,7 +506,7 @@
       margin-top: 6px;
       padding: 4px 0;
       background: transparent; border: none;
-      font-family: inherit; font-size: var(--fs-option); font-weight: 600;
+      font-family: inherit; font-size: var(--fs-body); font-weight: 600;
       color: var(--brand-deep); cursor: pointer;
       transition: color .15s ease;
     }
@@ -435,8 +516,8 @@
 
     .cA .cov-rep-head .rep-meta {
       display: none;
-      gap: 4px 12px;
-      margin-top: 10px;
+      gap: 7px 12px;
+      margin-top: 12px;
       padding: 10px 12px;
       background: var(--bg-soft);
       border-radius: var(--r-sm);
@@ -452,28 +533,51 @@
     .cE .report-viewseg-btn { font-size: var(--fs-body); padding: 10px 14px 12px; gap: 6px; }
 
     .cE .cov-subtabs { gap: 18px; }
-    .cE .cov-subtab { font-size: var(--fs-option); padding: 2px 1px 12px; }
+    .cE .cov-subtab { font-size: var(--fs-body); padding: 2px 1px 12px; }
     .cE .cov-co-select-row { width: 100%; }
     .cE .cov-co-select { width: 100%; }
     .cE .cov-co-product-head { flex-wrap: wrap; gap: 6px; padding: 14px 16px; }
     .cE .cov-detail-table th, .cE .cov-detail-table td { padding: 11px 16px; }
 
     .cE .cov-preview-head { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px 20px; }
-    .cE .cov-share-btn { align-self: flex-start; height: 40px; padding: 0 16px; font-size: var(--fs-option); }
+    .cE .cov-share-btn { align-self: flex-start; height: 40px; padding: 0 16px; font-size: var(--fs-body); }
 
     .nr-modal { padding: 12px; }
     .nr-modal-card { max-width: 100%; border-radius: 16px; }
     .nr-modal-head { padding: 18px 20px 14px; gap: 12px; }
     .nr-modal-head-ic { width: 36px; height: 36px; border-radius: 10px; }
     .nr-modal-head h3 { font-size: var(--fs-body); }
-    .nr-modal-head .desc { font-size: var(--fs-option); }
     .nr-modal-body { padding: 18px 20px; gap: 14px; }
     .nr-modal-actions { padding: 14px 20px 20px; flex-direction: column; gap: 8px; }
     .nr-modal-actions > button { width: 100% !important; padding: 12px 18px !important; justify-content: center !important; }
   }
 
   @media print {
-    .report-viewseg, .cov-rep-head, .cov-preview-head .menu-popover { display: none !important; }
+    .report-viewseg, .cov-rep-head, .cov-nav, .cov-preview-head .menu-popover, .sec-actions,
+    .cE .edt-add-row-btn, .cE .edt-contract-toggle, .cE .cov-src-toggle,
+    .cE #cov-co-filter, .cE .edt-opinion-del { display: none !important; }
+    .cE .cov-layout { display: block !important; }
+
+    /* 화면에서 가로로 스크롤해 보던 표는 인쇄하면 오른쪽이 잘린다.
+       폭 제한을 풀고 줄바꿈을 허용해 종이 폭 안에 전부 들어오게 한다. */
+    .cE .cov-matrix-wrap, .cE .ba-table-wrap, .cE .cov-score-card, .cE [style*="overflow-x"] { overflow: visible !important; }
+    .cE .cov-matrix, .cE .ba-table, .cE .cov-score-table, .cE .cov-contract-table, .cE .edt-table {
+      min-width: 0 !important; width: 100% !important; table-layout: auto !important; }
+    .cE .cov-matrix col { width: auto !important; }
+    .cE .cov-matrix th, .cE .cov-matrix td,
+    .cE .ba-table th, .cE .ba-table td { white-space: normal !important; padding: 7px 8px !important; }
+
+    /* 수정용 UI는 값만 남긴다 — 입력칸 테두리를 지우고, 유지/해지는 선택된 쪽만 */
+    .cE .edt-input { border: none !important; background: none !important; padding: 0 !important; height: auto !important; }
+    .cE .edt-status { border: none !important; }
+    .cE .edt-status-btn[aria-pressed="false"] { display: none !important; }
+    .cE .edt-opinion-text { border: none !important; background: none !important; padding: 0 !important; }
+    .cE .edt-contract-item { page-break-inside: avoid; }
+
+    /* 컬러 배경(해지 표시·AFTER 패널)이 인쇄에서 빠지지 않도록 */
+    .cE .cov-matrix thead th.drop, .cE .cov-matrix tbody td.drop,
+    .cE .edt-contract-item.is-drop, .cE .ba-col.after, .cE .cov-preview-head,
+    .cE .shr-tip, .cE .cov-matrix tr.tip td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
 </head>
@@ -507,21 +611,22 @@
         </div>
       </div>
       <div class="cov-rep-right">
-        <button type="button" class="edit-toggle" id="edit-mode-btn" aria-pressed="false">
-          <span class="edit-toggle-dot"></span>
-          <span id="edit-mode-label">수정</span>
-        </button>
-        <button type="button" class="menu-trigger edt-only" id="edt-reset-btn" aria-label="초기화" title="초기화">
-          <svg class="ic-svg" width="20" height="20"><use href="#i-rotate-ccw"/></svg>
-        </button>
         <div class="menu-popover" id="cov-more-popover">
           <button class="menu-trigger" type="button" id="cov-menu-btn" aria-expanded="false" aria-haspopup="true" aria-label="더보기">
             <svg class="ic-svg" width="20" height="20"><use href="#i-more-vertical"/></svg>
           </button>
           <div class="menu-list" id="cov-menu" hidden role="menu">
-            <button class="menu-item" type="button" role="menuitem" id="cov-print-btn">
+            <button class="menu-item" type="button" role="menuitem" data-act="print">
               <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
-              리포트 출력하기
+              인쇄하기
+            </button>
+            <button class="menu-item" type="button" role="menuitem" data-act="savepdf">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
+              PDF로 저장
+            </button>
+            <button class="menu-item" type="button" role="menuitem" data-act="sendpdf">
+              <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+              PDF 전송
             </button>
           </div>
         </div>
@@ -532,188 +637,191 @@
     <div class="report-viewseg" role="tablist" aria-label="보기 선택">
       <div class="report-viewseg-tabs">
         <button class="report-viewseg-btn on" type="button" role="tab" id="cov-tabA" aria-selected="true" aria-controls="cov-panelA">
-          <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
-          요약
+          <svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>
+          분석
         </button>
         <button class="report-viewseg-btn" type="button" role="tab" id="cov-tabB" aria-selected="false" aria-controls="cov-panelB">
-          <svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>
-          상세
-        </button>
-        <button class="report-viewseg-btn" type="button" role="tab" id="cov-tabC" aria-selected="false" aria-controls="cov-panelC">
-          고객용
+          <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
+          리포트
         </button>
       </div>
     </div>
 
-    <!-- ===== 패널 A: 보장분석 ===== -->
-    <div id="cov-panelA" role="tabpanel" aria-labelledby="cov-tabA">
+    <!-- ===== 네비게이터 + 본문 ===== -->
+    <div class="cov-layout">
 
-      <div class="card-pad">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 요약</h2>
-        <div class="cov-tiles">
-          <div class="cov-tile" style="flex:1 1 220px;">
-            <span class="cov-tile-l">유지 계약</span>
-            <span class="cov-tile-v">9건</span>
+      <nav class="cov-nav" aria-label="섹션 이동">
+        <div class="cov-nav-group" data-tab="A" id="cov-nav-A">
+          <a class="cov-nav-item on" href="#sec-summary">계약 요약</a>
+          <a class="cov-nav-item" href="#sec-score">보장 점수·의견</a>
+          <a class="cov-nav-item" href="#sec-claims">받을 수 있는 보험금</a>
+          <a class="cov-nav-item" href="#sec-cov">보장분석표</a>
+          <a class="cov-nav-item" href="#sec-matrix">담보별 상세</a>
+          <a class="cov-nav-item" href="#sec-contracts">계약 · 담보</a>
+          <p class="cov-nav-note">아래로 갈수록 원본 데이터에 가깝습니다. 계약과 담보는 맨 아래에서 직접 고칩니다.</p>
+        </div>
+        <div class="cov-nav-group" data-tab="B" id="cov-nav-B" hidden>
+          <a class="cov-nav-item on" href="#sec-r-premium">보험료</a>
+          <a class="cov-nav-item" href="#sec-r-cov">보장 내용</a>
+          <a class="cov-nav-item" href="#sec-r-contracts">계약 상세</a>
+          <p class="cov-nav-note">상담 후 기준으로 만든 고객용 리포트입니다. 해지로 표시한 계약은 AFTER에서 빠집니다.</p>
+        </div>
+      </nav>
+
+      <div class="cov-content">
+
+      <!-- ===== 패널 A: 분석 (요약 → 상세 → 원본) ===== -->
+      <div id="cov-panelA" role="tabpanel" aria-labelledby="cov-tabA">
+
+        <section class="cov-sec" id="sec-summary">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 요약</h2>
+            <div class="cov-tiles" id="cov-sum-tiles"></div>
           </div>
-          <div class="cov-tile" style="flex:2.4 1 320px;">
-            <div class="cov-tile-row">
-              <span class="cov-tile-l">보험료 납입</span>
+        </section>
+
+        <section class="cov-sec" id="sec-score">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장 점수·의견<span class="h-sub">기본형 37담보 권장금액 기준 · 점수는 설계사용이고 고객 리포트에는 넣지 않습니다</span></h2>
+
+            <div class="cov-tiles" id="cov-score-tiles"></div>
+            <div class="cov-score-card" style="overflow-x:auto">
+              <table class="cov-score-table" id="cov-score-table" style="min-width:680px">
+                <thead>
+                  <tr><th>항목</th><th class="amt">배점</th><th class="amt">충족률</th><th class="amt">점수</th><th>근거</th></tr>
+                </thead>
+                <tbody id="cov-score-tbody"></tbody>
+                <tfoot><tr><td>합계</td><td class="amt">100</td><td class="amt">—</td><td class="amt" id="cov-score-total">—</td><td></td></tr></tfoot>
+              </table>
             </div>
-            <span class="cov-bar" role="img" aria-label="누적 납입 51%, 잔여 납입 49%">
-              <span style="flex:51;background:var(--brand)">51%</span><span style="flex:49;background:var(--ink-200);justify-content:flex-end">49%</span>
-            </span>
-            <span class="cov-legend"><span><b style="color:var(--brand-deep)">■</b> 누적 납입 48,613,625원</span><span>잔여 납입 46,669,015원</span></span>
+            <div class="edt-opinions" id="edt-opinions"></div>
+            <button type="button" class="edt-add-row-btn" id="edt-add-opinion-btn">+ 의견 추가</button>
           </div>
-          <div class="cov-tile" style="flex:1 1 180px;">
-            <span class="cov-tile-l">미보유 담보</span>
-            <span class="cov-tile-v" id="cov-tile-uncovered">—</span>
+        </section>
+
+        <section class="cov-sec" id="sec-claims">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-won"/></svg>내가 받을 수 있는 보험금</h2>
+            <div class="cov-cards" id="cov-cards"></div>
           </div>
-        </div>
+        </section>
 
-        <button type="button" class="cov-goto-detail" id="cov-goto-detail">
-          계약 상세보기
-          <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-right"/></svg>
-        </button>
-      </div>
-
-      <div class="card-pad">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-won"/></svg>내가 받을 수 있는 보험금</h2>
-        <div class="cov-cards" id="cov-cards"></div>
-      </div>
-
-      <div class="card-pad">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장분석표</h2>
-        <div id="cov-groups"></div>
-      </div>
-
-    </div>
-
-    <!-- ===== 패널 B: 상세 ===== -->
-    <div id="cov-panelB" role="tabpanel" aria-labelledby="cov-tabB" hidden>
-
-      <div class="card-pad edt-editable">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장 점수·의견<span class="h-sub">기본형 37담보 권장금액 기준 · 설계사용, 고객용에는 점수를 넣지 않습니다 · 수정 모드에서는 표의 점수 칸을 직접 고칠 수 있어요(100점 만점)</span></h2>
-
-        <div class="cov-tiles" id="cov-score-tiles"></div>
-        <div class="cov-score-card" style="overflow-x:auto">
-          <table class="cov-score-table" id="cov-score-table" style="min-width:680px">
-            <thead>
-              <tr><th>항목</th><th class="amt">배점</th><th class="amt">충족률</th><th class="amt">점수</th><th>근거</th></tr>
-            </thead>
-            <tbody id="cov-score-tbody"></tbody>
-            <tfoot><tr><td>합계</td><td class="amt">100</td><td class="amt">—</td><td class="amt" id="cov-score-total">—</td><td></td></tr></tfoot>
-          </table>
-        </div>
-        <div class="cov-score-notes" id="cov-score-notes"></div>
-        <div class="edt-opinions" id="edt-opinions"></div>
-        <button type="button" class="edt-add-row-btn edt-add-opinion-btn" id="edt-add-opinion-btn">+ 의견 추가</button>
-      </div>
-
-      <div class="card-pad" id="cov-contract-detail">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 상세<span class="h-sub">총 월 보험료(완납 제외) <b id="cov-contract-total-amt">—</b></span></h2>
-        <div style="overflow-x:auto">
-          <table class="cov-contract-table" style="min-width:980px">
-            <thead>
-              <tr>
-                <th>#</th><th>보험사</th><th>상품명</th><th>계약일</th><th>납입/만기</th>
-                <th class="amt">월보험료</th><th>납입 진행</th><th class="amt">누적납입</th><th class="amt">잔여납입</th>
-              </tr>
-            </thead>
-            <tbody id="cov-contract-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card-pad edt-only" id="edt-contract-card">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약<span class="h-sub"></span></h2>
-        <p class="edt-hint">문서에서 읽은 계약과 담보예요. 계약과 담보를 직접 추가, 수정할 수 있어요.</p>
-        <div id="edt-contract-list"></div>
-        <button type="button" class="edt-add-row-btn" id="edt-add-contract-btn">+ 계약 추가</button>
-      </div>
-
-      <div class="card-pad edt-only" id="edt-history-card">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>수정 이력</h2>
-        <div id="edt-history-list"></div>
-      </div>
-
-      <div class="card-pad">
-        <div class="cov-subtabs" id="cov-view-toggle" role="tablist" aria-label="상세 보장분석표 / 보험사별 상세">
-          <button type="button" class="cov-subtab on" role="tab" aria-selected="true" data-view="matrix">상세 보장분석표</button>
-          <button type="button" class="cov-subtab" role="tab" aria-selected="false" data-view="bycompany">보험사별 상세</button>
-        </div>
-
-        <div id="cov-view-matrix">
-          <div class="sort-chips" id="cov-co-filter" role="group" aria-label="보험사 필터"></div>
-          <div class="cov-matrix-wrap" id="cov-matrix-wrap">
-            <table class="cov-matrix" id="cov-matrix"></table>
+        <section class="cov-sec" id="sec-cov">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>보장분석표</h2>
+            <div id="cov-groups"></div>
           </div>
-        </div>
+        </section>
 
-        <div id="cov-view-bycompany" hidden>
-          <div class="cov-co-select-row">
-            <div class="cov-co-select-wrap">
-              <span class="cov-co-select-logo" id="cov-co-select-logo"></span>
-              <select class="cov-co-select" id="cov-co-select"></select>
+        <section class="cov-sec" id="sec-matrix">
+          <div class="card-pad">
+            <div class="cov-subtabs" id="cov-view-toggle" role="tablist" aria-label="상세 보장분석표 / 보험사별 상세">
+              <button type="button" class="cov-subtab on" role="tab" aria-selected="true" data-view="matrix">상세 보장분석표</button>
+              <button type="button" class="cov-subtab" role="tab" aria-selected="false" data-view="bycompany">보험사별 상세</button>
             </div>
-            <span class="cov-co-select-meta" id="cov-co-select-meta"></span>
-          </div>
-          <div id="cov-co-products"></div>
-        </div>
-      </div>
-    </div>
 
-    <!-- ===== 패널 C: 고객용 미리보기 ===== -->
-    <div id="cov-panelC" role="tabpanel" aria-labelledby="cov-tabC" hidden>
-      <div class="cov-preview-head">
-        <div class="cov-preview-head-l">
-          <h2>홍길동님의 보장분석 리포트입니다</h2>
-          <p class="cov-preview-head-sub">2026.11.10 · 담당설계사 최신규</p>
-        </div>
-        <div class="menu-popover" id="cov-share-popover">
-          <button class="cov-share-btn" type="button" id="cov-share-btn" aria-expanded="false" aria-haspopup="true">
-            <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
-            공유
-          </button>
-          <div class="menu-list" id="cov-share-menu" hidden role="menu">
-            <button class="menu-item" type="button" role="menuitem" id="cov-share-print">
-              <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
-              인쇄하기
-            </button>
-            <button class="menu-item" type="button" role="menuitem" id="cov-share-savepdf">
-              <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
-              PDF로 저장
-            </button>
-            <button class="menu-item" type="button" role="menuitem" id="cov-share-sendpdf">
+            <div id="cov-view-matrix">
+              <div class="sort-chips" id="cov-co-filter" role="group" aria-label="보험사 필터"></div>
+              <div class="cov-matrix-wrap" id="cov-matrix-wrap">
+                <table class="cov-matrix" id="cov-matrix"></table>
+              </div>
+            </div>
+
+            <div id="cov-view-bycompany" hidden>
+              <div class="cov-co-select-row">
+                <div class="cov-co-select-wrap">
+                  <span class="cov-co-select-logo" id="cov-co-select-logo"></span>
+                  <select class="cov-co-select" id="cov-co-select"></select>
+                </div>
+                <span class="cov-co-select-meta" id="cov-co-select-meta"></span>
+              </div>
+              <div id="cov-co-products"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cov-sec" id="sec-contracts">
+          <div class="card-pad">
+            <div class="sec-head">
+              <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 · 담보<span class="h-sub">월 보험료 <b id="cov-contract-total-amt">—</b> · 유지 기준 <b id="cov-contract-keep-amt">—</b></span></h2>
+              <div class="sec-actions">
+                <button type="button" class="btn-ghost" id="edt-reset-btn">
+                  <svg class="ic-svg" width="14" height="14"><use href="#i-rotate-ccw"/></svg>
+                  초기화
+                </button>
+                <button type="button" class="btn-solid" id="edt-save-btn">저장</button>
+              </div>
+            </div>
+            <p class="edt-hint">문서에서 읽은 계약과 담보예요. 계약마다 유지할지 해지할지 표시하고, 내용은 [수정]을 눌러 직접 고칩니다. 고친 내용은 저장하면 위쪽 분석과 리포트에 반영됩니다.</p>
+            <div id="edt-contract-list"></div>
+            <button type="button" class="edt-add-row-btn" id="edt-add-contract-btn">+ 계약 추가</button>
+          </div>
+
+          <div class="card-pad" id="edt-history-card">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-clock"/></svg>수정 이력</h2>
+            <div id="edt-history-list"></div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ===== 패널 B: 리포트 (상담 후 · BEFORE & AFTER) ===== -->
+      <div id="cov-panelB" role="tabpanel" aria-labelledby="cov-tabB" hidden>
+
+        <div class="cov-preview-head">
+          <div class="cov-preview-head-l">
+            <h2>홍길동님의 보장분석 리포트입니다</h2>
+            <p class="cov-preview-head-sub">2026.11.10 · 담당설계사 최신규</p>
+          </div>
+          <div class="menu-popover" id="cov-share-popover">
+            <button class="cov-share-btn" type="button" id="cov-share-btn" aria-expanded="false" aria-haspopup="true">
               <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
-              PDF 전송
+              공유
             </button>
+            <div class="menu-list" id="cov-share-menu" hidden role="menu">
+              <button class="menu-item" type="button" role="menuitem" data-act="print">
+                <svg class="ic-svg" width="16" height="16"><use href="#i-printer"/></svg>
+                인쇄하기
+              </button>
+              <button class="menu-item" type="button" role="menuitem" data-act="savepdf">
+                <svg class="ic-svg" width="16" height="16"><use href="#i-download"/></svg>
+                PDF로 저장
+              </button>
+              <button class="menu-item" type="button" role="menuitem" data-act="sendpdf">
+                <svg class="ic-svg" width="16" height="16"><use href="#i-send"/></svg>
+                PDF 전송
+              </button>
+            </div>
           </div>
         </div>
+
+        <section class="cov-sec" id="sec-r-premium">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-won"/></svg>보험료</h2>
+            <div class="ba-compare" id="ba-premium"></div>
+            <p class="ba-delta" id="ba-delta"></p>
+          </div>
+        </section>
+
+        <section class="cov-sec" id="sec-r-cov">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>무슨 일이 생기면, 얼마를 받나요?</h2>
+            <div id="shr-cats"></div>
+          </div>
+        </section>
+
+        <section class="cov-sec" id="sec-r-contracts">
+          <div class="card-pad">
+            <h2><svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>계약 상세<span class="h-sub">지금 계약과 상담 후 계약을 나눠서 보여드려요</span></h2>
+            <div id="ba-contracts"></div>
+          </div>
+          <p class="shr-disclaim">이 안내는 현재 보유하신 계약 내용을 바탕으로 정리한 참고 자료이며, 실제 지급 금액과 조건은 약관과 심사 결과에 따라 달라질 수 있습니다.</p>
+        </section>
+
       </div>
 
-      <div class="card-pad">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-won"/></svg>지금 가지고 있는 보험</h2>
-        <div class="shr-sum-tiles" id="shr-sum-tiles"></div>
-        <div class="shr-policy-list">
-          <table class="shr-contract-table" style="min-width:860px">
-            <thead>
-              <tr>
-                <th>#</th><th>보험사</th><th>상품명</th><th>계약일</th><th>납입/만기</th>
-                <th class="amt">월보험료</th><th>납입 진행</th>
-              </tr>
-            </thead>
-            <tbody id="shr-policy-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card-pad">
-        <h2><svg class="ic-svg" width="18" height="18"><use href="#i-shield"/></svg>무슨 일이 생기면, 얼마를 받나요?</h2>
-        <div id="shr-cats"></div>
-      </div>
-
-      <p class="shr-disclaim">이 안내는 현재 보유하신 계약 내용을 바탕으로 정리한 참고 자료이며, 실제 지급 금액과 조건은 약관과 심사 결과에 따라 달라질 수 있습니다.</p>
-    </div>
+      </div><!-- /cov-content -->
+    </div><!-- /cov-layout -->
 
   </main>
 
@@ -757,31 +865,23 @@
 
 <script>
 (function () {
-  // ===== 수정 모드에서 쓸 전역 상태 =====
-  var OPINIONS = [];
-  var scoreOpinionsSeeded = false;
-  // renderPage()가 매번 다시 채우는 값 중, 수정 모드(아래) 쪽에서도 최신값을 읽어야 하는 것만 바깥 스코프에 미리 선언해둔다
-  var SCORE_ROWS;
-  // 저장을 누르면 표에서 손으로 고친 점수를 항목(label)별로 여기 담아둔다 — renderPage()가 다시 돌아도
-  // 규칙 계산값으로 되돌리지 않고 이 값을 그대로 보여준다. "초기화"를 누르면 비운다.
-  var scoreOverrides = {};
-
   // ===== 데이터 (단위: 원) =====
+  // C: [보험사, 상품명, 계약일, 납입/만기, 월보험료, 납입회차, 총회차, 누적납입, 잔여납입, 상태('keep'|'drop')]
+  // 상태 = 상담 결과 이 계약을 유지할지 해지할지. 'drop'으로 표시한 계약은 리포트 탭 AFTER에서 빠진다.
   var C = [
-    ['메리츠화재', '(무) 메리츠 운전자보험M-Drive1804', '2018.06.29', '20년납 / 80세', '25,800원', 99, 240, '2,554,200원', '3,637,800원'],
-    ['메리츠화재', '(무) 메리츠 운전자 상해종합보험2507', '2025.08.18', '20년납 / 55세', '14,960원', 13, 240, '194,480원', '3,395,920원'],
-    ['현대해상', 'Hicar 다이렉트(CM형) 개인용자동차보험', '2025.10.18', '— / 36세', '미제공', 0, 0, '—', '—'],
-    ['KB손보', '(무)LIG생활보장보험', '2009.09.11', '20년납 / 100세', '50,000원', 204, 240, '10,200,000원', '1,800,000원'],
-    ['푸본현대생명', '현대라이프 ZERO 5대성인병보험 무배당', '2014.09.05', '20년납 / 44세', '10,200원', 144, 240, '1,468,800원', '979,200원'],
-    ['푸본현대생명', '현대라이프 ZERO 암보험무배당', '2014.10.13', '1년납 / 44세', '99,450원', 12, 12, '1,193,400원', '—'],
-    ['DB생명', '(무) 유니버셜 더블종신보험(1604)', '2016.09.13', '10년납 / 종신', '103,447원', 120, 120, '12,413,640원', '—'],
-    ['메리츠화재', '(무) 메리츠 Mom편한 어린이보험2007', '2020.08.10', '20년납 / 100세', '97,710원', 73, 240, '7,132,830원', '16,317,570원'],
-    ['한화손보', '무배당 실속더한 든든보장보험1806', '2018.10.05', '20년납 / 100세', '141,645원', 95, 240, '13,456,275원', '20,538,525원']
+    ['메리츠화재', '(무) 메리츠 운전자보험M-Drive1804', '2018.06.29', '20년납 / 80세', '25,800원', 99, 240, '2,554,200원', '3,637,800원', 'keep'],
+    ['메리츠화재', '(무) 메리츠 운전자 상해종합보험2507', '2025.08.18', '20년납 / 55세', '14,960원', 13, 240, '194,480원', '3,395,920원', 'drop'],
+    ['현대해상', 'Hicar 다이렉트(CM형) 개인용자동차보험', '2025.10.18', '— / 36세', '미제공', 0, 0, '—', '—', 'keep'],
+    ['KB손보', '(무)LIG생활보장보험', '2009.09.11', '20년납 / 100세', '50,000원', 204, 240, '10,200,000원', '1,800,000원', 'keep'],
+    ['푸본현대생명', '현대라이프 ZERO 5대성인병보험 무배당', '2014.09.05', '20년납 / 44세', '10,200원', 144, 240, '1,468,800원', '979,200원', 'drop'],
+    ['푸본현대생명', '현대라이프 ZERO 암보험무배당', '2014.10.13', '1년납 / 44세', '99,450원', 12, 12, '1,193,400원', '—', 'keep'],
+    ['DB생명', '(무) 유니버셜 더블종신보험(1604)', '2016.09.13', '10년납 / 종신', '103,447원', 120, 120, '12,413,640원', '—', 'keep'],
+    ['메리츠화재', '(무) 메리츠 Mom편한 어린이보험2007', '2020.08.10', '20년납 / 100세', '97,710원', 73, 240, '7,132,830원', '16,317,570원', 'keep'],
+    ['한화손보', '무배당 실속더한 든든보장보험1806', '2018.10.05', '20년납 / 100세', '141,645원', 95, 240, '13,456,275원', '20,538,525원', 'keep']
   ];
 
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // 보험사 로고 — assets 공통 파일(pages/jjaepity/script.js의 INSURER_LOGO)과 같은 파일을 쓴다.
-  // 새 계약을 추가할 때도 로고가 맞물리도록, 지금 9건에 없는 보험사도 자산이 있으면 미리 넣어둔다.
   var INSURER_LOGO = {
     '메리츠화재': 'icn_blogo_mz_s.png', '현대해상': 'icn_blogo_hd_s.png', 'KB손보': 'icn_blogo_kb_s.png',
     'DB생명': 'icn_blogo_db_s.png', '한화손보': 'icn_carinsu_hh_s.png',
@@ -790,7 +890,7 @@
     '하나손해보험': 'icn_blogo_hnsh_s.png', 'AIG손해보험': 'icn_blogo_aig_s.png', 'AXA손해보험': 'icn_blogo_axa_s.png',
     'MG손해보험': 'icn_blogo_yb_s.png'
   };
-  // 계약 수정 화면의 "보험사" 드롭다운 — 뷰어 로고 매칭이 수기입력 오타로 깨지지 않도록, 자유 입력 대신 이 목록에서 고르게 한다
+  // 계약 수정의 "보험사" 드롭다운 — 로고 매칭이 수기입력 오타로 깨지지 않도록 목록에서 고르게 한다
   var INSURER_OPTIONS = [
     '메리츠화재', '삼성화재', '현대해상', 'DB손해보험', 'KB손보', '한화손보', '흥국화재',
     'NH농협손해보험', '라이나손해보험', '롯데손해보험', '하나손해보험', 'AIG손해보험', 'AXA손해보험', 'MG손해보험',
@@ -799,10 +899,9 @@
   function coLogo(co) {
     var file = INSURER_LOGO[co];
     if (file) return '<img class="cov-co-logo" src="../../assets/' + file + '" alt="" loading="lazy">';
-    // 로고 파일이 없는 보험사(푸본현대생명 등)는 우산 아이콘으로 대체
     return '<svg class="cov-co-logo ic-svg" viewBox="0 0 24 24"><use href="#i-umbrella"/></svg>';
   }
-  // 보장금액 표기 — consult/_model.js의 억/만원 포맷과 동일한 규칙(만원 콤마, "1억 4,500만원")을 원 단위 입력에 맞춰 적용
+  // 보장금액 표기 — consult/_model.js의 억/만원 포맷과 동일한 규칙
   var won = function (n) {
     n = Math.round(n);
     if (n === 0) return '0원';
@@ -812,14 +911,12 @@
     if (eok) return eok + '억원';
     return rest.toLocaleString('ko-KR') + '만원';
   };
+  function comma(n) { return Math.round(n).toLocaleString('ko-KR'); }
 
-  // ===== 보장분석표 데이터 (요약 탭 카드형 · 상세 탭 매트릭스가 공유) =====
-  // 회사·상품 — C(계약 요약)와 동일한 9건을 그대로 가리킨다. "내가 받을 수 있는 보험금" 카드,
-  // 요약 탭의 보장분석표 카드, 상세 탭의 매트릭스 — 셋 다 이 G 하나에서만 금액을 읽는다.
+  // ===== 보장 데이터 — 요약·상세·리포트가 전부 이 G 하나에서만 금액을 읽는다 =====
   var P0 = [C[0][0], C[0][1]], P1 = [C[1][0], C[1][1]], P2 = [C[2][0], C[2][1]], P3 = [C[3][0], C[3][1]],
       P4 = [C[4][0], C[4][1]], P5 = [C[5][0], C[5][1]], P6 = [C[6][0], C[6][1]],
       P7 = [C[7][0], C[7][1]], P8 = [C[8][0], C[8][1]];
-  // 상세 탭 매트릭스의 열 순서 — 계약 요약(C)과 동일한 9건. P2(Hicar)는 담보가 없어 전부 "—"로만 찍힌다.
   var PRODUCTS_LIST = [P0, P1, P2, P3, P4, P5, P6, P7, P8];
   var CIRCLED = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩', '⑪'];
 
@@ -877,15 +974,45 @@
   ];
   var CAT_ORDER = ['사망·후유장해', '암 진단', '뇌/심장 진단', '실손의료비', '수술/입원', '운전자/기타'];
 
+  // ===== 유지 / 해지 =====
+  function isDrop(i) { return C[i] && C[i][9] === 'drop'; }
+  function prodKept(prod) {
+    var i = PRODUCTS_LIST.indexOf(prod);
+    return i < 0 ? true : !isDrop(i);
+  }
+  function dropCount() { return C.filter(function (c) { return c[9] === 'drop'; }).length; }
+
   function gEntry(name) { return G.filter(function (g) { return g[0] === name; })[0] || null; }
-  function gTotal(g) { return g[2].reduce(function (a, r) { return a + r[2]; }, 0); }
-  function rowSum(name) {
+  // scope: 'after' = 유지 계약만, 그 밖에는 전체(지금 기준)
+  function gTotal(g, scope) {
+    return g[2].reduce(function (a, r) { return a + ((scope === 'after' && !prodKept(r[0])) ? 0 : r[2]); }, 0);
+  }
+  function rowSum(name, scope) {
     var g = gEntry(name);
-    return g ? gTotal(g) : 0;
+    return g ? gTotal(g, scope) : 0;
   }
 
-  // ===== 보장 점수·의견 — 권장금액(권장) 기준은 실제 보장분석 제안서(KB손해보험, 기본형 37담보)의
-  // "전체 담보 진단 현황" 표를 그대로 사용한다. 가입금액은 위 G/K(본 고객의 실제 보유 내역)를 그대로 읽는다.
+  // 월 보험료 합계 — 완납(납입 진행 100%) 계약과 "미제공"은 빼고 더한다
+  function premOf(c) {
+    var paidOff = c[6] > 0 && c[5] === c[6];
+    var prem = parseInt(String(c[4]).replace(/[^0-9]/g, ''), 10);
+    return (paidOff || isNaN(prem)) ? 0 : prem;
+  }
+  function premTotal(scope) {
+    return C.reduce(function (sum, c, i) {
+      if (scope === 'after' && isDrop(i)) return sum;
+      return sum + premOf(c);
+    }, 0);
+  }
+  function paidSum(idx) {
+    return C.reduce(function (sum, c) {
+      var v = parseInt(String(c[idx]).replace(/[^0-9]/g, ''), 10);
+      return isNaN(v) ? sum : sum + v;
+    }, 0);
+  }
+  function term(c) { var s = String(c[3]).split('/'); return [s[0].trim() || '—', (s[1] || '').trim() || '—']; }
+
+  // ===== 권장금액(기본형 37담보) — 보장 점수·보험금 카드가 같은 기준을 쓴다 =====
   var BENCH = {
     '상해사망': 200000000, '질병사망': 100000000, '상해80%미만후유장해': 100000000, '질병80%미만후유장해': 100000000,
     '장기요양간병비': 30000000, '경증치매진단': 100000000, '간병인/간호간병상해일당': 250000, '간병인/간호간병질병일당': 250000,
@@ -904,57 +1031,86 @@
     { label: '치매·간병', weight: 10, items: ['장기요양간병비', '경증치매진단', '간병인/간호간병상해일당', '간병인/간호간병질병일당'] },
     { label: '운전자/기타', weight: 5, items: ['벌금(대인/스쿨존/대물)', '교통사고처리지원금', '변호사선임비용', '자동차사고부상', '골절진단비', '보철치료비', '가족/일상/자녀배상', '화재벌금'] }
   ];
-  function heldAmt(name) { return rowSum(name); }
-  function term(c) { var s = String(c[3]).split('/'); return [s[0].trim() || '—', (s[1] || '').trim() || '—']; }
 
-  // ===== renderPage() — C/G가 바뀔 때마다(계약 수정 저장 시) 다시 불러서 요약/상세/고객용을 전부 새로 그린다 =====
-  function renderPage() {
-  SCORE_ROWS = SCORE_CATS.map(function (cat) {
-    var full = 0, part = 0, none = 0, rateSum = 0;
-    cat.items.forEach(function (name) {
-      var held = heldAmt(name), bench = BENCH[name];
-      var rate = bench ? Math.min(1, held / bench) : 0;
-      rateSum += rate;
-      if (held === 0) none++; else if (held >= bench) full++; else part++;
+  // ===== 수정 상태 =====
+  var OPINIONS = [];
+  var opinionsSeeded = false;
+  var SCORE_ROWS = [];
+  var SCORE_STAT = { full: 0, part: 0, none: 0, total: 0, missing: [] };
+  // 표에서 손으로 고친 점수 — 저장 후 다시 그려도 규칙 계산값으로 되돌리지 않는다
+  var scoreOverrides = {};
+
+  // ===== 보장 점수 계산 =====
+  function computeScore() {
+    SCORE_ROWS = SCORE_CATS.map(function (cat) {
+      var full = 0, part = 0, none = 0, rateSum = 0;
+      cat.items.forEach(function (name) {
+        var held = rowSum(name), bench = BENCH[name];
+        var rate = bench ? Math.min(1, held / bench) : 0;
+        rateSum += rate;
+        if (held === 0) none++; else if (held >= bench) full++; else part++;
+      });
+      var fillRate = rateSum / cat.items.length;
+      return { label: cat.label, weight: cat.weight, score: Math.round(cat.weight * fillRate),
+        full: full, part: part, none: none, total: cat.items.length, fillRate: fillRate };
     });
-    var fillRate = rateSum / cat.items.length;
-    var score = Math.round(cat.weight * fillRate);
-    return { label: cat.label, weight: cat.weight, score: score, full: full, part: part, none: none, total: cat.items.length, fillRate: fillRate };
-  });
-  var SCORE_TOTAL = SCORE_ROWS.reduce(function (a, r) { return a + r.score; }, 0);
-  var SCORE_MISSING = [];
-  SCORE_CATS.forEach(function (cat) {
-    cat.items.forEach(function (name) {
-      var held = heldAmt(name), bench = BENCH[name];
-      if (held < bench) SCORE_MISSING.push({ name: name, cat: cat.label, held: held, bench: bench, gap: bench - held });
+    var stat = { full: 0, part: 0, none: 0, total: 0, missing: [] };
+    SCORE_ROWS.forEach(function (r) { stat.full += r.full; stat.part += r.part; stat.none += r.none; stat.total += r.score; });
+    SCORE_CATS.forEach(function (cat) {
+      cat.items.forEach(function (name) {
+        var held = rowSum(name), bench = BENCH[name];
+        if (held < bench) stat.missing.push({ name: name, cat: cat.label, held: held, bench: bench, gap: bench - held });
+      });
     });
-  });
-  SCORE_MISSING.sort(function (a, b) { return b.gap - a.gap; });
+    stat.missing.sort(function (a, b) { return b.gap - a.gap; });
+    SCORE_STAT = stat;
+  }
 
-  // ===== 보장 점수·의견 렌더 =====
-  (function () {
-    var full = 0, part = 0, none = 0;
-    SCORE_ROWS.forEach(function (r) { full += r.full; part += r.part; none += r.none; });
-    document.getElementById('cov-tile-uncovered').textContent = none + '개';
+  // ===== 계약 요약 타일 =====
+  function renderSummary() {
+    var drop = dropCount(), keep = C.length - drop;
+    var cum = paidSum(7), rest = paidSum(8);
+    var pct = (cum + rest) ? Math.round(cum / (cum + rest) * 100) : 0;
+    document.getElementById('cov-sum-tiles').innerHTML = ''
+      + '<div class="cov-tile" style="flex:1 1 190px;">'
+      +   '<span class="cov-tile-l">보유 계약</span>'
+      +   '<span class="cov-tile-v">' + C.length + '건</span>'
+      +   '<span class="cov-tile-sub">유지 ' + keep + ' · 해지 ' + drop + '</span>'
+      + '</div>'
+      + '<div class="cov-tile" style="flex:1 1 190px;">'
+      +   '<span class="cov-tile-l">월 보험료</span>'
+      +   '<span class="cov-tile-v">' + comma(premTotal()) + '원</span>'
+      +   '<span class="cov-tile-sub">완납 계약 제외</span>'
+      + '</div>'
+      + '<div class="cov-tile" style="flex:2.2 1 300px;">'
+      +   '<div class="cov-tile-row"><span class="cov-tile-l">보험료 납입</span></div>'
+      +   '<span class="cov-bar" role="img" aria-label="누적 납입 ' + pct + '%, 잔여 납입 ' + (100 - pct) + '%">'
+      +     '<span style="flex:' + pct + ';background:var(--brand)">' + pct + '%</span>'
+      +     '<span style="flex:' + (100 - pct) + ';background:var(--line);justify-content:flex-end">' + (100 - pct) + '%</span>'
+      +   '</span>'
+      +   '<span class="cov-legend"><span><b>■</b> 누적 납입 ' + comma(cum) + '원</span><span>잔여 납입 ' + comma(rest) + '원</span></span>'
+      + '</div>';
+  }
 
-    // 저장으로 남겨둔 점수 보정값이 있으면 규칙 계산값 대신 그 값을 보여주고, 합계도 그 값들로 다시 더한다
+  // ===== 보장 점수 표 · 의견 =====
+  function renderScore() {
     var displayScores = SCORE_ROWS.map(function (r) {
       return scoreOverrides.hasOwnProperty(r.label) ? scoreOverrides[r.label] : r.score;
     });
     var displayTotal = displayScores.reduce(function (a, s) { return a + s; }, 0);
+    var top = SCORE_STAT.missing[0];
 
-    var top = SCORE_MISSING[0];
     document.getElementById('cov-score-tiles').innerHTML = [
       { l: '종합 보장점수', v: displayTotal + '점', cls: ' score', id: 'cov-score-tile-total' },
-      { l: '충족 담보', v: full + '개' },
-      { l: '부족 담보', v: part + '개' },
-      { l: '미가입 담보', v: none + '개' },
+      { l: '충족 담보', v: SCORE_STAT.full + '개' },
+      { l: '부족 담보', v: SCORE_STAT.part + '개' },
+      { l: '미가입 담보', v: SCORE_STAT.none + '개' },
       { l: '최대 부족액', v: top ? esc(top.name) : '—', sub: top ? won(top.gap) + ' 부족' : '' }
     ].map(function (t) {
-      return '<div class="cov-tile" style="flex:1 1 180px;">'
+      return '<div class="cov-tile" style="flex:1 1 170px;">'
         + '<span class="cov-tile-l">' + t.l + '</span>'
         + '<span class="cov-tile-v' + (t.cls || '') + '"' + (t.id ? ' id="' + t.id + '"' : '') + '>' + t.v + '</span>'
-        + (t.sub ? '<span class="cov-tile-l">' + t.sub + '</span>' : '')
+        + (t.sub ? '<span class="cov-tile-sub">' + t.sub + '</span>' : '')
         + '</div>';
     }).join('');
 
@@ -966,14 +1122,13 @@
         + '<td class="name">' + esc(r.label) + '</td>'
         + '<td class="amt">' + r.weight + '</td>'
         + '<td class="amt">' + Math.round(r.fillRate * 100) + '%</td>'
-        + '<td class="amt"><input class="score-input" type="number" min="0" max="' + r.weight + '" value="' + displayScores[idx] + '" readonly></td>'
+        + '<td class="amt"><input class="score-input" type="number" min="0" max="' + r.weight + '" value="' + displayScores[idx] + '" aria-label="' + esc(r.label) + ' 점수"></td>'
         + '<td class="note">' + note + '</td>'
         + '</tr>';
     }).join('');
     document.getElementById('cov-score-total').textContent = displayTotal + '점';
 
-    // 수정 모드에서 세부 점수(배점 한도 내)를 고치면 표의 합계뿐 아니라 위쪽 "종합 보장점수" 타일도 같이 다시 더한다
-    // (onInput= 할당 — renderPage()가 반복 호출돼도 같은 tbody에 리스너가 중복으로 쌓이지 않도록)
+    // 점수를 손으로 고치면 합계와 위쪽 타일도 같이 다시 더한다
     document.getElementById('cov-score-tbody').oninput = function (e) {
       if (!e.target.classList.contains('score-input')) return;
       var max = parseInt(e.target.max, 10);
@@ -983,89 +1138,368 @@
       if (String(val) !== e.target.value) e.target.value = val;
       var total = 0;
       document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp) { total += parseInt(inp.value, 10) || 0; });
+      scoreOverrides = {};
+      document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp, idx) {
+        scoreOverrides[SCORE_ROWS[idx].label] = parseInt(inp.value, 10) || 0;
+      });
       document.getElementById('cov-score-total').textContent = total + '점';
       var tile = document.getElementById('cov-score-tile-total');
       if (tile) tile.textContent = total + '점';
     };
 
-    var top3 = SCORE_MISSING.slice(0, 3);
-    var notes = [];
-    notes.push('<p>종합 보장점수는 <b>' + SCORE_TOTAL + '점</b>(100점 만점)으로, 기본형 37담보 권장금액 대비 충족 ' + full + '건 · 부족 ' + part + '건 · 미가입 ' + none + '건입니다.</p>');
+    seedOpinions();
+  }
+
+  // 의견 — 숫자에서 만든 초안을 처음 한 번만 채우고, 이후에는 손으로 고친 문장을 건드리지 않는다
+  function seedOpinions() {
+    if (opinionsSeeded) return;
+    var top3 = SCORE_STAT.missing.slice(0, 3);
+    var zero = SCORE_STAT.missing.filter(function (m) { return m.held === 0; });
+    OPINIONS.push({ label: '보장 점수', text: '종합 보장점수는 ' + SCORE_STAT.total + '점(100점 만점)으로, 기본형 37담보 권장금액 대비 충족 ' + SCORE_STAT.full + '건 · 부족 ' + SCORE_STAT.part + '건 · 미가입 ' + SCORE_STAT.none + '건입니다.' });
     if (top3.length) {
-      notes.push('<p>부족액이 큰 보장은 ' + top3.map(function (m) { return esc(m.name) + '(' + won(m.gap) + ' 부족)'; }).join(', ') + ' 순입니다.</p>');
+      OPINIONS.push({ label: '부족액이 큰 보장', text: top3.map(function (m) { return m.name + ': 가입 ' + won(m.held) + ' / 권장 ' + won(m.bench) + ' (부족 ' + won(m.gap) + ')'; }).join(' · ') });
     }
-    var zero = SCORE_MISSING.filter(function (m) { return m.held === 0; });
-    if (zero.length) notes.push('<p>미가입 보장은 ' + zero.map(function (m) { return esc(m.name); }).join(', ') + ' 입니다.</p>');
-    document.getElementById('cov-score-notes').innerHTML = notes.join('');
-
-    // ===== 의견(숫자에서 만든 초안, 문장으로 직접 수정 가능) — 처음 한 번만 만들고, 이후 저장으로 다시 그릴 때는
-    // 사용자가 이미 고쳤을 수 있는 의견 목록을 건드리지 않는다 =====
-    if (!scoreOpinionsSeeded) {
-      OPINIONS.push({ label: '보장 점수', text: '종합 보장점수는 ' + SCORE_TOTAL + '점(100점 만점)으로, 기본형 37담보 권장금액 대비 충족 ' + full + '건 · 부족 ' + part + '건 · 미가입 ' + none + '건입니다.' });
-      if (top3.length) {
-        OPINIONS.push({ label: '부족액이 큰 보장', text: top3.map(function (m) { return m.name + ': 가입 ' + won(m.held) + ' / 권장 ' + won(m.bench) + ' (부족 ' + won(m.gap) + ')'; }).join(' · ') });
-      }
-      if (zero.length) {
-        OPINIONS.push({ label: '미가입 보장', text: '가입금액이 없는 보장이 ' + zero.length + '건입니다: ' + zero.map(function (m) { return m.name; }).join(', ') });
-      }
-      scoreOpinionsSeeded = true;
+    if (zero.length) {
+      OPINIONS.push({ label: '미가입 보장', text: '가입금액이 없는 보장이 ' + zero.length + '건입니다: ' + zero.map(function (m) { return m.name; }).join(', ') });
     }
-  })();
+    opinionsSeeded = true;
+    renderOpinions();
+  }
 
-  // ===== 계약 상세 (요약/납입 통합) =====
-  document.getElementById('cov-contract-tbody').innerHTML = C.map(function (c, i) {
-    var t = term(c);
-    var w = c[6] ? Math.round(c[5] / c[6] * 100) : null;
-    var progHtml = w == null
-      ? '<span class="cov-prog-txt na">산출 불가</span>'
-      : '<div class="cov-prog"><div class="cov-prog-bar"><i style="width:' + w + '%"></i></div><span class="cov-prog-txt">' + c[5] + '/' + c[6] + '회</span></div>';
-    return '<tr>'
-      + '<td class="num">' + (i + 1) + '</td>'
-      + '<td class="co">' + esc(c[0]) + '</td>'
-      + '<td class="pname">' + esc(c[1]) + '</td>'
-      + '<td>' + c[2] + '</td>'
-      + '<td>' + esc(t[0]) + ' / ' + esc(t[1]) + '</td>'
-      + '<td class="amt">' + c[4] + '</td>'
-      + '<td>' + progHtml + '</td>'
-      + '<td class="amt">' + c[7] + '</td>'
-      + '<td class="amt">' + c[8] + '</td>'
-      + '</tr>';
-  }).join('');
+  var OPINIONS_INITIAL = null;
+  var opinionsEl = document.getElementById('edt-opinions');
+  function autoGrow(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+  function renderOpinions() {
+    opinionsEl.innerHTML = OPINIONS.map(function (o, i) {
+      return '<div class="edt-opinion-row" data-i="' + i + '">'
+        + '<span class="edt-opinion-label">' + esc(o.label) + '</span>'
+        + '<textarea class="edt-opinion-text" rows="1">' + esc(o.text) + '</textarea>'
+        + '<button type="button" class="edt-opinion-del" aria-label="의견 삭제"><svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg></button>'
+        + '</div>';
+    }).join('');
+    opinionsEl.querySelectorAll('.edt-opinion-text').forEach(autoGrow);
+    if (!OPINIONS_INITIAL && OPINIONS.length) {
+      OPINIONS_INITIAL = OPINIONS.map(function (o) { return { label: o.label, text: o.text }; });
+    }
+  }
+  opinionsEl.addEventListener('input', function (e) {
+    if (!e.target.classList.contains('edt-opinion-text')) return;
+    autoGrow(e.target);
+    var row = e.target.closest('.edt-opinion-row');
+    OPINIONS[Number(row.getAttribute('data-i'))].text = e.target.value;
+  });
+  opinionsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.edt-opinion-del');
+    if (!btn) return;
+    OPINIONS.splice(Number(btn.closest('.edt-opinion-row').getAttribute('data-i')), 1);
+    renderOpinions();
+  });
+  document.getElementById('edt-add-opinion-btn').addEventListener('click', function () {
+    OPINIONS.push({ label: '의견', text: '' });
+    renderOpinions();
+    var last = opinionsEl.querySelector('.edt-opinion-row:last-child .edt-opinion-text');
+    if (last) last.focus();
+  });
 
-  // 완납(납입 진행 100%) 계약은 제외하고 월보험료 합계를 낸다 — "미제공" 등 숫자가 아닌 값은 parseInt에서 자연히 걸러진다
-  var contractTotal = C.reduce(function (sum, c) {
-    var paidOff = c[6] > 0 && c[5] === c[6];
-    var prem = parseInt(String(c[4]).replace(/[^0-9]/g, ''), 10);
-    return paidOff || isNaN(prem) ? sum : sum + prem;
-  }, 0);
-  document.getElementById('cov-contract-total-amt').textContent = contractTotal.toLocaleString('ko-KR') + '원';
+  // ===== 받을 수 있는 보험금 카드 =====
+  var BC = { '적절': 'ok', '초과': 'over', '부족': 'low', '없음': 'low' };
+  function bdg(t) { return '<span class="cov-badge ' + BC[t] + '">' + t + '</span>'; }
+  function pctOf(names) {
+    var amt = 0, bench = 0;
+    names.forEach(function (n) { amt += rowSum(n); bench += BENCH[n] || 0; });
+    return bench ? Math.round(amt / bench * 100) : 0;
+  }
+  function renderClaimCards() {
+    // K: [항목, 금액, 근거 담보 목록, 권장금액 대비 비율]
+    var K = [
+      { label: '사망', amt: rowSum('질병사망') + rowSum('상해사망'),
+        src: [['상해80%미만후유장해', rowSum('상해80%미만후유장해')], ['질병80%미만후유장해', rowSum('질병80%미만후유장해')]],
+        rate: pctOf(['질병사망', '상해사망']) },
+      { label: '치매', amt: 0,
+        src: [['장기요양간병비', '미가입'], ['경증치매진단', '미가입'], ['간병인/간호간병상해일당', '미가입'], ['간병인/간호간병질병일당', '미가입']],
+        rate: 0 },
+      { label: '암', amt: rowSum('일반암'),
+        src: [['유사암', rowSum('유사암')], ['고액암', '미가입'], ['고액(표적)항암치료비', '미가입']],
+        rate: pctOf(['일반암']) },
+      { label: '뇌/심장', amt: rowSum('뇌혈관질환') + rowSum('허혈성심장질환'),
+        src: [['뇌혈관질환', rowSum('뇌혈관질환')], ['허혈성심장질환', rowSum('허혈성심장질환')], ['뇌졸중', '미가입'], ['뇌출혈', '미가입'], ['급성심근경색증', '미가입']],
+        rate: pctOf(['뇌혈관질환', '허혈성심장질환']) },
+      { label: '실손', amt: rowSum('질병입원의료비') + rowSum('질병통원의료비'),
+        src: [['질병입원의료비', rowSum('질병입원의료비')], ['질병통원의료비', rowSum('질병통원의료비')], ['상해입원의료비', '미가입'], ['상해통원의료비', '미가입'], ['3대비급여실손', '미가입']],
+        rate: pctOf(['질병입원의료비', '질병통원의료비']) },
+      { label: '수술', amt: rowSum('상해수술비') + rowSum('암수술비') + rowSum('질병입원일당'),
+        src: [['상해수술비', rowSum('상해수술비')], ['암수술비', rowSum('암수술비')], ['질병입원일당', rowSum('질병입원일당')], ['질병수술비', '미가입'], ['뇌혈관질환수술비', '미가입'], ['허혈성심장질환수술비', '미가입'], ['상해입원일당', '미가입']],
+        rate: pctOf(['상해수술비', '암수술비', '질병입원일당']) },
+      { label: '운전자', amt: rowSum('벌금(대인/스쿨존/대물)') + rowSum('교통사고처리지원금') + rowSum('변호사선임비용'),
+        src: [['벌금(대인/스쿨존/대물)', rowSum('벌금(대인/스쿨존/대물)')], ['교통사고처리지원금', rowSum('교통사고처리지원금')], ['변호사선임비용', rowSum('변호사선임비용')], ['자동차사고부상', '미가입'], ['골절진단비', '미가입'], ['보철치료비', '미가입'], ['가족/일상/자녀배상', '미가입'], ['화재벌금', '미가입']],
+        rate: pctOf(['벌금(대인/스쿨존/대물)', '교통사고처리지원금', '변호사선임비용']) }
+    ];
 
-  // ===== 고객용 미리보기 (share.html과 같은 문구·구성, 수치는 G/C를 그대로 재사용) =====
-  (function () {
-    document.getElementById('shr-sum-tiles').innerHTML =
-      '<div class="shr-sum-tile"><span class="shr-sum-l">유지하고 있는 보험</span><span class="shr-sum-v">' + C.length + '개</span></div>'
-      + '<div class="shr-sum-tile"><span class="shr-sum-l">매달 내는 보험료</span><span class="shr-sum-v">' + contractTotal.toLocaleString('ko-KR') + '원</span></div>';
-
-    document.getElementById('shr-policy-tbody').innerHTML = C.map(function (c, i) {
-      var t = term(c);
-      var noPrem = c[4] === '미제공';
-      var amtHtml = noPrem ? '<span class="na">정보 없음</span>' : c[4];
-      var w = (!noPrem && c[6]) ? Math.round(c[5] / c[6] * 100) : null;
-      var progHtml = w == null
-        ? '<span class="shr-prog-txt na">산출 불가</span>'
-        : '<div class="shr-prog"><div class="shr-prog-bar"><i style="width:' + w + '%"></i></div><span class="shr-prog-txt">' + c[5] + '/' + c[6] + '회</span></div>';
-      return '<tr>'
-        + '<td class="num">' + (i + 1) + '</td>'
-        + '<td class="co">' + esc(c[0]) + '</td>'
-        + '<td class="pname">' + esc(c[1]) + '</td>'
-        + '<td>' + esc(c[2]) + '</td>'
-        + '<td>' + esc(t[0]) + ' / ' + esc(t[1]) + '</td>'
-        + '<td class="amt' + (noPrem ? ' na' : '') + '">' + amtHtml + '</td>'
-        + '<td>' + progHtml + '</td>'
-        + '</tr>';
+    document.getElementById('cov-cards').innerHTML = K.map(function (k) {
+      var word = k.rate === 0 ? '없음' : k.rate >= 80 ? '적절' : '부족';
+      var badge = bdg(word);
+      var sub = '권장금액 대비 ' + k.rate + '% 준비';
+      // 담보가 많은 카드는 5개까지만 보여주고 나머지는 "더보기"로 펼친다
+      var SRC_VISIBLE = 5, collapsed = k.src.length > 7;
+      var srcHtml = k.src.length
+        ? '<div class="cov-src">' + k.src.map(function (s, idx) {
+            var more = collapsed && idx >= SRC_VISIBLE;
+            var cls = more ? ' more' : '', attr = more ? ' hidden' : '';
+            return '<span class="sn' + cls + '"' + attr + '>' + esc(s[0]) + '</span>'
+              + (s[1] === '미가입'
+                  ? '<span class="sa none' + cls + '"' + attr + '>없음</span>'
+                  : '<span class="sa' + cls + '"' + attr + '>' + (typeof s[1] === 'number' ? won(s[1]) : esc(s[1])) + '</span>');
+          }).join('') + '</div>'
+          + (collapsed ? '<button type="button" class="cov-src-toggle">더보기 (+' + (k.src.length - SRC_VISIBLE) + ')</button>' : '')
+        : '<div hidden></div>';
+      return '<article class="cov-card"><div><div class="cov-card-top"><span class="cov-card-l">' + k.label + '</span>' + badge + '</div>'
+        + '<p class="cov-amt">' + won(k.amt) + '</p><p class="cov-sub">' + sub + '</p></div>' + srcHtml + '</article>';
     }).join('');
 
-    // 카테고리·문항 구성은 share.html의 고객용 카피를 그대로 가져온다 — 금액은 G 기반 rowSum()에서 읽어 결과 탭과 항상 같은 값을 보장한다
+    document.getElementById('cov-cards').onclick = function (e) {
+      var btn = e.target.closest('.cov-src-toggle');
+      if (!btn) return;
+      var card = btn.closest('.cov-card');
+      var hiddenEls = card.querySelectorAll('.more[hidden]');
+      if (hiddenEls.length) {
+        hiddenEls.forEach(function (el) { el.hidden = false; });
+        btn.textContent = '접기';
+      } else {
+        var moreEls = card.querySelectorAll('.more');
+        moreEls.forEach(function (el) { el.hidden = true; });
+        btn.textContent = '더보기 (+' + (moreEls.length / 2) + ')';
+      }
+    };
+  }
+
+  // ===== 보장분석표 (담보별 카드) =====
+  function cluster(rows) {
+    var out = [];
+    rows.forEach(function (r) {
+      var co = r[0][0], pr = r[0][1];
+      var c = out.filter(function (x) { return x.co === co; })[0];
+      if (!c) { c = { co: co, products: [] }; out.push(c); }
+      var p = c.products.filter(function (x) { return x.product === pr; })[0];
+      if (!p) { p = { product: pr, items: [], drop: !prodKept(r[0]) }; c.products.push(p); }
+      p.items.push([r[1], r[2]]);
+    });
+    return out;
+  }
+  function renderCovGroups() {
+    function gcard(g) {
+      return '<article class="cov-group"><div class="cov-group-head"><h3>' + esc(g[0]) + '</h3><span class="cov-group-total">' + won(gTotal(g)) + '</span></div>'
+        + cluster(g[2]).map(function (c) {
+            return '<div class="cov-co-block"><span class="cov-co-name">' + coLogo(c.co) + esc(c.co) + '</span><div>'
+              + c.products.map(function (p) {
+                  return '<div class="cov-product"><div class="cov-product-name">' + esc(p.product)
+                    + (p.drop ? '<span class="cov-drop-mark">해지</span>' : '') + '</div>'
+                    + p.items.map(function (r) { return '<div class="cov-item-row"><span>' + esc(r[0]) + '</span><span class="cov-item-amt">' + won(r[1]) + '</span></div>'; }).join('')
+                    + '</div>';
+                }).join('')
+              + '</div></div>';
+          }).join('')
+        + '</article>';
+    }
+    document.getElementById('cov-groups').innerHTML = CAT_ORDER.map(function (cat) {
+      var gs = G.filter(function (g) { return g[1] === cat; });
+      return gs.length ? '<p class="cov-cat-label">' + esc(cat) + '</p>' + gs.map(gcard).join('') : '';
+    }).join('');
+  }
+
+  // ===== 상세 보장분석표 (담보 × 상품 매트릭스) =====
+  var CAT_TIPS = {
+    '사망·후유장해': { text: '3대 사망원인은 암·심장질환·폐렴으로 전체 사망의 42.6%를 차지합니다.', src: '통계청 「2024년 사망원인통계」' },
+    '암 진단': { text: '평생 한 번은 암을 진단받을 확률이 3명 중 1명꼴로, 진단비 공백이 없는지 먼저 확인해야 합니다.', src: '국립암센터 「국가암등록통계」' },
+    '뇌/심장 진단': { text: '심장질환·뇌혈관질환은 암에 이어 사망원인 2위·4위로, 진단 즉시 지급되는 정액형 보장이 중요합니다.', src: '통계청 「2024년 사망원인통계」' },
+    '실손의료비': { text: '실손의료보험 가입자는 약 4,000만명으로, 국민 대다수가 가입한 "제2의 건강보험"입니다.', src: '금융감독원' },
+    '수술/입원': { text: '국내 평균 입원일수는 OECD 평균보다 길어, 입원일당 보장의 공백이 클수록 실제 부담으로 이어집니다.', src: 'OECD Health Statistics' },
+    '운전자/기타': { text: '교통사고 발생 시 형사합의금·벌금 부담이 적지 않아, 운전자보험으로 별도 대비가 필요합니다.', src: '도로교통공단 교통사고분석시스템(TAAS)' }
+  };
+  var COL_NAME = 196, COL_SUM = 140, COL_CO = 136;
+  function buildMatrix(activeCos) {
+    var prods = PRODUCTS_LIST.filter(function (p) { return activeCos.indexOf(p[0]) !== -1; });
+    function matrixCells(breakdown) {
+      return prods.map(function (prod) {
+        var sum = 0;
+        breakdown.forEach(function (r) { if (r[0] === prod) sum += r[2]; });
+        return sum;
+      });
+    }
+    var colCount = prods.length;
+    var dropFlags = prods.map(function (p) { return isDrop(PRODUCTS_LIST.indexOf(p)); });
+    // 칼럼 폭은 내용이 안 잘리도록 넉넉히 잡는다 — 다 안 들어가면 표를 가로로 스크롤한다
+    var colgroup = '<colgroup><col style="width:' + COL_NAME + 'px"><col style="width:' + COL_SUM + 'px">'
+      + prods.map(function () { return '<col style="width:' + COL_CO + 'px">'; }).join('')
+      + '</colgroup>';
+    var head = colgroup + '<thead><tr>'
+      + '<th class="hname">담보</th>'
+      + '<th class="hsum">합계</th>'
+      + prods.map(function (p) {
+          var i = PRODUCTS_LIST.indexOf(p);
+          var drop = isDrop(i);
+          return '<th' + (drop ? ' class="drop"' : '') + '>'
+            + '<span class="pname">' + (CIRCLED[i] || (i + 1)) + esc(p[0]) + '</span>'
+            + '<span class="pprem">' + esc(C[i][4]) + (drop ? '<span class="pdrop">해지</span>' : '') + '</span>'
+            + '</th>';
+        }).join('')
+      + '</tr></thead>';
+
+    var body = '<tbody>' + CAT_ORDER.map(function (cat) {
+      var gs = G.filter(function (g) { return g[1] === cat; });
+      if (!gs.length) return '';
+      var catRow = '<tr class="cat"><td colspan="' + (colCount + 2) + '">' + esc(cat) + '</td></tr>';
+      var tip = CAT_TIPS[cat];
+      var tipRow = tip
+        ? '<tr class="tip"><td colspan="' + (colCount + 2) + '"><span class="tip-ic">💡</span><span class="tip-txt">' + esc(tip.text) + '</span><span class="tip-src">' + esc(tip.src) + '</span></td></tr>'
+        : '';
+      var dataRows = gs.map(function (g) {
+        var cells = matrixCells(g[2]);
+        var sum = gTotal(g);
+        var none = sum === 0;
+        var sumHtml = none ? '<td class="sum none">미보유</td>' : '<td class="sum">' + won(sum) + '</td>';
+        var cellsHtml = cells.map(function (v, ci) {
+          var cls = 'amt' + (dropFlags[ci] ? ' drop' : '');
+          return v === 0 ? '<td class="' + cls + ' dash">—</td>' : '<td class="' + cls + '">' + won(v) + '</td>';
+        }).join('');
+        return '<tr><td class="name' + (none ? ' none' : '') + '">' + esc(g[0]) + '</td>' + sumHtml + cellsHtml + '</tr>';
+      }).join('');
+      return catRow + tipRow + dataRows;
+    }).join('') + '</tbody>';
+
+    return head + body;
+  }
+  function renderMatrix() {
+    var co = [];
+    PRODUCTS_LIST.forEach(function (p) { if (co.indexOf(p[0]) === -1) co.push(p[0]); });
+    var filterEl = document.getElementById('cov-co-filter');
+    filterEl.innerHTML = co.map(function (name) {
+      return '<button type="button" class="sort-chip on" data-co="' + esc(name) + '">' + coLogo(name) + '<span>' + esc(name) + '</span></button>';
+    }).join('');
+
+    function apply() {
+      var active = Array.prototype.filter.call(filterEl.querySelectorAll('.sort-chip'), function (c) { return c.classList.contains('on'); })
+        .map(function (c) { return c.getAttribute('data-co'); });
+      var matrix = document.getElementById('cov-matrix');
+      matrix.innerHTML = buildMatrix(active);
+      // 최소폭은 "보이는 칼럼(상품) 수"로 잡는다 — 한 보험사에 상품이 여러 개라 보험사 수로 세면 칼럼이 눌려 글자가 넘친다.
+      // 화면보다 좁으면 남는 폭을 칼럼들이 나눠 늘어나고, 넓으면 표를 가로로 스크롤한다.
+      var colN = PRODUCTS_LIST.filter(function (p) { return active.indexOf(p[0]) !== -1; }).length;
+      matrix.style.minWidth = (COL_NAME + COL_SUM + Math.max(colN, 1) * COL_CO) + 'px';
+    }
+    apply();
+    filterEl.onclick = function (e) {
+      var chip = e.target.closest('.sort-chip');
+      if (!chip) return;
+      chip.classList.toggle('on');
+      apply();
+    };
+  }
+
+  // ===== 보험사별 상세 =====
+  function renderByCompany() {
+    var CAT_SHORT = {
+      '사망·후유장해': '사망', '암 진단': '암', '뇌/심장 진단': '뇌/심장',
+      '실손의료비': '실손', '수술/입원': '수술', '운전자/기타': '운전자'
+    };
+    var CO_PR_MAP = {};
+    C.forEach(function (c) { CO_PR_MAP[c[0] + '||' + c[1]] = c; });
+
+    var BY_CO = {}, CO_ORDER = [];
+    PRODUCTS_LIST.forEach(function (p) {
+      var co = p[0], pr = p[1];
+      if (!BY_CO[co]) { BY_CO[co] = { order: [], products: {} }; CO_ORDER.push(co); }
+      if (!BY_CO[co].products[pr]) { BY_CO[co].products[pr] = []; BY_CO[co].order.push(pr); }
+    });
+    CAT_ORDER.forEach(function (cat) {
+      G.filter(function (g) { return g[1] === cat; }).forEach(function (g) {
+        g[2].forEach(function (entry) {
+          var co = entry[0][0], pr = entry[0][1];
+          if (!BY_CO[co] || !BY_CO[co].products[pr]) return;
+          BY_CO[co].products[pr].push({ cat: cat, cov: g[0], detail: entry[1], amt: entry[2] });
+        });
+      });
+    });
+    function coCount(co) {
+      return BY_CO[co].order.reduce(function (sum, pr) { return sum + BY_CO[co].products[pr].length; }, 0);
+    }
+
+    var selectEl = document.getElementById('cov-co-select');
+    selectEl.innerHTML = CO_ORDER.map(function (co) {
+      return '<option value="' + esc(co) + '">' + esc(co) + ' (' + coCount(co) + ')</option>';
+    }).join('');
+
+    function renderCoDetail(co) {
+      var data = BY_CO[co];
+      if (!data) return;
+      document.getElementById('cov-co-select-logo').innerHTML = coLogo(co);
+      document.getElementById('cov-co-select-meta').textContent = '상품 ' + data.order.length + '개 · 담보 ' + coCount(co) + '건';
+      document.getElementById('cov-co-products').innerHTML = data.order.map(function (pr) {
+        var items = data.products[pr];
+        var rows = items.length
+          ? items.map(function (it) {
+              return '<tr><td><span class="cov-tag">' + esc(CAT_SHORT[it.cat] || it.cat) + '</span></td>'
+                + '<td class="cov">' + esc(it.cov) + '</td>'
+                + '<td class="detail">' + esc(it.detail) + '</td>'
+                + '<td class="amt">' + won(it.amt) + '</td></tr>';
+            }).join('')
+          : '<tr><td colspan="4" style="text-align:center;color:var(--ink-3);padding:24px 20px;">등록된 담보 정보가 없어요</td></tr>';
+        var cRow = CO_PR_MAP[co + '||' + pr];
+        var metaHtml = '';
+        var dropChip = '';
+        if (cRow) {
+          var t = term(cRow);
+          metaHtml = '<span class="cov-co-product-meta">' + ['가입일 ' + esc(cRow[2]), esc(t[0]), esc(t[1]), '월보험료 ' + esc(cRow[4])].join(' | ') + '</span>';
+          if (cRow[9] === 'drop') dropChip = '<span class="ba-chip">해지</span>';
+        }
+        return '<div class="cov-co-product">'
+          + '<div class="cov-co-product-head"><span class="cov-co-product-left"><span class="cov-co-product-name">' + esc(pr) + '</span><span class="cov-co-product-cnt">담보 ' + items.length + '건</span>' + dropChip + '</span>' + metaHtml + '</div>'
+          + '<table class="cov-detail-table"><thead><tr><th>구분</th><th>담보</th><th>세부담보명</th><th class="amt">가입금액</th></tr></thead><tbody>' + rows + '</tbody></table>'
+          + '</div>';
+      }).join('');
+    }
+    selectEl.onchange = function () { renderCoDetail(selectEl.value); };
+    if (CO_ORDER.length) renderCoDetail(CO_ORDER[0]);
+  }
+
+  // ===== 리포트 탭 — 보험료 BEFORE & AFTER =====
+  function renderReport() {
+    var drop = dropCount(), keep = C.length - drop;
+    var pb = premTotal(), pa = premTotal('after');
+    document.getElementById('ba-premium').innerHTML = ''
+      + '<div class="ba-col">'
+      +   '<span class="ba-tag">BEFORE<em>지금</em></span>'
+      +   '<span class="ba-main">' + comma(pb) + '원</span>'
+      +   '<div class="ba-rows">'
+      +     '<div class="ba-row"><span>계약</span><b>' + C.length + '건</b></div>'
+      +     '<div class="ba-row"><span>연간 보험료</span><b>' + comma(pb * 12) + '원</b></div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="ba-mid"><svg class="ic-svg" width="22" height="22"><use href="#i-arrow-right"/></svg></div>'
+      + '<div class="ba-col after">'
+      +   '<span class="ba-tag">AFTER<em>상담 후</em></span>'
+      +   '<span class="ba-main">' + comma(pa) + '원</span>'
+      +   '<div class="ba-rows">'
+      +     '<div class="ba-row"><span>계약</span><b>' + keep + '건</b></div>'
+      +     '<div class="ba-row"><span>연간 보험료</span><b>' + comma(pa * 12) + '원</b></div>'
+      +   '</div>'
+      + '</div>';
+
+    var diff = pb - pa;
+    var deltaEl = document.getElementById('ba-delta');
+    if (diff > 0) {
+      deltaEl.innerHTML = '월 ' + comma(diff) + '원 줄어듭니다.<span>연 ' + comma(diff * 12) + '원 · 해지 ' + drop + '건</span>';
+    } else if (diff < 0) {
+      deltaEl.innerHTML = '월 ' + comma(-diff) + '원 늘어납니다.<span>연 ' + comma(-diff * 12) + '원</span>';
+    } else {
+      deltaEl.innerHTML = '보험료는 그대로입니다.<span>해지로 표시한 계약이 없습니다</span>';
+    }
+
+    renderReportCats();
+    renderReportContracts();
+  }
+
+  // ===== 리포트 탭 — 보장 내용 (고객용 카피, AFTER 기준) =====
+  function renderReportCats() {
     var CATS = [
       { title: '사망·후유장해', icon: '🛡️',
         items: [
@@ -1112,14 +1546,22 @@
     function catCard(cat) {
       var held = [], missing = [];
       cat.items.forEach(function (it) {
-        var amt = rowSum(it.name);
-        if (amt > 0) held.push({ it: it, amt: amt }); else missing.push(it.name);
+        var after = rowSum(it.name, 'after'), before = rowSum(it.name);
+        // 지금도 없고 상담 후에도 없는 담보만 "아직 없는 담보"로 빼고, 해지로 0이 되는 담보는 줄을 남겨 금액 변화를 보여준다
+        if (before > 0 || after > 0) held.push({ it: it, after: after, before: before });
+        else missing.push(it.name);
       });
+      var headRow = '<div class="shr-row head"><span></span><span>지금</span><span></span><span class="after">상담 후</span></div>';
       var bodyHtml = held.length
-        ? held.map(function (h) {
+        ? headRow + held.map(function (h) {
             var daily = h.it.name.indexOf('일당') > -1;
-            return '<div class="shr-row"><span class="shr-row-l">' + esc(h.it.label) + '</span>'
-              + '<span class="shr-row-v">' + won(h.amt) + (daily ? '<small>(1일당)</small>' : '') + '</span></div>';
+            var unit = daily ? '<small>(1일당)</small>' : '';
+            return '<div class="shr-row">'
+              + '<span class="shr-row-l">' + esc(h.it.label) + '</span>'
+              + '<span class="shr-row-b">' + won(h.before) + unit + '</span>'
+              + '<span class="shr-row-arrow"><svg class="ic-svg" width="14" height="14"><use href="#i-arrow-right"/></svg></span>'
+              + '<span class="shr-row-a' + (h.after === 0 ? ' none' : '') + '">' + (h.after === 0 ? '없음' : won(h.after) + unit) + '</span>'
+              + '</div>';
           }).join('')
         : '<p class="shr-empty">이 분야는 지금 준비된 보장이 없어요.</p>';
       var missingHtml = missing.length
@@ -1138,296 +1580,313 @@
         + bodyHtml + missingHtml + tipHtml
         + '</article>';
     }
-
     document.getElementById('shr-cats').innerHTML = CATS.map(catCard).join('');
-  })();
-
-  // ===== 보험금 카드 =====
-  var BC = { '적절': 'ok', '초과': 'over', '부족': 'low', '없음': 'low' };
-  function judge(m, a) { if (m === 0) return '없음'; if (m == null || a == null) return null; var r = m / a; return r < 0.8 ? '부족' : r > 1.2 ? '초과' : '적절'; }
-  function bdg(t, cls) { return '<span class="cov-badge ' + (cls || BC[t]) + '">' + t + '</span>'; }
-
-  // K: [항목, {amt,sub} 또는 null, cmp[[이름,내금액,평균|null]], src[[담보명, 금액(원) 또는 '미가입'], ...], sc[총,충족,부족,없음,충족률%]|null]
-  // src 라벨은 전부 "담보명"만 쓴다(회사·상품명 섞지 않음) — '중증치매 진단' 행과 통일.
-  // cmp의 benchmark 숫자(200000000, 100000000)는 BENCH['상해사망']/BENCH['일반암']과 같은 값 — 카드 뱃지(부족/적절)가
-  // 보장 점수·의견의 권장금액 기준과 동일한 숫자로 판정되도록 맞춘다.
-  // 카드마다 보험금을 제각각 다른 문구(질병 기준·일반암 기준 등)로 설명하던 걸 "권장금액 대비 N% 준비"로 통일한다.
-  // 권장금액(BENCH)은 보장 점수·의견 표와 같은 기준을 쓰므로, 담보 금액을 고치면 이 비율도 같이 바뀐다.
-  function pctOf(names) {
-    var amt = 0, bench = 0;
-    names.forEach(function (n) { amt += rowSum(n); bench += BENCH[n] || 0; });
-    return bench ? Math.round(amt / bench * 100) : 0;
   }
-  var K = [
-    { label: '사망', amt: rowSum('질병사망') + rowSum('상해사망'),
-      src: [['상해80%미만후유장해', rowSum('상해80%미만후유장해')], ['질병80%미만후유장해', rowSum('질병80%미만후유장해')]],
-      sc: [0, 0, 0, 0, pctOf(['질병사망', '상해사망'])] },
-    { label: '치매', amt: 0,
-      src: [['장기요양간병비', '미가입'], ['경증치매진단', '미가입'], ['간병인/간호간병상해일당', '미가입'], ['간병인/간호간병질병일당', '미가입']],
-      sc: [0, 0, 0, 0, 0] },
-    { label: '암', amt: rowSum('일반암'),
-      src: [['유사암', rowSum('유사암')], ['고액암', '미가입'], ['고액(표적)항암치료비', '미가입']],
-      sc: [0, 0, 0, 0, pctOf(['일반암'])] },
-    { label: '뇌/심장', amt: rowSum('뇌혈관질환') + rowSum('허혈성심장질환'),
-      src: [['뇌혈관질환', rowSum('뇌혈관질환')], ['허혈성심장질환', rowSum('허혈성심장질환')], ['뇌졸중', '미가입'], ['뇌출혈', '미가입'], ['급성심근경색증', '미가입']],
-      sc: [0, 0, 0, 0, pctOf(['뇌혈관질환', '허혈성심장질환'])] },
-    { label: '실손', amt: rowSum('질병입원의료비') + rowSum('질병통원의료비'),
-      src: [['질병입원의료비', rowSum('질병입원의료비')], ['질병통원의료비', rowSum('질병통원의료비')], ['상해입원의료비', '미가입'], ['상해통원의료비', '미가입'], ['3대비급여실손', '미가입']],
-      sc: [0, 0, 0, 0, pctOf(['질병입원의료비', '질병통원의료비'])] },
-    { label: '수술', amt: rowSum('상해수술비') + rowSum('암수술비') + rowSum('질병입원일당'),
-      src: [['상해수술비', rowSum('상해수술비')], ['암수술비', rowSum('암수술비')], ['질병입원일당', rowSum('질병입원일당')], ['질병수술비', '미가입'], ['뇌혈관질환수술비', '미가입'], ['허혈성심장질환수술비', '미가입'], ['상해입원일당', '미가입']],
-      sc: [0, 0, 0, 0, pctOf(['상해수술비', '암수술비', '질병입원일당'])] },
-    { label: '운전자', amt: rowSum('벌금(대인/스쿨존/대물)') + rowSum('교통사고처리지원금') + rowSum('변호사선임비용'),
-      src: [['벌금(대인/스쿨존/대물)', rowSum('벌금(대인/스쿨존/대물)')], ['교통사고처리지원금', rowSum('교통사고처리지원금')], ['변호사선임비용', rowSum('변호사선임비용')], ['자동차사고부상', '미가입'], ['골절진단비', '미가입'], ['보철치료비', '미가입'], ['가족/일상/자녀배상', '미가입'], ['화재벌금', '미가입']],
-      sc: [0, 0, 0, 0, pctOf(['벌금(대인/스쿨존/대물)', '교통사고처리지원금', '변호사선임비용'])] }
-  ];
 
-  document.getElementById('cov-cards').innerHTML = K.map(function (k) {
-    var sub = k.sub, badge = '';
-    if (k.sc) {
-      var rate = k.sc[4];
-      var word = rate === 0 ? '없음' : rate >= 80 ? '적절' : '부족';
-      badge = bdg(word);
-      sub = '권장금액 대비 ' + rate + '% 준비';
-    } else {
-      var isNone = k.cmp.length && k.cmp.every(function (c) { return c[1] === 0; });
-      if (isNone) {
-        badge = bdg('없음');
-      } else {
-        var benched = k.cmp.filter(function (c) { return c[2] != null; })[0];
-        if (benched) {
-          var word2 = judge(benched[1], benched[2]);
-          if (word2) badge = bdg(word2);
-        }
-      }
-    }
-    var amtHtml = '<p class="cov-amt">' + won(k.amt) + '</p>';
-    // 담보가 많은 카드(현재 '운전자' 8개)는 5개까지만 보여주고 나머지는 "더보기"로 펼친다
-    var SRC_VISIBLE = 5, collapsed = k.src.length > 7;
-    var srcHtml = k.src.length
-      ? '<div class="cov-src">' + k.src.map(function (s, idx) {
-          var more = collapsed && idx >= SRC_VISIBLE;
-          var cls = more ? ' more' : '', attr = more ? ' hidden' : '';
-          return '<span class="sn' + cls + '"' + attr + '>' + esc(s[0]) + (s[2] ? '<span class="cov-tag">' + esc(s[2]) + '</span>' : '') + '</span>'
-            + (s[1] === '미가입' ? '<span class="sa none' + cls + '"' + attr + '>없음</span>' : '<span class="sa' + cls + '"' + attr + '>' + (typeof s[1] === 'number' ? won(s[1]) : esc(s[1])) + '</span>');
-        }).join('') + '</div>'
-        + (collapsed ? '<button type="button" class="cov-src-toggle">더보기 (+' + (k.src.length - SRC_VISIBLE) + ')</button>' : '')
-      : '<div hidden></div>';
-    return '<article class="cov-card"><div><div class="cov-card-top"><span class="cov-card-l">' + k.label + '</span>' + badge + '</div>'
-      + amtHtml + (sub ? '<p class="cov-sub">' + sub + '</p>' : '') + '</div>' + srcHtml + '</article>';
-  }).join('');
-
-  // ===== 보험금 카드 — 담보 더보기/접기 (onclick= 할당 — renderPage()가 반복 호출돼도 리스너가 중복으로 쌓이지 않도록) =====
-  document.getElementById('cov-cards').onclick = function (e) {
-    var btn = e.target.closest('.cov-src-toggle');
-    if (!btn) return;
-    var card = btn.closest('.cov-card');
-    var hiddenEls = card.querySelectorAll('.more[hidden]');
-    if (hiddenEls.length) {
-      hiddenEls.forEach(function (el) { el.hidden = false; });
-      btn.textContent = '접기';
-    } else {
-      var moreEls = card.querySelectorAll('.more');
-      moreEls.forEach(function (el) { el.hidden = true; });
-      btn.textContent = '더보기 (+' + (moreEls.length / 2) + ')';
-    }
-  };
-
-  // ===== 요약: 보장분석표 (담보별 카드) =====
-  function cluster(rows) {
-    var out = [];
-    rows.forEach(function (r) {
-      var co = r[0][0], pr = r[0][1];
-      var c = out.filter(function (x) { return x.co === co; })[0];
-      if (!c) { c = { co: co, products: [] }; out.push(c); }
-      var p = c.products.filter(function (x) { return x.product === pr; })[0];
-      if (!p) { p = { product: pr, items: [] }; c.products.push(p); }
-      p.items.push([r[1], r[2]]);
-    });
-    return out;
-  }
-  function gcard(g) {
-    return '<article class="cov-group"><div class="cov-group-head"><h3>' + esc(g[0]) + '</h3><span class="cov-group-total">' + won(gTotal(g)) + '</span></div>'
-      + cluster(g[2]).map(function (c) {
-          return '<div class="cov-co-block"><span class="cov-co-name">' + coLogo(c.co) + esc(c.co) + '</span><div>'
-            + c.products.map(function (p) {
-                return '<div class="cov-product"><div class="cov-product-name">' + esc(p.product) + '</div>'
-                  + p.items.map(function (r) { return '<div class="cov-item-row"><span>' + esc(r[0]) + '</span><span class="cov-item-amt">' + won(r[1]) + '</span></div>'; }).join('')
-                  + '</div>';
-              }).join('')
-            + '</div></div>';
-        }).join('')
-      + '</article>';
-  }
-  document.getElementById('cov-groups').innerHTML = CAT_ORDER.map(function (cat) {
-    var gs = G.filter(function (g) { return g[1] === cat; });
-    return gs.length ? '<p class="cov-cat-label">' + esc(cat) + '</p>' + gs.map(gcard).join('') : '';
-  }).join('');
-
-  // ===== 상세: 보장분석표 (담보 × 상품 매트릭스) — 위와 같은 G에서 그대로 끌어온다 =====
-  // AI 팁 — 지금은 담보군별 고정 문구, 추후 고객 데이터 기반 AI 생성 문구로 교체 예정
-  var CAT_TIPS = {
-    '사망·후유장해': { text: '3대 사망원인은 암·심장질환·폐렴으로 전체 사망의 42.6%를 차지합니다.', src: '통계청 「2024년 사망원인통계」' },
-    '암 진단': { text: '평생 한 번은 암을 진단받을 확률이 3명 중 1명꼴로, 진단비 공백이 없는지 먼저 확인해야 합니다.', src: '국립암센터 「국가암등록통계」' },
-    '뇌/심장 진단': { text: '심장질환·뇌혈관질환은 암에 이어 사망원인 2위·4위로, 진단 즉시 지급되는 정액형 보장이 중요합니다.', src: '통계청 「2024년 사망원인통계」' },
-    '실손의료비': { text: '실손의료보험 가입자는 약 4,000만명으로, 국민 대다수가 가입한 "제2의 건강보험"입니다.', src: '금융감독원' },
-    '수술/입원': { text: '국내 평균 입원일수는 OECD 평균보다 길어, 입원일당 보장의 공백이 클수록 실제 부담으로 이어집니다.', src: 'OECD Health Statistics' },
-    '운전자/기타': { text: '교통사고 발생 시 형사합의금·벌금 부담이 적지 않아, 운전자보험으로 별도 대비가 필요합니다.', src: '도로교통공단 교통사고분석시스템(TAAS)' }
-  };
-  // 활성 보험사만 넣어 테이블을 통째로 새로 그린다 — 숨긴 칼럼을 hidden/visibility로 남겨두면
-  // table-layout:fixed 폭 계산이 꼬이는 경우가 있어, 필터가 바뀔 때마다 실제 보일 칼럼 수만큼만 생성한다.
-  function buildMatrix(activeCos) {
-    var prods = PRODUCTS_LIST.filter(function (p) { return activeCos.indexOf(p[0]) !== -1; });
-    function matrixCells(breakdown) {
-      return prods.map(function (prod) {
-        var sum = 0;
-        breakdown.forEach(function (r) { if (r[0] === prod) sum += r[2]; });
-        return sum;
+  // ===== 리포트 탭 — 계약 상세 BEFORE & AFTER =====
+  function renderReportContracts() {
+    function table(scope) {
+      var after = scope === 'after';
+      var rows = [];
+      C.forEach(function (c, i) {
+        if (after && isDrop(i)) return;
+        rows.push({ c: c, i: i });
       });
-    }
-    var colCount = prods.length;
-    // colgroup으로 칼럼 폭을 명시 — 담보(200)·합계(130)만 고정폭, 보험사 칼럼은 width를 주지 않아 남는 폭을 나눠 갖는다(유동)
-    var colgroup = '<colgroup><col style="width:200px"><col style="width:130px">'
-      + prods.map(function () { return '<col>'; }).join('')
-      + '</colgroup>';
-    var head = colgroup + '<thead><tr>'
-      + '<th class="hname">담보</th>'
-      + '<th class="hsum">합계</th>'
-      + prods.map(function (p) {
-          var i = PRODUCTS_LIST.indexOf(p);
-          return '<th><span class="pname">' + (CIRCLED[i] || (i + 1)) + esc(p[0]) + '</span><span class="pprem">' + C[i][4] + '</span></th>';
-        }).join('')
-      + '</tr></thead>';
-
-    var body = '<tbody>' + CAT_ORDER.map(function (cat) {
-      var gs = G.filter(function (g) { return g[1] === cat; });
-      if (!gs.length) return '';
-      var catRow = '<tr class="cat"><td colspan="' + (colCount + 2) + '">' + esc(cat) + '</td></tr>';
-      var tip = CAT_TIPS[cat];
-      var tipRow = tip
-        ? '<tr class="tip"><td colspan="' + (colCount + 2) + '"><span class="tip-ic">💡</span><span class="tip-txt">' + esc(tip.text) + '</span><span class="tip-src">' + esc(tip.src) + '</span></td></tr>'
-        : '';
-      var dataRows = gs.map(function (g) {
-        var cells = matrixCells(g[2]);
-        var sum = gTotal(g);
-        var none = sum === 0;
-        var sumHtml = none
-          ? '<td class="sum none">미보유</td>'
-          : '<td class="sum">' + won(sum) + '</td>';
-        var cellsHtml = cells.map(function (v) {
-          return v === 0 ? '<td class="amt dash">—</td>' : '<td class="amt">' + won(v) + '</td>';
-        }).join('');
-        return '<tr><td class="name' + (none ? ' none' : '') + '">' + esc(g[0]) + '</td>' + sumHtml + cellsHtml + '</tr>';
+      var total = rows.reduce(function (sum, r) { return sum + premOf(r.c); }, 0);
+      var head = '<tr><th>#</th><th>보험사</th><th>상품명</th><th>계약일</th><th>납입/만기</th><th class="amt">월보험료</th>'
+        + (after ? '' : '<th>상담 결과</th>') + '</tr>';
+      var body = rows.map(function (r, n) {
+        var c = r.c, t = term(c);
+        var noPrem = c[4] === '미제공';
+        var drop = isDrop(r.i);
+        return '<tr' + (drop ? ' class="is-drop"' : '') + '>'
+          + '<td class="num">' + (n + 1) + '</td>'
+          + '<td class="co">' + esc(c[0]) + '</td>'
+          + '<td class="pname">' + esc(c[1]) + '</td>'
+          + '<td>' + esc(c[2]) + '</td>'
+          + '<td>' + esc(t[0]) + ' / ' + esc(t[1]) + '</td>'
+          + '<td class="amt' + (noPrem ? ' na' : '') + '">' + (noPrem ? '정보 없음' : esc(c[4])) + '</td>'
+          + (after ? '' : '<td><span class="ba-chip' + (drop ? '' : ' keep') + '">' + (drop ? '해지' : '유지') + '</span></td>')
+          + '</tr>';
       }).join('');
-      return catRow + tipRow + dataRows;
-    }).join('') + '</tbody>';
-
-    return head + body;
+      return '<div class="ba-block' + (after ? ' after' : '') + '">'
+        + '<div class="ba-block-head">'
+        +   '<span class="ba-tag">' + (after ? 'AFTER' : 'BEFORE') + '</span>'
+        +   '<span class="ba-block-sub">' + (after ? '상담 후 유지하는 계약 ' + rows.length + '건' : '지금 보유한 계약 ' + rows.length + '건') + '</span>'
+        +   '<span class="ba-block-total">월 ' + comma(total) + '원</span>'
+        + '</div>'
+        + '<div class="ba-table-wrap"><table class="ba-table" style="min-width:' + (after ? 900 : 1000) + 'px"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>'
+        + '</div>';
+    }
+    document.getElementById('ba-contracts').innerHTML = table('before') + table('after');
   }
 
-  // ===== 상세: 보장분석표 — 보험사 필터 =====
-  (function () {
-    var co = [];
-    PRODUCTS_LIST.forEach(function (p) { if (co.indexOf(p[0]) === -1) co.push(p[0]); });
-    var filterEl = document.getElementById('cov-co-filter');
-    filterEl.innerHTML = co.map(function (name) {
-      return '<button type="button" class="sort-chip on" data-co="' + esc(name) + '">' + coLogo(name) + '<span>' + esc(name) + '</span></button>';
-    }).join('');
+  // ===== 전체 다시 그리기 (계약·담보를 저장했을 때) =====
+  function renderAll() {
+    computeScore();
+    renderSummary();
+    renderScore();
+    renderClaimCards();
+    renderCovGroups();
+    renderMatrix();
+    renderByCompany();
+    renderReport();
+    document.getElementById('cov-contract-total-amt').textContent = comma(premTotal()) + '원';
+    document.getElementById('cov-contract-keep-amt').textContent = comma(premTotal('after')) + '원';
+  }
 
-    function apply() {
-      var active = Array.prototype.filter.call(filterEl.querySelectorAll('.sort-chip'), function (c) { return c.classList.contains('on'); })
-        .map(function (c) { return c.getAttribute('data-co'); });
-      var matrix = document.getElementById('cov-matrix');
-      matrix.innerHTML = buildMatrix(active);
-      // 담보(200)·합계(130) 칼럼은 고정, 보험사 칼럼만 보이는 개수만큼만 최소폭을 잡는다
-      // — 전체 가로폭(100%)보다 작으면 보험사 칼럼이 균등하게 늘어나 빈 공간이 남지 않고,
-      // 더 많이 선택되면 그만큼 늘어난 min-width가 가로 스크롤을 유도한다.
-      matrix.style.minWidth = (330 + Math.max(active.length, 1) * 110) + 'px';
-    }
-    apply();
+  // ===== 계약 · 담보 (읽기 + 유지/해지 + 편집) =====
+  var contractListEl = document.getElementById('edt-contract-list');
 
-    // onclick= 할당 — renderPage()가 반복 호출돼도 같은 filterEl에 리스너가 중복으로 쌓이지 않도록
-    filterEl.onclick = function (e) {
-      var chip = e.target.closest('.sort-chip');
-      if (!chip) return;
-      chip.classList.toggle('on');
-      apply();
-    };
-  })();
-
-  // ===== 상세: 보장분석표 — 보험사별 상세 (매트릭스와 같은 G에서 회사 → 상품 → 담보로 역방향 집계) =====
-  (function () {
-    var CAT_SHORT = {
-      '사망·후유장해': '사망', '암 진단': '암', '뇌/심장 진단': '뇌/심장',
-      '실손의료비': '실손', '수술/입원': '수술', '운전자/기타': '운전자'
-    };
-
-    // 상품명으로 계약 상세(C)의 계약일·납입/만기·월보험료를 찾아 상품 헤더에 같이 보여준다
-    var CO_PR_MAP = {};
-    C.forEach(function (c) { CO_PR_MAP[c[0] + '||' + c[1]] = c; });
-
-    var BY_CO = {};
-    var CO_ORDER = [];
-    PRODUCTS_LIST.forEach(function (p) {
-      var co = p[0], pr = p[1];
-      if (!BY_CO[co]) { BY_CO[co] = { order: [], products: {} }; CO_ORDER.push(co); }
-      if (!BY_CO[co].products[pr]) { BY_CO[co].products[pr] = []; BY_CO[co].order.push(pr); }
-    });
-    CAT_ORDER.forEach(function (cat) {
-      G.filter(function (g) { return g[1] === cat; }).forEach(function (g) {
-        g[2].forEach(function (entry) {
-          var co = entry[0][0], pr = entry[0][1];
-          BY_CO[co].products[pr].push({ cat: cat, cov: g[0], detail: entry[1], amt: entry[2] });
-        });
+  function contractCovs(i) {
+    var prod = PRODUCTS_LIST[i];
+    var list = [];
+    G.forEach(function (g) {
+      g[2].forEach(function (entry) {
+        if (entry[0] === prod) list.push([g[0], entry[1], entry[2]]);
       });
     });
+    return list;
+  }
+  function covRowCells(cov, detail, amtWon) {
+    var man = amtWon ? Math.round(amtWon / 10000) : '';
+    return '<td><input class="edt-input txt edt-cov-name" type="text" value="' + esc(cov || '') + '" placeholder="담보명"></td>'
+      + '<td><input class="edt-input txt edt-cov-detail" type="text" value="' + esc(detail || '') + '" placeholder="세부담보명"></td>'
+      + '<td><input class="edt-input edt-cov-amt" type="number" value="' + man + '" placeholder="0"></td>';
+  }
+  // 보험사 선택 — 목록에 없는 기존 값이면 "직접 입력"에 펼쳐서 보여준다
+  function insurerFieldHtml(co) {
+    var known = INSURER_OPTIONS.indexOf(co) > -1;
+    var showCustom = !!co && !known;
+    var opts = '<option value=""' + (co ? '' : ' selected') + ' disabled>보험사 선택</option>'
+      + INSURER_OPTIONS.map(function (name) {
+          return '<option value="' + esc(name) + '"' + (co === name ? ' selected' : '') + '>' + esc(name) + '</option>';
+        }).join('')
+      + '<option value="__custom__"' + (showCustom ? ' selected' : '') + '>직접 입력</option>';
+    return '<select class="edt-input txt edt-f-co">' + opts + '</select>'
+      + '<input class="edt-input txt edt-f-co-custom" type="text" value="' + (showCustom ? esc(co) : '') + '" placeholder="보험사명 입력"' + (showCustom ? '' : ' hidden') + '>';
+  }
+  function contractItemHtml(c, i) {
+    var t = term(c);
+    var years = parseInt(t[0], 10);
+    var premium = c[4] === '미제공' ? '' : String(c[4]).replace(/[^0-9]/g, '');
+    var covList = contractCovs(i);
+    var covRows = covList.map(function (r) { return '<tr>' + covRowCells(r[0], r[1], r[2]) + '</tr>'; }).join('');
+    var drop = c[9] === 'drop';
+    var progTxt = c[6] ? c[5] + '/' + c[6] + '회 (' + Math.round(c[5] / c[6] * 100) + '%)' : '산출 불가';
+    return '<div class="edt-contract-item' + (drop ? ' is-drop' : '') + '" data-i="' + i + '">'
+      + '<div class="edt-contract-row">'
+      +   '<span class="edt-contract-no">' + (i + 1) + '</span>'
+      +   '<span class="edt-c-co">' + coLogo(c[0]) + '<span class="edt-summary-co">' + esc(c[0] || '보험사 입력') + '</span></span>'
+      +   '<span class="edt-c-name edt-summary-name">' + esc(c[1] || '상품명 입력') + '</span>'
+      +   '<span class="edt-c-prem edt-summary-prem">' + esc(premium ? comma(premium) + '원' : '미제공') + '</span>'
+      +   '<span class="edt-status" role="group" aria-label="상담 결과">'
+      +     '<button type="button" class="edt-status-btn" data-v="keep" aria-pressed="' + (drop ? 'false' : 'true') + '">유지</button>'
+      +     '<button type="button" class="edt-status-btn" data-v="drop" aria-pressed="' + (drop ? 'true' : 'false') + '">해지</button>'
+      +   '</span>'
+      +   '<button type="button" class="edt-contract-toggle" aria-expanded="false">'
+      +     '<span>수정</span><svg class="ic-svg" width="14" height="14"><use href="#i-chevron-down"/></svg>'
+      +   '</button>'
+      + '</div>'
+      + '<div class="edt-contract-body" hidden>'
+      +   '<div class="edt-c-meta">'
+      +     '<span>계약일 <b>' + esc(c[2] || '—') + '</b></span>'
+      +     '<span>납입 <b>' + esc(progTxt) + '</b></span>'
+      +     '<span>누적납입 <b>' + esc(c[7] || '—') + '</b></span>'
+      +     '<span>잔여납입 <b>' + esc(c[8] || '—') + '</b></span>'
+      +     '<span>담보 <b>' + covList.length + '개</b></span>'
+      +   '</div>'
+      +   '<div class="edt-contract-fields">'
+      +     '<div class="edt-field"><span class="edt-field-l">보험사</span>' + insurerFieldHtml(c[0]) + '</div>'
+      +     '<div class="edt-field wide"><span class="edt-field-l">상품명</span><input class="edt-input txt edt-f-name" type="text" value="' + esc(c[1]) + '" placeholder="상품명"></div>'
+      +     '<div class="edt-field"><span class="edt-field-l">만기</span><input class="edt-input txt edt-f-maturity" type="text" value="' + esc(t[1]) + '" placeholder="만기"></div>'
+      +     '<div class="edt-field"><span class="edt-field-l">납입(년)</span><input class="edt-input edt-f-years" type="number" value="' + (isNaN(years) ? '' : years) + '" placeholder="0"></div>'
+      +     '<div class="edt-field"><span class="edt-field-l">월보험료(원)</span><input class="edt-input edt-f-premium" type="number" value="' + premium + '" placeholder="0"></div>'
+      +     '<div class="edt-field"><span class="edt-field-l">갱신형</span><input class="edt-input txt" type="text" placeholder="비갱신형"></div>'
+      +   '</div>'
+      +   '<div class="edt-contract-covs">'
+      +     '<table class="edt-table">'
+      +       '<thead><tr><th>담보</th><th>세부담보</th><th class="amt">가입금액(만원)</th></tr></thead>'
+      +       '<tbody>' + covRows + '</tbody>'
+      +     '</table>'
+      +     '<button type="button" class="edt-add-row-btn edt-add-cov-btn">+ 담보 추가</button>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  }
+  function renderContractList() {
+    contractListEl.innerHTML = C.map(function (c, i) { return contractItemHtml(c, i); }).join('');
+  }
+  function coValue(item) {
+    var sel = item.querySelector('.edt-f-co');
+    return sel.value === '__custom__' ? item.querySelector('.edt-f-co-custom').value.trim() : sel.value;
+  }
+  function updateRowSummary(item) {
+    var co = coValue(item);
+    var name = item.querySelector('.edt-f-name').value.trim();
+    var premium = item.querySelector('.edt-f-premium').value.trim();
+    var covCount = item.querySelectorAll('.edt-contract-covs tbody tr').length;
+    item.querySelector('.edt-summary-co').textContent = co || '보험사 입력';
+    item.querySelector('.edt-summary-name').textContent = name || '상품명 입력';
+    item.querySelector('.edt-summary-prem').textContent = premium ? comma(premium) + '원' : '미제공';
+    var covSpan = item.querySelector('.edt-c-meta span:last-child b');
+    if (covSpan) covSpan.textContent = covCount + '개';
+  }
+  // 저장 시 입력값을 C/G로 바꿔 넣는다 — 계약일·납입회차처럼 이 화면에서 고치지 않는 값은
+  // 기존 계약이면 원래 값을 유지하고, 새로 추가한 계약이면 "—"/0으로 둔다.
+  function collectContractsFromForm() {
+    var items = Array.prototype.slice.call(contractListEl.querySelectorAll('.edt-contract-item'));
+    var newC = [], newProducts = [], gMap = {};
+    items.forEach(function (item, i) {
+      var co = coValue(item);
+      var name = item.querySelector('.edt-f-name').value.trim();
+      var maturity = item.querySelector('.edt-f-maturity').value.trim();
+      var years = item.querySelector('.edt-f-years').value.trim();
+      var premiumNum = parseInt(item.querySelector('.edt-f-premium').value, 10);
+      var premium = premiumNum ? premiumNum.toLocaleString('ko-KR') + '원' : '미제공';
+      var termStr = (years ? years + '년납' : '—') + ' / ' + (maturity || '—');
+      var status = item.querySelector('.edt-status-btn[data-v="drop"]').getAttribute('aria-pressed') === 'true' ? 'drop' : 'keep';
+      var prod = [co, name];
+      newProducts.push(prod);
 
-    function coCount(co) {
-      return BY_CO[co].order.reduce(function (sum, pr) { return sum + BY_CO[co].products[pr].length; }, 0);
-    }
+      var old = C[i];
+      newC.push([co, name, old ? old[2] : '—', termStr, premium,
+        old ? old[5] : 0, old ? old[6] : 0, old ? old[7] : '—', old ? old[8] : '—', status]);
 
-    var selectEl = document.getElementById('cov-co-select');
-    selectEl.innerHTML = CO_ORDER.map(function (co) {
-      return '<option value="' + esc(co) + '">' + esc(co) + ' (' + coCount(co) + ')</option>';
-    }).join('');
-
-    function renderCoDetail(co) {
-      var data = BY_CO[co];
-      document.getElementById('cov-co-select-logo').innerHTML = coLogo(co);
-      document.getElementById('cov-co-select-meta').textContent = '상품 ' + data.order.length + '개 · 담보 ' + coCount(co) + '건';
-      document.getElementById('cov-co-products').innerHTML = data.order.map(function (pr) {
-        var items = data.products[pr];
-        var rows = items.length
-          ? items.map(function (it) {
-              return '<tr><td><span class="cov-tag">' + esc(CAT_SHORT[it.cat] || it.cat) + '</span></td>'
-                + '<td class="cov">' + esc(it.cov) + '</td>'
-                + '<td class="detail">' + esc(it.detail) + '</td>'
-                + '<td class="amt">' + won(it.amt) + '</td></tr>';
-            }).join('')
-          : '<tr><td colspan="4" style="text-align:center;color:var(--ink-3);padding:24px 20px;">등록된 담보 정보가 없어요</td></tr>';
-        var cRow = CO_PR_MAP[co + '||' + pr];
-        var metaHtml = '';
-        if (cRow) {
-          var t = term(cRow);
-          var metaParts = ['가입일 ' + esc(cRow[2]), esc(t[0]), esc(t[1]), '월보험료 ' + esc(cRow[4])];
-          metaHtml = '<span class="cov-co-product-meta">' + metaParts.join(' | ') + '</span>';
+      var rows = item.querySelectorAll('.edt-contract-covs tbody tr');
+      Array.prototype.forEach.call(rows, function (tr) {
+        var covName = tr.querySelector('.edt-cov-name').value.trim();
+        var detailName = tr.querySelector('.edt-cov-detail').value.trim();
+        var amtMan = parseInt(tr.querySelector('.edt-cov-amt').value, 10);
+        if (!covName || !detailName || !amtMan) return;
+        if (!gMap[covName]) {
+          var catEntry = SCORE_CATS.filter(function (c) { return c.items.indexOf(covName) > -1; })[0];
+          gMap[covName] = [covName, catEntry ? catEntry.label : '운전자/기타', []];
         }
-        return '<div class="cov-co-product">'
-          + '<div class="cov-co-product-head"><span class="cov-co-product-left"><span class="cov-co-product-name">' + esc(pr) + '</span><span class="cov-co-product-cnt">담보 ' + items.length + '건</span></span>' + metaHtml + '</div>'
-          + '<table class="cov-detail-table"><thead><tr><th>구분</th><th>담보</th><th>세부담보명</th><th class="amt">가입금액</th></tr></thead><tbody>' + rows + '</tbody></table>'
-          + '</div>';
-      }).join('');
+        gMap[covName][2].push([prod, detailName, amtMan * 10000]);
+      });
+    });
+    return { C: newC, G: Object.keys(gMap).map(function (k) { return gMap[k]; }), PRODUCTS: newProducts };
+  }
+  function toggleContract(btn) {
+    var body = btn.closest('.edt-contract-item').querySelector('.edt-contract-body');
+    var open = body.hidden;
+    body.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.querySelector('span').textContent = open ? '접기' : '수정';
+  }
+
+  contractListEl.addEventListener('click', function (e) {
+    var statusBtn = e.target.closest('.edt-status-btn');
+    if (statusBtn) {
+      var item = statusBtn.closest('.edt-contract-item');
+      var i = Number(item.getAttribute('data-i'));
+      var v = statusBtn.getAttribute('data-v');
+      if (!C[i]) return;
+      C[i][9] = v;
+      item.querySelectorAll('.edt-status-btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', b === statusBtn ? 'true' : 'false');
+      });
+      item.classList.toggle('is-drop', v === 'drop');
+      // 유지/해지는 표시만 바꾸는 값이라 저장을 기다리지 않고 바로 반영한다
+      renderSummary();
+      renderCovGroups();
+      renderMatrix();
+      renderByCompany();
+      renderReport();
+      document.getElementById('cov-contract-keep-amt').textContent = comma(premTotal('after')) + '원';
+      return;
     }
+    if (e.target.classList.contains('edt-add-cov-btn')) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = covRowCells('', '', 0);
+      e.target.closest('.edt-contract-covs').querySelector('tbody').appendChild(tr);
+      updateRowSummary(e.target.closest('.edt-contract-item'));
+      return;
+    }
+    var toggle = e.target.closest('.edt-contract-toggle');
+    if (toggle) toggleContract(toggle);
+  });
+  contractListEl.addEventListener('input', function (e) {
+    if (e.target.classList.contains('edt-f-co-custom') || e.target.classList.contains('edt-f-name') || e.target.classList.contains('edt-f-premium')) {
+      updateRowSummary(e.target.closest('.edt-contract-item'));
+    }
+  });
+  contractListEl.addEventListener('change', function (e) {
+    if (!e.target.classList.contains('edt-f-co')) return;
+    var item = e.target.closest('.edt-contract-item');
+    var custom = item.querySelector('.edt-f-co-custom');
+    var isCustom = e.target.value === '__custom__';
+    custom.hidden = !isCustom;
+    if (isCustom) custom.focus();
+    updateRowSummary(item);
+  });
+  document.getElementById('edt-add-contract-btn').addEventListener('click', function () {
+    var idx = contractListEl.children.length;
+    var blank = ['', '', '', '', '', 0, 0, '', '', 'keep'];
+    var wrap = document.createElement('div');
+    wrap.innerHTML = contractItemHtml(blank, idx);
+    var item = wrap.firstChild;
+    contractListEl.appendChild(item);
+    toggleContract(item.querySelector('.edt-contract-toggle'));
+  });
 
-    // onchange= 할당 — renderPage()가 반복 호출돼도 같은 selectEl에 리스너가 중복으로 쌓이지 않도록
-    selectEl.onchange = function () { renderCoDetail(selectEl.value); };
-    if (CO_ORDER.length) renderCoDetail(CO_ORDER[0]);
-  })();
-  } // ===== renderPage() 끝 =====
+  // ----- 수정 이력 -----
+  var historyEl = document.getElementById('edt-history-list');
+  historyEl.innerHTML =
+    '<div class="edt-history-row"><span class="ts">2026.11.09 · 최신규</span><ul><li>보장분석 데이터 최초 생성</li></ul></div>';
 
-  renderPage();
+  // ----- 저장 · 초기화 -----
+  function toast(msg) {
+    var t = document.createElement('div');
+    t.className = 'edt-save-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add('show'); });
+    setTimeout(function () {
+      t.classList.remove('show');
+      setTimeout(function () { t.remove(); }, 250);
+    }, 2200);
+  }
+  var C_INITIAL = C.map(function (c) { return c.slice(); });
+  var G_INITIAL = G;
+  var PRODUCTS_INITIAL = PRODUCTS_LIST;
 
-  // ===== 탭 전환: 상세 보장분석표 ↔ 보험사별 상세 — 데이터와 무관한 고정 UI라 한 번만 연결한다 =====
+  document.getElementById('edt-save-btn').addEventListener('click', function () {
+    var collected = collectContractsFromForm();
+    C = collected.C;
+    G = collected.G;
+    PRODUCTS_LIST = collected.PRODUCTS;
+    renderAll();
+    renderContractList();
+
+    var row = document.createElement('div');
+    row.className = 'edt-history-row';
+    row.innerHTML = '<span class="ts">2026.11.09 · 최신규</span><ul><li>계약·담보 수정 저장 (유지 '
+      + (C.length - dropCount()) + '건 · 해지 ' + dropCount() + '건)</li></ul>';
+    historyEl.insertBefore(row, historyEl.firstChild);
+    toast('저장했어요.');
+  });
+
+  document.getElementById('edt-reset-btn').addEventListener('click', function () {
+    C = C_INITIAL.map(function (c) { return c.slice(); });
+    G = G_INITIAL;
+    PRODUCTS_LIST = PRODUCTS_INITIAL;
+    scoreOverrides = {};
+    if (OPINIONS_INITIAL) {
+      OPINIONS = OPINIONS_INITIAL.map(function (o) { return { label: o.label, text: o.text }; });
+      renderOpinions();
+    }
+    renderAll();
+    renderContractList();
+    toast('수정 내용을 초기화했어요.');
+  });
+
+  // ===== 첫 렌더 =====
+  renderAll();
+  renderContractList();
+
+  // ===== 상세 보장분석표 ↔ 보험사별 상세 =====
   (function () {
     var toggleEl = document.getElementById('cov-view-toggle');
     var viewMatrix = document.getElementById('cov-view-matrix');
@@ -1468,89 +1927,65 @@
     });
   })();
 
-  // ===== 탭 전환 (요약 / 상세 / 고객용 3-way) =====
+  // ===== 탭 전환 (분석 / 리포트) + 네비게이터 =====
   (function () {
     var tabs = [
-      { btn: document.getElementById('cov-tabA'), panel: document.getElementById('cov-panelA') },
-      { btn: document.getElementById('cov-tabB'), panel: document.getElementById('cov-panelB') },
-      { btn: document.getElementById('cov-tabC'), panel: document.getElementById('cov-panelC') }
+      { btn: document.getElementById('cov-tabA'), panel: document.getElementById('cov-panelA'), nav: document.getElementById('cov-nav-A') },
+      { btn: document.getElementById('cov-tabB'), panel: document.getElementById('cov-panelB'), nav: document.getElementById('cov-nav-B') }
     ];
+    var navEl = document.querySelector('.cov-nav');
+
     function tab(i) {
       tabs.forEach(function (t, idx) {
         var on = idx === i;
         t.btn.classList.toggle('on', on);
         t.btn.setAttribute('aria-selected', on ? 'true' : 'false');
         t.panel.hidden = !on;
+        t.nav.hidden = !on;
       });
+      syncNav();
     }
     tabs.forEach(function (t, idx) {
       t.btn.addEventListener('click', function () { tab(idx); window.scrollTo(0, 0); });
     });
 
-    // 계약 요약 → "계약 상세보기" 버튼: 상세 탭으로 전환 후 계약 상세 섹션으로 스크롤
-    document.getElementById('cov-goto-detail').addEventListener('click', function () {
-      tab(1);
-      document.getElementById('cov-contract-detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // 네비게이터 클릭 — 상단 고정 탭 높이를 감안해 섹션 위로 맞춘다
+    navEl.addEventListener('click', function (e) {
+      var link = e.target.closest('.cov-nav-item');
+      if (!link) return;
+      e.preventDefault();
+      var el = document.querySelector(link.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-  })();
 
-  // ===== 더보기 메뉴 =====
-  (function () {
-    var menuBtn = document.getElementById('cov-menu-btn');
-    var menu = document.getElementById('cov-menu');
-    var popover = menuBtn.closest('.menu-popover');
-    function openMenu() { menu.hidden = false; menuBtn.setAttribute('aria-expanded', 'true'); }
-    function closeMenu() { menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); }
-    menuBtn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? openMenu() : closeMenu(); });
-    document.addEventListener('click', function (e) { if (!menu.hidden && !popover.contains(e.target)) closeMenu(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
-    document.getElementById('cov-print-btn').addEventListener('click', function () { closeMenu(); window.print(); });
-  })();
-
-  // ===== 고객용 공유 메뉴 (인쇄하기 / PDF로 저장 / PDF 전송) =====
-  (function () {
-    var btn = document.getElementById('cov-share-btn');
-    var menu = document.getElementById('cov-share-menu');
-    var popover = btn.closest('.menu-popover');
-    function openMenu() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
-    function closeMenu() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
-    btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? openMenu() : closeMenu(); });
-    document.addEventListener('click', function (e) { if (!menu.hidden && !popover.contains(e.target)) closeMenu(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
-
-    function toast(msg) {
-      var t = document.createElement('div');
-      t.className = 'edt-save-toast';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      requestAnimationFrame(function () { t.classList.add('show'); });
-      setTimeout(function () {
-        t.classList.remove('show');
-        setTimeout(function () { t.remove(); }, 250);
-      }, 2200);
+    // 스크롤 위치에 맞춰 현재 섹션 표시
+    function syncNav() {
+      var group = tabs.filter(function (t) { return !t.nav.hidden; })[0];
+      if (!group) return;
+      var links = Array.prototype.slice.call(group.nav.querySelectorAll('.cov-nav-item'));
+      var current = links[0];
+      links.forEach(function (link) {
+        var el = document.querySelector(link.getAttribute('href'));
+        if (el && el.getBoundingClientRect().top <= 120) current = link;
+      });
+      links.forEach(function (link) { link.classList.toggle('on', link === current); });
     }
-
-    document.getElementById('cov-share-print').addEventListener('click', function () {
-      closeMenu();
-      window.print();
+    var raf = null;
+    window.addEventListener('scroll', function () {
+      if (raf) return;
+      raf = requestAnimationFrame(function () { raf = null; syncNav(); });
     });
-    // PDF로 저장 — 별도 변환 서버 없이, 브라우저 인쇄창에서 "PDF로 저장"을 destination으로 고르면 된다
-    document.getElementById('cov-share-savepdf').addEventListener('click', function () {
-      closeMenu();
-      window.print();
-    });
+    syncNav();
 
-    // ===== PDF 전송 모달 — 보내기 전에 고객 연락처를 확인·수정할 수 있게 =====
+  })();
+
+  // ===== 인쇄 · PDF — 헤더 더보기(⋮)와 리포트 탭 "공유"가 같은 메뉴를 쓴다 =====
+  (function () {
+    // PDF 전송 모달 — 보내기 전에 고객 연락처를 확인·수정할 수 있게
     var sendModal = document.getElementById('pdf-send-modal');
     var sendPhone = document.getElementById('pdf-send-phone');
     var CUSTOMER_PHONE = '010-9876-5432';
 
-    document.getElementById('cov-share-sendpdf').addEventListener('click', function () {
-      closeMenu();
-      sendPhone.value = CUSTOMER_PHONE;
-      sendModal.hidden = false;
-      sendPhone.focus();
-    });
     document.getElementById('pdf-send-close').addEventListener('click', function () { sendModal.hidden = true; });
     document.getElementById('pdf-send-cancel').addEventListener('click', function () { sendModal.hidden = true; });
     sendModal.addEventListener('click', function (e) { if (e.target === sendModal) sendModal.hidden = true; });
@@ -1560,316 +1995,38 @@
       sendModal.hidden = true;
       toast(phone + '(으)로 PDF가 전송되었습니다.');
     });
-  })();
 
-  // ===== 수정 모드 =====
-  (function () {
-    var root = document.querySelector('.cE');
-    var toggleBtn = document.getElementById('edit-mode-btn');
-    var editLabel = document.getElementById('edit-mode-label');
-
-    function applyEditState(on) {
-      root.classList.toggle('is-editing', on);
-      toggleBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      editLabel.textContent = on ? '저장' : '수정';
-      document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp) { inp.readOnly = !on; });
-      // 수정할 내용은 상세 탭에 있으므로, 수정 모드를 켜면 상세 탭으로 전환
-      if (on) {
-        document.getElementById('cov-tabB').click();
-        // display:none 상태에서 계산된 textarea 높이는 부정확하므로, 보이게 된 시점에 다시 맞춘다
-        document.querySelectorAll('.edt-opinion-text').forEach(autoGrow);
+    // 인쇄하기 / PDF로 저장 — 둘 다 브라우저 인쇄창을 연다(미리보기가 그 창에 있고,
+    // "대상"을 PDF로 저장으로 고르면 파일로 떨어진다). 별도 변환 서버를 두지 않는다.
+    var ACTIONS = {
+      print: function () { window.print(); },
+      savepdf: function () { window.print(); },
+      sendpdf: function () {
+        sendPhone.value = CUSTOMER_PHONE;
+        sendModal.hidden = false;
+        sendPhone.focus();
       }
-    }
+    };
 
-    // 수정 모드 진입 시 history에 상태를 쌓아, 뒤로가기(브라우저/모바일 스와이프)를 누르면
-    // 리스트 화면까지 나가버리지 않고 수정 모드만 먼저 빠져나오도록 한다.
-    function enterEdit() {
-      history.pushState({ covEdit: true }, '', location.href);
-      applyEditState(true);
-    }
-    function exitEdit(fromPopstate) {
-      applyEditState(false);
-      doSave();
-      if (!fromPopstate) history.back(); // 쌓아둔 수정 모드 상태를 소비해 다음 뒤로가기가 바로 리스트로 가게 한다
-    }
-
-    toggleBtn.addEventListener('click', function () {
-      if (root.classList.contains('is-editing')) exitEdit(false);
-      else enterEdit();
-    });
-
-    window.addEventListener('popstate', function () {
-      if (root.classList.contains('is-editing')) exitEdit(true);
-    });
-
-    // ----- 보장 점수 — 표의 "점수" 칸을 규칙 계산값으로 되돌리고 합계도 다시 더한다 -----
-    function renderScore() {
-      scoreOverrides = {};
-      var total = 0;
-      SCORE_ROWS.forEach(function (r, idx) {
-        var inp = document.querySelectorAll('#cov-score-tbody .score-input')[idx];
-        inp.value = r.score;
-        total += r.score;
+    function wireMenu(btnId, menuId) {
+      var btn = document.getElementById(btnId);
+      var menu = document.getElementById(menuId);
+      var popover = btn.closest('.menu-popover');
+      function openMenu() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+      function closeMenu() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+      btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? openMenu() : closeMenu(); });
+      document.addEventListener('click', function (e) { if (!menu.hidden && !popover.contains(e.target)) closeMenu(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) closeMenu(); });
+      menu.addEventListener('click', function (e) {
+        var item = e.target.closest('.menu-item');
+        if (!item) return;
+        closeMenu();
+        var act = ACTIONS[item.getAttribute('data-act')];
+        if (act) act();
       });
-      document.getElementById('cov-score-total').textContent = total + '점';
-      var tile = document.getElementById('cov-score-tile-total');
-      if (tile) tile.textContent = total + '점';
     }
-
-    // ----- 의견 -----
-    var OPINIONS_INITIAL = OPINIONS.map(function (o) { return { label: o.label, text: o.text }; });
-    var opinionsEl = document.getElementById('edt-opinions');
-    function autoGrow(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
-    function renderOpinions() {
-      opinionsEl.innerHTML = OPINIONS.map(function (o, i) {
-        return '<div class="edt-opinion-row" data-i="' + i + '">'
-          + '<span class="edt-opinion-label">' + esc(o.label) + '</span>'
-          + '<textarea class="edt-opinion-text" rows="1">' + esc(o.text) + '</textarea>'
-          + '<button type="button" class="edt-opinion-del" aria-label="의견 삭제"><svg class="ic-svg" width="14" height="14"><use href="#i-x"/></svg></button>'
-          + '</div>';
-      }).join('');
-      opinionsEl.querySelectorAll('.edt-opinion-text').forEach(autoGrow);
-    }
-    renderOpinions();
-    opinionsEl.addEventListener('input', function (e) {
-      if (e.target.classList.contains('edt-opinion-text')) autoGrow(e.target);
-    });
-    opinionsEl.addEventListener('click', function (e) {
-      var btn = e.target.closest('.edt-opinion-del');
-      if (!btn) return;
-      var row = btn.closest('.edt-opinion-row');
-      OPINIONS.splice(Number(row.getAttribute('data-i')), 1);
-      renderOpinions();
-    });
-    document.getElementById('edt-add-opinion-btn').addEventListener('click', function () {
-      OPINIONS.push({ label: '의견', text: '' });
-      renderOpinions();
-    });
-
-    // ----- 계약 — 보험사·상품명부터 담보·세부담보·가입금액까지 -----
-    // 계약별 담보 목록은 G(담보명, [[상품, 세부담보명, 금액], ...])에서 이 계약(PRODUCTS_LIST[i])을
-    // 가리키는 항목만 걸러서 만든다. 수정 모드의 다른 표들과 마찬가지로 입력값은 화면에만 반영되고,
-    // "초기화"를 누르면 C/G 원본에서 다시 그려 전부 되돌아간다.
-    function contractCovs(i) {
-      var prod = PRODUCTS_LIST[i];
-      var list = [];
-      G.forEach(function (g) {
-        g[2].forEach(function (entry) {
-          if (entry[0] === prod) list.push([g[0], entry[1], entry[2]]);
-        });
-      });
-      return list;
-    }
-    function covRowCells(cov, detail, amtWon) {
-      var man = amtWon ? Math.round(amtWon / 10000) : '';
-      return '<td><input class="edt-input txt edt-cov-name" type="text" value="' + esc(cov || '') + '" placeholder="담보명"></td>'
-        + '<td><input class="edt-input txt edt-cov-detail" type="text" value="' + esc(detail || '') + '" placeholder="세부담보명"></td>'
-        + '<td><input class="edt-input edt-cov-amt" type="number" value="' + man + '" placeholder="0"></td>';
-    }
-    // 보험사 선택 — 목록에 있으면 드롭다운에서 고른 값 그대로, 목록에 없는 기존 값이면 "직접 입력"에 펼쳐서 보여준다
-    function insurerFieldHtml(co) {
-      var known = INSURER_OPTIONS.indexOf(co) > -1;
-      var showCustom = !!co && !known;
-      var opts = '<option value=""' + (co ? '' : ' selected') + ' disabled>보험사 선택</option>'
-        + INSURER_OPTIONS.map(function (name) {
-            return '<option value="' + esc(name) + '"' + (co === name ? ' selected' : '') + '>' + esc(name) + '</option>';
-          }).join('')
-        + '<option value="__custom__"' + (showCustom ? ' selected' : '') + '>직접 입력</option>';
-      return '<select class="edt-input txt edt-f-co">' + opts + '</select>'
-        + '<input class="edt-input txt edt-f-co-custom" type="text" value="' + (showCustom ? esc(co) : '') + '" placeholder="보험사명 입력"' + (showCustom ? '' : ' hidden') + '>';
-    }
-    function summaryText(co, name, premium, covCount) {
-      return {
-        co: co || '보험사 입력',
-        name: name || '상품명 입력',
-        sub: (premium ? '월 ' + Number(premium).toLocaleString('ko-KR') + '원' : '월보험료 입력') + ' · 담보 ' + covCount + '개'
-      };
-    }
-    function contractItemHtml(c, i) {
-      var t = term(c);
-      var years = parseInt(t[0], 10);
-      var premium = c[4] === '미제공' ? '' : String(c[4]).replace(/[^0-9]/g, '');
-      var covList = contractCovs(i);
-      var covRows = covList.map(function (r) { return '<tr>' + covRowCells(r[0], r[1], r[2]) + '</tr>'; }).join('');
-      var s = summaryText(c[0], c[1], premium, covList.length);
-      return '<div class="edt-contract-item">'
-        + '<div class="edt-contract-head" role="button" tabindex="0" aria-expanded="false">'
-        +   '<span class="edt-contract-no">' + (i + 1) + '</span>'
-        +   '<div class="edt-contract-summary">'
-        +     '<b class="edt-summary-co">' + esc(s.co) + '</b>'
-        +     '<span class="edt-summary-name">' + esc(s.name) + '</span>'
-        +     '<span class="edt-summary-sub">' + esc(s.sub) + '</span>'
-        +   '</div>'
-        +   '<span class="edt-contract-toggle">'
-        +     '수정하기<svg class="ic-svg" width="14" height="14"><use href="#i-chevron-down"/></svg>'
-        +   '</span>'
-        + '</div>'
-        + '<div class="edt-contract-body" hidden>'
-        +   '<div class="edt-contract-fields">'
-        +     '<div class="edt-field"><span class="edt-field-l">보험사</span>' + insurerFieldHtml(c[0]) + '</div>'
-        +     '<div class="edt-field wide"><span class="edt-field-l">상품명</span><input class="edt-input txt edt-f-name" type="text" value="' + esc(c[1]) + '" placeholder="상품명"></div>'
-        +     '<div class="edt-field"><span class="edt-field-l">만기</span><input class="edt-input txt edt-f-maturity" type="text" value="' + esc(t[1]) + '" placeholder="만기"></div>'
-        +     '<div class="edt-field"><span class="edt-field-l">납입(년)</span><input class="edt-input edt-f-years" type="number" value="' + (isNaN(years) ? '' : years) + '" placeholder="0"></div>'
-        +     '<div class="edt-field"><span class="edt-field-l">월보험료(원)</span><input class="edt-input edt-f-premium" type="number" value="' + premium + '" placeholder="0"></div>'
-        +     '<div class="edt-field"><span class="edt-field-l">갱신형</span><input class="edt-input txt" type="text" placeholder="비갱신형"></div>'
-        +   '</div>'
-        +   '<div class="edt-contract-covs">'
-        +     '<table class="edt-table">'
-        +       '<thead><tr><th>담보</th><th>세부담보</th><th class="amt">가입금액(만원)</th></tr></thead>'
-        +       '<tbody>' + covRows + '</tbody>'
-        +     '</table>'
-        +     '<button type="button" class="edt-add-row-btn edt-add-cov-btn">+ 담보 추가</button>'
-        +   '</div>'
-        + '</div>'
-        + '</div>';
-    }
-    var contractListEl = document.getElementById('edt-contract-list');
-    function renderContractTable() {
-      contractListEl.innerHTML = C.map(function (c, i) { return contractItemHtml(c, i); }).join('');
-    }
-    renderContractTable();
-    function coValue(item) {
-      var sel = item.querySelector('.edt-f-co');
-      return sel.value === '__custom__' ? item.querySelector('.edt-f-co-custom').value.trim() : sel.value;
-    }
-    // 저장 시 편집 화면의 입력값을 그대로 C/G로 바꿔 넣는다 — 계약일·납입회차처럼 이 화면에 없는 값은
-    // 기존 계약이면 원래 값을 유지하고, 새로 추가한 계약이면 "—"/0으로 둔다(해당 항목은 편집 UI에 없음).
-    function collectContractsFromForm() {
-      var items = Array.prototype.slice.call(contractListEl.querySelectorAll('.edt-contract-item'));
-      var newC = [];
-      var newProducts = [];
-      var gMap = {};
-      items.forEach(function (item, i) {
-        var co = coValue(item);
-        var name = item.querySelector('.edt-f-name').value.trim();
-        var maturity = item.querySelector('.edt-f-maturity').value.trim();
-        var years = item.querySelector('.edt-f-years').value.trim();
-        var premiumNum = parseInt(item.querySelector('.edt-f-premium').value, 10);
-        var premium = premiumNum ? premiumNum.toLocaleString('ko-KR') + '원' : '미제공';
-        var termStr = (years ? years + '년납' : '—') + ' / ' + (maturity || '—');
-        var prod = [co, name];
-        newProducts.push(prod);
-
-        var old = C[i];
-        newC.push([co, name, old ? old[2] : '—', termStr, premium, old ? old[5] : 0, old ? old[6] : 0, old ? old[7] : '—', old ? old[8] : '—']);
-
-        var rows = item.querySelectorAll('.edt-contract-covs tbody tr');
-        Array.prototype.forEach.call(rows, function (tr) {
-          var covName = tr.querySelector('.edt-cov-name').value.trim();
-          var detailName = tr.querySelector('.edt-cov-detail').value.trim();
-          var amtMan = parseInt(tr.querySelector('.edt-cov-amt').value, 10);
-          if (!covName || !detailName || !amtMan) return;
-          if (!gMap[covName]) {
-            var catEntry = SCORE_CATS.filter(function (c) { return c.items.indexOf(covName) > -1; })[0];
-            gMap[covName] = [covName, catEntry ? catEntry.label : '운전자/기타', []];
-          }
-          gMap[covName][2].push([prod, detailName, amtMan * 10000]);
-        });
-      });
-      return { C: newC, G: Object.keys(gMap).map(function (k) { return gMap[k]; }), PRODUCTS: newProducts };
-    }
-    function updateSummary(item) {
-      var co = coValue(item);
-      var name = item.querySelector('.edt-f-name').value.trim();
-      var premium = item.querySelector('.edt-f-premium').value.trim();
-      var covCount = item.querySelectorAll('.edt-contract-covs tbody tr').length;
-      var s = summaryText(co, name, premium, covCount);
-      item.querySelector('.edt-summary-co').textContent = s.co;
-      item.querySelector('.edt-summary-name').textContent = s.name;
-      item.querySelector('.edt-summary-sub').textContent = s.sub;
-    }
-    function toggleContract(head) {
-      var toggle = head.querySelector('.edt-contract-toggle');
-      var body = head.closest('.edt-contract-item').querySelector('.edt-contract-body');
-      var open = body.hidden;
-      body.hidden = !open;
-      head.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.firstChild.textContent = open ? '접기' : '수정하기';
-    }
-    contractListEl.addEventListener('click', function (e) {
-      if (e.target.classList.contains('edt-add-cov-btn')) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = covRowCells('', '', 0);
-        e.target.closest('.edt-contract-covs').querySelector('tbody').appendChild(tr);
-        updateSummary(e.target.closest('.edt-contract-item'));
-      } else if (e.target.closest('.edt-contract-head')) {
-        toggleContract(e.target.closest('.edt-contract-head'));
-      }
-    });
-    contractListEl.addEventListener('keydown', function (e) {
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('edt-contract-head')) {
-        e.preventDefault();
-        toggleContract(e.target);
-      }
-    });
-    contractListEl.addEventListener('input', function (e) {
-      if (e.target.classList.contains('edt-f-co-custom') || e.target.classList.contains('edt-f-name') || e.target.classList.contains('edt-f-premium')) {
-        updateSummary(e.target.closest('.edt-contract-item'));
-      }
-    });
-    contractListEl.addEventListener('change', function (e) {
-      if (!e.target.classList.contains('edt-f-co')) return;
-      var item = e.target.closest('.edt-contract-item');
-      var custom = item.querySelector('.edt-f-co-custom');
-      var isCustom = e.target.value === '__custom__';
-      custom.hidden = !isCustom;
-      if (isCustom) custom.focus();
-      updateSummary(item);
-    });
-    document.getElementById('edt-add-contract-btn').addEventListener('click', function () {
-      var idx = contractListEl.children.length;
-      var blank = ['', '', '', '', '', 0, 0, '', ''];
-      var wrap = document.createElement('div');
-      wrap.innerHTML = contractItemHtml(blank, idx);
-      var item = wrap.firstChild;
-      contractListEl.appendChild(item);
-      toggleContract(item.querySelector('.edt-contract-head'));
-    });
-
-    // ----- 수정 이력 -----
-    var historyEl = document.getElementById('edt-history-list');
-    historyEl.innerHTML =
-      '<div class="edt-history-row"><span class="ts">2026.11.09 · 최신규</span><ul><li>보장분석 데이터 최초 생성</li></ul></div>';
-
-    // ----- 저장 · 초기화 -----
-    function toast(msg) {
-      var t = document.createElement('div');
-      t.className = 'edt-save-toast';
-      t.textContent = msg;
-      document.body.appendChild(t);
-      requestAnimationFrame(function () { t.classList.add('show'); });
-      setTimeout(function () {
-        t.classList.remove('show');
-        setTimeout(function () { t.remove(); }, 250);
-      }, 2200);
-    }
-    document.getElementById('edt-reset-btn').addEventListener('click', function () {
-      renderScore();
-      OPINIONS = OPINIONS_INITIAL.map(function (o) { return { label: o.label, text: o.text }; });
-      renderOpinions();
-      renderContractTable();
-      toast('수정 내용을 초기화했어요.');
-    });
-    function doSave() {
-      // 표에서 손으로 고친 점수를 항목별로 기억해둔다 — renderPage()가 다시 돌아도 규칙 계산값으로 안 돌아가고 이 값을 보여준다
-      document.querySelectorAll('#cov-score-tbody .score-input').forEach(function (inp, idx) {
-        scoreOverrides[SCORE_ROWS[idx].label] = parseInt(inp.value, 10) || 0;
-      });
-
-      // 편집 화면의 계약·담보 입력값을 C/G에 반영하고, 요약/상세/고객용을 전부 다시 그린다
-      var collected = collectContractsFromForm();
-      C = collected.C;
-      G = collected.G;
-      PRODUCTS_LIST = collected.PRODUCTS;
-      renderPage();
-      renderContractTable();
-
-      var row = document.createElement('div');
-      row.className = 'edt-history-row';
-      row.innerHTML = '<span class="ts">2026.11.09 · 최신규</span><ul><li>보장분석 데이터 수정 저장</li></ul>';
-      historyEl.insertBefore(row, historyEl.firstChild);
-      toast('저장했어요.');
-    }
+    wireMenu('cov-menu-btn', 'cov-menu');
+    wireMenu('cov-share-btn', 'cov-share-menu');
   })();
 
   // ===== 고객 정보 토글 (모바일) =====
