@@ -31,7 +31,7 @@
   .cE #b-cf { max-width: 760px; margin-left: auto; margin-right: auto; }
   /* 맨 아래 잔액은 이 표가 말하려는 값이라 크게 둔다 */
   .cE .rs-cf tfoot td { font-size: var(--fs-h2); padding-top: 20px; padding-bottom: 20px; }
-  .cE .rs-cf tfoot td.amt { font-size: var(--fs-h1); letter-spacing: -0.02em; }
+  .cE .rs-cf tfoot td.amt { font-size: var(--fs-h1); }
   .cE .rs-cf tr.grp td { font-weight: 700; color: var(--ink); }
   /* 묶음 줄 — 누르면 아래 항목이 펴진다 */
   .cE .rs-cf tr.grp[data-cfgrp] { cursor: pointer; }
@@ -62,7 +62,7 @@
   .cE .rs-pl-sum { display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
     margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--ink);
     font-size: var(--fs-body); color: var(--ink-2); font-variant-numeric: tabular-nums; }
-  .cE .rs-pl-sum b { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .rs-pl-sum b { font-size: var(--fs-h1); font-weight: 700; color: var(--ink); }
   .cE .rs-pl-net { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
   /* 묶음 줄은 항목보다 위에 서야 해서 위쪽 여백을 준다 */
   .cE .rs-bs .ct-kv .k.tp, .cE .rs-bs .ct-kv .v.tp { border-top: 0; padding-top: 20px; }
@@ -84,14 +84,14 @@
   .cE #b-cf .rs-cf tr.grp td:first-child { padding-left: 16px; }
   .cE #b-cf .rs-cf tr.itm td { font-weight: 400; color: var(--ink-2); }
   .cE #b-cf .rs-cf tr.itm td:first-child { padding-left: 42px; }
-  .cE #b-cf .rs-cf tfoot td.amt { font-size: var(--fs-h1); letter-spacing: -0.02em; }
+  .cE #b-cf .rs-cf tfoot td.amt { font-size: var(--fs-h1); }
 
   /* 결산·재무상태표는 표가 아니라 두 칸 목록이지만, 선과 머리는 표와 같게 맞춘다.
      머리 = 회색 배경 + 아래 굵은 선, 줄마다 아래 선, 합계 위 선. */
   .cE .rs-pl-h { display: flex; align-items: baseline; gap: 6px;
     padding: 14px 16px; background: var(--bg-soft); border-bottom: 2px solid var(--ink);
-    font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; }
-  .cE .rs-pl-h .sub { font-weight: 500; color: var(--ink-3); letter-spacing: 0; }
+    font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
+  .cE .rs-pl-h .sub { font-weight: 500; color: var(--ink-3); }
   .cE .rs-pl-h .unit { margin-left: auto; font-weight: 500; color: var(--ink-3); }
 
   .cE .rs-pl .ct-kv, .cE .rs-bs .ct-kv { gap: 0 24px; margin: 0; font-size: var(--fs-body); }
@@ -117,7 +117,7 @@
     border: 1px solid var(--brand); border-radius: var(--r-md); background: var(--brand-pale);
     font-size: var(--fs-body); font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
   .cE .rs-net .sub { font-weight: 400; color: var(--ink-3); }
-  .cE .rs-net b { font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--brand-deep); }
+  .cE .rs-net b { font-size: var(--fs-h1); font-weight: 700; color: var(--brand-deep); }
   /* 글자 크기가 달라도 줄 상자 높이를 같게 두어야 가운데가 맞는다 */
   .cE .rs-net > span, .cE .rs-net > b { line-height: 32px; }
 
@@ -451,7 +451,7 @@
          묶음 합계 아래에 항목까지 펼쳐, 상담 중 적은 값을 고객과 같이 확인한다. -->
     <div class="ct-panel rs-blk" id="b-cf">
       <div class="ct-card-h" style="margin-bottom:6px;">
-        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">현금흐름표</h3>
+        <h3 style="font-size:var(--fs-h2);font-weight:700;margin:0;color:var(--ink);">현금흐름표</h3>
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">한 달 동안 들어온 돈이 어디로 갔는지
@@ -506,7 +506,7 @@
          시안: 왼쪽 '수입 · 들어온 돈' / 오른쪽 '비용 · 생활비와 이자' 를 나란히 두고 손익으로 맺는다. -->
     <div class="ct-panel">
       <div class="ct-card-h" style="margin-bottom:6px;">
-        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">한 달 수입·지출 결산</h3>
+        <h3 style="font-size:var(--fs-h2);font-weight:700;margin:0;color:var(--ink);">한 달 수입·지출 결산</h3>
         <a class="ct-note" href="cashflow.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">02 수입지출 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">손익계산서
@@ -528,7 +528,7 @@
 
       <div class="ct-card pad flat rs-pl-net" style="margin-top:20px;border-color:var(--brand);background:var(--brand-pale);">
         <span class="ct-card-t">손익 <span class="ct-note">수입 − 비용</span></span>
-        <span class="num" style="font-size:28px;font-weight:700;letter-spacing:-0.02em;color:var(--brand-deep);"><span id="pl-net">0</span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만원</span></span>
+        <span class="num" style="font-size:28px;font-weight:700;color:var(--brand-deep);"><span id="pl-net">0</span><span style="font-size:var(--fs-option);font-weight:600;color:var(--ink-3);"> 만원</span></span>
       </div>
 
       <div class="ct-note" style="margin-top:14px;">저축·투자와 원금 상환은 비용이 아니라 현금흐름표 ③에서,
@@ -549,7 +549,7 @@
     <!-- ===================== 재무상태표 ===================== -->
     <div class="ct-panel">
       <div class="ct-card-h" style="margin-bottom:6px;">
-        <h3 style="font-size:var(--fs-h2);font-weight:700;letter-spacing:-0.02em;margin:0;color:var(--ink);">재무상태표</h3>
+        <h3 style="font-size:var(--fs-h2);font-weight:700;margin:0;color:var(--ink);">재무상태표</h3>
         <a class="ct-note" href="assets.html" style="color:var(--brand-deep);text-decoration:none;font-weight:600;">03 자산·부채 수정 ›</a>
       </div>
       <div class="ct-lead" style="margin-bottom:20px;">지금 가진 것과 갚을 것

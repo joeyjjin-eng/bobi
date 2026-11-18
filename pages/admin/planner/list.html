@@ -24,13 +24,13 @@
   .cE .hist-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .cE .ht-l { display: flex; align-items: center; gap: 14px; }
   .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: #0E1A24; color: #66E1FF; display: grid; place-items: center; flex: none; }
-  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; margin: 0; color: var(--ink); }
   .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
   .cE .ht-sub b { color: var(--ink); font-weight: 800; }
   .cE .ht-sub .ok { color: #15967F; font-weight: 800; }
   .cE .ht-sub .warn { color: #B07816; font-weight: 800; }
   .cE .ht-actions { display: inline-flex; align-items: center; gap: 10px; flex: none; }
-  .cE .export-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 12px 20px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; text-decoration: none; letter-spacing: -0.01em; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .cE .export-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 12px 20px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; text-decoration: none; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
   .cE .export-btn:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
 
   /* ===== 검색바 ===== */
@@ -61,7 +61,7 @@
   .cE .table-head,
   .cE .table-row { display: grid; grid-template-columns: 100px 200px 60px 130px 130px 70px 90px 110px 22px; column-gap: 14px; justify-content: space-between; align-items: center; justify-items: center; }
   .cE .table-head { padding: 16px 24px; border-bottom: 1px solid var(--line); background: var(--bg-soft); flex-shrink: 0; }
-  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; text-align: center; }
+  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); text-align: center; }
   .cE .table-body { flex: 1; }
   .cE .table-row { padding: 20px 24px; cursor: pointer; transition: background-color 0.12s ease; border-bottom: 1px solid var(--line); text-decoration: none; }
   .cE .table-row:last-of-type { border-bottom: none; }
@@ -72,10 +72,10 @@
 
   /* 이름 셀 — 아바타 + 이름 + 아이디 */
   .cE .tr-name { display: flex; align-items: center; justify-content: flex-start; gap: 14px; min-width: 0; justify-self: stretch; }
-  .cE .tr-name .patient-avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 18px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
+  .cE .tr-name .patient-avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 18px; font-weight: 500; user-select: none; }
   .cE .tr-name .nm-stack { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 2px; }
   .cE .table-head > *:nth-child(2) { justify-self: stretch; text-align: left; padding-left: 4px; }
-  .cE .tr-name .nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; line-height: 1.2; white-space: nowrap; }
+  .cE .tr-name .nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.2; white-space: nowrap; }
   .cE .tr-name .nm-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.2; }
 
   /* 성별 칩 */
@@ -87,12 +87,12 @@
   /* 텍스트 셀 */
   .cE .tr-phone,
   .cE .tr-org,
-  .cE .tr-role { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-weight: 500; letter-spacing: -0.01em; }
+  .cE .tr-role { font-size: var(--fs-body); color: var(--ink-2); text-align: center; font-weight: 500; }
   .cE .tr-phone { font-variant-numeric: tabular-nums; }
   .cE .tr-date { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
   /* 회원등급 칩 (계정상태 칩과 동일 무게감) */
-  .cE .tier-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .tier-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; white-space: nowrap; }
   .cE .tier-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none; }
   .cE .tier-chip.t-normal { background: var(--bg-soft);   color: var(--ink-2); }
   .cE .tier-chip.t-normal::before { background: var(--ink-3); }
@@ -104,7 +104,7 @@
   .cE .tier-chip.t-admin::before  { background: #7A6797; }
 
   /* 상태 칩 (계정 상태) */
-  .cE .status-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .status-chip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; white-space: nowrap; }
   .cE .status-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none; }
   .cE .status-chip.approved  { background: #E7FAF6; color: #15967F; }
   .cE .status-chip.approved::before  { background: #2ABBA7; }

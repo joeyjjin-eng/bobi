@@ -29,7 +29,7 @@
   .cE .nr-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 22px; }
   .cE .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); text-decoration: none; font-weight: 600; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: var(--r-pill); background: #fff; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
   .cE .back-btn:hover { background: var(--bg-soft); border-color: var(--ink-4); color: var(--ink); }
-  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; }
+  .cE .nr-title-row h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; margin: 0; }
   .cE .nr-title-info { display: flex; flex-direction: column; }
   .cE .nr-title-row .sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
   .cE .nr-title-row .sub b { color: var(--ink-2); font-weight: 700; }
@@ -40,7 +40,7 @@
   .cE .step-dots { display: flex; align-items: center; gap: 10px; margin: 18px auto 24px; padding: 14px 22px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); }
   .cE .step { display: inline-flex; align-items: center; gap: 8px; }
   .cE .step .num { width: 24px; height: 24px; border-radius: 50%; background: var(--line); color: var(--ink-3); display: grid; place-items: center; font-size: var(--fs-option); font-weight: 700; }
-  .cE .step .lbl { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .step .lbl { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); white-space: nowrap; }
   .cE .step.on .num { background: var(--brand); color: #fff; }
   .cE .step.on .lbl { color: var(--ink); font-weight: 700; }
   .cE .step.done .num { background: var(--brand); color: #fff; }
@@ -53,7 +53,7 @@
   .cE .pane-main { min-width: 0; padding-bottom: 48px; }
 
   /* pane 타이틀 블록: h1 하단 18px 통일 (모든 스텝에서 h1 → 다음요소 간격 일정) */
-  .cE .pane-h1 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.6; margin: 0 0 18px; }
+  .cE .pane-h1 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); line-height: 1.6; margin: 0 0 18px; }
   .cE .pane-desc { font-size: var(--fs-option); color: var(--ink-3); line-height: 1.6; margin: 0 0 18px; }
 
   .step-pane[hidden] { display: none; }
@@ -62,7 +62,7 @@
   .cE .p-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 20px 22px; margin-bottom: 12px; box-shadow: var(--sh-1); }
   .cE .p-card.hi { border-color: var(--ink-4); }
   .cE .p-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-  .cE .p-card-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .p-card-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
   .cE .p-card-hint { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; flex: 1; }
   .cE .p-card-tools { display: inline-flex; gap: 6px; align-items: center; flex: none; }
   .cE .icon-btn { width: 28px; height: 28px; border-radius: 8px; border: none; background: none; color: var(--ink-4); cursor: pointer; display: grid; place-items: center; transition: background-color .12s ease, color .12s ease; }
@@ -89,12 +89,12 @@
   .cE .input-box[readonly] { background: var(--bg-soft); color: var(--ink-3); cursor: default; }
   .cE .rrn-row { display: flex; align-items: center; gap: 10px; }
   .cE .rrn-row .input-box { flex: 1; text-align: center; }
-  .cE .rrn-row .rrn-front { letter-spacing: 0.12em; }
+  .cE .rrn-row .rrn-front { }
   .cE .rrn-sep { color: var(--ink-4); font-weight: 700; font-size: var(--fs-body); }
   /* 뒷자리: 실제 input 은 투명(캐럿만 보임), 오버레이 span 이 채워진 부분 + 남은 슬롯을 보여줌 */
   .cE .rrn-back-slot { position: relative; flex: 1; }
-  .cE .rrn-back-slot .rrn-back { color: transparent; caret-color: var(--ink); letter-spacing: 0.25em; background: transparent; position: relative; z-index: 1; }
-  .cE .rrn-back-ghost { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-size: var(--fs-body); font-family: inherit; letter-spacing: 0.25em; z-index: 0; }
+  .cE .rrn-back-slot .rrn-back { color: transparent; caret-color: var(--ink); background: transparent; position: relative; z-index: 1; }
+  .cE .rrn-back-ghost { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-size: var(--fs-body); font-family: inherit; z-index: 0; }
   .cE .rrn-back-ghost .on { color: var(--ink); font-weight: 500; }
   .cE .rrn-back-ghost .off { color: var(--ink-4); font-weight: 400; }
   .cE textarea.input-box { height: auto; min-height: 100px; padding: 14px; line-height: 1.5; resize: none; font-family: inherit; }
@@ -111,7 +111,7 @@
   /* ===== Step 1: 보험사 선택 ===== */
   /* 섹션 헤더 → 그리드: 14px (같은 그룹, 살짝 붙임) */
   .cE .ins-section-h { display: flex; align-items: baseline; gap: 8px; margin: 0 0 14px 4px; }
-  .cE .ins-section-t { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .ins-section-t { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
   .cE .ins-section-c { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
   .cE .ins-section-c b { color: var(--brand-deep); font-weight: 800; }
   .cE .insurer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -122,7 +122,7 @@
   .cE .insurer-logo img { max-width: 26px; max-height: 26px; object-fit: contain; }
   .cE .insurer-logo .insurer-fallback { font-size: var(--fs-option); font-weight: 800; color: var(--ink-3); }
   .cE .insurer-btn.on .insurer-logo { border-color: var(--brand-soft); }
-  .cE .insurer-name { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.01em; }
+  .cE .insurer-name { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cE .insurer-btn .ic-check { color: var(--brand-deep); flex: none; opacity: 0; width: 16px; height: 16px; }
   .cE .insurer-btn.on .ic-check { opacity: 1; }
 
@@ -133,7 +133,7 @@
   .cE .type-btn.on { border-color: var(--brand); background: var(--brand-pale); box-shadow: none; }
   .cE .type-icwrap { width: 44px; height: 44px; border-radius: 10px; background: var(--bg-soft); color: var(--ink-2); display: grid; place-items: center; flex: none; }
   .cE .type-btn.on .type-icwrap { background: #fff; color: var(--brand-deep); }
-  .cE .type-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .type-name { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
   .cE .type-desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
   .cE .type-btn .ic-check { color: var(--brand-deep); flex: none; opacity: 0; }
   .cE .type-btn.on .ic-check { opacity: 1; }
@@ -180,7 +180,7 @@
   .cE .sm-btn.on .sm-radio { border-color: var(--brand); }
   .cE .sm-btn.on .sm-radio::after { transform: scale(1); }
   .cE .sm-txt { display: block; flex: 1; min-width: 0; }
-  .cE .sm-name { display: block; font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; line-height: 1.4; }
+  .cE .sm-name { display: block; font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.4; }
   .cE .sm-desc { display: block; font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; line-height: 1.4; }
 
   /* 서명 링크 받을 분 */
@@ -190,9 +190,9 @@
   .cE .signer-row { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 16px; }
   .cE .signer-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
   .cE .signer-roles { display: inline-flex; gap: 4px; flex: none; }
-  .cE .signer-role-tag { font-size: var(--fs-option); font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--brand-pale); color: var(--brand-deep); letter-spacing: -0.01em; white-space: nowrap; }
-  .cE .signer-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; white-space: nowrap; }
-  .cE .signer-phone { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-body); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; flex: none; }
+  .cE .signer-role-tag { font-size: var(--fs-option); font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--brand-pale); color: var(--brand-deep); white-space: nowrap; }
+  .cE .signer-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .cE .signer-phone { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-body); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; flex: none; }
   .cE .signer-phone svg { color: var(--ink-3); flex: none; }
   .cE .signer-phone.empty { color: var(--ink-3); font-weight: 500; }
   .cE .signer-phone.empty svg { color: var(--ink-4); }
@@ -206,7 +206,7 @@
   .cE .wizard-cta-inner { max-width: 760px; margin: 0 auto; padding: 16px 0; display: flex; justify-content: flex-end; gap: 10px; box-sizing: border-box; }
   .cE .btn-secondary { background: #fff; color: var(--ink-2); border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 12px 22px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
   .cE .btn-secondary:hover { background: var(--bg-soft); color: var(--ink); border-color: var(--ink-3); }
-  .cE .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 26px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); letter-spacing: -0.01em; transition: filter .2s ease; min-width: 180px; }
+  .cE .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 26px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); transition: filter .2s ease; min-width: 180px; }
   .cE .btn-primary:hover:not(:disabled) { filter: brightness(1.05); }
   .cE .btn-primary:disabled { background: var(--line); color: var(--ink-4); box-shadow: none; cursor: not-allowed; }
 
@@ -228,7 +228,7 @@
   .load-modal[hidden] { display: none; }
   .load-card { background: #fff; border-radius: 18px; max-width: 460px; width: 100%; box-shadow: var(--sh-2); overflow: hidden; display: flex; flex-direction: column; max-height: 75vh; }
   .load-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-  .load-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 4px 0; letter-spacing: -0.02em; }
+  .load-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 4px 0; }
   .load-head .desc { font-size: var(--fs-option); color: var(--ink-3); }
   .load-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
   .load-close:hover { background: var(--line); color: var(--ink); }
@@ -241,7 +241,7 @@
   .load-row:hover { background: var(--bg-soft); }
   .load-av { width: 32px; height: 32px; border-radius: 50%; background: var(--brand-pale); color: var(--brand-deep); display: grid; place-items: center; font-size: var(--fs-option); font-weight: 800; flex: none; }
   .load-nm-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .load-nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .load-nm { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .load-sub { font-size: var(--fs-option); color: var(--ink-3); }
   .load-ph { font-size: var(--fs-option); color: var(--ink-3); font-variant-numeric: tabular-nums; flex: none; }
   .load-empty { padding: 40px 12px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }

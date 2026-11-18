@@ -165,7 +165,7 @@
   // ===== 이벤트 =====
   document.addEventListener('click', function (e) {
     var card = e.target.closest('[data-no]');
-    if (card) { location.href = 'detail.html?no=' + card.dataset.no; return; }
+    if (card) { openArticle(parseInt(card.dataset.no, 10)); return; }
 
     var chip = e.target.closest('[data-topic]');
     if (chip) {
@@ -215,7 +215,59 @@
     st.view = e.target.value; st.page = 0; drawList();
   });
 
+
+  // ===== 기사 레이어 — 화면을 넘기지 않고 목록 위에 지면을 띄운다 =====
+  var A = window.NEWS_ARTICLE;
+  var dim = el('nl-dim');
+  var layerBody = el('nl-body');
+  var listTitle = document.title;
+  var lastFocus = null;
+
+  function openArticle(no, push) {
+    var it = A && A.find(no);
+    if (!it) return;
+    lastFocus = document.activeElement;
+    layerBody.innerHTML = A.html(it);
+    dim.hidden = false;
+    layerBody.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    document.title = it.title + ' · BoBi 보험소식지';
+    el('nl-close').focus();
+    if (push !== false) history.pushState({ no: no }, '', 'index.html?no=' + no);
+  }
+
+  function closeArticle() {
+    if (dim.hidden) return;
+    dim.hidden = true;
+    layerBody.innerHTML = '';
+    document.body.style.overflow = '';
+    document.title = listTitle;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  // 닫기는 주소도 함께 되돌린다 — 브라우저 뒤로가기와 같은 동작
+  function requestClose() {
+    if (history.state && history.state.no) { history.back(); return; }
+    closeArticle();
+    history.replaceState(null, '', 'index.html');
+  }
+
+  var sheet = dim.querySelector('.nl-sheet');
+  dim.addEventListener('mousedown', function (e) { if (!sheet.contains(e.target)) requestClose(); });
+  el('nl-close').addEventListener('click', requestClose);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !dim.hidden) requestClose();
+  });
+  window.addEventListener('popstate', function (e) {
+    var no = e.state && e.state.no;
+    if (no) openArticle(no, false); else closeArticle();
+  });
+
   renderHead();
   bindTrack();
   drawList();
+
+  // 주소에 기사 번호가 있으면 목록을 그린 뒤 바로 띄운다
+  var startNo = parseInt(new URLSearchParams(location.search).get('no'), 10);
+  if (startNo) openArticle(startNo, false);
 })();

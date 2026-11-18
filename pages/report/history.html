@@ -24,9 +24,9 @@
   .cE .hist-title-inner { max-width: 1192px; margin: 0 auto; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .cE .ht-l { display: flex; align-items: center; gap: 14px; }
   .cE .ht-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-deep); display: grid; place-items: center; flex: none; }
-  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .ht-l h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.2; margin: 0; color: var(--ink); }
   .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
-  .cE .new-rep-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); text-decoration: none; flex: none; letter-spacing: -0.01em; transition: filter .2s ease; }
+  .cE .new-rep-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); text-decoration: none; flex: none; transition: filter .2s ease; }
   .cE .new-rep-btn:hover { filter: brightness(1.05); }
 
   /* ===== 검색바 (한 줄 카드) ===== */
@@ -39,13 +39,13 @@
   .cE .period-trigger { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-3); font-size: var(--fs-option); font-weight: 600; cursor: pointer; user-select: none; background: transparent; border: none; padding: 0; font-family: inherit; }
   .cE .period-trigger:hover { color: var(--ink); }
   .cE .period-trigger[aria-expanded="true"], .cE .period-trigger.has-value { color: var(--ink); }
-  .cE .sb-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); padding: 10px 24px; font-size: var(--fs-body); font-weight: 700; font-family: inherit; cursor: pointer; letter-spacing: -0.01em; box-shadow: var(--sh-brand); transition: background-color .2s ease; flex: none; }
+  .cE .sb-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--brand); color: #fff; border: none; border-radius: var(--r-pill); padding: 10px 24px; font-size: var(--fs-body); font-weight: 700; font-family: inherit; cursor: pointer; box-shadow: var(--sh-brand); transition: background-color .2s ease; flex: none; }
   .cE .sb-btn:hover { background: var(--brand-hover); }
 
   /* ===== 기간 선택 팝오버 ===== */
   .cE .period-popup { position: absolute; top: calc(100% + 12px); right: 0; z-index: 50; width: 460px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--sh-2); padding: 24px 26px 20px; }
   .cE .period-popup[hidden] { display: none; }
-  .cE .pp-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 18px; }
+  .cE .pp-title { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-bottom: 18px; }
   .cE .pp-range { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 12px; margin-bottom: 20px; }
   .cE .pp-range .date-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
   .cE .pp-range .dlabel { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; padding-left: 2px; }
@@ -85,7 +85,7 @@
   /* ===== 리스트 패널 — card-pad 톤 (border-radius: r-lg) ===== */
   .cE .list-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
   .cE .table-head { display: grid; grid-template-columns: 100px 200px 1fr 110px 28px; column-gap: 10px; padding: 16px 28px; border-bottom: 1px solid var(--line); background: var(--bg-soft); flex-shrink: 0; }
-  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: 0.02em; }
+  .cE .table-head span { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); }
   .cE .table-head span.h-name { padding-right: 24px; }
   .cE .table-head span.h-dz { text-align: right; }
   .cE .table-head span.h-cost { text-align: right; }
@@ -98,7 +98,7 @@
   .cE .tr-date { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
   .cE .table-row.on .tr-date { padding-left: 6px; }
   .cE .tr-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; min-width: 0; padding-right: 24px; }
-  .cE .tr-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .tr-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .cE .table-row.on .tr-name { color: var(--brand-deep); }
   .cE .tr-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
   .cE .tr-diseases { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; min-width: 0; justify-content: flex-end; }
@@ -109,7 +109,7 @@
   .cE .empty-list { padding: 60px 20px; text-align: center; font-size: var(--fs-body); color: var(--ink-3); }
 
   /* ===== 질환 칩 (typechip 톤에 맞춤) ===== */
-  .cE .dz-chip { font-size: var(--fs-option); font-weight: 700; padding: 3px 10px; border-radius: var(--r-pill); white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .dz-chip { font-size: var(--fs-option); font-weight: 700; padding: 3px 10px; border-radius: var(--r-pill); white-space: nowrap; }
   .cE .dz-cancer       { background: #FEF2F2; color: #C0392B; }
   .cE .dz-brain        { background: #FFF3E0; color: #C0550A; }
   .cE .dz-heart        { background: #FFF3E0; color: #C0550A; }
@@ -144,7 +144,7 @@
   .cE .preview-head { padding: 18px 22px 14px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-shrink: 0; }
   .cE .ph-l { display: flex; align-items: center; gap: 14px; min-width: 0; }
   .cE .ph-av { width: 48px; height: 48px; border-radius: 50%; background: var(--brand-pale); display: grid; place-items: center; flex: none; font-weight: 800; font-size: var(--fs-h2); color: var(--brand-deep); }
-  .cE .ph-name-link { font-weight: 800; font-size: var(--fs-h2); color: var(--ink); letter-spacing: -0.02em; text-decoration: none; border-bottom: 1px dashed var(--ink-4); padding-bottom: 1px; transition: color .2s ease, border-bottom-color .2s ease; }
+  .cE .ph-name-link { font-weight: 800; font-size: var(--fs-h2); color: var(--ink); text-decoration: none; border-bottom: 1px dashed var(--ink-4); padding-bottom: 1px; transition: color .2s ease, border-bottom-color .2s ease; }
   .cE .ph-name-link:hover { color: var(--brand-deep); border-bottom-color: var(--brand); }
   .cE .ph-chips { display: flex; gap: 6px; margin-top: 6px; }
   .cE .gender-chip { font-size: var(--fs-option); font-weight: 700; padding: 3px 10px; border-radius: var(--r-pill); display: inline-block; }
@@ -158,7 +158,7 @@
   .cE .pb-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .cE .pb-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
   .cE .pb-v { font-size: var(--fs-option); font-weight: 600; color: var(--ink-2); }
-  .cE .pb-v.em { font-size: var(--fs-body); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+  .cE .pb-v.em { font-size: var(--fs-body); font-weight: 800; color: var(--ink); }
   .cE .pb-age { color: var(--ink-3); font-weight: 500; margin-left: 2px; }
   .cE .pb-div { height: 1px; background: var(--line); margin: 2px 0; }
   .cE .pb-section-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 700; margin-bottom: 6px; }
@@ -170,12 +170,12 @@
   .cE .pb-memo:focus { border-color: var(--brand); }
 
   /* 미청구보험금 조회 여부 배지 (인라인) */
-  .cE .claim-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .cE .claim-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 700; white-space: nowrap; }
   .cE .claim-badge.done { background: #E7FAF6; color: #15967F; }
   .cE .claim-badge.undone { background: var(--bg-soft); color: var(--ink-3); }
 
   .cE .preview-cta { padding: 14px 22px 18px; flex-shrink: 0; border-top: 1px solid var(--line); background: #fff; }
-  .cE .preview-cta a { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; text-decoration: none; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; box-sizing: border-box; box-shadow: var(--sh-brand); transition: filter .2s ease; }
+  .cE .preview-cta a { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; text-decoration: none; font-size: var(--fs-body); font-weight: 700; box-sizing: border-box; box-shadow: var(--sh-brand); transition: filter .2s ease; }
   .cE .preview-cta a:hover { filter: brightness(1.05); }
 
   /* 애니메이션 + 패널 내부 flex 컬럼 (head 고정 / body 스크롤 / cta 고정) */

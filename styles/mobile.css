@@ -11,7 +11,6 @@
   color: var(--ink);
   font-feature-settings: "ss01","ss02";
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.01em;
   overflow: hidden;
 }
 .phone * { box-sizing: border-box; }

@@ -15,7 +15,6 @@
   border-radius: var(--r-pill);
   font-family: inherit; font-size: var(--fs-option); font-weight: 700; line-height: 1.4;
   color: var(--ink-2); cursor: pointer;
-  letter-spacing: -0.01em;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(14,26,36,.08), 0 2px 6px rgba(14,26,36,.04);
   transition: color .18s ease, border-color .18s ease, box-shadow .2s ease, transform .15s ease;
@@ -27,7 +26,6 @@
 .tt-root {
   position: fixed; inset: 0; z-index: 400;
   font-family: 'Pretendard', system-ui, sans-serif;
-  letter-spacing: -0.01em;
   pointer-events: none;            /* 기본은 통과 — 가림막/말풍선만 이벤트를 받는다 */
 }
 .tt-root[hidden] { display: none; }
@@ -132,8 +130,8 @@
 .tt-root:not(.is-card) .tt-card { display: none; }
 .tt-card-top { padding: 32px 32px 0; display: flex; gap: 18px; align-items: flex-start; }
 .tt-card-mascot { width: 76px; height: 76px; flex: none; object-fit: contain; filter: drop-shadow(0 10px 22px rgba(66,186,255,.22)); }
-.tt-kicker { font-size: var(--fs-option); font-weight: 700; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
-.tt-card-title { margin: 8px 0 10px; font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; color: var(--ink); }
+.tt-kicker { font-size: var(--fs-option); font-weight: 700; line-height: 1.4; text-transform: uppercase; color: var(--ink-3); }
+.tt-card-title { margin: 8px 0 10px; font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; color: var(--ink); }
 .tt-card-sub { margin: 0; font-size: var(--fs-body); font-weight: 500; line-height: 1.4; color: var(--ink-2); }
 .tt-card-sub b { color: var(--ink); font-weight: 700; }
 

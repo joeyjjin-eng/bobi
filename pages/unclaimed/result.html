@@ -37,7 +37,7 @@
 
   /* ===== 조회 조건 카드 ===== */
   .cE .uc-filter { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: 4px 28px 14px; margin-top: 20px; }
-  .cE .uc-filter-cap { display: flex; align-items: center; gap: 7px; padding: 18px 0 14px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); letter-spacing: 0.04em; }
+  .cE .uc-filter-cap { display: flex; align-items: center; gap: 7px; padding: 18px 0 14px; font-size: var(--fs-option); font-weight: 700; color: var(--ink-3); }
   .cE .uc-filter-row { display: grid; grid-template-columns: 132px 1fr; gap: 20px; align-items: flex-start; padding: 18px 0; border-top: 1px solid var(--line); }
   .cE .uc-filter-row:last-of-type { padding-bottom: 8px; }
   .cE .uc-filter-l { display: flex; align-items: center; gap: 8px; padding-top: 8px; font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
@@ -55,7 +55,7 @@
   /* ===== 계산 결과 (의료비 − 받은실손보험금 = 미청구보험금) ===== */
   .cE .uc-result { margin-top: 36px; }
   .cE .uc-result-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
-  .cE .uc-result-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; }
+  .cE .uc-result-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; }
   .cE .uc-result-head .s { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
   .cE .uc-result-head .s b { color: var(--brand-deep); font-weight: 700; }
   .cE .uc-eq { display: flex; align-items: stretch; gap: 14px; }
@@ -66,7 +66,7 @@
   .cE .uc-card .hint-q { width: 18px; height: 18px; border-radius: 50%; border: 1.4px solid var(--ink-4); color: var(--ink-4); display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-option); font-weight: 700; flex: none; }
   .cE .uc-card.primary .hint-q { border-color: rgba(255,255,255,.85); color: rgba(255,255,255,.85); }
   .cE .uc-amt { display: flex; align-items: baseline; gap: 2px; justify-content: flex-end; font-variant-numeric: tabular-nums; }
-  .cE .uc-amt .n { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
+  .cE .uc-amt .n { font-size: 28px; font-weight: 800; white-space: nowrap; }
   .cE .uc-amt .w { font-size: var(--fs-h2); font-weight: 700; }
   .cE .uc-card.primary .uc-amt { color: #fff; }
   .cE .uc-op { display: flex; align-items: center; font-size: 26px; font-weight: 700; color: var(--ink-4); flex: none; }
@@ -86,13 +86,13 @@
     display: grid; place-items: center;
     color: var(--brand-deep); flex: none;
   }
-  .cE .uc-benefit-title { font-size: var(--fs-body); font-weight: 500; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .uc-benefit-title { font-size: var(--fs-body); font-weight: 500; color: var(--ink); }
   .cE .uc-benefit-title b { color: var(--brand-deep); font-weight: 800; }
   .cE .uc-benefit-title .sub { color: var(--ink-3); font-weight: 500; margin-left: 8px; font-size: var(--fs-option); }
   .cE .uc-benefit-r { text-align: right; flex: none; }
   .cE .uc-benefit-amt {
     font-size: var(--fs-h2); font-weight: 800;
-    color: var(--brand-deep); letter-spacing: -0.02em;
+    color: var(--brand-deep);
     font-variant-numeric: tabular-nums;
     line-height: 1.2;
   }
@@ -110,7 +110,7 @@
 
   /* ===== 베타 참고용 안내 (계산 결과 상단) ===== */
   .cE .uc-beta-notice { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 12px 16px; background: #FFF5F6; border: 1px solid #F5BFC3; border-radius: var(--r-sm); font-size: var(--fs-option); color: #7A1826; line-height: 1.4; }
-  .cE .uc-beta-notice .bn-tag { flex: none; font-size: var(--fs-option); font-weight: 800; letter-spacing: 0.04em; color: #fff; background: #C92238; border: 1px solid #C92238; border-radius: 4px; padding: 3px 7px; line-height: 1; }
+  .cE .uc-beta-notice .bn-tag { flex: none; font-size: var(--fs-option); font-weight: 800; color: #fff; background: #C92238; border: 1px solid #C92238; border-radius: 4px; padding: 3px 7px; line-height: 1; }
   .cE .uc-beta-notice b { color: #C92238; font-weight: 800; }
 
   /* ===== 의료비내역 (헤더 rec-head/rec-tabs 패턴 재사용 — report/main.html과 통일) ===== */
@@ -132,7 +132,7 @@
   .wp-modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; padding: 6px; cursor: pointer; color: var(--ink-3); display: inline-flex; border-radius: 8px; transition: color .15s ease, background-color .15s ease; }
   .wp-modal-close:hover { color: var(--ink); background: var(--bg-soft); }
   .wp-modal-icon { width: 88px; height: 88px; margin: 4px auto 18px; display: block; }
-  .wp-modal-text { font-size: var(--fs-body); color: var(--ink); line-height: 1.4; margin: 0 0 24px; font-weight: 600; letter-spacing: -0.01em; }
+  .wp-modal-text { font-size: var(--fs-body); color: var(--ink); line-height: 1.4; margin: 0 0 24px; font-weight: 600; }
   .wp-modal-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .wp-modal-cta { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--brand); color: #fff; text-decoration: none; border-radius: var(--r-pill); font-weight: 700; font-size: var(--fs-body); box-shadow: var(--sh-brand); transition: background-color .2s ease; }
   .wp-modal-cta:hover { background: var(--brand-hover); }

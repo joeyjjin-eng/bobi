@@ -60,7 +60,6 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-name {
   font-size: var(--fs-body); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
 }
 .jm-subhead-pill {
   flex: none;
@@ -73,7 +72,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink-2);
   cursor: pointer;
-  letter-spacing: -0.01em;
   line-height: 1.4;
   transition: background-color .15s ease, border-color .15s ease, color .15s ease;
 }
@@ -92,7 +90,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-family: inherit;
   font-size: var(--fs-option); font-weight: 700;
   color: #B45309;
-  letter-spacing: -0.01em;
   line-height: 1.4;
   cursor: pointer;
   transition: background-color .15s ease;
@@ -116,7 +113,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-size: var(--fs-option); font-weight: 800;
   color: #fff;
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 .jm-notice-list {
   margin: 0; padding: 0;
@@ -129,7 +125,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-size: var(--fs-option); font-weight: 600;
   color: rgba(255,255,255,.86);
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 .jm-notice-list li:first-child { margin-top: 0; }
 .jm-notice-list li::before {
@@ -177,7 +172,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   padding: 12px 14px;
   font-size: var(--fs-body);
   line-height: 1.4;
-  letter-spacing: -0.01em;
   box-shadow: var(--sh-1);
 }
 .jm-bubble.bot {
@@ -245,7 +239,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   color: var(--ink);
   cursor: pointer;
   text-align: left;
-  letter-spacing: -0.01em;
   transition: background-color .14s ease, border-color .14s ease, color .14s ease;
 }
 .jm-opt:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
@@ -270,7 +263,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   border-radius: var(--r-pill);
   color: var(--ink);
   cursor: pointer;
-  letter-spacing: -0.01em;
   transition: background-color .14s ease, border-color .14s ease, color .14s ease;
 }
 .jm-chip:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
@@ -301,7 +293,6 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-period-lbl {
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink-2);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 /* ===== 날짜 인풋 (표시용 span + 투명 date input 오버레이)
@@ -326,7 +317,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-size: var(--fs-body); font-weight: 600;
   color: var(--ink);
   line-height: 1.4;
-  letter-spacing: -0.01em;
   transition: border-color .14s ease, box-shadow .14s ease, background-color .14s ease, color .14s ease;
 }
 .jm-date-disp.empty { color: var(--ink-4); font-weight: 500; }
@@ -396,7 +386,6 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-period-check-t {
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 
@@ -408,7 +397,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   border-radius: var(--r-sm);
   font-size: var(--fs-option); font-weight: 600;
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 
 /* period 스텝일 때 .jm-opts 내부의 마지막 다음 버튼은 폼 안에서 처리 */
@@ -426,7 +414,6 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-hosp-lbl {
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink-2);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-hosp-max {
@@ -471,7 +458,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-family: inherit;
   font-size: var(--fs-h2); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   outline: none;
   text-align: center;
   line-height: 1.4;
@@ -482,14 +468,12 @@ button, a, label, input, select, [role="button"], [data-action] {
   padding: 0 14px 0 4px;
   font-size: var(--fs-body); font-weight: 700;
   color: var(--ink-3);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-hosp-hint {
   font-size: var(--fs-option); font-weight: 500;
   color: var(--ink-3);
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 .jm-hosp-err[hidden] { display: none !important; }
 .jm-hosp-err {
@@ -499,7 +483,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   border-radius: var(--r-sm);
   font-size: var(--fs-option); font-weight: 600;
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 
 /* ===== 병력 확인 카드 ===== */
@@ -522,14 +505,12 @@ button, a, label, input, select, [role="button"], [data-action] {
   color: #fff;
   font-size: var(--fs-option); font-weight: 800;
   display: grid; place-items: center;
-  letter-spacing: 0;
 }
 .jm-conf-info { flex: 1; min-width: 0; }
 .jm-conf-dis {
   font-size: var(--fs-body); font-weight: 700;
   color: var(--ink);
   line-height: 1.4;
-  letter-spacing: -0.01em;
   word-break: keep-all;
 }
 .jm-conf-meta {
@@ -564,7 +545,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink-2);
   cursor: pointer;
-  letter-spacing: -0.01em;
 }
 .jm-btn-ghost:hover:not(:disabled) { background: var(--bg-soft); color: var(--ink); }
 .jm-btn-ghost:disabled { color: var(--ink-4); border-color: var(--line); background: var(--bg-soft); cursor: not-allowed; }
@@ -578,7 +558,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   font-size: var(--fs-option); font-weight: 800;
   color: #fff;
   cursor: pointer;
-  letter-spacing: -0.01em;
 }
 .jm-btn-dark:hover { background: var(--brand-deep); }
 .jm-btn-dark:disabled {
@@ -634,8 +613,7 @@ button, a, label, input, select, [role="button"], [data-action] {
 .jm-load-title {
   margin: 12px 0 6px;
   font-size: var(--fs-h2); font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.02em; line-height: 1.4;
+  color: var(--ink); line-height: 1.4;
 }
 .jm-load-sub {
   margin: 0 0 20px;
@@ -680,7 +658,6 @@ button, a, label, input, select, [role="button"], [data-action] {
   border-radius: var(--r-pill);
   font-size: var(--fs-option); font-weight: 600;
   color: var(--ink-2);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-res-chip .d {
@@ -716,18 +693,15 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink-3);
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 .jm-stat .v {
   font-size: var(--fs-h1); font-weight: 800;
   color: var(--ink-3);
   line-height: 1.15;
-  letter-spacing: -0.02em;
 }
 .jm-stat .v .u {
   margin-left: 2px;
   font-size: var(--fs-body); font-weight: 700;
-  letter-spacing: -0.01em;
 }
 .jm-stat.blue .v, .jm-stat.blue .k { color: var(--brand-deep); }
 .jm-stat.outline .v, .jm-stat.outline .k { color: var(--ink); }
@@ -743,7 +717,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   font-size: var(--fs-body); font-weight: 800;
   color: #fff;
   cursor: pointer;
-  letter-spacing: -0.01em;
 }
 .jm-res-cta:hover { background: var(--brand-deep); }
 
@@ -756,7 +729,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   font-size: var(--fs-option); font-weight: 500;
   color: var(--ink-2);
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 
 /* ===== 결과 카드 히어로 (마스코트) ===== */
@@ -798,7 +770,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   border-radius: var(--r-pill);
   color: var(--brand-deep);
   cursor: pointer;
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-quick-btn:hover { background: var(--brand-pale); border-color: var(--brand); }
@@ -829,7 +800,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   font-size: var(--fs-body); font-weight: 500;
   line-height: 1.4;
   color: var(--ink);
-  letter-spacing: -0.01em;
   cursor: pointer;
   border-top: 1px solid var(--line);
 }
@@ -851,7 +821,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   font-family: inherit;
   font-size: var(--fs-body); font-weight: 500;
   color: var(--ink);
-  letter-spacing: -0.01em;
   outline: none;
   line-height: 1.4;
   transition: border-color .14s ease, box-shadow .14s ease;
@@ -911,7 +880,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   margin: 0;
   font-size: var(--fs-h2); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   line-height: 1.4;
 }
 .jm-sheet-close, .jm-sheet-back {
@@ -943,7 +911,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   color: var(--ink-2);
   cursor: pointer;
   line-height: 1.4;
-  letter-spacing: -0.01em;
   flex: none;
 }
 .jm-pill:hover { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
@@ -977,14 +944,12 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
 .jm-hist-date {
   font-size: var(--fs-option); font-weight: 600;
   color: var(--ink-3);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-hist-dis {
   margin-top: 4px;
   font-size: var(--fs-body); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   line-height: 1.4;
   word-break: keep-all;
 }
@@ -997,7 +962,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   margin-top: 4px;
   font-size: var(--fs-option); font-weight: 500;
   color: var(--ink-3);
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-hist-badges {
@@ -1010,7 +974,6 @@ button.jm-stat.outline:hover { border-color: var(--ink-4); box-shadow: 0 4px 12p
   border-radius: var(--r-pill);
   font-family: inherit;
   font-size: var(--fs-option); font-weight: 700;
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-hist-badge.gray { background: var(--bg-soft); color: var(--ink-2); border: 1px solid var(--line); }
@@ -1037,7 +1000,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   margin: 0 0 10px;
   font-size: var(--fs-body); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   line-height: 1.4;
 }
 .jm-hist-section h4 .cnt {
@@ -1055,7 +1017,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
 .jm-hist-entry-no {
   font-size: var(--fs-option); font-weight: 800;
   color: var(--brand-deep);
-  letter-spacing: 0.02em;
   line-height: 1.4;
   margin-bottom: 8px;
 }
@@ -1067,13 +1028,11 @@ button.jm-hist-badge:active { transform: scale(0.97); }
 .jm-hist-kv dt {
   font-size: var(--fs-option); font-weight: 600;
   color: var(--ink-3);
-  letter-spacing: -0.01em;
 }
 .jm-hist-kv dd {
   margin: 0;
   font-size: var(--fs-option); font-weight: 700;
   color: var(--ink);
-  letter-spacing: -0.01em;
 }
 
 .jm-hist-summary {
@@ -1084,7 +1043,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   font-size: var(--fs-body); font-weight: 600;
   color: var(--ink);
   line-height: 1.4;
-  letter-spacing: -0.01em;
   margin-bottom: 12px;
 }
 .jm-hist-summary strong { font-weight: 800; }
@@ -1112,7 +1070,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   border: none;
   color: var(--ink-3);
   font-size: var(--fs-body); font-weight: 700;
-  letter-spacing: -0.01em;
   line-height: 1.4;
   cursor: pointer;
   position: relative;
@@ -1147,7 +1104,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   margin: 0;
   font-size: var(--fs-body); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   line-height: 1.4;
 }
 .jm-prod-sec-head h4 .cnt {
@@ -1167,7 +1123,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   color: var(--ink-2);
   cursor: pointer;
   line-height: 1.4;
-  letter-spacing: -0.01em;
 }
 .jm-prod-toggle-all:hover { background: var(--bg-soft); color: var(--ink); }
 
@@ -1194,7 +1149,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   flex: 1;
   font-size: var(--fs-body); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   line-height: 1.4;
 }
 .jm-grp-count {
@@ -1203,7 +1157,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   color: var(--brand-deep);
   border-radius: var(--r-pill);
   font-size: var(--fs-option); font-weight: 800;
-  letter-spacing: -0.01em;
   line-height: 1.4;
 }
 .jm-grp-arrow {
@@ -1229,7 +1182,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   font-size: var(--fs-option); font-weight: 600;
   color: var(--ink);
   line-height: 1.4;
-  letter-spacing: -0.01em;
   border-radius: var(--r-sm);
   background: var(--bg-soft);
   word-break: keep-all;
@@ -1253,7 +1205,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   color: var(--brand-deep);
   font-weight: 800;
   margin-bottom: 6px;
-  letter-spacing: -0.01em;
 }
 .jm-grp-item .notes-l { display: block; padding-left: 2px; }
 .jm-grp-item .notes-l + .notes-l { margin-top: 4px; }
@@ -1310,7 +1261,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   margin: 0 0 12px;
   font-size: var(--fs-h2); font-weight: 800;
   color: var(--ink);
-  letter-spacing: -0.02em;
   line-height: 1.4;
 }
 .jm-confirm-desc {
@@ -1318,7 +1268,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   font-size: var(--fs-body); font-weight: 500;
   color: var(--ink-3);
   line-height: 1.5;
-  letter-spacing: -0.01em;
 }
 .jm-confirm-desc b { color: var(--brand-deep); font-weight: 700; }
 .jm-confirm-actions {
@@ -1331,7 +1280,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   border-radius: var(--r-sm);
   font-family: inherit;
   font-size: var(--fs-body); font-weight: 700;
-  letter-spacing: -0.01em;
   line-height: 1.4;
   cursor: pointer;
   transition: filter .14s ease, background-color .14s ease, border-color .14s ease, color .14s ease, box-shadow .14s ease;
@@ -1364,7 +1312,6 @@ button.jm-hist-badge:active { transform: scale(0.97); }
   border-radius: var(--r-pill);
   font-size: var(--fs-option); font-weight: 700;
   line-height: 1.4;
-  letter-spacing: -0.01em;
   box-shadow: var(--sh-2);
   animation: jm-toast-in .22s ease-out;
 }

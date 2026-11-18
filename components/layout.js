@@ -406,6 +406,7 @@
     + '<symbol id="i-sort" viewBox="0 0 24 24"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></symbol>'
     + '<symbol id="i-chevrons-right" viewBox="0 0 24 24"><path d="m7 6 6 6-6 6"/><path d="m13 6 6 6-6 6"/></symbol>'
     + '<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>'
+    + '<symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>'
     + '<symbol id="i-trending-up" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M16 7h5v5"/></symbol>'
     // 액션
     + '<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6 18 18M18 6 6 18"/></symbol>'
@@ -591,12 +592,12 @@
     + '.sm-modal-ic::before { content: ""; position: absolute; inset: 8px; border-radius: 50%; background: radial-gradient(circle at 50% 55%, var(--brand-pale) 0%, #FFF1E8 55%, transparent 78%); z-index: 0; }'
     + '.sm-modal-ic img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; animation: smFloat 3.6s ease-in-out infinite; }'
     + '@keyframes smFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }'
-    + '.sm-modal-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-pale); color: var(--brand-deep); border-radius: var(--r-pill); padding: 5px 12px; font-size: var(--fs-option); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 12px; }'
+    + '.sm-modal-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--brand-pale); color: var(--brand-deep); border-radius: var(--r-pill); padding: 5px 12px; font-size: var(--fs-option); font-weight: 800; margin-bottom: 12px; }'
     + '.sm-modal-tag svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
-    + '.sm-modal-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0 0 10px; }'
+    + '.sm-modal-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); line-height: 1.4; margin: 0 0 10px; }'
     + '.sm-modal-desc { font-size: var(--fs-body); color: var(--ink-3); line-height: 1.6; margin: 0 0 26px; font-weight: 500; }'
     + '.sm-modal-desc b { color: var(--ink); font-weight: 700; }'
-    + '.sm-modal-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 14px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); letter-spacing: -0.01em; transition: filter .2s ease; }'
+    + '.sm-modal-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: var(--brand-grad); color: #fff; border: none; border-radius: var(--r-pill); padding: 14px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: var(--sh-brand); transition: filter .2s ease; }'
     + '.sm-modal-cta:hover { filter: brightness(1.05); }';
 
   function smartModalHTML() {
@@ -631,7 +632,7 @@
     + '.qm-close svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
     + '.qm-ic { width: 56px; height: 56px; border-radius: 50%; background: #FFF0F1; color: #C92238; display: grid; place-items: center; margin-bottom: 16px; }'
     + '.qm-ic svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }'
-    + '.qm-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 8px; line-height: 1.4; }'
+    + '.qm-title { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0 0 8px; line-height: 1.4; }'
     + '.qm-desc { font-size: var(--fs-body); color: var(--ink-2); line-height: 1.6; margin: 0 0 18px; }'
     + '.qm-desc b { color: var(--ink); font-weight: 700; }'
     + '.qm-status { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--bg-soft); border-radius: var(--r-md); padding: 12px 16px; margin-bottom: 18px; }'
@@ -640,11 +641,11 @@
     + '.qm-status-v b { color: #C92238; }'
     + '.qm-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }'
     + '.qm-plan { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; text-align: left; }'
-    + '.qm-plan .qp-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 800; letter-spacing: 0.04em; }'
+    + '.qm-plan .qp-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 800; }'
     + '.qm-plan .qp-v { font-size: var(--fs-body); font-weight: 800; color: var(--ink); margin-top: 4px; }'
     + '.qm-plan .qp-v small { font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); margin-left: 2px; }'
     + '.qm-actions { display: flex; flex-direction: column; gap: 8px; }'
-    + '.qm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; letter-spacing: -0.01em; border: 1px solid transparent; text-decoration: none; transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }'
+    + '.qm-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: var(--r-pill); font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; border: 1px solid transparent; text-decoration: none; transition: filter .15s ease, background-color .15s ease, border-color .15s ease; }'
     + '.qm-btn.primary { border: none; background: var(--brand-grad); color: #fff; box-shadow: var(--sh-brand); }'
     + '.qm-btn.primary:hover { filter: brightness(1.05); }'
     + '.qm-btn.extra { background: #fff; color: var(--brand-deep); border-color: var(--brand-soft); }'
@@ -719,7 +720,7 @@
   // 사용법: <span class="quota-pill" data-quota-pill="report"></span>
   // 또는 window.renderQuotaPill('report') 로 HTML 문자열 얻어 삽입.
   var QUOTA_PILL_CSS = ''
-    + '.quota-pill { display: inline-flex; align-items: baseline; gap: 4px; color: var(--ink-3); font-family: "Pretendard", system-ui, sans-serif; font-size: var(--fs-option); font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; white-space: nowrap; }'
+    + '.quota-pill { display: inline-flex; align-items: baseline; gap: 4px; color: var(--ink-3); font-family: "Pretendard", system-ui, sans-serif; font-size: var(--fs-option); font-weight: 600; line-height: 1.4; white-space: nowrap; }'
     + '.quota-pill b { color: var(--ink); font-weight: 800; }'
     + '.quota-pill.warn { color: #C92238; }'
     + '.quota-pill.warn b { color: #C92238; }'
@@ -757,7 +758,7 @@
   // ===== [DEV] 스위처 CSS =====
   var DEV_SWITCH_CSS = ''
     + '.dev-switch { margin: 12px 12px 0; padding: 10px 12px; background: #F3F5F7; border: 1px dashed #C7CFD6; border-radius: 10px; font-family: "Pretendard", system-ui, sans-serif; }'
-    + '.dev-switch-title { font-size: var(--fs-option); color: #6B7681; font-weight: 800; letter-spacing: 0.03em; margin-bottom: 6px; }'
+    + '.dev-switch-title { font-size: var(--fs-option); color: #6B7681; font-weight: 800; margin-bottom: 6px; }'
     + '.dev-switch-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }'
     + '.dev-switch-row > span { font-size: var(--fs-option); color: #6B7681; font-weight: 700; flex: none; width: 34px; }'
     + '.dev-switch-sel { flex: 1; min-width: 0; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #2A343B; padding: 0 6px; outline: none; }'

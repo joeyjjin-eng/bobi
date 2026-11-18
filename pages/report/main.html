@@ -30,7 +30,7 @@
     background: #fff; color: var(--ink);
     border: 1px solid var(--line-strong); border-radius: var(--r-pill);
     font-family: inherit; font-size: var(--fs-option); font-weight: 700;
-    line-height: 1; letter-spacing: -0.01em;
+    line-height: 1;
     cursor: pointer; white-space: nowrap;
     transition: background-color .15s ease, border-color .15s ease, color .15s ease;
   }
@@ -82,7 +82,7 @@
 
   /* ===== 리포트 뷰 세그먼트 — 문서 최상위 탭 (일반/교통사고 전환) ===== */
   .cE .report-viewseg { display: flex; align-items: stretch; gap: 4px; margin: 28px 0 12px; border-bottom: 1px solid var(--line); position: relative; }
-  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
+  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); cursor: pointer; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
   .cE .report-viewseg-btn::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 3px; background: transparent; border-radius: 3px 3px 0 0; transition: background-color .2s ease; }
   .cE .report-viewseg-btn:hover { color: var(--ink); }
   .cE .report-viewseg-btn svg { color: currentColor; }
@@ -90,7 +90,7 @@
   .cE .report-viewseg-btn.on[data-view-btn="general"]::after { background: var(--brand); }
   .cE .report-viewseg-btn.on[data-view-btn="car"] { color: #B07816; }
   .cE .report-viewseg-btn.on[data-view-btn="car"]::after { background: #E67E22; }
-  .cE .report-viewseg-btn .cnt { font-size: var(--fs-option); font-weight: 800; color: var(--ink-4); background: var(--bg-soft); padding: 3px 10px; border-radius: var(--r-pill); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  .cE .report-viewseg-btn .cnt { font-size: var(--fs-option); font-weight: 800; color: var(--ink-4); background: var(--bg-soft); padding: 3px 10px; border-radius: var(--r-pill); font-variant-numeric: tabular-nums; }
   .cE .report-viewseg-btn.on[data-view-btn="general"] .cnt { background: var(--brand-pale); color: var(--brand-deep); }
   .cE .report-viewseg-btn.on[data-view-btn="car"] .cnt { background: #FFF4E4; color: #B07816; }
 
@@ -102,7 +102,7 @@
   .cE .car-summary { position: relative; overflow: hidden; }
   .cE .car-summary-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
   .cE .car-summary-head-l { display: flex; align-items: center; gap: 12px; }
-  .cE .car-summary-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; }
+  .cE .car-summary-head h2 { margin: 0; font-size: var(--fs-h2); font-weight: 800; }
   .cE .car-summary-head .car-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
   .cE .car-summary-head .car-sub b { color: var(--ink); font-weight: 700; }
   .cE .car-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -117,7 +117,7 @@
   .cE .car-stat .car-stat-l .dot.in { background: var(--c-in); }
   .cE .car-stat .car-stat-l .dot.surg { background: var(--c-surg); }
   .cE .car-stat .car-stat-l .dot.total { background: #C77E22; }
-  .cE .car-stat .car-stat-v { font-size: var(--fs-h2); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cE .car-stat .car-stat-v { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
   .cE .car-stat .car-stat-v small { font-size: var(--fs-body); font-weight: 700; color: var(--ink-3); margin-left: 4px; }
   .cE .car-stat .car-stat-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; }
   .cE .car-stat .car-stat-sub b { color: var(--ink-2); font-weight: 700; }
@@ -126,7 +126,7 @@
   .cE .car-card { position: relative; overflow: hidden; }
   .cE .car-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; gap: 16px; flex-wrap: wrap; }
   .cE .car-head-l { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-  .cE .car-badge { display: inline-flex; align-items: center; gap: 6px; background: #FFF4E4; color: #B07816; border: 1px solid #F6DDB0; padding: 5px 12px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 800; letter-spacing: -0.01em; align-self: flex-start; }
+  .cE .car-badge { display: inline-flex; align-items: center; gap: 6px; background: #FFF4E4; color: #B07816; border: 1px solid #F6DDB0; padding: 5px 12px; border-radius: var(--r-pill); font-size: var(--fs-option); font-weight: 800; align-self: flex-start; }
   .cE .car-badge svg { color: currentColor; }
   .cE .car-tabs { display: flex; gap: 0; }
   .cE .car-tab { background: none; border: none; padding: 10px 18px; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; transition: color .2s ease; -webkit-tap-highlight-color: transparent; }

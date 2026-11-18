@@ -40,8 +40,7 @@
     flex: 1; min-width: 0;
     text-align: center;
     font-size: var(--fs-body);
-    font-weight: 800; color: var(--ink);
-    letter-spacing: -0.02em; line-height: 1.2;
+    font-weight: 800; color: var(--ink); line-height: 1.2;
     padding: 0 4px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
@@ -181,7 +180,6 @@
     display: block !important;
     font-size: var(--fs-body) !important; font-weight: 800 !important;
     margin: 8px 0 16px !important; color: var(--ink);
-    letter-spacing: -0.02em;
   }
   .cE .tr-filter .dlabel,
   .cE .card-pad.period-host .dlabel {
@@ -352,7 +350,7 @@
   .tr-detail-head-t { min-width: 0; }
   .tr-detail-head h3 {
     margin: 0; font-size: var(--fs-body);
-    font-weight: 800; letter-spacing: -0.02em;
+    font-weight: 800;
     color: var(--ink);
   }
   .tr-detail-head .tr-detail-sub {

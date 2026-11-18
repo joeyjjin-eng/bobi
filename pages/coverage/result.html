@@ -35,7 +35,7 @@
   /* ===== 탭 (report-viewseg 패턴 재사용) — 스크롤 시 상단 고정 ===== */
   .cE .report-viewseg { display: flex; align-items: stretch; margin: 8px 0 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; background: #fff; }
   .cE .report-viewseg-tabs { display: flex; align-items: stretch; gap: 4px; }
-  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); text-decoration: none; cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
+  .cE .report-viewseg-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 800; color: var(--ink-3); text-decoration: none; cursor: pointer; transition: color .2s ease; margin-bottom: -1px; -webkit-tap-highlight-color: transparent; }
   .cE .report-viewseg-btn::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 3px; background: transparent; border-radius: 3px 3px 0 0; transition: background-color .2s ease; }
   .cE .report-viewseg-btn:hover { color: var(--ink); }
   .cE .report-viewseg-btn svg { color: currentColor; }
@@ -53,7 +53,7 @@
   .cE .cov-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
   .cE .cov-tile-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; }
   .cE .cov-tile-l { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
-  .cE .cov-tile-v { font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; }
+  .cE .cov-tile-v { font-size: var(--fs-h1); font-weight: 800; }
   .cE .cov-bar { display: flex; width: 100%; height: 26px; border-radius: 7px; overflow: hidden; font-size: var(--fs-option); font-weight: 700; }
   .cE .cov-bar span { display: flex; align-items: center; padding: 0 10px; color: var(--ink); white-space: nowrap; }
   .cE .cov-legend { display: flex; justify-content: space-between; width: 100%; font-size: var(--fs-option); color: var(--ink-3); }
@@ -101,7 +101,7 @@
   .cE .cov-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s6); display: flex; flex-direction: column; gap: var(--s5); }
   .cE .cov-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
   .cE .cov-card-l { font-size: var(--fs-body); font-weight: 600; color: var(--ink-2); }
-  .cE .cov-amt { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+  .cE .cov-amt { font-size: 32px; font-weight: 800; margin: 0; }
   .cE .cov-amt.ok { color: var(--success); }
   .cE .cov-amt.low { color: #C92238; }
   .cE .cov-sub { font-size: var(--fs-option); color: var(--ink-3); margin: 4px 0 0; }
@@ -138,7 +138,7 @@
   .cE .cov-matrix thead th:not(.hname):not(.hsum) { min-width: 110px; }
   .cE .cov-matrix thead th.hname { text-align: left; width: 200px; }
   .cE .cov-matrix thead th.hsum { width: 130px; }
-  .cE .cov-matrix thead th .pname { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: var(--fs-option); font-weight: 800; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .cov-matrix thead th .pname { display: flex; align-items: center; justify-content: center; gap: 4px; font-size: var(--fs-option); font-weight: 800; color: var(--ink); }
   .cE .cov-co-logo { width: 16px; height: 16px; object-fit: contain; flex: none; border-radius: 3px; }
   .cE .cov-matrix thead th .pprem { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; margin-top: 3px; }
   .cE .cov-matrix tbody tr { border-bottom: 1px solid var(--line); }
@@ -152,7 +152,7 @@
   .cE .cov-matrix th:nth-child(even), .cE .cov-matrix td:nth-child(even) { background: #F7F8FA; }
   .cE .cov-matrix thead th.hsum, .cE .cov-matrix td.sum { background: #EAF4FB; }
   .cE .cov-matrix thead th.hsum { color: #2D4F9F; }
-  .cE .cov-matrix tr.cat td { border-bottom: 1px solid var(--line); border-top: 2px solid var(--line-strong); padding: 11px 16px; font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep); letter-spacing: 0.01em; }
+  .cE .cov-matrix tr.cat td { border-bottom: 1px solid var(--line); border-top: 2px solid var(--line-strong); padding: 11px 16px; font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep); }
   .cE .cov-matrix tbody tr:first-child.cat td { border-top: none; }
   .cE .cov-matrix tr.tip td { background: var(--brand-pale); border-bottom: 1px solid var(--line); padding: 11px 16px; white-space: normal; }
   .cE .cov-matrix tr.tip .tip-ic { margin-right: 6px; }
@@ -163,7 +163,7 @@
   /* 카드 패딩(28px)을 좌우로 빼서 페이지 최대폭(1192px)까지 꽉 채운다 — 다른 카드처럼 안쪽으로 들어간 폭이 아니라 테이블 자체가 1192*/
   .cE .card-pad:has(#cov-view-toggle) { border-color: transparent; padding-left: 0; padding-right: 0; }
   .cE .cov-subtabs { display: flex; align-items: stretch; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
-  .cE .cov-subtab { position: relative; padding: 2px 1px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; letter-spacing: -0.02em; transition: color .2s ease; margin-bottom: -1px; }
+  .cE .cov-subtab { position: relative; padding: 2px 1px 16px; border: none; background: transparent; font-family: inherit; font-size: var(--fs-h2); font-weight: 700; color: var(--ink-3); cursor: pointer; transition: color .2s ease; margin-bottom: -1px; }
   .cE .cov-subtab::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent; border-radius: 2px 2px 0 0; transition: background-color .2s ease; }
   .cE .cov-subtab:hover { color: var(--ink); }
   .cE .cov-subtab.on { color: var(--brand-deep); }
@@ -181,7 +181,7 @@
   .cE .cov-co-product + .cov-co-product { margin-top: 20px; }
   .cE .cov-co-product-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); background: var(--bg-soft); }
   .cE .cov-co-product-left { display: flex; align-items: baseline; gap: 8px; }
-  .cE .cov-co-product-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+  .cE .cov-co-product-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .cE .cov-co-product-meta { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; white-space: nowrap; text-align: right; }
   .cE .cov-co-product-cnt { font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; white-space: nowrap; }
   .cE .cov-detail-table { width: 100%; border-collapse: collapse; }
@@ -196,18 +196,18 @@
   /* ===== 고객용 미리보기 (share.html과 같은 수치를 설계사 화면 안에서 그대로 보여준다) ===== */
   .cE .cov-preview-head { background: var(--brand-pale); border-radius: var(--r-md); padding: 28px 32px; margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .cE .cov-preview-head-l { min-width: 0; }
-  .cE .cov-preview-head h2 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .cE .cov-preview-head h2 { font-size: var(--fs-h1); font-weight: 800; color: var(--ink); margin: 0; }
   .cE .cov-preview-head-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; margin: 4px 0 0; }
 
   /* 고객용 공유 버튼 + 드롭다운 (인쇄하기 / PDF로 저장 / PDF 전송) */
-  .cE .cov-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; cursor: pointer; white-space: nowrap; flex: none; transition: filter .15s ease; }
+  .cE .cov-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; cursor: pointer; white-space: nowrap; flex: none; transition: filter .15s ease; }
   .cE .cov-share-btn:hover { filter: brightness(1.05); }
   .cE .cov-share-btn svg { color: currentColor; flex: none; }
   .cE #cov-share-popover .menu-list { right: 0; }
 
   /* ===== 폼 요소 (PDF 전송 모달용) ===== */
   .cE .field { display: flex; flex-direction: column; gap: 8px; }
-  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: -0.01em; padding-left: 2px; }
+  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); padding-left: 2px; }
   .cE .input-box { width: 100%; height: 46px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 0 14px; font-size: var(--fs-body); color: var(--ink); font-family: inherit; outline: none; background: #fff; transition: border-color .15s ease; box-sizing: border-box; }
   .cE .input-box:hover { border-color: var(--ink-3); }
   .cE .input-box:focus { border-color: var(--brand); }
@@ -219,7 +219,7 @@
   .nr-modal-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .nr-modal-head-l { display: flex; align-items: center; gap: 12px; }
   .nr-modal-head-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); color: #fff; display: grid; place-items: center; flex: none; }
-  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0; }
   .nr-modal-head .desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
   .nr-modal-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
   .nr-modal-close:hover { background: var(--line); color: var(--ink); }
@@ -232,7 +232,7 @@
   .cE .shr-sum-tiles { display: flex; gap: 12px; margin-bottom: 20px; }
   .cE .shr-sum-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
   .cE .shr-sum-l { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; }
-  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; color: var(--ink); }
   .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow-x: auto; }
   .cE .shr-contract-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
   .cE .shr-contract-table th { text-align: left; font-weight: 700; color: var(--ink-2); background: var(--bg-soft); padding: 12px 16px; white-space: nowrap; border-bottom: 1px solid var(--line); }
@@ -253,11 +253,11 @@
   .cE .shr-cat-card:first-child { margin-top: 0; }
   .cE .shr-cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
   .cE .shr-cat-ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); display: grid; place-items: center; font-size: 19px; line-height: 1; }
-  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); }
   .cE .shr-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: var(--fs-body); }
   .cE .shr-row:last-of-type { border-bottom: none; }
   .cE .shr-row-l { color: var(--ink-2); font-weight: 500; }
-  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; }
   .cE .shr-row-v small { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-left: 3px; }
   .cE .shr-empty { margin: 0; padding: 2px 0 4px; font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; }
   .cE .shr-missing { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
@@ -271,14 +271,14 @@
 
   /* ===== 요약: 보장분석표 (담보별 카드 — 회사·상품·세부담보명) ===== */
   /* 첫 카테고리도 48px를 그대로 둔다 — h2("보장분석표")→카테고리 라벨 간격이 라벨→그룹(24px)보다 넓어야 한다 */
-  .cE .cov-cat-label { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); margin: var(--s9) 0 0; letter-spacing: 0.01em; }
+  .cE .cov-cat-label { font-size: var(--fs-option); font-weight: 700; color: var(--brand-deep); margin: var(--s9) 0 0; }
   /* 박스 없이 그대로 노출 — 담보 제목 밑줄(cov-group-head)만으로 구분, 그룹 사이는 48px로 넉넉히 */
   .cE .cov-group { margin-top: var(--s9); }
   /* 카테고리 라벨 바로 다음 그룹은 라벨과 한 묶음으로 보이도록 그룹 간 간격의 절반만 띄운다(카테고리 자체 상단 간격은 48px 그대로) */
   .cE .cov-cat-label + .cov-group { margin-top: var(--s6); }
   .cE .cov-group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
   .cE .cov-group-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; }
-  .cE .cov-group-total { font-size: 22px; font-weight: 800; color: var(--brand-deep); letter-spacing: -0.02em; white-space: nowrap; }
+  .cE .cov-group-total { font-size: 22px; font-weight: 800; color: var(--brand-deep); white-space: nowrap; }
   .cE .cov-co-block { display: grid; grid-template-columns: 110px minmax(0, 1fr); column-gap: 16px; align-items: start; border-bottom: 1px solid var(--line); min-width: 620px; }
   .cE .cov-co-block:last-child { border-bottom: none; }
   .cE .cov-co-name { display: flex; align-items: center; gap: 6px; padding: 12px 0; font-weight: 700; color: var(--ink-2); font-size: var(--fs-body); }
@@ -744,7 +744,7 @@
       </div>
       <div class="nr-modal-actions">
         <button class="btn-secondary" type="button" id="pdf-send-cancel" style="background:#fff;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:12px 22px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;">취소</button>
-        <button class="btn-primary" type="button" id="pdf-send-confirm" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand-grad);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 24px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;box-shadow:var(--sh-brand);letter-spacing:-0.01em;">
+        <button class="btn-primary" type="button" id="pdf-send-confirm" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand-grad);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 24px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;box-shadow:var(--sh-brand);">
           <svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>
           전송하기
         </button>

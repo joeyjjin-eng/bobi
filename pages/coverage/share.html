@@ -22,20 +22,20 @@
   /* ===== 상단 헤더 (customer/detail.html의 back-btn + cust-rep-head와 동일한 높이) ===== */
   .cE .shr-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 0 32px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
   .cE .shr-head-l { display: flex; align-items: center; gap: 16px; }
-  .cE .shr-head-l .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; color: #fff; flex: none; font-family: inherit; font-size: 26px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
-  .cE .shr-head h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; letter-spacing: -0.02em; margin: 0; color: var(--ink); }
+  .cE .shr-head-l .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; color: #fff; flex: none; font-family: inherit; font-size: 26px; font-weight: 500; user-select: none; }
+  .cE .shr-head h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; margin: 0; color: var(--ink); }
   .cE .shr-head-sub { font-size: var(--fs-option); color: var(--ink-3); font-weight: 500; line-height: 1.4; margin-top: 4px; }
 
   /* 공유 버튼 + 드롭다운 (인쇄하기 / PDF 전송) */
   .cE .shr-head .menu-popover { position: relative; }
-  .cE .shr-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; cursor: pointer; white-space: nowrap; transition: filter .15s ease; }
+  .cE .shr-share-btn { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 20px; border-radius: var(--r-pill); background: var(--brand-grad); color: #fff; border: none; box-shadow: var(--sh-brand); font-family: inherit; font-size: var(--fs-body); font-weight: 700; line-height: 1.4; cursor: pointer; white-space: nowrap; transition: filter .15s ease; }
   .cE .shr-share-btn:hover { filter: brightness(1.05); }
   .cE .shr-share-btn svg { color: currentColor; flex: none; }
   .cE .shr-head .menu-list { right: 0; }
 
   /* ===== 폼 요소 (PDF 전송 모달용) ===== */
   .cE .field { display: flex; flex-direction: column; gap: 8px; }
-  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); letter-spacing: -0.01em; padding-left: 2px; }
+  .cE .field-l { font-size: var(--fs-option); font-weight: 700; color: var(--ink-2); padding-left: 2px; }
   .cE .input-box { width: 100%; height: 46px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 0 14px; font-size: var(--fs-body); color: var(--ink); font-family: inherit; outline: none; background: #fff; transition: border-color .15s ease; box-sizing: border-box; }
   .cE .input-box:hover { border-color: var(--ink-3); }
   .cE .input-box:focus { border-color: var(--brand); }
@@ -47,7 +47,7 @@
   .nr-modal-head { padding: 22px 26px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .nr-modal-head-l { display: flex; align-items: center; gap: 12px; }
   .nr-modal-head-ic { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); color: #fff; display: grid; place-items: center; flex: none; }
-  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin: 0; }
+  .nr-modal-head h3 { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); margin: 0; }
   .nr-modal-head .desc { font-size: var(--fs-option); color: var(--ink-3); margin-top: 4px; }
   .nr-modal-close { background: var(--bg-soft); border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); flex: none; }
   .nr-modal-close:hover { background: var(--line); color: var(--ink); }
@@ -60,7 +60,7 @@
 
   /* ===== 섹션 제목 ===== */
   .cE .shr-section { margin-bottom: 36px; }
-  .cE .shr-section-title { display: flex; align-items: center; gap: 8px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; margin: 0 0 16px; }
+  .cE .shr-section-title { display: flex; align-items: center; gap: 8px; font-size: var(--fs-h2); font-weight: 800; color: var(--ink); line-height: 1.4; margin: 0 0 16px; }
   .cE .shr-section-title svg { color: var(--brand-deep); }
 
   /* ===== 보장 카테고리 카드 ===== */
@@ -68,12 +68,12 @@
   .cE .shr-cat-card:first-child { margin-top: 0; }
   .cE .shr-cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
   .cE .shr-cat-ic { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-soft); display: grid; place-items: center; font-size: 19px; line-height: 1; }
-  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.4; }
+  .cE .shr-cat-head h3 { margin: 0; font-size: var(--fs-h2); font-weight: 700; color: var(--ink); line-height: 1.4; }
 
   .cE .shr-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: var(--fs-body); line-height: 1.4; }
   .cE .shr-row:last-of-type { border-bottom: none; }
   .cE .shr-row-l { color: var(--ink-2); font-weight: 500; }
-  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; letter-spacing: -0.01em; }
+  .cE .shr-row-v { color: var(--ink); font-weight: 700; white-space: nowrap; }
   .cE .shr-row-v small { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); margin-left: 3px; }
 
   .cE .shr-empty { margin: 0; padding: 2px 0 4px; font-size: var(--fs-body); color: var(--ink-3); font-weight: 500; line-height: 1.4; }
@@ -91,7 +91,7 @@
   .cE .shr-sum-tiles { display: flex; gap: 12px; margin-bottom: 20px; }
   .cE .shr-sum-tile { flex: 1 1 220px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-md); padding: 16px 20px; }
   .cE .shr-sum-l { display: block; font-size: var(--fs-option); color: var(--ink-3); font-weight: 600; line-height: 1.4; }
-  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1.4; }
+  .cE .shr-sum-v { display: block; margin-top: 6px; font-size: var(--fs-h1); font-weight: 800; color: var(--ink); line-height: 1.4; }
 
   .cE .shr-policy-list { background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); overflow-x: auto; }
   .cE .shr-contract-table { width: 100%; border-collapse: collapse; font-size: var(--fs-option); }
@@ -242,7 +242,7 @@
       </div>
       <div class="nr-modal-actions">
         <button class="btn-secondary" type="button" id="pdf-send-cancel" style="background:#fff;color:var(--ink-2);border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:12px 22px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;">취소</button>
-        <button class="btn-primary" type="button" id="pdf-send-confirm" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand-grad);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 24px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;box-shadow:var(--sh-brand);letter-spacing:-0.01em;">
+        <button class="btn-primary" type="button" id="pdf-send-confirm" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--brand-grad);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 24px;font-family:inherit;font-size:var(--fs-body);font-weight:700;cursor:pointer;box-shadow:var(--sh-brand);">
           <svg class="ic-svg" width="14" height="14"><use href="#i-send"/></svg>
           전송하기
         </button>

@@ -39,8 +39,8 @@
   background: linear-gradient(120deg, var(--brand-pale), #fff 72%);
   border: 1px solid var(--line); border-radius: var(--r-lg);
 }
-.cA .eyebrow { font-size: var(--fs-label); font-weight: 700; color: var(--brand-deep); letter-spacing: .02em; }
-.cA .hero h1 { font-size: var(--fs-title); font-weight: 800; line-height: 1.26; letter-spacing: -.02em; margin: 8px 0 18px; white-space: pre-line; }
+.cA .eyebrow { font-size: var(--fs-label); font-weight: 700; color: var(--brand-deep); }
+.cA .hero h1 { font-size: var(--fs-title); font-weight: 800; line-height: 1.26; margin: 8px 0 18px; white-space: pre-line; }
 .cA .hero h1 b { color: var(--brand); }
 .cA .hero-btn {
   display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
@@ -103,7 +103,7 @@
 .cA .rep-head { display: flex; align-items: center; justify-content: space-between; padding: 28px; border: 1px solid var(--line); border-radius: var(--r-lg); margin-top: 40px; }
 .cA .rep-id { display: flex; align-items: center; gap: 18px; }
 .cA .rep-id img { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-soft); object-fit: cover; object-position: top; }
-.cA .rep-id .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 28px; font-weight: 500; letter-spacing: -0.02em; user-select: none; }
+.cA .rep-id .patient-avatar { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #8FB8C4; color: #fff; flex: none; font-family: inherit; font-size: 28px; font-weight: 500; user-select: none; }
 .cA .rep-id h1 { font-size: var(--fs-title); font-weight: 800; }
 .cA .rep-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 8px; }
 .cA .rep-meta span { font-size: var(--fs-label); color: var(--ink-2); }
@@ -158,7 +158,7 @@ a.kwchip:hover { background: var(--brand-soft); border-color: var(--brand); }
   flex: none; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
   padding: 10px 16px; border-radius: var(--r-pill);
   background: #fff; border: 1px solid #A5DEFF;
-  font-size: var(--fs-body); font-weight: 700; line-height: 1.4; letter-spacing: -0.01em;
+  font-size: var(--fs-body); font-weight: 700; line-height: 1.4;
   color: var(--brand-deep); text-decoration: none; cursor: pointer;
   transition: background-color .2s ease, border-color .2s ease;
 }
