@@ -193,7 +193,7 @@
 
     body.innerHTML = list.map(function (p) {
       return ''
-        + '<a class="table-row" href="result.html">'
+        + '<a class="table-row" href="result.html?report=' + encodeURIComponent(JSON.stringify([p.name, p.file])) + '">'
         +   '<span class="tr-date">' + p.date + '</span>'
         +   '<span class="tr-name">' + escapeHTML(p.name) + '</span>'
         +   '<span class="tr-agent">' + escapeHTML(p.agent) + '</span>'

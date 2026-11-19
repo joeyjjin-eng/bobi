@@ -529,7 +529,7 @@
 
   document.getElementById('analyze-btn').addEventListener('click', function () {
     if (!state.files.length) return;
-    window.location.href = 'result.html';
+    window.location.href = 'result.html?report=' + encodeURIComponent(JSON.stringify([state.selected.name, state.files[0]]));
   });
 
   renderCustList();
