@@ -220,6 +220,7 @@
   var A = window.NEWS_ARTICLE;
   var dim = el('nl-dim');
   var layerBody = el('nl-body');
+  var layerScroll = dim.querySelector('.nl-scroll');
   var listTitle = document.title;
   var lastFocus = null;
 
@@ -229,10 +230,10 @@
     lastFocus = document.activeElement;
     layerBody.innerHTML = A.html(it);
     dim.hidden = false;
-    layerBody.scrollTop = 0;
     document.body.style.overflow = 'hidden';
     document.title = it.title + ' · BoBi 보험소식지';
-    el('nl-close').focus();
+    sheet.focus();
+    layerScroll.scrollTop = 0;
     if (push !== false) history.pushState({ no: no }, '', 'index.html?no=' + no);
   }
 

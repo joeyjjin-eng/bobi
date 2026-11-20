@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 보험과 제도</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/news-article.css" />
+<link rel="stylesheet" href="../../styles/policies.css" />
+</head>
+<body>
+<div id="icons-host"></div>
+<div class="layout">
+  <div class="cA cE bobi">
+    <div id="gnb-host"></div>
+    <main class="emain policy-page">
+      <div class="policy-title-row">
+        <div class="policy-title-inner">
+          <div class="policy-heading">
+            <div class="policy-heading-icon" aria-hidden="true">
+              <svg class="ic-svg" width="22" height="22"><use href="#i-newspaper"/></svg>
+            </div>
+            <div>
+              <h1>보험소식지</h1>
+              <p>업계 뉴스와 기관의 제도·절차, 법원 판례를 나누어 봅니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-tabs-row">
+        <nav class="policy-tabs" aria-label="보험소식지 하위 메뉴">
+          <a class="policy-tab" href="index.html">오늘의 뉴스</a>
+          <a class="policy-tab on" href="policies.html" aria-current="page">보험과 제도</a>
+          <span class="policy-tab">판례노트</span>
+        </nav>
+      </div>
+
+      <section class="policy-content" aria-labelledby="policy-title">
+        <header class="policy-intro">
+          <div>
+            <h2 id="policy-title">보험과 제도</h2>
+            <p>기관의 기준·절차·서비스 변경과 시행 상태를 확인하세요.</p>
+          </div>
+          <div class="policy-total" aria-label="누적 자료 수">
+            <strong id="policy-total">0</strong>
+            <span>누적 자료</span>
+          </div>
+        </header>
+
+        <div class="policy-filter" aria-label="정책 자료 필터">
+          <label class="policy-search">
+            <span class="filter-label">검색</span>
+            <span class="search-control">
+              <svg class="ic-svg" width="18" height="18" aria-hidden="true"><use href="#i-search"/></svg>
+              <input type="search" id="policy-q" placeholder="제목·기관·내용" autocomplete="off" />
+            </span>
+          </label>
+          <label class="policy-field">
+            <span class="filter-label">뉴스 분류</span>
+            <select id="policy-kind"><option value="">모든 분류</option></select>
+          </label>
+          <label class="policy-field">
+            <span class="filter-label">상태</span>
+            <select id="policy-state"><option value="">모든 상태</option></select>
+          </label>
+          <label class="policy-field policy-org">
+            <span class="filter-label">관련 기관·서비스</span>
+            <select id="policy-org"><option value="">모든 기관</option></select>
+          </label>
+          <label class="archive-check">
+            <input type="checkbox" id="policy-archive" />
+            <span class="check-ui" aria-hidden="true">
+              <svg class="ic-svg" width="14" height="14"><use href="#i-check"/></svg>
+            </span>
+            <span>종료·폐지·대체 자료 보관</span>
+          </label>
+        </div>
+
+        <div class="policy-list-head">
+          <h3>누적 자료</h3>
+          <span id="policy-count" role="status" aria-live="polite">0건</span>
+        </div>
+        <div id="policy-results"></div>
+        <nav class="pager" id="policy-pager" aria-label="검색 결과 페이지"></nav>
+      </section>
+    </main>
+
+    <div class="policy-modal" id="policy-modal" hidden>
+      <div class="policy-modal-sheet nd-page" role="dialog" aria-modal="true" aria-label="보험과 제도 상세" tabindex="-1">
+        <div class="policy-modal-scroll">
+          <div class="policy-modal-body" id="policy-modal-body"></div>
+          <div class="policy-modal-foot">
+            <button type="button" class="policy-modal-close" id="policy-modal-close">
+              닫기
+              <svg class="ic-svg" width="16" height="16" aria-hidden="true"><use href="#i-x"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer-host"></div>
+</div>
+<script src="../../components/layout.js"></script>
+<script>injectShell('news');</script>
+<script src="policies-data.js"></script>
+<script src="policies.js"></script>
+</body>
+</html>
