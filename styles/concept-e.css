@@ -8,29 +8,30 @@
 .cE { width: 1440px; display: flex; background: var(--white); color: var(--ink); align-items: stretch; }
 
 /* 좌측 GNB (A 스타일: 화이트 · 얇은 보더 · brand-pale 액티브 · 스크롤 sticky) */
-.cE .eside { width: 248px; flex: none; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 22px 16px; position: sticky; top: 0; align-self: flex-start; height: 100vh; max-height: 100%; overflow-y: auto; }
-.cE .eside .brand { padding: 6px 8px 20px; }
+.cE .eside { width: 248px; flex: none; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh; max-height: 100%; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.cE .eside::-webkit-scrollbar { width: 0; height: 0; }
+.cE .eside .brand { padding: 2px 8px 14px; }
 .cE .eside .brand a { display: inline-flex; align-items: center; }
 .cE .eside .brand img { height: 22px; display: block; }
-.cE .eprofile { border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; }
+.cE .eprofile { border: 1px solid var(--line); border-radius: var(--r-md); padding: 14px; }
 .cE .eprofile .pa { display: flex; align-items: center; gap: 12px; }
 .cE .eprofile .eav { width: 42px; height: 42px; border-radius: 50%; background: var(--brand-pale); border: 1px solid var(--brand-soft); display: grid; place-items: center; font-weight: 800; color: var(--brand-deep); }
 .cE .eprofile .nm { font-size: var(--fs-sub); font-weight: 800; }
 .cE .eprofile .rl { font-size: var(--fs-label); color: var(--ink-3); }
-.cE .eprofile .plan { display: flex; justify-content: space-between; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: var(--fs-label); }
+.cE .eprofile .plan { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: var(--fs-label); }
 .cE .eprofile .plan .k { color: var(--ink-3); }
 .cE .eprofile .plan .v { font-weight: 800; color: var(--brand-deep); }
-.cE .eprofile .mybtn { display: block; text-align: center; margin-top: 14px; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-size: var(--fs-body); font-weight: 700; padding: 9px; border-radius: var(--r-pill); width: 100%; cursor: pointer; text-decoration: none; box-sizing: border-box; }
+.cE .eprofile .mybtn { display: block; text-align: center; margin-top: 12px; background: #fff; border: 1px solid var(--brand-soft); color: var(--brand-deep); font-size: var(--fs-body); font-weight: 700; padding: 8px; border-radius: var(--r-pill); width: 100%; cursor: pointer; text-decoration: none; box-sizing: border-box; }
 .cE .eprofile .mybtn:hover { background: var(--brand-pale); }
 .cE .eprofile .mybtn.on { background: var(--brand-pale); border-color: var(--brand); color: var(--brand-deep); }
-.cE .enav { display: flex; flex-direction: column; gap: 3px; margin-top: 18px; }
-.cE .enav a { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; color: var(--ink-2); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
+.cE .enav { display: flex; flex-direction: column; gap: 2px; margin-top: 14px; }
+.cE .enav a { display: flex; align-items: center; gap: 12px; padding: 9px 14px; border-radius: 12px; color: var(--ink-2); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
 .cE .enav a:hover { background: var(--bg-soft); color: var(--ink); }
 .cE .enav a.on { background: var(--brand-pale); color: var(--brand-deep); box-shadow: inset 2px 0 0 var(--brand); }
 .cE .enav a .badge { margin-left: auto; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
 .cE .enav a .beta-tag { margin-left: auto; font-size: var(--fs-option); font-weight: 800; color: var(--brand-deep); background: var(--brand-pale); border: 1px solid var(--brand-soft); border-radius: 4px; padding: 2px 6px; line-height: 1; }
 .cE .enav a.on .beta-tag { background: #fff; }
-.cE .eside .logout { margin-top: auto; display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: var(--fs-body); font-weight: 600; padding: 11px 14px; cursor: pointer; }
+.cE .eside .logout { margin-top: auto; display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: var(--fs-body); font-weight: 600; padding: 9px 14px; cursor: pointer; }
 .cE .eside .logout:hover { color: var(--ink); }
 
 /* 메인 */
@@ -343,12 +344,12 @@
 
 .tree-chk { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; font-size: var(--fs-body); font-weight: 500; color: var(--ink); user-select: none; position: relative; }
 .tree-chk input[type="checkbox"] { position: absolute; opacity: 0; pointer-events: none; width: 18px; height: 18px; margin: 0; }
-.tree-chk .tree-box { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--ink-4); border-radius: 4px; background: #fff; position: relative; flex: none; box-sizing: border-box; transition: background-color .15s ease, border-color .15s ease; }
-.tree-chk:hover .tree-box { border-color: var(--ink-3); }
+.tree-chk .tree-box { display: inline-block; width: 18px; height: 18px; border: 1.5px solid var(--line-strong); border-radius: 4px; background: #fff; position: relative; flex: none; box-sizing: border-box; transition: background-color .15s ease, border-color .15s ease; }
+.tree-chk:hover .tree-box { border-color: var(--ink-4); }
 .tree-chk input:checked ~ .tree-box { background: var(--brand); border-color: var(--brand); }
-.tree-chk input:checked ~ .tree-box::after { content: ''; position: absolute; left: 3px; top: 0px; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.tree-chk input:checked ~ .tree-box::after { content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .tree-chk input:indeterminate ~ .tree-box { background: var(--brand); border-color: var(--brand); }
-.tree-chk input:indeterminate ~ .tree-box::after { content: ''; position: absolute; left: 2px; top: 5px; width: 10px; height: 2px; background: #fff; border-radius: 1px; }
+.tree-chk input:indeterminate ~ .tree-box::after { content: ''; position: absolute; left: 3px; right: 3px; top: 6.5px; height: 2px; background: #fff; border-radius: 1px; }
 .tree-chk input:focus-visible ~ .tree-box { outline: 2px solid var(--brand); outline-offset: 2px; }
 .print-tree th .tree-chk { font-weight: 700; justify-content: center; width: 100%; }
 .print-tree tbody tr:hover td .tree-chk { color: var(--brand-deep); }

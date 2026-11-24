@@ -757,11 +757,11 @@
 
   // ===== [DEV] 스위처 CSS =====
   var DEV_SWITCH_CSS = ''
-    + '.dev-switch { margin: 12px 12px 0; padding: 10px 12px; background: #F3F5F7; border: 1px dashed #C7CFD6; border-radius: 10px; font-family: "Pretendard", system-ui, sans-serif; }'
-    + '.dev-switch-title { font-size: var(--fs-option); color: #6B7681; font-weight: 800; margin-bottom: 6px; }'
-    + '.dev-switch-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }'
+    + '.dev-switch { margin: 10px 10px 0; padding: 8px 10px; background: #F3F5F7; border: 1px dashed #C7CFD6; border-radius: 10px; font-family: "Pretendard", system-ui, sans-serif; }'
+    + '.dev-switch-title { font-size: var(--fs-option); color: #6B7681; font-weight: 800; margin-bottom: 4px; }'
+    + '.dev-switch-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }'
     + '.dev-switch-row > span { font-size: var(--fs-option); color: #6B7681; font-weight: 700; flex: none; width: 34px; }'
-    + '.dev-switch-sel { flex: 1; min-width: 0; height: 28px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #2A343B; padding: 0 6px; outline: none; }'
+    + '.dev-switch-sel { flex: 1; min-width: 0; height: 26px; border: 1px solid #D1D8DE; border-radius: 6px; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #2A343B; padding: 0 6px; outline: none; }'
     + '.dev-switch-sel:focus { border-color: var(--brand); }';
 
   function bindDevSwitcher() {

@@ -107,6 +107,35 @@
 .t-sub     { font-size: var(--fs-body);   font-weight: 700; line-height: 1.4; }
 .t-label   { font-size: var(--fs-option); font-weight: 500; line-height: 1.5; }
 
+/* ===== 체크박스 — 전역 공통 =====
+   기준: pages/jjaepity 의 .sm-tbl-check (18px · 라운드 4 · 선택 시 --brand)
+   미선택은 회색 테두리. 네이티브 체크박스를 그대로 쓰면 이 모양이 된다. */
+input[type="checkbox"] {
+  -webkit-appearance: none; appearance: none;
+  position: relative; flex: none; box-sizing: border-box;
+  width: 18px; height: 18px; margin: 0;
+  border: 1.5px solid var(--line-strong); border-radius: 4px;
+  background: #fff; cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+input[type="checkbox"]:hover { border-color: var(--ink-4); }
+input[type="checkbox"]:checked,
+input[type="checkbox"]:indeterminate { background: var(--brand); border-color: var(--brand); }
+input[type="checkbox"]:checked::after {
+  content: ''; position: absolute; left: 5px; top: 1px;
+  width: 4px; height: 9px;
+  border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+input[type="checkbox"]:indeterminate::after {
+  content: ''; position: absolute; left: 3px; right: 3px; top: 6.5px;
+  height: 2px; background: #fff; border-radius: 1px;
+}
+input[type="checkbox"]:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+input[type="checkbox"]:disabled { background: var(--bg-soft); border-color: var(--line); cursor: not-allowed; }
+input[type="checkbox"]:disabled:checked,
+input[type="checkbox"]:disabled:indeterminate { background: var(--ink-4); border-color: var(--ink-4); }
+
 /* 부드러운 전환 기본값 */
 .tap { transition: transform .15s ease, box-shadow .3s ease, background-color .2s ease, color .2s ease, border-color .2s ease; }
 .lift:hover { transform: translateY(-3px); }

@@ -411,7 +411,7 @@ html, body { margin: 0; background: #fff; }
 .cE .sm-tbl-check input:checked + .box { background: var(--brand); border-color: var(--brand); }
 .cE .sm-tbl-check input:checked + .box::after { content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .cE .sm-tbl-check input:indeterminate + .box { background: var(--brand); border-color: var(--brand); }
-.cE .sm-tbl-check input:indeterminate + .box::after { content: ''; position: absolute; left: 3px; right: 3px; top: 7.5px; height: 2px; background: #fff; border-radius: 1px; }
+.cE .sm-tbl-check input:indeterminate + .box::after { content: ''; position: absolute; left: 3px; right: 3px; top: 6.5px; height: 2px; background: #fff; border-radius: 1px; }
 
 /* 선택 삭제 버튼 */
 .cE .hist-delete-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid var(--line-strong); background: #fff; color: var(--ink-3); font-family: inherit; font-size: var(--fs-option); font-weight: 700; border-radius: 999px; cursor: pointer; transition: color .15s ease, border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }

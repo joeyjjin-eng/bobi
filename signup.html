@@ -22,17 +22,34 @@
 
       <!-- ===== 스텝퍼 ===== -->
       <nav class="sg-stepper" aria-label="회원가입 진행 단계">
-        <div class="sg-step cur reachable" data-step="1"><span class="num">1</span><span class="lbl">본인인증</span></div>
+        <div class="sg-step cur reachable" data-step="1"><span class="num">1</span><span class="lbl">약관동의</span></div>
         <div class="sg-step-line" aria-hidden="true"></div>
-        <div class="sg-step" data-step="2"><span class="num">2</span><span class="lbl">계정정보</span></div>
+        <div class="sg-step" data-step="2"><span class="num">2</span><span class="lbl">본인인증</span></div>
         <div class="sg-step-line" aria-hidden="true"></div>
-        <div class="sg-step" data-step="3"><span class="num">3</span><span class="lbl">소속정보</span></div>
+        <div class="sg-step" data-step="3"><span class="num">3</span><span class="lbl">계정정보</span></div>
+        <div class="sg-step-line" aria-hidden="true"></div>
+        <div class="sg-step" data-step="4"><span class="num">4</span><span class="lbl">소속정보</span></div>
       </nav>
 
       <form class="sg-form" onsubmit="event.preventDefault(); alert('가입이 완료되었습니다.'); location.href='login.html';">
 
-        <!-- ===== STEP 1: 본인인증 ===== -->
+        <!-- ===== STEP 1: 약관동의 ===== -->
         <div class="sg-pane" data-step="1">
+
+          <section class="sg-section">
+            <h2 class="sg-section-title">약관 동의</h2>
+            <p class="sg-lead">서비스를 이용하려면 아래 약관에 동의해야 합니다.</p>
+            <!-- 약관 본문은 components/terms.js 에서 주입 -->
+            <div id="sg-terms-host"></div>
+          </section>
+
+          <div class="sg-actions">
+            <button class="lg-submit" type="button" id="sg-terms-next" disabled onclick="goStep(2)">다음</button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2: 본인인증 ===== -->
+        <div class="sg-pane" data-step="2" hidden>
           <div class="sg-fields">
 
             <div class="lg-field">
@@ -73,12 +90,12 @@
           </div>
 
           <div class="sg-actions">
-            <button class="lg-submit" type="button" onclick="goStep(2)">다음</button>
+            <button class="lg-submit" type="button" onclick="goStep(3)">다음</button>
           </div>
         </div>
 
-        <!-- ===== STEP 2: 계정정보 ===== -->
-        <div class="sg-pane" data-step="2" hidden>
+        <!-- ===== STEP 3: 계정정보 ===== -->
+        <div class="sg-pane" data-step="3" hidden>
           <div class="sg-fields">
 
             <div class="sg-field-row">
@@ -102,12 +119,12 @@
           </div>
 
           <div class="sg-actions">
-            <button class="lg-submit" type="button" onclick="goStep(3)">다음</button>
+            <button class="lg-submit" type="button" onclick="goStep(4)">다음</button>
           </div>
         </div>
 
-        <!-- ===== STEP 3: 소속정보 ===== -->
-        <div class="sg-pane" data-step="3" hidden>
+        <!-- ===== STEP 4: 소속정보 ===== -->
+        <div class="sg-pane" data-step="4" hidden>
 
           <section class="sg-section">
             <h2 class="sg-section-title">소속정보</h2>
@@ -201,6 +218,7 @@
 
 </div>
 
+<script src="components/terms.js"></script>
 <script>
   let maxReached = 1;
   function goStep(n) {
@@ -221,6 +239,23 @@
       if (step <= maxReached) goStep(step);
     });
   });
+
+  // 1단계 약관 — 필수 3건 모두 동의해야 다음으로 넘어간다
+  const termsNext = document.getElementById('sg-terms-next');
+  renderTermsList(document.getElementById('sg-terms-host'), 'sg', ok => {
+    termsNext.disabled = !ok;
+  });
+
+  // 카카오로 시작한 경우 약관은 레이어에서 이미 동의했으므로 1단계를 건너뛴다
+  if (new URLSearchParams(location.search).get('social') === 'kakao') {
+    const first = document.querySelector('.sg-step[data-step="1"]');
+    first.nextElementSibling.remove();
+    first.remove();
+    document.querySelector('.sg-pane[data-step="1"]').remove();
+    document.querySelectorAll('.sg-step .num').forEach((num, i) => { num.textContent = i + 1; });
+    maxReached = 2;
+    goStep(2);
+  }
 </script>
 
 </body>
