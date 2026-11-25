@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BoBi · 판례노트</title>
+<link rel="stylesheet" href="../../styles/tokens.css" />
+<link rel="stylesheet" href="../../styles/concept-a.css" />
+<link rel="stylesheet" href="../../styles/concept-e.css" />
+<link rel="stylesheet" href="../../styles/news-article.css" />
+<link rel="stylesheet" href="../../styles/policies.css" />
+<link rel="stylesheet" href="../../styles/cases.css" />
+</head>
+<body>
+<div id="icons-host"></div>
+<div class="layout">
+  <div class="cA cE bobi">
+    <div id="gnb-host"></div>
+    <main class="emain policy-page case-page">
+      <div class="policy-title-row">
+        <div class="policy-title-inner">
+          <div class="policy-heading">
+            <div class="policy-heading-icon" aria-hidden="true">
+              <svg class="ic-svg" width="22" height="22"><use href="#i-newspaper"/></svg>
+            </div>
+            <div>
+              <h1>보험소식지</h1>
+              <p>업계 뉴스와 기관의 제도·절차, 법원 판례를 나누어 봅니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-tabs-row">
+        <nav class="policy-tabs" aria-label="보험소식지 하위 메뉴">
+          <a class="policy-tab" href="index.html">오늘의 뉴스</a>
+          <a class="policy-tab" href="policies.html">보험과 제도</a>
+          <a class="policy-tab on" href="cases.html" aria-current="page">판례노트</a>
+        </nav>
+      </div>
+
+      <section class="policy-content" aria-labelledby="case-title">
+        <header class="policy-intro">
+          <div>
+            <h2 id="case-title">판례노트</h2>
+            <p>판결과 분쟁조정의 쟁점, 판단 요지, 확인 자료를 살펴보세요.</p>
+          </div>
+          <p class="case-stat">
+            <strong id="case-total">0</strong> 판례·분쟁조정
+            <span aria-hidden="true">·</span>
+            <strong id="case-note-total">0</strong> 판례노트
+          </p>
+        </header>
+
+        <!-- ===== 고객에게 보여주는 판례노트 — 카드뉴스 ===== -->
+        <section class="case-panel case-cardnews" aria-labelledby="cn-title">
+          <h3 id="cn-title">고객에게 보여주는 판례노트</h3>
+          <p class="case-panel-sub">표지를 눌러 카드뉴스를 미리보고 저장하세요. 사건별 판단과 약관을 함께 확인하세요.</p>
+          <div class="cn-rail-wrap">
+            <ul class="cn-rail" id="cn-rail"></ul>
+          </div>
+          <div class="cn-nav">
+            <button type="button" class="cn-arrow" id="cn-prev" aria-label="이전 카드뉴스">
+              <svg class="ic-svg" width="18" height="18"><use href="#i-chevron-left"/></svg>
+            </button>
+            <span class="cn-hint" id="cn-hint">좌우로 넘겨보세요</span>
+            <button type="button" class="cn-arrow" id="cn-next" aria-label="다음 카드뉴스">
+              <svg class="ic-svg" width="18" height="18"><use href="#i-chevron-right"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- ===== 판례 자료 찾기 ===== -->
+        <section class="case-find" aria-labelledby="case-find-title">
+          <div class="case-find-head">
+            <h3 id="case-find-title">판례 자료 찾기</h3>
+            <button type="button" class="case-reset" id="case-reset">선택 초기화</button>
+          </div>
+
+          <div class="policy-filter" aria-label="판례 자료 필터">
+            <label class="policy-search">
+              <span class="filter-label">판례 검색</span>
+              <span class="search-control">
+                <svg class="ic-svg" width="18" height="18" aria-hidden="true"><use href="#i-search"/></svg>
+                <input type="search" id="case-q" placeholder="사건번호·쟁점·제목" autocomplete="off" />
+              </span>
+            </label>
+            <label class="policy-field">
+              <span class="filter-label">분류</span>
+              <select id="case-kind"><option value="">모든 분류</option></select>
+            </label>
+            <label class="policy-field">
+              <span class="filter-label">자료 선택</span>
+              <select id="case-scope">
+                <option value="">전체 판례</option>
+                <option value="note">판례노트 있는 자료</option>
+                <option value="판례">법원 판결</option>
+                <option value="분쟁조정">분쟁조정 결정</option>
+                <option value="pending">확정 전 판단</option>
+              </select>
+            </label>
+          </div>
+
+          <p class="case-guard">개별 사건의 판단입니다. 파기환송은 보험금 지급 확정이 아니며, 하급심 판단과 상고심 판단을 구분합니다.</p>
+
+          <p class="case-listmeta"><span id="case-count">0건</span> · 선고·결정일 최신순</p>
+          <div id="case-results"></div>
+          <nav class="case-pager" id="case-pager" aria-label="판례 목록 페이지"></nav>
+        </section>
+
+        <!-- ===== 기존 판례 관련 보도 ===== -->
+        <details class="case-press" id="case-press" open>
+          <summary>
+            <svg class="ic-svg cn-caret" width="14" height="14" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            기존 판례 관련 보도 · <span id="case-press-count">0</span>건
+          </summary>
+          <ul class="case-press-list" id="case-press-list"></ul>
+        </details>
+      </section>
+    </main>
+
+    <!-- 판례 상세 -->
+    <div class="policy-modal" id="case-modal" hidden>
+      <div class="policy-modal-sheet nd-page" role="dialog" aria-modal="true" aria-label="판례 상세" tabindex="-1">
+        <div class="policy-modal-scroll">
+          <div class="policy-modal-body" id="case-modal-body"></div>
+          <div class="policy-modal-foot">
+            <button type="button" class="policy-modal-close" id="case-modal-close">
+              닫기
+              <svg class="ic-svg" width="16" height="16" aria-hidden="true"><use href="#i-x"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드뉴스 미리보기 -->
+    <div class="cn-modal" id="cn-modal" hidden>
+      <div class="cn-sheet" role="dialog" aria-modal="true" aria-label="카드뉴스 미리보기" tabindex="-1">
+        <div class="cn-sheet-head">
+          <span class="cn-sheet-title" id="cn-sheet-title">카드뉴스</span>
+          <button type="button" class="cn-close" id="cn-close" aria-label="닫기">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+          </button>
+        </div>
+        <div class="cn-stage">
+          <button type="button" class="cn-arrow" id="cn-slide-prev" aria-label="이전 장">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-chevron-left"/></svg>
+          </button>
+          <div class="cn-slide-host" id="cn-slide-host"></div>
+          <button type="button" class="cn-arrow" id="cn-slide-next" aria-label="다음 장">
+            <svg class="ic-svg" width="18" height="18"><use href="#i-chevron-right"/></svg>
+          </button>
+        </div>
+        <div class="cn-sheet-foot">
+          <span class="cn-counter" id="cn-counter">1 / 4</span>
+          <div class="cn-foot-right">
+            <span class="cn-save-note" id="cn-save-note" role="status"></span>
+            <button type="button" class="cn-save" id="cn-save">
+              <svg class="ic-svg" width="16" height="16" aria-hidden="true"><use href="#i-download"/></svg>
+              저장
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="footer-host"></div>
+</div>
+<script src="../../components/layout.js"></script>
+<script>injectShell('news');</script>
+<script src="cases-data.js"></script>
+<script src="cases.js"></script>
+</body>
+</html>
