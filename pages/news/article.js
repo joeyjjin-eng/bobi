@@ -1,4 +1,4 @@
-/* 보험소식지 — 기사 지면 한 벌
+/* 보험인사이트 — 기사 지면 한 벌
    상세 페이지(detail.js)와 목록의 기사 레이어(index.js)가 같은 마크업을 쓴다.
    _data.js 보다 뒤, 쓰는 쪽보다 앞에 둔다. */
 window.NEWS_ARTICLE = (function () {

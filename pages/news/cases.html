@@ -24,7 +24,7 @@
               <svg class="ic-svg" width="22" height="22"><use href="#i-newspaper"/></svg>
             </div>
             <div>
-              <h1>보험소식지</h1>
+              <h1>보험인사이트</h1>
               <p>업계 뉴스와 기관의 제도·절차, 법원 판례를 나누어 봅니다.</p>
             </div>
           </div>
@@ -32,14 +32,14 @@
       </div>
 
       <div class="policy-tabs-row">
-        <nav class="policy-tabs" aria-label="보험소식지 하위 메뉴">
+        <nav class="policy-tabs" aria-label="보험인사이트 하위 메뉴">
           <a class="policy-tab" href="index.html">오늘의 뉴스</a>
           <a class="policy-tab" href="policies.html">보험과 제도</a>
           <a class="policy-tab on" href="cases.html" aria-current="page">판례노트</a>
         </nav>
       </div>
 
-      <section class="policy-content" aria-labelledby="case-title">
+      <div class="case-hero">
         <header class="policy-intro">
           <div>
             <h2 id="case-title">판례노트</h2>
@@ -55,7 +55,7 @@
         <!-- ===== 고객에게 보여주는 판례노트 — 카드뉴스 ===== -->
         <section class="case-panel case-cardnews" aria-labelledby="cn-title">
           <h3 id="cn-title">고객에게 보여주는 판례노트</h3>
-          <p class="case-panel-sub">표지를 눌러 카드뉴스를 미리보고 저장하세요. 사건별 판단과 약관을 함께 확인하세요.</p>
+          <p class="case-panel-sub">카드를 누르면 크게 보고 저장할 수 있습니다. 한 사건이 4장입니다.</p>
           <div class="cn-rail-wrap">
             <ul class="cn-rail" id="cn-rail"></ul>
           </div>
@@ -69,12 +69,13 @@
             </button>
           </div>
         </section>
+      </div>
 
+      <section class="policy-content" aria-labelledby="case-title">
         <!-- ===== 판례 자료 찾기 ===== -->
         <section class="case-find" aria-labelledby="case-find-title">
           <div class="case-find-head">
             <h3 id="case-find-title">판례 자료 찾기</h3>
-            <button type="button" class="case-reset" id="case-reset">선택 초기화</button>
           </div>
 
           <div class="policy-filter" aria-label="판례 자료 필터">
@@ -99,9 +100,13 @@
                 <option value="pending">확정 전 판단</option>
               </select>
             </label>
+            <button type="button" class="case-reset" id="case-reset" title="검색·분류 초기화" aria-label="검색·분류 초기화">
+              <svg class="ic-svg" width="18" height="18" aria-hidden="true"><use href="#i-rotate-ccw"/></svg>
+              <span class="case-reset-tx">초기화</span>
+            </button>
           </div>
 
-          <p class="case-guard">개별 사건의 판단입니다. 파기환송은 보험금 지급 확정이 아니며, 하급심 판단과 상고심 판단을 구분합니다.</p>
+          <p class="case-guard">같은 담보라도 약관 문구와 사실관계가 다르면 결론이 달라집니다. 상담에 쓰기 전에 고객 계약의 약관을 확인하세요.</p>
 
           <p class="case-listmeta"><span id="case-count">0건</span> · 선고·결정일 최신순</p>
           <div id="case-results"></div>
@@ -134,36 +139,17 @@
       </div>
     </div>
 
-    <!-- 카드뉴스 미리보기 -->
-    <div class="cn-modal" id="cn-modal" hidden>
-      <div class="cn-sheet" role="dialog" aria-modal="true" aria-label="카드뉴스 미리보기" tabindex="-1">
-        <div class="cn-sheet-head">
-          <span class="cn-sheet-title" id="cn-sheet-title">카드뉴스</span>
-          <button type="button" class="cn-close" id="cn-close" aria-label="닫기">
-            <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
-          </button>
-        </div>
-        <div class="cn-stage">
-          <button type="button" class="cn-arrow" id="cn-slide-prev" aria-label="이전 장">
-            <svg class="ic-svg" width="18" height="18"><use href="#i-chevron-left"/></svg>
-          </button>
-          <div class="cn-slide-host" id="cn-slide-host"></div>
-          <button type="button" class="cn-arrow" id="cn-slide-next" aria-label="다음 장">
-            <svg class="ic-svg" width="18" height="18"><use href="#i-chevron-right"/></svg>
-          </button>
-        </div>
-        <div class="cn-sheet-foot">
-          <span class="cn-counter" id="cn-counter">1 / 4</span>
-          <div class="cn-foot-right">
-            <span class="cn-save-note" id="cn-save-note" role="status"></span>
-            <button type="button" class="cn-save" id="cn-save">
-              <svg class="ic-svg" width="16" height="16" aria-hidden="true"><use href="#i-download"/></svg>
-              저장
-            </button>
-          </div>
-        </div>
+    <!-- 관련 보도 — 정보가 적어 작은 카드로 보여 준다 -->
+    <div class="policy-modal press-modal" id="press-modal" hidden>
+      <div class="press-sheet" role="dialog" aria-modal="true" aria-labelledby="press-title" tabindex="-1">
+        <button type="button" class="press-close" id="press-close" aria-label="닫기">
+          <svg class="ic-svg" width="18" height="18"><use href="#i-x"/></svg>
+        </button>
+        <div class="press-body" id="press-body"></div>
       </div>
     </div>
+
+    <p class="cs-toast" id="cs-toast" role="status" hidden></p>
   </div>
   <div id="footer-host"></div>
 </div>

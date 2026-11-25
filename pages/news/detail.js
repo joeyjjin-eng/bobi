@@ -1,4 +1,4 @@
-/* 보험소식지 — 기사 상세 (detail.html?no=<기사 번호>)
+/* 보험인사이트 — 기사 상세 (detail.html?no=<기사 번호>)
    지면은 article.js 가 그린다. 이 파일은 주소에서 기사를 찾아 꽂는 일만 한다. */
 (function () {
   var A = window.NEWS_ARTICLE;
@@ -9,6 +9,6 @@
 
   if (!it) { host.innerHTML = A.notFound(); return; }
 
-  document.title = it.title + ' · BoBi 보험소식지';
+  document.title = it.title + ' · BoBi 보험인사이트';
   host.innerHTML = A.html(it);
 })();

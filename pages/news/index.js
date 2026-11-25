@@ -1,4 +1,4 @@
-/* 보험소식지 — 오늘의 뉴스 (헤드라인 · 상품 소식 · 주제별 목록 · 기사 상세) */
+/* 보험인사이트 — 오늘의 뉴스 (헤드라인 · 상품 소식 · 주제별 목록 · 기사 상세) */
 (function () {
   var D = window.NEWS;
   if (!D) return;
@@ -63,6 +63,7 @@
     var heads = D.head.headlines.map(function (no) { return byNo[no]; }).filter(Boolean);
     var prods = D.head.products.map(function (no) { return byNo[no]; }).filter(Boolean);
     el('ns-hl-meta').textContent = D.head.date + ' 기준 · 주제별 ' + heads.length + '건';
+    if (el('ns-total')) el('ns-total').textContent = D.items.length;
     el('ns-headlines').innerHTML = heads.map(function (it) { return cardHTML(it, 'headline'); }).join('');
     el('ns-products').innerHTML = prods.map(function (it) { return cardHTML(it, 'product'); }).join('');
 
@@ -231,7 +232,7 @@
     layerBody.innerHTML = A.html(it);
     dim.hidden = false;
     document.body.style.overflow = 'hidden';
-    document.title = it.title + ' · BoBi 보험소식지';
+    document.title = it.title + ' · BoBi 보험인사이트';
     sheet.focus();
     layerScroll.scrollTop = 0;
     if (push !== false) history.pushState({ no: no }, '', 'index.html?no=' + no);

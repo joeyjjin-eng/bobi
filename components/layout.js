@@ -485,7 +485,7 @@
       +     navItem('jjaepity', BASE + 'pages/jjaepity/index.html',     'i-wing',         '째피티', '<span class="badge"></span>')
       +     navItem('consult',  BASE + 'pages/consult/index.html',      'i-trending-up',  '재무상담')
       +     navItem('library',  BASE + 'pages/library/index.html',      'i-folder',       '자료실', '<span class="beta-tag">NEW</span>')
-      +     navItem('news',     BASE + 'pages/news/index.html',        'i-newspaper',    '보험소식지', '<span class="beta-tag">NEW</span>')
+      +     navItem('news',     BASE + 'pages/news/index.html',        'i-newspaper',    '보험인사이트', '<span class="beta-tag">NEW</span>')
       +     navItem('notice',   '#',                                    'i-bell',         '공지사항')
       +     navItem('planner',  BASE + 'pages/admin/planner/list.html', 'i-user-2',       '설계사관리')
       +   '</nav>'
@@ -564,7 +564,7 @@
       +       drawerItem('jjaepity',  BASE + 'pages/jjaepity/index.html',    'i-wing',         '째피티', '<span class="m-drawer-badge"></span>')
       +       drawerItem('consult',   BASE + 'pages/consult/index.html',     'i-trending-up',  '재무상담')
       +       drawerItem('library',   BASE + 'pages/library/index.html',     'i-folder',       '자료실', '<span class="m-drawer-beta">NEW</span>')
-      +       drawerItem('news',     BASE + 'pages/news/index.html',       'i-newspaper',    '보험소식지', '<span class="m-drawer-beta">NEW</span>')
+      +       drawerItem('news',     BASE + 'pages/news/index.html',       'i-newspaper',    '보험인사이트', '<span class="m-drawer-beta">NEW</span>')
       +       drawerItem('notice',   '#',                                   'i-bell',         '공지사항')
       +       drawerItem('planner',  BASE + 'pages/admin/planner/list.html','i-user-2',       '설계사관리')
       +     '</div>'

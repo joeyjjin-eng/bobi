@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BoBi · 보험소식지</title>
+<title>BoBi · 보험인사이트</title>
 <link rel="stylesheet" href="../../styles/tokens.css" />
 <link rel="stylesheet" href="../../styles/concept-a.css" />
 <link rel="stylesheet" href="../../styles/concept-e.css" />
@@ -59,6 +59,14 @@
   .cE .ns-arrow:disabled { color: var(--ink-4); opacity: .5; cursor: default; }
   .cE .ns-arrow.prev { left: max(16px, calc((100% - 1192px) / 2 - 22px)); }
   .cE .ns-arrow.next { right: max(16px, calc((100% - 1192px) / 2 - 22px)); }
+
+  /* ===== 지면 머리 — 띠 맨 위, 이 탭이 무엇을 보여 주는지 ===== */
+  .cE .ns-intro { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .cE .ns-intro-t { margin: 0; font-size: var(--fs-h1); font-weight: 800; line-height: 1.4; color: var(--ink); }
+  .cE .ns-intro-sub { margin: 6px 0 0; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-2); }
+  .cE .ns-intro-stat { margin: 0; font-size: var(--fs-body); font-weight: 600; line-height: 1.4; color: var(--ink-3); }
+  .cE .ns-intro-stat strong { color: var(--brand-deep); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .cE .ns-today-sec { margin-top: 28px; }
 
   /* ===== 오늘의 헤드라인 — 영역 전체에 옅은 쿨그레이 띠. 안쪽 글은 본문 칸(1192px)에 맞춘다 ===== */
   .cE .ns-today { width: calc(100% + 72px) !important; max-width: none !important; margin: 0 -36px; padding: 40px 0; background: var(--bg-soft); }
@@ -214,7 +222,7 @@
             <svg class="ic-svg" width="22" height="22"><use href="#i-newspaper"/></svg>
           </div>
           <div>
-            <h1>보험소식지</h1>
+            <h1>보험인사이트</h1>
             <div class="ht-sub">업계 뉴스와 기관의 제도·절차, 법원 판례를 나누어 봅니다.</div>
           </div>
         </div>
@@ -223,24 +231,34 @@
 
     <!-- ===== 하위 메뉴 ===== -->
     <div class="ns-tabs-row">
-      <nav class="ns-tabs" aria-label="보험소식지 하위 메뉴">
+      <nav class="ns-tabs" aria-label="보험인사이트 하위 메뉴">
         <a class="ns-tab on" href="index.html" aria-current="page">오늘의 뉴스</a>
         <a class="ns-tab" href="policies.html">보험과 제도</a>
         <a class="ns-tab" href="cases.html">판례노트</a>
       </nav>
     </div>
 
-    <!-- ===== 오늘의 보험 헤드라인 ===== -->
-    <section class="ns-sec ns-today" aria-labelledby="ns-hl-t">
-      <div class="ns-sec-head">
-        <h2 id="ns-hl-t">
-          <span class="ns-sec-ic today" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg></span>
-          오늘의 보험 헤드라인
-        </h2>
-        <span class="ns-sec-meta" id="ns-hl-meta"></span>
-      </div>
-      <div class="ns-grid" id="ns-headlines"></div>
-    </section>
+    <!-- ===== 지면 머리 + 오늘의 보험 헤드라인 — 탭 바로 아래부터 띠를 깐다 ===== -->
+    <div class="ns-today">
+      <header class="ns-intro">
+        <div>
+          <h2 class="ns-intro-t">오늘의 뉴스</h2>
+          <p class="ns-intro-sub">보험업계의 최근 소식을 원문과 함께 확인하세요.</p>
+        </div>
+        <p class="ns-intro-stat"><strong id="ns-total">0</strong> 누적 자료</p>
+      </header>
+
+      <section class="ns-sec ns-today-sec" aria-labelledby="ns-hl-t">
+        <div class="ns-sec-head">
+          <h2 id="ns-hl-t">
+            <span class="ns-sec-ic today" aria-hidden="true"><svg class="ic-svg" width="16" height="16"><use href="#i-calendar"/></svg></span>
+            오늘의 보험 헤드라인
+          </h2>
+          <span class="ns-sec-meta" id="ns-hl-meta"></span>
+        </div>
+        <div class="ns-grid" id="ns-headlines"></div>
+      </section>
+    </div>
 
     <!-- ===== 상품·보장 소식 ===== -->
     <section class="ns-sec ns-prod" aria-labelledby="ns-pd-t">
