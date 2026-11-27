@@ -113,7 +113,7 @@ html, body { margin: 0; background: var(--white); }
   .policy-tabs { gap: 20px; }
   .policy-intro { align-items: flex-start; }
   .policy-total strong { font-size: var(--fs-h1); }
-  .policy-filter { grid-template-columns: 1fr; }
+  .policy-filter { grid-template-columns: minmax(0, 1fr); }
   .policy-search, .policy-org, .archive-check { grid-column: auto; }
   .policy-subject { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
   .policy-thumb { width: 96px; height: 64px; }

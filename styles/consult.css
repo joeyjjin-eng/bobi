@@ -456,19 +456,19 @@
 }
 
 @media (max-width: 760px) {
-  .cE .debt-card { grid-template-columns: 1fr; gap: 18px; }
+  .cE .debt-card { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .cE .debt-field { grid-template-columns: 120px minmax(0, 1fr); }
   .cE .finance-grid-row,
-  .cE .finance-asset-row { grid-template-columns: 1fr; gap: 8px; }
+  .cE .finance-asset-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .cE .finance-grid-head { display: none; }
   .cE .finance-input-row .del { justify-self: start; }
-  .cE .debt-pay-row { grid-template-columns: 1fr; gap: 8px; }
+  .cE .debt-pay-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .cE .debt-pay-row .del { justify-self: start; }
   .cE .debt-pay-add { flex-wrap: wrap; }
 }
 
 @media (max-width: 960px) {
-  .cE .finance-body { grid-template-columns: 1fr; }
+  .cE .finance-body { grid-template-columns: minmax(0, 1fr); }
   .cE .finance-index { position: static; max-height: none; }
 }
 
@@ -868,9 +868,9 @@
   .cE .ct-act { width: 100%; flex-wrap: wrap; }
   .cE .ct-steps { overflow-x: auto; }
   .cE .ct-panel { padding: 20px 16px; }
-  .cE .ct-sec { grid-template-columns: 1fr; gap: 14px; }
-  .cE .ct-split, .cE .ct-g2, .cE .ct-g3, .cE .ct-goals, .cE .ct-donut { grid-template-columns: 1fr; gap: 16px; }
-  .cE .ct-sum { grid-template-columns: 1fr; }
+  .cE .ct-sec { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .cE .ct-split, .cE .ct-g2, .cE .ct-g3, .cE .ct-goals, .cE .ct-donut { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .cE .ct-sum { grid-template-columns: minmax(0, 1fr); }
   .cE .ct-sum .op { display: none; }
   .cE .ct-tbl { display: block; overflow-x: auto; white-space: nowrap; }
 }
@@ -880,3 +880,63 @@
 .cE .ct-tot .hd[data-go], .cE .ct-tot .li[data-go] { cursor: pointer; }
 .cE .ct-tot .hd[data-go] { margin: 0 4px; padding: 11px 8px; border-radius: var(--r-sm); }
 .cE .ct-tot .hd[data-go]:hover, .cE .ct-tot .li[data-go]:hover { background: var(--bg-soft); border-radius: var(--r-sm); }
+
+/* ============================================================
+   재무상담 — 모바일 (≤960px)
+   치수(여백·행 높이·글자)는 styles/mobile-rules.css 가 정한다.
+   여기서는 어느 칸을 어디에 놓을지만 다시 짠다.
+   ============================================================ */
+@media (max-width: 960px) {
+  /* ===== 목록 — 표를 카드 행으로 =====
+     칸 차례: 1 고객 · 2 회차 · 3 빈칸 · 4 최초 · 5 마지막 · 6 다음 · 7 펼치기
+     최초 상담은 모바일에서 접는다(마지막·다음만 봐도 판단이 된다). */
+  .cE .table-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 24px;
+    grid-template-areas:
+      "name last go"
+      "cnt  next go";
+    align-items: center;
+    justify-items: start;
+  }
+  .cE .table-row > *:nth-child(1) { grid-area: name; justify-self: stretch; }
+  .cE .table-row > *:nth-child(2) { grid-area: cnt; }
+  .cE .table-row > *:nth-child(3) { display: none; }
+  .cE .table-row > *:nth-child(4) { display: none; }
+  .cE .table-row > *:nth-child(5) { grid-area: last; justify-self: end; }
+  .cE .table-row > *:nth-child(6) { grid-area: next; justify-self: end; }
+  .cE .table-row > *:nth-child(7) { grid-area: go; }
+
+  /* 표 머리를 숨겼으니 어느 날짜인지 앞에 적어 준다 */
+  .cE .table-row > *:nth-child(5)::before { content: '마지막 '; color: var(--ink-4); font-weight: 500; }
+  .cE .table-row .tr-next::before { content: '다음 '; color: var(--ink-4); font-weight: 500; }
+  .cE .table-row .tr-next:empty { display: none; }
+
+  .cE .table-row .tr-name .patient-avatar { width: 34px; height: 34px; font-size: var(--fs-body); }
+  .cE .table-row .tr-cnt { font-size: var(--fs-option); color: var(--ink-2); }
+  .cE .table-row .tr-go { margin: 0; align-self: center; }
+
+  /* ===== 펼친 회차 — 회차·날짜 한 줄, 링크는 아래 줄 ===== */
+  .cE .ct-srow { grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; padding: 12px 0; }
+  .cE .ct-srow > *:nth-child(3) { display: none; }
+  .cE .ct-srow .n { grid-column: 1; }
+  .cE .ct-srow .d { grid-column: 2; justify-self: start; }
+  .cE .ct-srow .a { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
+  .cE .ct-srow .cfm { flex-wrap: wrap; gap: 10px 14px; }
+  .cE .ct-srow .cfm-q { flex: 1 1 100%; white-space: normal; }
+
+  /* ===== 단계 줄 · 탭 — 가로로 밀어서 본다 ===== */
+  .cE .ct-steps,
+  .cE .ct-subtabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .cE .ct-steps::-webkit-scrollbar,
+  .cE .ct-subtabs::-webkit-scrollbar { display: none; }
+  .cE .ct-steps > *,
+  .cE .ct-subtabs > * { flex: none; white-space: nowrap; }
+
+  /* ===== 입력 칸 — 고정 폭 해제 ===== */
+  .cE .ct-ag .gr { flex-wrap: wrap; }
+  .cE .ct-ag .gr .ct-in { width: 100%; }
+  .cE .ct-cond { grid-template-columns: 84px minmax(0, 1fr); }
+  .cE .ct-benefit { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .cE .ct-benefit .bside { align-items: flex-start; text-align: left; }
+}

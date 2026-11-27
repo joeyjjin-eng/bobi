@@ -139,7 +139,6 @@
 
   /* ===== 반응형 (모바일) ===== */
   @media (max-width: 960px) {
-    .cE .back-btn { margin-top: 4px; }
 
     /* 프로필 헤더 — 세로 스택 */
     .cE .cust-rep-head { padding: 8px 0 18px !important; margin-bottom: 16px; gap: 14px; }
@@ -152,12 +151,12 @@
     .cE .cust-rep-right .resend-cta { flex: 1; justify-content: center; height: 42px; }
 
     /* 트리거 카드 — 1열 */
-    .cE .trigger-cards { grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    .cE .trigger-cards { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-bottom: 16px; }
     .cE .trig { padding: 14px 16px; grid-template-columns: 40px 1fr 16px; gap: 12px; }
     .cE .trig .tc-ic { width: 40px; height: 40px; border-radius: 11px; }
 
     /* 본문 그리드 — 1열 */
-    .cE .cust-grid { grid-template-columns: 1fr; gap: 14px; }
+    .cE .cust-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
     .cE .cust-grid > .col { gap: 14px; }
     .cE .cust-grid .card-pad h2 { font-size: var(--fs-body); margin: 0 0 12px; }
 
@@ -166,7 +165,7 @@
     .cE .info-dl dd { font-size: var(--fs-body); }
 
     /* 활동 요약 — 세로 스택 */
-    .cE .act-summary { grid-template-columns: 1fr; gap: 0; padding: 14px 16px; }
+    .cE .act-summary { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 14px 16px; }
     .cE .act-cell { padding: 12px 0; border-right: none; border-bottom: 1px dashed var(--line); }
     .cE .act-cell:first-child { padding-top: 0; }
     .cE .act-cell:last-child { border-bottom: none; padding-bottom: 0; }
@@ -180,12 +179,14 @@
     .act-modal-head { gap: 10px; }
     .act-modal .at-item { grid-template-columns: 12px 44px 1fr; gap: 10px; padding: 12px 0; }
     .edit-modal-card { padding: 22px 20px 20px; }
-    .edit-modal-card .form-row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+    .edit-modal-card .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; margin-bottom: 0; }
     .edit-modal-card .form-row .form-field { margin-bottom: 14px; }
     .edit-modal-actions { flex-wrap: wrap; }
     .edit-modal-card .em-btn { flex: 1; padding: 0 14px; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 
@@ -197,10 +198,6 @@
 
   <main class="emain">
 
-    <a class="back-btn" href="list.html">
-      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
-    </a>
-
     <div class="rep-head cust-rep-head">
       <div class="rep-id">
         <div class="patient-avatar" data-name="배태우"></div>
@@ -208,11 +205,7 @@
           <div class="h-eyebrow">고객 상세정보 <span class="status-pill">약관동의 대기</span></div>
           <h1>배태우님</h1>
           <div class="rep-meta">
-            <span>성별 <span class="empty-v">—</span></span>
-            <span>생년월일 <span class="empty-v">—</span></span>
             <span>보험나이 <span class="empty-v">—</span></span>
-            <span><svg class="ic-svg" width="13" height="13"><use href="#i-phone"/></svg> <b>010-4471-9920</b></span>
-            <span><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> <span class="empty-v">—</span></span>
           </div>
         </div>
       </div>
@@ -274,6 +267,57 @@
       </div>
     </div>
 
+    <!-- ===== 모바일 전용 — 개인정보 · 서비스 이용내역 · 메모 ===== -->
+    <div class="cust-m">
+      <div class="cm-top">
+        <span><i>담당설계사</i>홍길동 FC</span>
+        <span><i>약관동의</i><b class="cm-wait">대기 중</b><button type="button" class="cm-resend">재전송</button></span>
+      </div>
+
+      <div class="cm-head">
+        <h2>개인정보</h2>
+        <button type="button" class="cm-edit">수정</button>
+      </div>
+      <dl class="cm-card">
+        <div class="cm-row">
+          <dt>이름</dt>
+          <dd>배태우</dd>
+        </div>
+        <div class="cm-row">
+          <dt>생년월일</dt>
+          <dd><span class="cm-empty">—</span></dd>
+        </div>
+        <div class="cm-row">
+          <dt>연락처</dt>
+          <dd>010-4471-9920</dd>
+        </div>
+        <div class="cm-row">
+          <dt>성별</dt>
+          <dd><span class="cm-empty">—</span></dd>
+        </div>
+      </dl>
+
+      <div class="cm-head"><h2>서비스 이용내역</h2></div>
+      <a class="cm-svc" href="../report/new.html">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
+        <span class="cm-svc-t">진료기록리포트</span>
+        <span class="cm-badge todo">미완료</span>
+        <span class="cm-svc-go">발급하기<svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span>
+      </a>
+      <a class="cm-svc" href="../unclaimed/new.html">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-search-check"/></svg>
+        <span class="cm-svc-t">미청구보험금</span>
+        <span class="cm-badge todo">미완료</span>
+        <span class="cm-svc-go">조회하기<svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span>
+      </a>
+
+      <div class="cm-head"><h2>메모</h2></div>
+      <textarea class="cm-memo" placeholder="메모를 입력해 주세요."></textarea>
+
+      <button type="button" class="cm-save">저장</button>
+      <button type="button" class="cm-delete">고객 삭제</button>
+    </div>
+
     <div class="cust-grid">
       <div class="col">
         <div class="card-pad">
@@ -287,7 +331,6 @@
             <dt>생년월일</dt><dd class="empty">—</dd>
             <dt>보험나이</dt><dd class="empty">—</dd>
             <dt>연락처</dt><dd>010-4471-9920</dd>
-            <dt>주소</dt><dd class="empty">—</dd>
             <dt>이메일</dt><dd class="empty">—</dd>
           </dl>
         </div>
@@ -448,6 +491,30 @@
 </script>
 
 <script src="../../components/layout.js"></script>
-<script>injectShell('customer');</script>
+<script>injectShell('customer');
+  // 모바일 '재전송' → 기존 약관동의 링크 재전송 버튼
+  document.querySelectorAll('.cm-resend').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var o = document.getElementById('resend-link-btn');
+      if (o) o.click();
+    });
+  });
+  // cm-delete 연결 — 기존 더보기 메뉴의 '고객 삭제' 와 같은 동작
+  document.querySelectorAll('.cm-delete').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var o = document.querySelector('.menu-item[data-action="delete"]');
+      if (o) o.click();
+    });
+  });
+  // 모바일 '수정' → 기존 수정 모달 열기
+  document.querySelectorAll('.cm-edit').forEach(function (b) {
+    b.id = b.id || 'cm-edit-proxy';
+    b.addEventListener('click', function () {
+      var o = document.getElementById('edit-info-btn');
+      if (o) o.click();
+    });
+  });
+  // 모바일 상단바 — 햄버거 대신 뒤로가기 (본문 상단 텍스트 링크를 대신한다)
+  if (window.setDetailTopbar) setDetailTopbar('고객 상세정보', 'list.html');</script>
 </body>
 </html>

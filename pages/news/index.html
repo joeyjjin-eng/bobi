@@ -197,12 +197,14 @@
 
   @media (max-width: 640px) {
     .layout { min-width: 0; }
-    .cE .ns-grid { grid-template-columns: 1fr; }
+    .cE .ns-grid { grid-template-columns: minmax(0, 1fr); }
     .cE .ns-row { grid-template-columns: 1fr 88px 24px; }
     .cE .ns-row .dt { grid-column: 1 / -1; padding-top: 0; }
     .cE .ns-row .ns-thumb { width: 88px; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

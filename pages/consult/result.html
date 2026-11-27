@@ -122,10 +122,12 @@
   .cE .rs-net > span, .cE .rs-net > b { line-height: 32px; }
 
   @media (max-width: 960px) {
-    .cE .rs-hero { grid-template-columns: 1fr; gap: 20px; }
-    .cE .rs-bs, .cE .rs-pl { grid-template-columns: 1fr; gap: 28px; }
+    .cE .rs-hero { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .cE .rs-bs, .cE .rs-pl { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

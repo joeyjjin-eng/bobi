@@ -1,4 +1,4 @@
-\!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
@@ -195,13 +195,13 @@
     .cE .mp-card-body { padding: 4px 20px 20px; }
     .cE .mp-card-actions { padding: 14px 20px; flex-wrap: wrap; }
 
-    .cE .form-row { grid-template-columns: 1fr; gap: 0; }
+    .cE .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
 
     .cE .plan-body { padding: 0 20px 16px; }
     .cE .up-row { grid-template-columns: 90px 1fr auto; gap: 10px; }
     .cE .plan-current { margin: 8px 20px 16px; }
     .cE .pc-head { padding: 14px 16px; }
-    .cE .pc-grid { grid-template-columns: 1fr; }
+    .cE .pc-grid { grid-template-columns: minmax(0, 1fr); }
     .cE .pc-item { padding: 14px 16px; border-right: none; border-bottom: 1px solid rgba(102, 178, 255, 0.18); }
     .cE .pc-item:last-child { border-bottom: none; }
 
@@ -214,6 +214,8 @@
     .cE .sb-r { width: 100%; justify-content: flex-end; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

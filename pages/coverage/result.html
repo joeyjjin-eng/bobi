@@ -470,14 +470,14 @@
     .cE #cov-score-tiles .cov-tile:first-child { padding-top: 4px; }
     .cE #cov-score-tiles .cov-tile:last-child { padding-bottom: 4px; }
     .cE #cov-score-tiles .cov-tile + .cov-tile { border-left: 0; border-top: 1px solid var(--line-strong); }
-    .cE .cov-cards { grid-template-columns: 1fr; }
+    .cE .cov-cards { grid-template-columns: minmax(0, 1fr); }
     .cE .cov-card { padding: 20px 0; }
     .cE .cov-card:not(:nth-child(3n + 1)) { border-left: 0; }
     .cE .cov-card:nth-child(n + 2) { border-top: 1px solid var(--line-strong); }
     .cE .cov-amt { font-size: 26px; }
     .cE .cov-group { margin-top: var(--s7); }
     .cE .cov-cat-label + .cov-group { margin-top: var(--s4); }
-    .cE .cov-co-block { grid-template-columns: 1fr; }
+    .cE .cov-co-block { grid-template-columns: minmax(0, 1fr); }
     .cE .cov-co-name { padding-bottom: 2px; }
 
     .cE .sec-head { flex-direction: column; gap: 12px; }
@@ -504,7 +504,7 @@
     .cE .shr-row.head { grid-template-areas: "before arrow after"; }
     .cE .shr-row.head span:first-child { display: none; }
 
-    .cE .ba-compare { grid-template-columns: 1fr; row-gap: 10px; }
+    .cE .ba-compare { grid-template-columns: minmax(0, 1fr); row-gap: 10px; }
     .cE .ba-mid { height: 28px; transform: rotate(90deg); }
     .cE .ba-main { font-size: var(--fs-h1); }
     .cE .ba-block + .ba-block { margin-top: var(--s7); }
@@ -603,6 +603,8 @@
     .cE .shr-tip, .cE .cov-matrix tr.tip td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

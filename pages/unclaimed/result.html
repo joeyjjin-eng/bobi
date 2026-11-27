@@ -221,7 +221,7 @@
     /* ===== 조회 조건 — 라벨 위/칩 아래 스택 ===== */
     .cE .uc-filter { padding: 4px 16px 14px; margin-top: 4px; border-radius: var(--r-md); }
     .cE .uc-filter-cap { padding: 14px 0 10px; }
-    .cE .uc-filter-row { grid-template-columns: 1fr; gap: 10px; padding: 14px 0; }
+    .cE .uc-filter-row { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 14px 0; }
     .cE .uc-filter-l { padding-top: 0; font-size: var(--fs-body); }
     .cE .uc-chips { gap: 6px; }
     .cE .uc-chip { padding: 8px 14px; font-size: var(--fs-option); }
@@ -346,6 +346,8 @@
     .wp-modal-cta { padding: 11px 22px; font-size: var(--fs-body); }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

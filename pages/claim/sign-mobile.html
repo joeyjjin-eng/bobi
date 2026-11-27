@@ -131,9 +131,11 @@
   /* ===== [임시] 상황 스위처 (실제 서비스 배포시 삭제) ===== */
   .dev-switcher { background: #FFF8E1; border-top: 1px dashed #E0A800; padding: 12px 16px; display: flex; align-items: center; gap: 8px; font-size: var(--fs-option); color: #7A5A00; }
   .dev-switcher .lbl { font-weight: 800; white-space: nowrap; }
-  .dev-switcher select { flex: 1; padding: 7px 10px; border-radius: 6px; border: 1px solid #E0A800; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #333; cursor: pointer; }
+  .dev-switcher select { flex: 1; min-width: 0; padding: 7px 10px; border-radius: 6px; border: 1px solid #E0A800; background: #fff; font-family: inherit; font-size: var(--fs-option); color: #333; cursor: pointer; }
   .foot p + p { margin-top: 4px; }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

@@ -1,0 +1,729 @@
+/* ============================================================
+   BoBi v2 — 모바일 공통 규격 (≤ 960px)
+
+   이 파일이 모바일 치수의 단일 기준이다.
+   페이지 <style> 보다 뒤에 로드한다 (head 마지막 줄).
+   페이지에서 값을 다시 쓰지 말고 아래 변수를 가져다 쓴다.
+
+   구성
+   ----
+   0. 줄바꿈·금액    — 폭 상관없이 늘 적용 (어절·금액 중간 잘림 금지)
+   1. 규격 변수      — 여백·간격·높이
+   2. 화면 여백      — emain · 푸터 · 넘침 안전망
+   3. 상단 제목      — 제목 19 / 설명 13 / 버튼 36, 한 줄 안에 담는다
+   4. 검색 · 필터    — 검색 한 줄 44, 필터는 칩 하나 + 바텀시트
+   5. 리스트         — 표 머리 숨김, 행은 카드처럼 (별도 규칙)
+   6. 카드 · 표
+   7. 터치 타깃
+   ============================================================ */
+
+/* ============================================================
+   0. 줄바꿈 · 금액 — 폭과 무관하게 적용
+   ------------------------------------------------------------
+   · word-break: keep-all  — 한글 어절 안에서 줄을 끊지 않는다.
+     칸이 좁아져도 한 글자씩 세로로 쌓이는 일이 생기지 않는다.
+   · overflow-wrap 은 쓰지 않는다. anywhere/break-word 를 주면
+     칸이 좁을 때 글자 단위로 쪼개져 세로로 흐른다.
+   · 금액·날짜·건수는 nowrap — 숫자가 두 줄로 갈라지지 않는다.
+   ============================================================ */
+.bobi,
+.cA,
+.cE,
+.ft,
+.lp { word-break: keep-all; }
+
+/* 금액·수치 셀 — 중간에서 갈라지지 않게 */
+.bobi .amt,
+.bobi td.amt,
+.bobi th.amt,
+.bobi .tr-amt,
+.bobi .tr-cost,
+.bobi .uc-amt,
+.bobi .kc-v,
+.bobi .cp-price,
+.bobi .shr-sum-v,
+.bobi .cov-tile-v,
+.bobi .car-stat-v,
+.bobi .act-v,
+.bobi .pb-v,
+.bobi .upr-v,
+.bobi .mg-v,
+.bobi .pci-v,
+.bobi .empty-v,
+.bobi .tr-date,
+.bobi .tr-next,
+.bobi .consent-meta {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 필터 트리거 칩 — 모바일에서만 쓴다 */
+.cE .filter-trigger { display: none; }
+
+/* 검색 입력 래퍼 — 데스크탑에서는 없는 셈 친다 (기존 .search-bar 레이아웃 유지) */
+.cE .sb-field { display: contents; }
+
+/* 고객 상세 — 모바일 전용 묶음. 데스크탑에서는 쓰지 않는다 */
+.cE .cust-m { display: none; }
+
+/* 칩·배지·버튼 라벨 — 한 줄 유지 */
+.bobi .pill,
+.bobi .typechip,
+.bobi .ntag,
+.bobi .gender-chip,
+.bobi .consent-badge,
+.bobi .task-pill,
+.bobi .sort-pill,
+.bobi .preset,
+.bobi .kwchip { white-space: nowrap; }
+
+@media (max-width: 960px) {
+
+  /* ============================================================
+     1. 규격 변수
+     ------------------------------------------------------------
+     간격은 Gestalt 비율로 — 묶음 내부 10 : 묶음 사이 24 (약 2.4배).
+     데스크탑(20 : 48)과 같은 비율을 모바일 치수로 줄인 값이다.
+     ============================================================ */
+  :root {
+    --m-gut:      16px;  /* 화면 좌우 여백 (모든 화면 동일) */
+    --m-pad:      16px;  /* 카드·리스트 행 내부 좌우 여백 */
+    --m-pad-sm:   14px;  /* 검색·필터처럼 얕은 바의 내부 여백 */
+    --m-gap-in:   10px;  /* 한 묶음 안 요소 사이 */
+    --m-gap-grp:  24px;  /* 묶음 사이 */
+    --m-gap-card: 16px;  /* 카드·바 사이 (세로) */
+    --m-gap-x:     8px;  /* 한 줄 안 가로 간격 */
+    --m-row-y:    14px;  /* 리스트 행 위아래 여백 */
+    --m-row-h:    56px;  /* 리스트 행 최소 높이 */
+    --m-bar-h:    44px;  /* 검색·입력·주요 버튼 높이 */
+    --m-chip-h:   32px;  /* 칩·필터 버튼 높이 */
+    --m-tap:      44px;  /* 최소 터치 높이 */
+    --m-ic:       34px;  /* 제목 아이콘 */
+
+    /* 글자 단계 — docs/mobile-design-standard.md 1-1 */
+    --m-fs-sec:    17px;  /* 섹션 제목 */
+    --m-fs-item:   16px;  /* 목록 핵심 정보 · 값 */
+    --m-fs-btn-sm: 14px;  /* 보조 버튼 */
+
+    /* 하단 플로팅 버튼(FAB) — 주요 CTA */
+    --m-fab-h:     48px;  /* 높이 */
+    --m-fab-pad-x: 20px;  /* 좌우 패딩 */
+    --m-fab-gap:   16px;  /* 화면 모서리에서 띄우는 거리 */
+    --m-fab-fs:    16px;  /* 라벨 — 기준 1-1 '주요 버튼 16' */
+    --m-fab-clear: 80px;  /* FAB 이 가리지 않게 페이지 끝에 비우는 높이 */
+  }
+
+  /* 상단 바 — 로고를 화면 한가운데. 좌우 버튼 수가 달라도 가운데가 흔들리지 않게
+     양쪽에 같은 폭의 칸을 두고 가운데 칸에 로고를 놓는다. */
+  .m-topbar {
+    display: grid !important;
+    grid-template-columns: var(--m-tap) 1fr var(--m-tap);
+    align-items: center;
+  }
+  .m-topbar .m-logo { justify-self: center; }
+  /* 상세 화면 상단바 — 뒤로 · 제목 · 빈칸 */
+  .m-topbar.detail-mode { padding: 0 4px !important; }
+  .m-topbar.detail-mode .m-back {
+    width: var(--m-tap); height: var(--m-tap);
+    display: grid; place-items: center;
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-2); text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .m-topbar.detail-mode .m-title {
+    justify-self: center; min-width: 0;
+    font-size: var(--fs-body); font-weight: 800; color: var(--ink); line-height: 1.4;
+    padding: 0 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .m-topbar.detail-mode .m-spacer { width: var(--m-tap); height: var(--m-tap); }
+
+  /* ============================================================
+     2. 화면 여백 · 넘침 안전망
+     ============================================================ */
+  .cE .emain {
+    padding: 12px var(--m-gut) 32px !important;
+    /* clip 은 hidden 과 달리 안쪽 sticky 를 깨지 않는다 */
+    overflow-x: clip;
+  }
+  .layout,
+  .cA,
+  .cE { max-width: 100%; }
+  .cE .emain > * { max-width: 100%; }
+
+  /* 푸터 좌우를 본문 여백과 맞춘다 */
+  .ft { padding: 24px var(--m-gut) calc(28px + env(safe-area-inset-bottom)) !important; }
+
+  /* 입력 요소는 내용이 길어도 칸을 밀어내지 않는다 (select 의 긴 option 등) */
+  .cE input,
+  .cE select,
+  .cE textarea { max-width: 100%; min-width: 0; }
+
+  /* 가로로 넘칠 수 있는 것은 밀어서 본다 (칸 밖으로 삐져나오지 않게) */
+  .cE .raw-scroll,
+  .cE .ct-tbl-wrap,
+  .cE .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* ============================================================
+     3. 상단 제목 — 절제
+     ------------------------------------------------------------
+     제목 19 · 설명 13 · 아이콘 34 · 버튼 36.
+     제목과 버튼은 같은 줄에 두고, 자리가 없을 때만 버튼이 내려간다.
+     ============================================================ */
+  .cE .hist-title-row,
+  .cE .ct-title-row {
+    /* 아래 선만 화면 끝까지 — 본문 여백만큼 음의 마진 */
+    width: calc(100% + var(--m-gut) * 2) !important;
+    max-width: none !important;
+    margin: 0 calc(var(--m-gut) * -1) var(--m-gap-card) !important;
+    padding: 0 0 var(--m-gap-in) !important;
+  }
+  .cE .hist-title-inner,
+  .cE .ct-title-inner {
+    max-width: none !important;
+    padding: 0 var(--m-gut) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-items: center !important;
+    gap: var(--m-gap-in) !important;
+  }
+  .cE .ht-l,
+  .cE .ct-title-l {
+    flex: 1 1 200px;
+    min-width: 0;
+    align-items: center !important;
+    gap: var(--m-gap-in) !important;
+  }
+  .cE .ht-ic,
+  .cE .ct-title-ic {
+    width: var(--m-ic) !important;
+    height: var(--m-ic) !important;
+    border-radius: 10px !important;
+  }
+  .cE .ht-ic svg,
+  .cE .ct-title-ic svg { width: 18px; height: 18px; }
+
+  .cE .ht-l h1,
+  .cE .hist-title-row h1,
+  .cE .ct-title-row h1 {
+    font-size: var(--fs-h2) !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+  }
+  .cE .ht-sub,
+  .cE .ct-title-sub {
+    font-size: var(--fs-option) !important;
+    line-height: 1.4 !important;
+    margin-top: 2px !important;
+    /* 설명은 두 줄까지 — 그 아래는 화면을 더 먹지 않는다 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* 제목 오른쪽 액션 — 자리가 없으면 다음 줄 오른쪽 */
+  .cE .ht-actions,
+  .cE .ct-title-act {
+    flex: 0 1 auto;
+    margin-left: auto !important;
+    align-self: center !important;
+    display: inline-flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--m-gap-x) !important;
+  }
+  /* 제목줄에 남는 버튼(내보내기 등)은 모두 같은 높이·같은 글자 크기.
+     주요 CTA 는 .m-fab 으로 하단에 떠 있으므로 여기서 뺀다. */
+  .cE .ht-actions > a:not(.m-fab),
+  .cE .ht-actions > button:not(.m-fab),
+  .cE .ct-title-act > a:not(.m-fab),
+  .cE .ct-title-act > button:not(.m-fab),
+  .cE .export-btn {
+    min-height: 36px;
+    padding: 0 14px !important;
+    font-size: var(--fs-option) !important;
+    gap: 6px !important;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 뒤로 + 제목 바(.nr-title-row) — 데스크탑 음의 마진을 모바일 여백에 맞춘다.
+     (topbar 로 대체하는 페이지는 이 바를 display:none 으로 감춘다) */
+  .cE .nr-title-row {
+    width: calc(100% + var(--m-gut) * 2) !important;
+    max-width: none !important;
+    margin: -12px calc(var(--m-gut) * -1) var(--m-gap-card) !important;
+    padding: var(--m-gap-in) 0 !important;
+  }
+  .cE .nr-title-inner {
+    max-width: none !important;
+    padding: 0 var(--m-gut) !important;
+    gap: var(--m-gap-in) !important;
+    flex-wrap: wrap;
+  }
+  .cE .nr-title-row h1 { font-size: var(--fs-h2) !important; line-height: 1.4 !important; }
+  .cE .nr-title-row .sub { font-size: var(--fs-option) !important; line-height: 1.4 !important; }
+  .cE .back-btn { flex: none; min-height: var(--m-chip-h); }
+
+  /* ---- 하단 플로팅 버튼(FAB) — 그 화면에서 '새로 만드는' 동작 하나 ----
+     헤더에 두면 엄지가 닿지 않고, 잔여 뱃지와 겹쳐 제목줄이 두 줄이 된다.
+     데스크탑 마크업을 그대로 두고 위치만 옮긴다(= data-quota 등 동작 유지).
+     색·그림자는 각 페이지의 기존 값을 쓴다 — 이 규격의 범위 밖이다. */
+  .cE .m-fab {
+    position: fixed;
+    right: var(--m-fab-gap);
+    bottom: calc(var(--m-fab-gap) + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+    width: auto;
+    min-height: var(--m-fab-h);
+    height: var(--m-fab-h);
+    padding: 0 var(--m-fab-pad-x) !important;
+    font-size: var(--m-fab-fs) !important;
+    gap: 8px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    margin: 0 !important;
+    flex: none;
+  }
+  /* 라벨은 짧게 — 수식어는 접는다. "+" 아이콘이 이미 '새로'를 말한다 */
+  .cE .m-fab .m-fab-ext { display: none; }
+
+  /* 푸터가 화면에 들어오면 FAB 은 비켜 준다 (동작은 components/layout.js 의 bindFab) */
+  .cE .m-fab { transition: opacity .18s ease, transform .18s ease; }
+  .cE .m-fab.m-fab-hide { opacity: 0; transform: translateY(12px); pointer-events: none; }
+
+  /* 주요 CTA 가 FAB 으로 빠져 제목 오른쪽에 잔여 뱃지만 남은 경우 —
+     뱃지가 제목 칸을 좁혀 제목이 두 줄로 밀린다. 제목에 한 줄을 통째로 주고 뱃지를 내린다. */
+  .cE .hist-title-inner:has(.quota-pill) .ht-l { flex: 1 1 100%; }
+  .cE .hist-title-inner:has(.quota-pill) .ht-actions { margin-left: 0 !important; }
+
+  /* 상세 화면 제목(.etop) — 모바일에서 한 줄 고정 해제 */
+  .cE .etop { flex-wrap: wrap; gap: var(--m-gap-in); margin-bottom: var(--m-gap-card); }
+  .cE .etop h1 { font-size: var(--fs-h2); white-space: normal; line-height: 1.4; }
+  .cE .etop .sub { font-size: var(--fs-option); line-height: 1.4; }
+
+  /* ============================================================
+     4. 검색 · 필터 — 표시는 하되 자리는 적게
+     ============================================================ */
+  /* 검색·정렬·필터는 스크롤에 고정하지 않는다. 고정은 상단 바 하나뿐이다. */
+  .cE .search-bar,
+  .cE .filter-trigger,
+  .cE .sort-row { position: static !important; top: auto !important; }
+
+  /* 검색 줄 — 테두리 없는 투명한 줄. 안에 [검색 입력][정렬][기간][필터]를 나란히 둔다.
+     검색 입력만 테두리를 갖는다. 성격이 다른 버튼을 같은 테두리 안에 넣지 않는다. */
+  .cE .search-bar {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    min-height: var(--m-tap);
+    column-gap: var(--m-gap-x) !important;
+    row-gap: var(--m-gap-x) !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    margin-bottom: var(--m-gap-x) !important;
+  }
+  /* 검색 입력 묶음 — 이것만 테두리 */
+  .cE .search-bar .sb-field {
+    display: flex !important;
+    align-items: center;
+    gap: var(--m-gap-x);
+    flex: 1 1 100px;
+    min-width: 0;
+    min-height: var(--m-tap);
+    padding: 0 var(--m-pad-sm);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+  }
+  .cE .search-bar .sb-field > .si-ic { flex: none; }
+  .cE .search-bar input {
+    flex: 1;
+    min-width: 0;
+    min-height: var(--m-tap);
+    border: none;
+    background: none;
+  }
+  /* 정렬 — 검색 줄 아래로 내리고 테두리 없는 텍스트 버튼으로.
+     줄바꿈은 폭 100% 짜리 ::after 로 만들고, 정렬 자체는 글자 폭만 차지하게 둔다
+     (100% 로 늘리면 꺾쇠가 화면 오른쪽 끝으로 떨어져 글자와 따로 논다) */
+  .cE .search-bar::after { content: ''; flex: 0 0 100%; height: 0; order: 9; }
+  .cE .search-bar .sort-select {
+    order: 11;
+    flex: 0 0 auto;
+    margin-left: auto;
+    min-height: var(--m-chip-h);
+    padding: 0 2px;
+    border: none;
+    background: none;
+  }
+  .cE .search-bar .sort-select select {
+    padding: 0 22px 0 2px;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink-2);
+  }
+  .cE .search-bar .sort-select svg.ic-svg { right: 4px; }
+  .cE .sb-divider { display: none !important; }
+  .cE .sort-select select { font-size: var(--fs-option); }
+  .cE .sb-help-btn { min-height: var(--m-chip-h); font-size: var(--fs-option); white-space: nowrap; }
+  .cE .sb-help { display: flex; gap: var(--m-gap-x); flex-wrap: wrap; }
+  /* 아이콘만 남은 보조 버튼 — 아이콘을 칸 한가운데로 */
+  .cE .sb-help-btn {
+    width: 36px; height: 36px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cE .sb-help-btn svg { margin: 0; }
+
+  /* ---- 검색바 안 아이콘 버튼 — 기간 선택 · 필터 ----
+     글자를 빼고 아이콘만 남긴다. 달력/필터 아이콘은 그것만으로 읽히고,
+     라벨을 달면 둘이 검색창을 밀어내 한 줄에 못 들어간다.
+     고른 값이 있으면 브랜드 색으로 채워서 '적용됨' 을 표시한다. */
+  .cE .search-bar .period-trigger,
+  .cE .search-bar .filter-trigger {
+    flex: none;
+    width: var(--m-tap);
+    height: var(--m-tap);
+    min-height: var(--m-tap);
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 !important;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    background: #fff;
+    color: var(--ink-2);
+  }
+  /* 라벨과 꺾쇠는 숨기고 앞의 아이콘만 남긴다 */
+  .cE .search-bar .period-trigger > span,
+  .cE .search-bar .filter-trigger > span,
+  .cE .search-bar .period-trigger > svg:last-child,
+  .cE .search-bar .filter-trigger > svg:last-child { display: none; }
+  .cE .search-bar .period-trigger > svg:first-child,
+  .cE .search-bar .filter-trigger > svg:first-child {
+    width: 18px; height: 18px; color: inherit;
+  }
+  /* 고른 값이 있을 때 */
+  .cE .search-bar .period-trigger.has-value,
+  .cE .search-bar .period-trigger[aria-expanded="true"],
+  .cE .search-bar .filter-trigger.on,
+  .cE .search-bar .filter-trigger[aria-expanded="true"] {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+  }
+
+  /* ---- 필터 — 칩 한 줄로 접고, 누르면 바텀시트 ----
+     필터바를 펼쳐 두면 화면 위쪽을 다 먹는다. 칩 하나만 두고
+     고른 값이 있으면 칩에 적어 둔다(.on → '필터 적용됨'). */
+  /* 검색바 밖에 둔 경우의 기본형(칩). 검색바 안에서는 위의 아이콘 규격이 이긴다. */
+  .cE .filter-trigger {
+    display: inline-flex; align-items: center; gap: 6px;
+    width: auto; align-self: flex-start;
+    min-height: var(--m-chip-h);
+    padding: 0 14px;
+    margin-bottom: var(--m-gap-card);
+    background: #fff; border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    font-family: inherit; font-size: var(--fs-option); font-weight: 600;
+    color: var(--ink); cursor: pointer; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .cE .filter-trigger:hover { border-color: var(--ink-4); }
+  .cE .filter-trigger:active { background: var(--bg-soft); }
+  .cE .filter-trigger > svg:first-child { color: var(--ink-3); flex: none; }
+  .cE .filter-trigger > svg:last-child { color: var(--ink-4); flex: none; }
+  .cE .filter-trigger.on { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 700; }
+  .cE .filter-trigger.on > svg { color: currentColor; opacity: .9; }
+
+  /* 주의 — .filter-bar 를 쓰는 화면에는 #filter-trigger 버튼이 반드시 있어야 한다.
+     (없으면 시트를 열 방법이 없다. 트리거 마크업은 다른 목록 화면을 참고) */
+  .cE .filter-bar {
+    display: none;
+    position: fixed;
+    left: 0; right: 0; bottom: 0; top: auto;
+    width: 100%; max-width: 520px;
+    margin: 0 auto;
+    max-height: 85vh; overflow-y: auto;
+    background: #fff;
+    border: none;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 32px rgba(8, 22, 32, .22);
+    padding: 22px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+    z-index: 300;
+    flex-direction: column;
+    align-items: stretch;
+    /* 묶음 사이 — 내부 8 : 사이 24 (약 3배)로 성별/연령대가 갈라져 보인다 */
+    gap: var(--m-gap-grp);
+  }
+  .cE .filter-bar.open { display: flex; animation: fbSheetUp .28s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes fbSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  /* 드래그 핸들 */
+  .cE .filter-bar.open::before {
+    content: '';
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 4px;
+    border-radius: 2px;
+    background: var(--ink-4); opacity: .5;
+  }
+  /* 백드롭 */
+  body:has(.filter-bar.open)::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: rgba(8, 22, 32, .45);
+    z-index: 299;
+    animation: fbBgIn .2s ease both;
+  }
+  @keyframes fbBgIn { from { opacity: 0; } to { opacity: 1; } }
+  body:has(.filter-bar.open) { overflow: hidden; }
+
+  /* 시트 안 — 자리가 넉넉하니 라벨은 본문, 칩은 줄바꿈 허용 */
+  .cE .filter-bar .filter-group { flex-direction: column; align-items: flex-start; gap: var(--m-gap-x); padding-top: 4px; }
+  .cE .filter-bar .fg-l { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cE .filter-bar .fb-divider { display: none; }
+  .cE .filter-bar .pills { flex-wrap: wrap; gap: var(--m-gap-x); }
+  .cE .filter-bar .pill { min-height: var(--m-chip-h); padding: 0 14px; font-size: var(--fs-option); }
+  .cE .filter-bar .fb-count {
+    margin-left: 0; margin-top: 4px;
+    padding-top: var(--m-gap-in); border-top: 1px solid var(--line);
+    font-size: var(--fs-option); text-align: center;
+  }
+
+  /* ---- 정렬 줄 — 칩은 가로로 밀어서 본다(줄바꿈 금지) ---- */
+  .cE .sort-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    column-gap: var(--m-gap-x) !important;
+    row-gap: var(--m-gap-x) !important;
+    margin-bottom: var(--m-gap-card) !important;
+  }
+  .cE .sort-row .fg-l { flex: none; font-size: var(--fs-option); }
+  /* 건수는 정렬 칩 위 한 줄 (오른쪽) */
+  .cE .sort-row .fb-count {
+    order: -1;
+    flex: 1 1 100%;
+    margin-left: 0 !important;
+    text-align: right;
+    font-size: var(--fs-option);
+  }
+  .cE .sort-pills {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cE .sort-pills::-webkit-scrollbar { display: none; }
+  .cE .sort-pill { flex: none; min-height: var(--m-chip-h); padding: 0 12px !important; font-size: var(--fs-option) !important; }
+
+  /* ---- 고객 상세 (모바일) ----
+     데스크탑 묶음은 모두 감추고, 개인정보 · 서비스 이용내역 · 메모만 보여 준다. */
+  .cE .trigger-cards,
+  .cE .cust-grid,
+  .cE .cust-rep-head .cust-rep-right,
+  .cE .cust-rep-head .rep-meta { display: none; }   /* 보험나이 — 생년월일로 대신한다 */
+
+  .cE .cust-m { display: block; margin-top: var(--m-gap-card); }
+
+  /* 섹션 머리 — 제목 · 최초등록일 · 수정 */
+  .cE .cm-head {
+    display: flex; align-items: center; gap: var(--m-gap-x);
+    margin: var(--m-gap-grp) 0 var(--m-gap-x);
+  }
+  .cE .cm-head:first-child { margin-top: 0; }
+  .cE .cm-head h2 { flex: 1; margin: 0; font-size: var(--m-fs-sec); font-weight: 700; color: var(--ink); }
+  .cE .cm-edit {
+    flex: none; min-height: var(--m-chip-h); padding: 0 14px;
+    border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+    background: #fff; color: var(--ink-2);
+    font-family: inherit; font-size: var(--m-fs-btn-sm); font-weight: 700; cursor: pointer;
+  }
+
+  /* 담당설계사 · 약관동의 완료 일시 — 상자 없이 글자만.
+     왼쪽 항목명, 오른쪽 끝에 값. */
+  .cE .cm-top {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: var(--m-gap-grp);
+    font-variant-numeric: tabular-nums;
+  }
+  .cE .cm-top span {
+    display: flex; align-items: baseline;
+    justify-content: space-between; gap: var(--m-gap-x);
+    font-size: var(--fs-body); color: var(--ink);
+  }
+  .cE .cm-top i {
+    flex: none; font-style: normal;
+    font-size: var(--fs-body); color: var(--ink-3);
+  }
+  .cE .cm-top .cm-wait { color: #C92238; font-weight: 700; }
+  .cE .cm-top .cm-resend {
+    margin-left: 10px; padding: 0; border: none; background: none;
+    font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+    color: var(--brand-deep); text-decoration: underline; cursor: pointer;
+  }
+
+  /* 개인정보 카드 — 라벨 위 · 값 아래, 칸마다 구분선 */
+  .cE .cm-card {
+    margin: 0; border: 1px solid var(--line); border-radius: var(--r-md);
+    background: #fff; overflow: hidden;
+  }
+  .cE .cm-row { padding: var(--m-pad); border-top: 1px solid var(--line); }
+  .cE .cm-row:first-child { border-top: none; }
+  .cE .cm-row dt { font-size: var(--fs-option); color: var(--ink-3); margin: 0 0 6px; }
+  .cE .cm-row dd {
+    margin: 0; font-size: var(--m-fs-item); font-weight: 700; color: var(--ink);
+    font-variant-numeric: tabular-nums; word-break: keep-all;
+  }
+  .cE .cm-row dd .cm-empty { color: var(--ink-4); font-weight: 500; }
+  .cE .cm-row dd .cm-age { font-size: var(--fs-option); font-weight: 500; color: var(--ink-3); }
+
+  /* 서비스 이용내역 — 한 줄에 아이콘 · 이름 · 상태 · 액션 */
+  .cE .cm-svc {
+    display: flex; align-items: center; gap: var(--m-gap-x);
+    min-height: 64px; padding: 0 var(--m-pad); margin-bottom: var(--m-gap-x);
+    border: 1px solid var(--line); border-radius: var(--r-md);
+    background: #fff; text-decoration: none;
+  }
+  .cE .cm-svc > svg { flex: none; color: var(--brand-deep); }
+  .cE .cm-svc-t { flex: 1; font-size: var(--m-fs-item); font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .cE .cm-badge {
+    flex: none; padding: 4px 10px; border-radius: var(--r-pill);
+    font-size: var(--fs-option); font-weight: 700; white-space: nowrap;
+  }
+  .cE .cm-badge.done { background: var(--brand-pale); color: var(--brand-deep); }
+  .cE .cm-badge.todo { background: #FFF0F1; color: #E0445A; }
+  .cE .cm-svc-go {
+    flex: none; display: inline-flex; align-items: center; gap: 2px;
+    min-height: var(--m-chip-h); padding: 0 10px 0 12px;
+    border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+    font-size: var(--m-fs-btn-sm); font-weight: 700; color: var(--ink-2); white-space: nowrap;
+  }
+
+  /* 메모 */
+  .cE .cm-memo {
+    width: 100%; min-height: 120px; padding: var(--m-pad);
+    border: 1px solid var(--line); border-radius: var(--r-md);
+    background: #fff; font-family: inherit; font-size: var(--fs-body);
+    color: var(--ink); line-height: 1.5; resize: vertical;
+  }
+  .cE .cm-memo::placeholder { color: var(--ink-4); }
+
+  /* 저장 · 고객 삭제 */
+  .cE .cm-save {
+    display: block; width: 100%; min-height: var(--m-bar-h);
+    margin-top: var(--m-gap-card);
+    border: none; border-radius: var(--r-pill);
+    background: var(--brand); color: #fff;
+    font-family: inherit; font-size: var(--m-fs-item); font-weight: 700; cursor: pointer;
+  }
+  .cE .cm-delete {
+    display: block; width: 100%; min-height: var(--m-tap);
+    margin-top: var(--m-gap-x);
+    border: none; background: none; color: #C92238;
+    font-family: inherit; font-size: var(--m-fs-btn-sm); font-weight: 700; cursor: pointer;
+  }
+
+  /* KPI · 통계 묶음 — 모바일에서는 뺀다.
+     라벨이 좁은 칸에서 세로로 흩어지고, 목록이 주인인 화면에서 첫 데이터를 밀어낸다. */
+  .cE .kpi-row { display: none; }
+
+  /* ============================================================
+     5. 리스트 — 모바일 별도 규칙
+     ------------------------------------------------------------
+     · 표 머리(.table-head)는 숨긴다.
+     · 행은 카드처럼: 위아래 14 · 좌우 16 · 최소 높이 56.
+     · 행 안의 글자는 본문 15 / 메타 13 두 단만 쓴다.
+     · 오른쪽에 금액이나 화살표를 겹쳐 놓는 화면은 페이지에서
+       padding-right 만 따로 준다 (--m-row-rsv-* 참고).
+     ============================================================ */
+  .cE .table-head { display: none !important; }
+  .cE .list-panel { border-radius: var(--r-md) !important; }
+
+  .cE .table-row {
+    padding-top: var(--m-row-y) !important;
+    padding-bottom: var(--m-row-y) !important;
+    padding-left: var(--m-pad) !important;
+    padding-right: var(--m-pad);
+    min-height: var(--m-row-h);
+    column-gap: var(--m-gap-x) !important;
+    row-gap: 6px !important;
+    border-bottom: 1px solid var(--line);
+  }
+  /* 오른쪽 자리 예약 — 겹쳐 둔 금액/화살표용 */
+  .cE .table-row.rsv-chev { padding-right: 38px; }
+  .cE .table-row.rsv-amt  { padding-right: 104px; }
+
+  .cE .table-row .nm,
+  .cE .table-row .tr-name .nm { font-size: var(--fs-body); }
+  .cE .table-row .tr-date,
+  .cE .table-row .mobile-meta,
+  .cE .table-row .nm-sub { font-size: var(--fs-option); }
+
+  /* 펼친 하위 행 */
+  .cE .row-sub { padding: 0 var(--m-pad) var(--m-gap-x) !important; }
+
+  /* 페이지네이션 */
+  .cE .pagination,
+  .cE .pager {
+    padding: var(--m-row-y) var(--m-pad) !important;
+    gap: 4px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cE .pg-btn,
+  .cE .pager button {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px !important;
+    font-size: var(--fs-option) !important;
+  }
+
+  /* ============================================================
+     6. 카드 · 표
+     ============================================================ */
+  .cE .card-pad,
+  .cA .card-pad {
+    padding: var(--m-pad) !important;
+    margin-top: var(--m-gap-card) !important;
+    border-radius: var(--r-md) !important;
+  }
+  .cE .card-pad h2,
+  .cA .card-pad h2 { font-size: var(--fs-h2) !important; margin: 0 0 var(--m-gap-in) !important; }
+
+  /* 표 — 글자는 옵션(13)까지만 줄이고 그 아래로는 안 내린다 */
+  .cA thead th,
+  .cA tbody td,
+  .cE .raw-table thead th,
+  .cE .raw-table tbody td { font-size: var(--fs-option); padding: 10px; }
+  .cE .raw-table tbody td.num { max-width: none; }
+
+  /* ============================================================
+     7. 터치 타깃 — 손가락이 닿는 최소 크기
+     ============================================================ */
+  .cE .search-btn,
+  .cE .reset-btn,
+  .cE .ct-btn.primary,
+  .cE .ct-btn.solid { min-height: var(--m-tap); }
+  .cE .m-iconbtn,
+  .cE .menu-trigger { min-width: 40px; min-height: 40px; }
+}

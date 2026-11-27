@@ -210,7 +210,6 @@
   /* ===== 반응형 (모바일) ===== */
   @media (max-width: 960px) {
     /* 뒤로가기 */
-    .cE .back-btn { margin-top: 4px; }
 
     /* 프로필 헤더 — 세로 스택 (전역 .rep-head 규칙과 조화) */
     .cE .cust-rep-head { padding: 8px 0 18px !important; margin-bottom: 16px; gap: 14px; }
@@ -222,12 +221,12 @@
     .cE .cust-rep-right .rep-asof { text-align: left; }
 
     /* 트리거 카드 — 1열 */
-    .cE .trigger-cards { grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    .cE .trigger-cards { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-bottom: 16px; }
     .cE .trig { padding: 14px 16px; grid-template-columns: 40px 1fr 16px; gap: 12px; }
     .cE .trig .tc-ic { width: 40px; height: 40px; border-radius: 11px; }
 
     /* 본문 그리드 — 1열 */
-    .cE .cust-grid { grid-template-columns: 1fr; gap: 14px; }
+    .cE .cust-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
     .cE .cust-grid > .col { gap: 14px; }
     .cE .cust-grid .card-pad h2 { font-size: var(--fs-body); margin: 0 0 12px; }
 
@@ -236,7 +235,7 @@
     .cE .info-dl dd { font-size: var(--fs-body); }
 
     /* 활동 요약 — 세로 스택 */
-    .cE .act-summary { grid-template-columns: 1fr; gap: 0; padding: 14px 16px; }
+    .cE .act-summary { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 14px 16px; }
     .cE .act-cell { padding: 12px 0; border-right: none; border-bottom: 1px dashed var(--line); }
     .cE .act-cell:first-child { padding-top: 0; }
     .cE .act-cell:last-child { border-bottom: none; padding-bottom: 0; }
@@ -261,12 +260,14 @@
     .act-modal-head { gap: 10px; }
     .act-modal .at-item { grid-template-columns: 12px 44px 1fr; gap: 10px; padding: 12px 0; }
     .edit-modal-card { padding: 22px 20px 20px; }
-    .edit-modal-card .form-row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+    .edit-modal-card .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; margin-bottom: 0; }
     .edit-modal-card .form-row .form-field { margin-bottom: 14px; }
     .edit-modal-actions { flex-wrap: wrap; }
     .edit-modal-card .em-btn { flex: 1; padding: 0 14px; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 
@@ -278,10 +279,6 @@
 
   <main class="emain">
 
-    <a class="back-btn" href="#">
-      <svg class="ic-svg" width="14" height="14"><use href="#i-chevron-left"/></svg> 내고객 목록으로
-    </a>
-
     <div class="rep-head cust-rep-head">
       <div class="rep-id">
         <div class="patient-avatar" data-name="김진주"></div>
@@ -289,11 +286,7 @@
           <div class="h-eyebrow">고객 상세정보</div>
           <h1>김진주님</h1>
           <div class="rep-meta">
-            <span>성별 <b class="sx-f">여성</b></span>
-            <span>생년월일 <b>1983.02.15</b> (만 43세)</span>
             <span>보험나이 <b>43세</b></span>
-            <span><svg class="ic-svg" width="13" height="13"><use href="#i-phone"/></svg> <b>010-1234-5678</b></span>
-            <span><svg class="ic-svg" width="13" height="13"><use href="#i-map-pin"/></svg> 대구광역시 수성구 범어동</span>
           </div>
         </div>
       </div>
@@ -350,6 +343,57 @@
       </a>
     </div>
 
+    <!-- ===== 모바일 전용 — 개인정보 · 서비스 이용내역 · 메모 ===== -->
+    <div class="cust-m">
+      <div class="cm-top">
+        <span><i>담당설계사</i>홍길동 FC</span>
+        <span><i>약관동의</i>2026.06.09 15:42</span>
+      </div>
+
+      <div class="cm-head">
+        <h2>개인정보</h2>
+        <button type="button" class="cm-edit">수정</button>
+      </div>
+      <dl class="cm-card">
+        <div class="cm-row">
+          <dt>이름</dt>
+          <dd>김진주</dd>
+        </div>
+        <div class="cm-row">
+          <dt>생년월일</dt>
+          <dd>1983.02.15 <span class="cm-age">(만 43세)</span></dd>
+        </div>
+        <div class="cm-row">
+          <dt>연락처</dt>
+          <dd>010-1234-5678</dd>
+        </div>
+        <div class="cm-row">
+          <dt>성별</dt>
+          <dd>여성</dd>
+        </div>
+      </dl>
+
+      <div class="cm-head"><h2>서비스 이용내역</h2></div>
+      <a class="cm-svc" href="../report/main.html">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-file-text"/></svg>
+        <span class="cm-svc-t">진료기록리포트</span>
+        <span class="cm-badge done">완료</span>
+        <span class="cm-svc-go">바로가기<svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span>
+      </a>
+      <a class="cm-svc" href="../unclaimed/result.html">
+        <svg class="ic-svg" width="18" height="18"><use href="#i-search-check"/></svg>
+        <span class="cm-svc-t">미청구보험금</span>
+        <span class="cm-badge done">완료</span>
+        <span class="cm-svc-go">바로가기<svg class="ic-svg" width="14" height="14"><use href="#i-chevron-right"/></svg></span>
+      </a>
+
+      <div class="cm-head"><h2>메모</h2></div>
+      <textarea class="cm-memo" placeholder="메모를 입력해 주세요."></textarea>
+
+      <button type="button" class="cm-save">저장</button>
+      <button type="button" class="cm-delete">고객 삭제</button>
+    </div>
+
     <div class="cust-grid">
       <div class="col">
         <div class="card-pad">
@@ -363,7 +407,6 @@
             <dt>생년월일</dt><dd>1983.02.15 <small>(만 43세)</small></dd>
             <dt>보험나이</dt><dd>43세</dd>
             <dt>연락처</dt><dd>010-1234-5678</dd>
-            <dt>주소</dt><dd>대구광역시 수성구 범어동 123-45</dd>
             <dt>이메일</dt><dd>jjjj@example.com</dd>
           </dl>
         </div>
@@ -624,10 +667,6 @@
         </div>
       </div>
       <div class="form-field">
-        <label class="f-label" for="em-addr">주소 <span class="opt">선택</span></label>
-        <input type="text" id="em-addr" class="f-input" value="대구광역시 수성구 범어동 123-45" placeholder="시·도 시·군·구 도로명·번지" />
-      </div>
-      <div class="form-field">
         <label class="f-label" for="em-email">이메일 <span class="opt">선택</span></label>
         <input type="email" id="em-email" class="f-input" value="jjjj@example.com" placeholder="example@email.com" autocomplete="off" />
       </div>
@@ -686,13 +725,11 @@
     var saveBtn = document.getElementById('edit-modal-save');
     var form = document.getElementById('edit-form');
     var birthInput = document.getElementById('em-birth');
-    var addrInput = document.getElementById('em-addr');
     var emailInput = document.getElementById('em-email');
     if (!openBtn || !modal) return;
 
     var initial = {
       birth: birthInput.value,
-      addr: addrInput.value,
       email: emailInput.value,
       gender: '여'
     };
@@ -700,7 +737,6 @@
 
     function checkDirty() {
       var dirty = (birthInput.value !== initial.birth)
-               || (addrInput.value !== initial.addr)
                || (emailInput.value !== initial.email)
                || (gender !== initial.gender);
       saveBtn.disabled = !dirty;
@@ -733,7 +769,6 @@
       e.target.value = out;
       checkDirty();
     });
-    addrInput.addEventListener('input', checkDirty);
     emailInput.addEventListener('input', checkDirty);
 
     document.querySelectorAll('#em-gender .seg-btn').forEach(function (btn) {
@@ -755,7 +790,6 @@
       alert('✓ 김진주님 정보가 수정되었습니다.');
       // 초기값을 새로 저장된 값으로 업데이트 (모달은 그대로 유지 가능하지만 닫음)
       initial.birth = birthInput.value;
-      initial.addr = addrInput.value;
       initial.email = emailInput.value;
       initial.gender = gender;
       saveBtn.disabled = true;
@@ -765,6 +799,23 @@
 </script>
 
 <script src="../../components/layout.js"></script>
-<script>injectShell('customer');</script>
+<script>injectShell('customer');
+  // cm-delete 연결 — 기존 더보기 메뉴의 '고객 삭제' 와 같은 동작
+  document.querySelectorAll('.cm-delete').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var o = document.querySelector('.menu-item[data-action="delete"]');
+      if (o) o.click();
+    });
+  });
+  // 모바일 '수정' → 기존 수정 모달 열기
+  document.querySelectorAll('.cm-edit').forEach(function (b) {
+    b.id = b.id || 'cm-edit-proxy';
+    b.addEventListener('click', function () {
+      var o = document.getElementById('edit-info-btn');
+      if (o) o.click();
+    });
+  });
+  // 모바일 상단바 — 햄버거 대신 뒤로가기 (본문 상단 텍스트 링크를 대신한다)
+  if (window.setDetailTopbar) setDetailTopbar('고객 상세정보', 'list.html');</script>
 </body>
 </html>

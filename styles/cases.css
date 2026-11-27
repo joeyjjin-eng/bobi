@@ -246,7 +246,7 @@
 }
 @media (max-width: 640px) {
   .policy-intro .case-stat { margin-top: 10px; }
-  .case-page .policy-filter { grid-template-columns: 1fr; }
+  .case-page .policy-filter { grid-template-columns: minmax(0, 1fr); }
   .case-reset { width: 100%; }
   .case-reset-tx { display: inline; }
   .cn-card { flex-basis: 150px; }

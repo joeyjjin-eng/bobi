@@ -1,4 +1,4 @@
-\!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
@@ -129,12 +129,14 @@
     .cE .co-title-inner { padding: 0 16px; flex-wrap: wrap; }
     .cE .co-title-ic { width: 38px; height: 38px; }
     .cE .co-title-l h1 { font-size: var(--fs-h2); }
-    .cE .co-grid { grid-template-columns: 1fr; }
+    .cE .co-grid { grid-template-columns: minmax(0, 1fr); }
     .cE .co-summary { position: static; }
     .cE .co-plan { flex-direction: column; align-items: flex-start; }
     .cE .co-plan-r { text-align: left; align-self: stretch; display: flex; justify-content: space-between; align-items: baseline; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

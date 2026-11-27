@@ -198,7 +198,7 @@
     .cE .adm-card-head:has(+ .adm-card-body) { padding-bottom: 18px; }
     .cE .adm-card-sub { padding: 0 20px 18px; }
     .cE .adm-card-body { padding: 0 20px 20px; }
-    .cE .info-grid { grid-template-columns: 1fr; gap: 14px; }
+    .cE .info-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
     .cE .current-plan { flex-direction: column; align-items: stretch; gap: 12px; }
     .cE .action-row { flex-direction: column; align-items: stretch; gap: 10px; }
     .cE .action-row .h-btn { align-self: stretch; justify-content: center; }
@@ -206,6 +206,8 @@
     .role-card { padding: 24px 20px 20px; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../../styles/mobile-rules.css" />
 </head>
 <body>
 

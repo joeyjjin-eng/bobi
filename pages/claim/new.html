@@ -267,18 +267,18 @@
     /* pane 헤더 */
     .cE .pane-desc { margin-bottom: 20px; }
     .cE .p-card { padding: 16px 18px; margin-bottom: 10px; }
-    .cE .field-grid { grid-template-columns: 1fr; gap: 12px; }
+    .cE .field-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
     .cE .insurer-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
     .cE .insurer-btn { padding: 8px 10px; min-height: 52px; gap: 8px; }
     .cE .insurer-logo { width: 30px; height: 30px; }
     .cE .insurer-logo img { max-width: 22px; max-height: 22px; }
     .cE .insurer-name { font-size: var(--fs-option); }
-    .cE .type-grid { grid-template-columns: 1fr; gap: 8px; }
-    .cE .sign-method { grid-template-columns: 1fr; gap: 8px; }
+    .cE .type-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .cE .sign-method { grid-template-columns: minmax(0, 1fr); gap: 8px; }
     /* 자격 라벨이 길면 이름이 쪼개지므로 폭이 좁을 땐 연락처를 아랫줄로 */
     .cE .signer-row { flex-direction: column; align-items: flex-start; gap: 8px; }
     .cE .signer-main { width: 100%; }
-    .cE .photo-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .cE .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 
     .cE .review-card { padding: 18px 20px; }
     /* 모바일 emain padding: 16px → 바 -16px 로 뽑아냄 · 안쪽 버튼은 뷰포트 폭 그대로 */
@@ -293,6 +293,8 @@
     .load-body { padding: 4px 10px 12px; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

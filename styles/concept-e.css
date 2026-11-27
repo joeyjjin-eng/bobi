@@ -38,6 +38,8 @@
 .cE .emain { flex: 1; padding: 28px 36px 48px; min-width: 0; }
 .cE .etop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
 .cE .etop-actions { display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+/* 페이지 제목줄 오른쪽 액션 (.hist-title-inner / .ct-title-inner 공통) */
+.cE .ht-actions { display: inline-flex; align-items: center; gap: 10px; flex: none; }
 .cE .etop h1 { font-size: var(--fs-display); font-weight: 800; white-space: nowrap; }
 .cE .etop .sub { font-size: var(--fs-label); color: var(--ink-3); margin-top: 2px; }
 
@@ -264,7 +266,7 @@
 .cE .raw-table thead th.wrap { white-space: normal; min-width: 220px; }
 .cE .raw-table tbody td { font-size: var(--fs-body); padding: 14px 12px; border-bottom: 1px solid var(--line); color: var(--ink-2); vertical-align: middle; line-height: 1.45; }
 .cE .raw-table tbody td.ctr { text-align: center; white-space: nowrap; }
-.cE .raw-table tbody td.num { color: var(--ink); font-weight: 600; max-width: 220px; overflow-wrap: anywhere; }
+.cE .raw-table tbody td.num { color: var(--ink); font-weight: 600; max-width: 220px; word-break: keep-all; }
 .cE .raw-table tbody td:first-child { white-space: nowrap; }
 .cE .raw-table tbody tr:hover { background: var(--bg-warm); }
 
@@ -325,6 +327,8 @@
 .ft-info { font-size: var(--fs-label); color: var(--ink-3); line-height: 1.7; }
 .ft-info p { margin: 0; }
 .ft-info .ft-sep-dot { color: var(--ink-4); margin: 0 8px; }
+/* 항목은 통째로 줄바꿈 — 전화번호·사업자번호가 가운데서 갈라지지 않게 */
+.ft-info .ft-i { white-space: nowrap; }
 
 /* ===== 리포트 출력 — 항목 선택 모달 ===== */
 .print-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'Pretendard', system-ui, sans-serif; }
@@ -482,11 +486,11 @@
   .cE .pc-actions { width: 100%; }
   .cE .pc-cta { padding: 11px 18px; }
   .cE .disclosure-btn { padding: 11px 18px; }
-  .cE .pc-flags { grid-template-columns: 1fr; gap: 8px; }
+  .cE .pc-flags { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .cE .pc-flag { padding: 14px 16px; }
 
   /* 의료비/라디얼 차트 행 — 2단 → 1단 */
-  .cE .chartrow { grid-template-columns: 1fr; gap: 14px; }
+  .cE .chartrow { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .cE .chartrow .card-pad { height: auto; }
   .cE .costnums { gap: 22px; margin-bottom: 18px; }
   .cE .costnums .v { font-size: var(--fs-h2); }

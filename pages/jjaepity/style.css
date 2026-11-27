@@ -350,7 +350,7 @@ html, body { margin: 0; background: #fff; }
 .cE .sm-fam-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); line-height: 1.4; word-break: keep-all; }
 .cE .sm-fam-meta { flex: none; font-size: var(--fs-option); font-weight: 600; color: var(--ink-3); line-height: 1.4; }
 .cE .sm-fam-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.cE .sm-chip { display: inline-block; max-width: 100%; padding: 5px 11px; background: #fff; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-2); font-size: var(--fs-option); font-weight: 600; line-height: 1.4; font-variant-numeric: tabular-nums; word-break: keep-all; overflow-wrap: anywhere; }
+.cE .sm-chip { display: inline-block; max-width: 100%; padding: 5px 11px; background: #fff; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-2); font-size: var(--fs-option); font-weight: 600; line-height: 1.4; font-variant-numeric: tabular-nums; word-break: keep-all; }
 
 /* 회사별 그룹핑 (접기/펼치기) */
 .cE .sm-grp-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }

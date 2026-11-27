@@ -408,6 +408,6 @@ body.tm-open { overflow: hidden; }
 /* 모바일 대응 */
 @media (max-width: 640px) {
   .auth-main { padding: 48px 20px 40px; }
-  .auth-ft { grid-template-columns: 1fr; padding: 24px 20px; }
+  .auth-ft { grid-template-columns: minmax(0, 1fr); padding: 24px 20px; }
   .auth-ft-cs { text-align: left; min-width: 0; }
 }

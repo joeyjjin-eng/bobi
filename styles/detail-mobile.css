@@ -390,7 +390,6 @@
     color: var(--ink); font-weight: 500;
     text-align: right;
     word-break: keep-all;
-    overflow-wrap: anywhere;
     flex: 1;
   }
   .tr-detail-v.em { font-weight: 800; color: var(--brand-deep); }

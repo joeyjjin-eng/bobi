@@ -94,7 +94,32 @@
   .confirm-card .cf-btn.send { background: var(--brand); color: #fff; border: none; }
   .confirm-card .cf-btn.send:hover { background: var(--brand-hover); }
   .confirm-card .cf-btn svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ===== 반응형 (모바일) — 치수는 styles/mobile-rules.css ===== */
+  @media (max-width: 960px) {
+    /* 뒤로 버튼과 제목을 한 줄에 두면 제목이 눌린다 — 버튼은 윗줄 */
+    .cE .nr-title-inner { align-items: flex-start; }
+    .cE .nr-title-info { flex: 1 1 100%; min-width: 0; }
+
+    .cE .form-wrap { margin-top: 0; margin-bottom: 24px; }
+    .cE .form-card { padding: 18px 16px 16px; border-radius: var(--r-md); }
+    .cE .form-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .cE .form-field { margin-bottom: 16px; }
+    .cE .form-row .form-field { margin-bottom: 16px; }
+
+    /* 액션 바 — 취소/등록을 같은 폭으로 꽉 채운다 */
+    .cE .form-actions { gap: 8px; padding-top: 16px; }
+    .cE .btn-cancel,
+    .cE .btn-submit { flex: 1; justify-content: center; height: auto; min-height: 46px; padding: 10px 14px; line-height: 1.4; text-align: center; }
+    .cE .btn-submit { box-shadow: 0 6px 16px rgba(255, 142, 92, 0.28); }
+
+    /* 발송 확인 모달 */
+    .confirm-modal { padding: 16px; }
+    .confirm-card { padding: 22px 18px 18px; border-radius: 16px; }
+  }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 
@@ -109,10 +134,6 @@
     <!-- 타이틀 (좌우 꽉차는 흰 박스) -->
     <div class="nr-title-row">
       <div class="nr-title-inner">
-        <a class="back-btn" href="list.html">
-          <svg class="ic-svg" width="16" height="16"><use href="#i-chevron-left"/></svg>
-          뒤로
-        </a>
         <div class="nr-title-info">
           <h1>고객 추가</h1>
           <div class="sub">새 고객 정보를 입력하면 연락처로 약관동의 링크가 자동 발송됩니다</div>
@@ -312,6 +333,8 @@
 </script>
 
 <script src="../../components/layout.js"></script>
-<script>injectShell('customer');</script>
+<script>injectShell('customer');
+  // 모바일 상단바 — 햄버거 대신 뒤로가기 (본문 상단 텍스트 링크를 대신한다)
+  if (window.setDetailTopbar) setDetailTopbar('고객 추가', 'list.html');</script>
 </body>
 </html>

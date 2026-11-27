@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
@@ -74,11 +74,13 @@
     .cE .ph-title-ic { width: 38px; height: 38px; }
     .cE .ph-title-l h1 { font-size: var(--fs-h2); }
     .cE .ph-thead { display: none; }
-    .cE .ph-row { grid-template-columns: 1fr; gap: 6px; padding: 16px 20px; }
+    .cE .ph-row { grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 16px 20px; }
     .cE .ph-status { justify-self: start; }
     .cE .ph-amt { text-align: left; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

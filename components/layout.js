@@ -544,7 +544,6 @@
       + '<header class="m-topbar">'
       +   '<button class="m-ham" type="button" aria-label="메뉴 열기"><svg class="ic-svg" width="22" height="22"><use href="#i-menu"/></svg></button>'
       +   '<a class="m-logo" href="' + BASE + 'home.html"><img src="' + BASE + 'assets/bobi-logo.png" alt="BoBi" /></a>'
-      +   '<button class="m-bell" type="button" aria-label="알림"><svg class="ic-svg" width="22" height="22"><use href="#i-bell"/></svg><span class="m-dot"></span></button>'
       + '</header>'
       + '<div class="m-drawer" id="m-drawer" hidden aria-hidden="true">'
       +   '<div class="m-drawer-bg"></div>'
@@ -577,6 +576,8 @@
   // 모바일 헤더/탭바에 필요한 아이콘 추가
   ICONS_SVG += ''
     + '<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>'
+    // 필터 — 햄버거(i-menu)와 겹치지 않게 조절 손잡이 모양. 선으로만 그려 어떤 배경에서도 보인다
+    + '<symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 6h4M11 6h10M3 12h10M17 12h4M3 18h4M11 18h10"/><path d="M9 4v4M15 10v4M9 16v4"/></symbol>'
     + '<symbol id="i-more-horizontal" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>';
 
   // ===== 스마트보비 준비중 모달 =====
@@ -808,9 +809,10 @@
       +       '<button class="ft-link bold">개인정보처리방침</button>'
       +     '</div>'
       +     '<div class="ft-info">'
-      +       '<p>고객센터 ' + SUPPORT.tel + '<span class="ft-sep-dot">·</span>' + SUPPORT.email + '<span class="ft-sep-dot">·</span>' + SUPPORT.hours + '</p>'
-      +       '<p>주식회사 천호인터내셔널<span class="ft-sep-dot">·</span>대표 이승엽<span class="ft-sep-dot">·</span>사업자등록번호 342-81-00261</p>'
-      +       '<p>대구광역시 중구 달구벌대로 1929, 2층 (대신동)<span class="ft-sep-dot">·</span>대표번호 1644-0161</p>'
+      // 항목마다 .ft-i 로 묶는다 — 좁은 화면에서 번호가 가운데서 잘리지 않게
+      +       '<p><span class="ft-i">고객센터 ' + SUPPORT.tel + '</span><span class="ft-sep-dot">·</span><span class="ft-i">' + SUPPORT.email + '</span><span class="ft-sep-dot">·</span><span class="ft-i">' + SUPPORT.hours + '</span></p>'
+      +       '<p><span class="ft-i">주식회사 천호인터내셔널</span><span class="ft-sep-dot">·</span><span class="ft-i">대표 이승엽</span><span class="ft-sep-dot">·</span><span class="ft-i">사업자등록번호 342-81-00261</span></p>'
+      +       '<p><span class="ft-i">대구광역시 중구 달구벌대로 1929, 2층 (대신동)</span><span class="ft-sep-dot">·</span><span class="ft-i">대표번호 1644-0161</span></p>'
       +     '</div>'
       +   '</div>'
       + '</footer>';
@@ -871,11 +873,86 @@
     }
     window.paintPatientAvatars();
     bindMobileShell();
+    bindFab();
+    bindFilterSheet();
     bindSmartModal();
     bindQuotaModal();
     bindDevSwitcher();
     paintQuotaPills();
   };
+
+  // 필터 바텀시트 (모바일) — #filter-trigger 로 .filter-bar 를 여닫는다.
+  // 치수·모양은 styles/mobile-rules.css. 둘 다 있는 페이지에서만 동작한다.
+  function bindFilterSheet() {
+    var trigger = document.getElementById('filter-trigger');
+    var sheet   = document.getElementById('filter-sheet');
+    if (!trigger || !sheet) return;
+    var label = document.getElementById('filter-label');
+
+    // 묶음마다 첫 칩이 '전체'다. 첫 칩이 아닌 칩이 켜져 있으면 고른 값이 있는 것.
+    function picked() {
+      var groups = sheet.querySelectorAll('.pills');
+      for (var i = 0; i < groups.length; i++) {
+        var on = groups[i].querySelector('.pill.on');
+        if (on && on !== groups[i].querySelector('.pill')) return true;
+      }
+      return false;
+    }
+    function paint() {
+      var p = picked();
+      if (label) label.textContent = p ? '필터 적용됨' : '필터';
+      if (p) trigger.classList.add('on'); else trigger.classList.remove('on');
+    }
+    function open() { sheet.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); }
+    function shut() { sheet.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); }
+
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (sheet.classList.contains('open')) shut(); else open();
+    });
+    document.addEventListener('click', function (e) {
+      if (!sheet.classList.contains('open')) return;
+      if (sheet.contains(e.target) || trigger.contains(e.target)) return;
+      shut();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && sheet.classList.contains('open')) shut();
+    });
+    // 칩을 누른 뒤 — 페이지의 핸들러가 .on 을 옮긴 다음에 칩 라벨을 다시 쓴다
+    sheet.addEventListener('click', function (e) {
+      if (e.target.closest('.pill')) setTimeout(paint, 20);
+    });
+    paint();
+  }
+
+  // 모바일 상단바를 '뒤로 + 제목' 으로 바꾼다 (상세 화면용).
+  // 본문 상단에 텍스트 뒤로가기 링크를 두지 않기 위한 공통 수단.
+  window.setDetailTopbar = function (title, backHref) {
+    var topbar = document.querySelector('.m-topbar');
+    if (!topbar) return;
+    topbar.classList.add('detail-mode');
+    topbar.innerHTML = ''
+      + '<a class="m-back" href="' + (backHref || '#') + '" aria-label="뒤로가기">'
+      +   '<svg class="ic-svg" width="22" height="22"><use href="#i-chevron-left"/></svg>'
+      + '</a>'
+      + '<span class="m-title">' + (title || '') + '</span>'
+      + '<span class="m-spacer" aria-hidden="true"></span>';
+  };
+
+  // 하단 플로팅 버튼(.m-fab) — 푸터가 화면에 들어오면 비켜 준다
+  function bindFab() {
+    var fab = document.querySelector('.m-fab');
+    var ft = document.querySelector('.ft');
+    if (!fab || !ft) return;
+    function sync() {
+      var top = ft.getBoundingClientRect().top;
+      if (top < (window.innerHeight || 0)) fab.classList.add('m-fab-hide');
+      else fab.classList.remove('m-fab-hide');
+    }
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+  }
 
   // 햄버거 → 드로어 토글
   function bindMobileShell() {

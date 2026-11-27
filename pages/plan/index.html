@@ -89,10 +89,12 @@
     .cE .pl-title-row { padding-bottom: 16px; margin-bottom: 16px; }
     .cE .pl-title-ic { width: 38px; height: 38px; }
     .cE .pl-title-row h1 { font-size: var(--fs-h2); }
-    .cE .pl-cards { grid-template-columns: 1fr; gap: 12px; }
+    .cE .pl-cards { grid-template-columns: minmax(0, 1fr); gap: 12px; }
     .cE .pl-cmp-table { display: block; overflow-x: auto; white-space: nowrap; }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

@@ -39,12 +39,8 @@
 
   /* ===== 반응형 (모바일) ===== */
   @media (max-width: 960px) {
-    .cE .plan-strip { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
-    .cE .ps-l { align-self: flex-start; }
-    .cE .ps-quotas { flex-direction: column; gap: 4px; }
-    .cE .ps-q { border-right: none; border-bottom: 1px solid var(--line); padding: 8px 4px; }
-    .cE .ps-q:last-child { border-bottom: none; }
-    .cE .ps-cta { align-self: flex-end; }
+    /* 플랜·잔여 묶음 — 모바일에서는 뺀다. 마이페이지·요금제에서 본다 */
+    .cE .plan-strip { display: none; }
   }
   @media (max-width: 960px) {
     /* 상단 인사말 + 스마트보비 CTA 세로 스택 */
@@ -64,9 +60,9 @@
     .cE .kpi .spark i { width: 4px; }
 
     /* 홈 그리드 — 좌(피처+액션)/우(공지) 2열 → 1열 세로 스택 */
-    .cE .grid2 { grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+    .cE .grid2 { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 14px; }
     .cE .grid2 .col { gap: 14px; }
-    .cE .grid2 .acts { grid-template-columns: 1fr; gap: 10px; }
+    .cE .grid2 .acts { grid-template-columns: minmax(0, 1fr); gap: 10px; }
     .cE .grid2 .tile.feature { min-height: 200px; padding: 20px; }
     .cE .grid2 .tile.feature .mascot-card { width: 110px; height: 92px; right: 8px; bottom: 4px; }
     .cE .grid2 .tile.feature h3 { font-size: var(--fs-h2); max-width: 60%; }
@@ -83,6 +79,8 @@
     .cE .npanel h2 { font-size: var(--fs-sub); }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="styles/mobile-rules.css" />
 </head>
 <body>
 

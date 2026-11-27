@@ -16,7 +16,7 @@
 }
 
 html, body { margin: 0; }
-.lp { background: var(--white); color: var(--ink); word-break: keep-all; overflow-wrap: break-word; overflow-x: hidden; }
+.lp { background: var(--white); color: var(--ink); word-break: keep-all; overflow-x: hidden; }
 .lp a { color: inherit; text-decoration: none; }
 .wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
 
@@ -785,7 +785,7 @@ body[data-card-halo="off"] .preview::before { display: none; }
   /* 마지막 CTA 띠 — PC 의 104px 은 좁은 폭에서 과하다 */
   .final { padding: 100px 0; }
   .hero { padding: 56px 0 58px; }
-  .hero .wrap { grid-template-columns: 1fr; gap: 30px; }
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .preview { margin-top: 32px; }
 
   /* ===== 모바일 타입 스케일 — 17→15 / 15→14, 제목 행간 1.3 · 본문 1.4 ===== */
@@ -811,20 +811,20 @@ body[data-card-halo="off"] .preview::before { display: none; }
   .preview .floaty.f1 { top: -22px; right: -24px; }
   .preview .floaty.f1.dz { min-width: 0; }
   .preview .floaty.f2 { bottom: -24px; left: -24px; }
-  .hg-cards { grid-template-columns: repeat(2, 1fr); }
+  .hg-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .why .grid4 { grid-template-columns: 1fr 1fr; }
-  .feat-row { grid-template-columns: 1fr; gap: 24px; padding: 36px 0; }
+  .feat-row { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 36px 0; }
   .feat-row h3 { font-size: 20px; }
-  .feat-row.svc-area-ai, .feat-row.svc-area-med, .feat-row.svc-area-unclaim { grid-template-columns: 1fr; padding: 36px 28px; gap: 24px; }
+  .feat-row.svc-area-ai, .feat-row.svc-area-med, .feat-row.svc-area-unclaim { grid-template-columns: minmax(0, 1fr); padding: 36px 28px; gap: 24px; }
   /* 주석은 불릿 묶음에 딸린 글 — 목업과의 간격(24px)보다 가깝게 붙인다 */
   .svc-area-ai .fnote { margin-top: 16px; }
   .svc-area-ai h3 { font-size: 20px; }
-  .tier3-grid { grid-template-columns: 1fr; }
+  .tier3-grid { grid-template-columns: minmax(0, 1fr); }
   /* 1단이 되면 다른 기능 밴드와 같은 폭·같은 안쪽 여백으로 떨어뜨린다
      (여기서 .wrap 이 좌우 32px 을 다시 넣으므로 특이성을 올려 되돌린다) */
   .wrap.tier3-grid { padding-left: 0; padding-right: 0; }
   .t3 { padding: 36px 28px; }
-  .company .co-grid { grid-template-columns: 1fr; gap: 44px; justify-items: center; }
+  .company .co-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; justify-items: center; }
   .company .co-text { text-align: center; }
   .company .co-text .co-lead { margin-left: auto; margin-right: auto; }
   .company .co-stats { grid-template-columns: 1fr 1fr; gap: 20px 26px; margin-left: auto; margin-right: auto; }

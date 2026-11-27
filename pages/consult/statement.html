@@ -11,8 +11,10 @@
 <style>
   html, body { margin: 0; background: #fff; }
   .cE .st-bs { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 24px; align-items: start; }
-  @media (max-width: 960px) { .cE .st-bs { grid-template-columns: 1fr; gap: 20px; } }
+  @media (max-width: 960px) { .cE .st-bs { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 

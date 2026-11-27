@@ -28,7 +28,6 @@
   .cE .ht-sub { font-size: var(--fs-option); color: var(--ink-3); margin-top: 2px; }
   .cE .ht-sub b { color: var(--ink); font-weight: 800; }
   .cE .ht-sub .ok { color: #15967F; font-weight: 800; }
-  .cE .ht-actions { display: inline-flex; align-items: center; gap: 10px; flex: none; }
   .cE .add-btn {display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #FFC299 0%, #FF8E5C 45%, #C9603A 100%); color: #fff; border: none; border-radius: var(--r-pill); padding: 12px 24px; font-family: inherit; font-size: var(--fs-body); font-weight: 700; cursor: pointer; box-shadow: 0 10px 30px rgba(255, 142, 92, 0.32); text-decoration: none; transition: filter .2s ease; }
   .cE .add-btn:hover { filter: brightness(1.05); }
 
@@ -76,6 +75,7 @@
      - 각 셀은 콘텐츠에 맞는 고정 폭
      - 중간 1fr 빈 셀이 두 그룹 사이의 시각적 분리 흡수
      - column-gap 12px 균등 */
+  .cE .sel-toggle { display: none; }   /* 모바일 전용 */
   .cE .list-panel { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
   .cE .table-head,
   .cE .table-row { display: grid; grid-template-columns: 24px 90px 170px 70px 80px 130px 1fr 170px 170px 22px; column-gap: 12px; align-items: center; justify-items: center; }
@@ -90,6 +90,10 @@
   /* 체크박스 (UI만 — 실제 동작 없음) */
   .cE .row-chk { width: 18px; height: 18px; border: 1.6px solid var(--line-strong); border-radius: 5px; background: #fff; cursor: pointer; display: block; }
   .cE .table-head .row-chk { margin: 0; }
+  /* 선택됨 — tokens.css 의 네이티브 체크박스와 같은 모양 */
+  .cE .row-chk.on { background: var(--brand); border-color: var(--brand); position: relative; }
+  .cE .row-chk.on::after { content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px;
+    border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
   /* 이름 셀 — 아바타 + 이름 + 생년월일 (좌측 정렬) */
   .cE .tr-name { display: flex; align-items: center; justify-content: flex-start; gap: 14px; min-width: 0; justify-self: stretch; }
@@ -164,92 +168,81 @@
      반응형 (모바일) — 좌우 여백 16px 통일
      ============================================================ */
   @media (max-width: 960px) {
-    /* 어떤 자식도 뷰포트 폭을 초과하지 않도록 안전망 */
-    .cE .emain { overflow-x: hidden; }
-    .cE .emain > * { max-width: 100%; }
+    /* 타이틀 · 검색 · 필터 치수는 styles/mobile-rules.css 가 정한다 */
+    .cE .add-btn { box-shadow: 0 6px 16px rgba(255,142,92,0.28); }
 
-    /* 타이틀 — 마이너스 마진 해제, 세로 스택 */
-    .cE .hist-title-row { width: 100% !important; max-width: none !important; margin: 0 0 16px !important; padding: 0 0 14px !important; }
-    .cE .hist-title-inner { flex-direction: column; align-items: stretch; gap: 12px; padding: 0; }
-    .cE .ht-l { align-items: flex-start; gap: 12px; }
-    .cE .ht-ic { width: 38px; height: 38px; border-radius: 10px; }
-    .cE .ht-l h1 { font-size: var(--fs-h1); }
-    .cE .ht-sub { font-size: var(--fs-option); }
-    .cE .ht-actions { align-self: flex-end; }
-    .cE .add-btn { padding: 10px 16px; font-size: var(--fs-option); box-shadow: 0 6px 16px rgba(255,142,92,0.28); }
 
-    /* KPI 3개 → 1열 세로 스택 (숫자 오른쪽, 라벨/트렌드 왼쪽) */
-    .cE .kpi-row { grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
-    .cE .kpi-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; padding: 12px 14px; column-gap: 12px; }
-    .cE .kc-l { grid-column: 1; font-size: var(--fs-option); white-space: normal; }
-    .cE .kc-v { grid-column: 2; grid-row: 1 / span 2; font-size: var(--fs-sub); margin-top: 0; align-self: center; white-space: nowrap; }
-    .cE .kc-v small { font-size: var(--fs-option); margin-left: 2px; }
-    .cE .kc-trend { grid-column: 1; grid-row: 2; font-size: var(--fs-option); margin-top: 0; }
-
-    /* 검색바 — 정렬 셀렉트 폰트 축소, 구분선 제거 */
-    .cE .search-bar { padding: 10px 14px; gap: 10px; }
-    .cE .search-bar input { min-width: 0; font-size: var(--fs-option); }
-    .cE .sb-divider { display: none; }
-    .cE .sort-select select { font-size: var(--fs-option); padding-right: 18px; }
+    .cE .sort-select select { padding-right: 18px; }
     .cE .sort-select svg.ic-svg { right: 2px; }
 
-    /* 필터바 — 세로 스택, 카운트는 오른쪽 정렬 별도 줄 */
-    .cE .filter-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
-    .cE .filter-group { flex-wrap: wrap; gap: 8px; }
-    .cE .fb-divider { display: none; }
-    .cE .fb-count { margin-left: 0; text-align: right; font-size: var(--fs-option); }
-    .cE .pills { flex-wrap: wrap; gap: 5px; }
-    .cE .pill { padding: 6px 12px; font-size: var(--fs-option); }
-
-    /* 리스트 — 테이블 그리드를 카드형으로 재배치 */
-    .cE .table-head { display: none; }
-    .cE .list-panel { border-radius: var(--r-md); }
+    /* 리스트 — 카드형 행 (치수는 mobile-rules.css)
+         1줄  이름 · 생년월일            등록일
+         2줄  성별 · 나이 · 연락처
+         3줄  상태 배지 (맨 아래)                                   */
     .cE .table-row {
       display: grid !important;
-      grid-template-columns: 20px minmax(0, 1fr) auto 16px;
+      grid-template-columns: minmax(0, 1fr) auto;
       grid-template-areas:
-        "chk name name go"
-        "chk meta meta go"
-        ".   cons task go"
-        ".   date date .";
-      column-gap: 8px;
-      row-gap: 8px;
-      padding: 12px 12px;
+        "name date"
+        "meta meta"
+        "cons task";
       align-items: center;
       justify-items: start;
     }
-    .cE .table-row > *:nth-child(1) { grid-area: chk; align-self: start; margin-top: 4px; }
+    /* 체크박스는 상시 자리를 차지하지 않는다 — '선택' 을 눌렀을 때만 */
+    .cE .table-row > *:nth-child(1) { display: none; }
+    .cE .list-panel.sel-mode .table-row {
+      grid-template-columns: 20px minmax(0, 1fr) auto;
+      grid-template-areas:
+        "chk name date"
+        "chk meta meta"
+        ".   cons task";
+    }
+    .cE .list-panel.sel-mode .table-row > *:nth-child(1) {
+      display: block; grid-area: chk; align-self: start; margin-top: 4px;
+    }
+
+    /* '선택' — 정렬과 같은 줄 오른쪽 끝. 정렬(텍스트 드롭다운)과 구분되게 칩 모양으로.
+       이 화면의 필터 칩과 같은 생김새를 쓴다. */
+    .cE .sel-toggle {
+      display: inline-flex; align-items: center; gap: 7px;
+      order: 10;
+      min-height: var(--m-chip-h); padding: 0 2px;
+      border: none; background: none;
+      font-family: inherit; font-size: var(--fs-body); font-weight: 700;
+      color: var(--ink-2); cursor: pointer; white-space: nowrap;
+    }
+    .cE .sel-toggle .row-chk { flex: none; }
+    .cE .sel-toggle.on { color: var(--brand-deep); }
     .cE .table-row .tr-name { grid-area: name; justify-self: stretch; min-width: 0; gap: 10px; }
     .cE .table-row .tr-name .patient-avatar { width: 38px; height: 38px; font-size: 17px; }
-    .cE .table-row .tr-name .nm { font-size: var(--fs-body); }
+    .cE .table-row .tr-date { grid-area: date; align-self: start; justify-self: end; font-size: var(--fs-option); color: var(--ink-4); }
 
-    /* 성별·나이·연락처 — 개별 셀은 숨기고 tr-name 내부의 mobile-meta 사용 */
+    /* 성별·나이·연락처 — 개별 셀은 숨기고 한 줄 글자로 */
     .cE .table-row .tr-gender,
     .cE .table-row .tr-age,
     .cE .table-row .tr-phone { display: none; }
-    .cE .table-row .mobile-meta { grid-area: meta; justify-self: stretch; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-3); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
-    .cE .table-row .mobile-meta .gender-chip { padding: 2px 7px; font-size: var(--fs-option); }
+    .cE .table-row .mobile-meta { grid-area: meta; justify-self: stretch; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: var(--fs-option); color: var(--ink-2); font-variant-numeric: tabular-nums; flex-wrap: wrap; }
     .cE .table-row .mobile-meta .mm-sep { color: var(--ink-4); }
-    .cE .table-row .mobile-meta .mm-age { color: var(--ink-2); font-weight: 600; }
-    .cE .table-row .mobile-meta .mm-phone { color: var(--ink-2); }
+    .cE .table-row .mobile-meta .mm-g { font-weight: 600; }
+    .cE .table-row .mobile-meta .mm-age { font-weight: 600; }
 
-    /* 배지 & 하단 등록일 */
-    .cE .table-row > *:nth-child(7) { display: none; }
-    .cE .table-row > *:nth-child(8) { grid-area: cons; justify-self: start; min-width: 0; }
-    .cE .table-row > *:nth-child(9) { grid-area: task; justify-self: end; min-width: 0; }
-    .cE .table-row .tr-date { grid-area: date; font-size: var(--fs-option); color: var(--ink-4); justify-self: end; }
-    .cE .table-row .tr-go { grid-area: go; align-self: center; justify-self: center; }
-    .cE .consent-stack { align-items: flex-start; gap: 3px; }
+    /* 상태 — 맨 아래 한 줄. 왼쪽 약관동의, 오른쪽 조회상태 */
+    .cE .table-row > *:nth-child(7) { display: none; }      /* 자리 띄우던 빈 칸 */
+    .cE .table-row > *:nth-child(8) { grid-area: cons; justify-self: start; align-self: center; min-width: 0; }
+    .cE .table-row > *:nth-child(9) { grid-area: task; justify-self: end; align-self: center; min-width: 0; }
+    .cE .consent-stack { flex-direction: row; align-items: center; gap: 8px; }
     .cE .consent-badge { padding: 0 9px; font-size: var(--fs-option); height: 24px; }
-    .cE .consent-meta { text-align: left; font-size: var(--fs-option); }
-    .cE .task-pill { padding: 0 10px; font-size: var(--fs-option); height: 26px; }
+    .cE .consent-meta { text-align: left; font-size: var(--fs-option); color: var(--ink-3); }
+    /* 발송일·재전송 — 목록에서는 빼고 상세에서 처리한다 */
+    .cE .consent-meta { display: none; }
+    .cE .task-pill { padding: 0 10px; font-size: var(--fs-option); height: 24px; }
     .cE .task .tip { display: none; }
 
-    /* 페이지네이션 — 여백 축소 */
-    .cE .pagination { padding: 14px 12px; gap: 4px; }
-    .cE .pg-btn { min-width: 32px; height: 32px; padding: 0 8px; font-size: var(--fs-option); }
   }
 </style>
+<!-- 모바일 공통 규격 — 페이지 스타일보다 뒤에 둔다 -->
+<link rel="stylesheet" href="../../styles/mobile-rules.css" />
 </head>
 <body>
 
@@ -274,7 +267,7 @@
           </div>
         </div>
         <div class="ht-actions">
-          <a class="add-btn" href="new.html">
+          <a class="add-btn m-fab" href="new.html">
             <svg class="ic-svg" width="16" height="16"><use href="#i-plus"/></svg>
             고객 추가
           </a>
@@ -314,8 +307,11 @@
 
     <!-- ===== 검색바 ===== -->
     <div class="search-bar">
-      <span class="si-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg></span>
-      <input type="text" id="search-input" placeholder="이름 · 연락처로 검색" />
+      <!-- 검색 입력만 테두리 안. 기간·필터는 그 밖에 나란히 둔다 -->
+      <div class="sb-field">
+        <span class="si-ic"><svg class="ic-svg" width="18" height="18"><use href="#i-search"/></svg></span>
+        <input type="text" id="search-input" placeholder="이름 · 연락처로 검색" />
+      </div>
       <div class="sb-divider"></div>
       <div class="sort-select">
         <select id="sort-select">
@@ -325,10 +321,22 @@
         </select>
         <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-down"/></svg>
       </div>
+    
+      <!-- 선택 모드 — 모바일에서만. 누를 때만 체크박스가 나온다 -->
+      <button type="button" class="sel-toggle" id="sel-toggle">
+        <span class="row-chk" aria-hidden="true"></span><span class="sel-label">선택</span>
+      </button>
+
+      <!-- 필터 — 기간 선택 옆 아이콘 버튼. 동작은 components/layout.js -->
+      <button class="filter-trigger" id="filter-trigger" type="button" aria-expanded="false" aria-controls="filter-sheet" aria-label="필터">
+        <svg class="ic-svg" width="14" height="14"><use href="#i-filter"/></svg>
+        <span id="filter-label">필터</span>
+        <svg class="ic-svg" width="12" height="12"><use href="#i-chevron-down"/></svg>
+      </button>
     </div>
 
     <!-- ===== 필터바 ===== -->
-    <div class="filter-bar">
+    <div class="filter-bar" id="filter-sheet">
       <div class="filter-group">
         <span class="fg-l">성별</span>
         <div class="pills" id="gender-pills">
@@ -454,7 +462,10 @@
     return ''
       + '<div class="consent-stack">'
       +   '<span class="consent-badge wait">동의 대기</span>'
-      +   '<span class="consent-meta"><b>' + p.link + '</b> 발송 · <span class="resend-link">재전송</span></span>'
+      +   '<span class="consent-meta">'
+      +     '<span class="consent-sent"><b>' + p.link + '</b> 발송 · </span>'
+      +     '<span class="resend-link">재전송</span>'
+      +   '</span>'
       + '</div>';
   }
 
@@ -508,6 +519,7 @@
     document.getElementById('count').innerHTML = '총 <b>' + list.length + '명</b> 표시 중';
 
     var body = document.getElementById('tbl-body');
+    var panel = body.closest('.list-panel');
     if (list.length === 0) {
       body.innerHTML = '<div class="empty-list">조건에 맞는 고객이 없어요</div>';
       return;
@@ -534,7 +546,7 @@
 
       // 모바일 meta 라인 — 성별칩 · 나이 · 연락처를 한 줄로
       var mmGender = p.g
-        ? '<span class="gender-chip ' + (p.g === '남' ? 'm' : 'f') + '">' + p.g + '</span>'
+        ? '<span class="mm-g">' + p.g + '</span>'
         : '<span class="cell-empty">—</span>';
       var mmAge = p.age != null ? '<span class="mm-age">' + p.age + '세</span>' : '<span class="cell-empty">—</span>';
       var mobileMeta = ''
@@ -561,9 +573,18 @@
         +   '<span>' + consentCell(p) + '</span>'
         +   '<span>' + taskCell(p) + '</span>'
         +   mobileMeta
-        +   '<span class="tr-go"><svg class="ic-svg" width="16" height="16"><use href="#i-chevron-right"/></svg></span>'
         + '</a>';
     }).join('');
+
+    // 선택 모드에서는 행을 눌러도 이동하지 않고 체크만 토글
+    body.querySelectorAll('.table-row').forEach(function (row) {
+      row.addEventListener('click', function (e) {
+        if (!panel.classList.contains('sel-mode')) return;
+        e.preventDefault();
+        var box = row.querySelector('.row-chk');
+        if (box) box.classList.toggle('on');
+      });
+    });
 
     // 아바타 채색 (layout.js가 노출하는 헬퍼)
     if (window.paintPatientAvatars) window.paintPatientAvatars();
@@ -612,6 +633,22 @@
 </script>
 
 <script src="../../components/layout.js"></script>
-<script>injectShell('customer');</script>
+<script>injectShell('customer');
+  // '선택' — 누를 때만 체크박스를 보여 준다 (상시 자리 차지 안 함)
+  (function () {
+    var btn = document.getElementById('sel-toggle');
+    var panel = document.querySelector('.list-panel');
+    if (!btn || !panel) return;
+    btn.addEventListener('click', function () {
+      var on = panel.classList.toggle('sel-mode');
+      btn.classList.toggle('on', on);
+      var box = btn.querySelector('.row-chk');
+      if (box) box.classList.toggle('on', on);
+      var lab = btn.querySelector('.sel-label');
+      if (lab) lab.textContent = on ? '취소' : '선택';
+      if (!on) panel.querySelectorAll('.row-chk.on').forEach(function (b) { b.classList.remove('on'); });
+    });
+  })();
+</script>
 </body>
 </html>
